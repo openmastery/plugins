@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ideaflow
+Bundle-SymbolicName: ideaflow; singleton:=true
+Bundle-Version: 1.0.0.alpha
+Bundle-Activator: com.ideaflow.eclipse.IdeaFlowActivator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.codehaus.groovy;bundle-version="1.8.6",
+ org.eclipse.core.expressions;bundle-version="3.4.401",
+ org.eclipse.core.resources;bundle-version="3.8.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

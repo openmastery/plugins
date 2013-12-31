@@ -1,0 +1,42 @@
+<idea-plugin version="2">
+  <name>Plugin name here</name>
+  <description>short description of the plugin</description>
+  <version>1.0</version>
+  <vendor>YourCompany</vendor>
+
+  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="107.105"/>
+
+  <application-components>
+  </application-components>
+
+  <project-components>
+      <component>
+          <implementation-class>com.ideaflow.intellij.IdeaFlowComponent</implementation-class>
+      </component>
+  </project-components>
+
+  <actions>
+      <action id="IdeaFlow.Note" class="com.ideaflow.intellij.action.CreateEventNoteAction" text="Create Event Note"
+              description="Create an event note on the active IdeaFlow map" icon="/icons/note.png">
+          <add-to-group group-id="MainToolBar" anchor="first"/>
+      </action>
+      <action id="IdeaFlow.ToggleConflict" class="com.ideaflow.intellij.action.ToggleConflict"
+              icon="/icons/conflict.png">
+          <add-to-group group-id="MainToolBar" anchor="first"/>
+      </action>
+      <action id="IdeaFlow.TogglePause" class="com.ideaflow.intellij.action.TogglePause"
+              icon="/icons/pause.png">
+          <add-to-group group-id="MainToolBar" anchor="first"/>
+      </action>
+      <action id="IdeaFlow.ToggleOpenIdeaFlow" class="com.ideaflow.intellij.action.ToggleOpenIdeaFlow"
+              icon="/icons/record.png">
+          <add-to-group group-id="MainToolBar" anchor="first"/>
+      </action>
+
+
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+  </extensions>
+</idea-plugin>

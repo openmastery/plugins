@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PLUGIN_MODULE" version="4">
+  <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/META-INF/plugin.xml" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/intellij" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/eclipse" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.settings" />
+      <excludeFolder url="file://$MODULE_DIR$/bineclipse" />
+      <excludeFolder url="file://$MODULE_DIR$/eclipse" />
+    </content>
+    <orderEntry type="jdk" jdkName="IDEA IC-117.SNAPSHOT" jdkType="IDEA JDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///usr/local/grails-2.0.4/lib/org.codehaus.groovy/groovy-all/jars/groovy-all-1.8.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>
+

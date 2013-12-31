@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="com.ideaflow.eclipse.handler.IdeaFlowHandler"
+            description="Start Idea Flow"
+            id="ideaflow.IdeaFlowCmd"
+            name="Start Idea Flow">
+      </command>
+      <command
+            description="Pause IdeaFlow"
+            id="ideaflow.PauseCmd"
+            name="Pause IdeaFlow">
+      </command>
+      <command
+            description="Start Conflict"
+            id="ideaflow.ConflictCmd"
+            name="Start Conflict">
+      </command>
+      <command
+            description="Create Event Note"
+            id="ideaflow.EventNoteCmd"
+            name="Create Event Note">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="ideaflow.toolbar">
+            <command
+                  commandId="ideaflow.IdeaFlowCmd"
+                  icon="resources/icons/record.png"
+                  style="toggle" 
+                  >
+            </command>
+            <command
+                  commandId="ideaflow.PauseCmd"
+                  icon="resources/icons/pause.png"
+                  style="toggle">
+            </command>
+            <command
+                  commandId="ideaflow.ConflictCmd"
+                  icon="resources/icons/conflict.png"
+                  style="toggle">
+            </command>
+            <command
+                  commandId="ideaflow.EventNoteCmd"
+                  icon="resources/icons/note.png"
+                  style="push">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.ideaflow.eclipse.handler.PauseHandler"
+            commandId="ideaflow.PauseCmd">
+         <enabledWhen>
+            <test
+                  property="ideaflow.isOpen">
+            </test>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.ideaflow.eclipse.handler.ConflictHandler"
+            commandId="ideaflow.ConflictCmd">
+         <enabledWhen>
+            <test
+                  property="ideaflow.isOpen">
+            </test>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.ideaflow.eclipse.handler.EventNoteHandler"
+            commandId="ideaflow.EventNoteCmd">
+         <enabledWhen>
+            <test
+                  property="ideaflow.isOpen">
+            </test>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.ideaflow.eclipse.handler.IdeaFlowIsOpenTester"
+            id="ideaflow.isOpenProperty"
+            namespace="ideaflow"
+            properties="isOpen"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+
+</plugin>
