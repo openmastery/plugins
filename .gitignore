@@ -1,3 +1,4 @@
-visualizer/target/
 .idea
+.DS_Store
+visualizer/target/
 plugins/ideaflow/bineclipse
