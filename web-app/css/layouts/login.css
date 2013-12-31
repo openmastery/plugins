@@ -1,0 +1,77 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #333333;
+}
+
+table {
+
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+
+}
+
+table td {
+    vertical-align: middle;
+}
+
+.login-content {
+
+    display: block;
+
+    width: 420px;
+
+    margin: 0px auto;
+
+}
+
+.login-content .logo {
+
+    width: 100%;
+
+    display: inline-block;
+    text-decoration: none;
+
+}
+
+.login-content .logo img {
+    width: 100%;
+}
+
+.layout-footer {
+
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: 60px;
+
+    font-size: 13px;
+
+    color: #989898;
+
+    text-align: center;
+
+}
+
+div.errors {
+
+    background: #FFB3BB;
+    border: 3px solid #CC0000;
+    color: #CC0000;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    margin: 10px 0px;
+    padding: 8px 0px;
+
+    line-height: 20px;
+
+    text-align: center;
+
+}

@@ -1,0 +1,10 @@
+/**
+ * Jquery UI Overrides
+ */
+.ui-dialog {
+    padding: 0px;
+}
+
+.ui-dialog .ui-dialog-content {
+    padding: 0px;
+}

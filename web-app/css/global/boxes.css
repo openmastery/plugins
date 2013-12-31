@@ -1,0 +1,111 @@
+.box-1 {
+
+    position: relative;
+    border: 1px solid #333333;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+}
+
+.box-1 > .title {
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: #e8c02b;
+    text-shadow: 1px 1px 2px #333333;
+
+    min-height: 45px;
+    line-height: 45px;
+
+    padding: 0px 20px;
+
+    border-bottom: 1px solid #333333;
+
+    -moz-border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+
+    background-image: -ms-linear-gradient(top, #40a6ef 0%, #1073b9 100%);
+    background-image: -moz-linear-gradient(top, #40a6ef 0%, #1073b9 100%);
+    background-image: -o-linear-gradient(top, #40a6ef 0%, #1073b9 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #40a6ef), color-stop(1, #1073b9));
+    background-image: -webkit-linear-gradient(top, #40a6ef 0%, #1073b9 100%);
+    background-image: linear-gradient(to bottom, #40a6ef 0%, #1073b9 100%);
+
+}
+
+.no-cssgradients .box-1 > .title {
+    -pie-background: linear-gradient(#40a6ef 0%, #1073b9 100%);
+}
+
+.box-1 > .content {
+
+    color: #333333;
+
+    padding: 15px;
+
+}
+
+.box-1 > .buttons {
+
+    display: block;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    position: absolute;
+    bottom: 0;
+
+    padding-top: 20px;
+
+}
+
+.box-1 > .buttons button, .box-1 > .buttons a {
+
+    float: right;
+
+    position: relative;
+    top: -10px;
+    right: 15px;
+
+    margin-left: 10px;
+
+}
+
+.box-1 > .buttons a {
+
+    display: inline-block;
+    *display: inline;
+
+    padding: 10px;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    text-align: center;
+
+    color: #1073b9;
+
+}
+
+.box-1 > .buttons a:hover {
+    color: #40a6ef;
+}
+
+.box-2 {
+
+    zoom: 1;
+    position: relative;
+    z-index: 1;
+
+    border: 1px dotted #333333;
+    background-color: #FEFEFE;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+}
