@@ -2,12 +2,8 @@ package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowComponent
-import com.ideaflow.model.Event
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.ui.Messages
-import com.intellij.ui.UIBundle
-import com.ideaflow.model.EventType
 
 @Mixin(ActionSupport)
 class CreateEventNoteAction extends AnAction {

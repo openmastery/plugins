@@ -1,9 +1,8 @@
 package com.ideaflow.report
 
-import com.ideaflow.model.IdeaFlowModel
-import test.support.FixtureSupport
-import com.ideaflow.model.Timeline
 import com.ideaflow.model.EventType
+import com.ideaflow.model.Timeline
+import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
 class TestReportGenerator extends GroovyTestCase {

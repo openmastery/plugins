@@ -1,9 +1,8 @@
 package test.support
 
 import com.ideaflow.model.Event
-import com.ideaflow.model.Interval
 import com.ideaflow.model.EventType
-
+import com.ideaflow.model.Interval
 
 class FixtureSupport {
 

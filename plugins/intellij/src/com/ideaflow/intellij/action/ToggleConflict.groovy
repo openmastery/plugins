@@ -5,8 +5,6 @@ import com.ideaflow.intellij.IdeaFlowComponent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ToggleAction
-import com.intellij.openapi.ui.Messages
-import com.intellij.ui.UIBundle
 
 @Mixin(ActionSupport)
 class ToggleConflict extends ToggleAction {

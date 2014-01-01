@@ -3,9 +3,6 @@ package com.ideaflow.intellij
 import com.ideaflow.controller.IDEService
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl
-import com.intellij.openapi.fileChooser.FileChooserDescriptor
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -13,7 +10,6 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.ui.UIBundle
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.ui.Messages
 
 

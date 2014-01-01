@@ -1,7 +1,6 @@
 package com.ideaflow.report
 
 import com.ideaflow.model.Timeline
-import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.EventType
 
 

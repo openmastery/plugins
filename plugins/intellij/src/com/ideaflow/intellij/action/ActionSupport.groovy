@@ -1,10 +1,9 @@
 package com.ideaflow.intellij.action
 
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowComponent
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
-
 
 class ActionSupport {
 

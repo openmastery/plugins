@@ -1,7 +1,7 @@
 package com.ideaflow.report
 
-import test.support.FixtureSupport
 import com.ideaflow.model.IdeaFlowModel
+import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
 class TestXMLTimelineSerializer extends GroovyTestCase {
