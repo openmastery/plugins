@@ -17,7 +17,7 @@ class TestEventToIntervalHandler extends GroovyTestCase {
         timeService = [getTime: { time }] as TimeService
         time = NOW
 
-        model = new IdeaFlowModel('test', new Date(NOW))
+        model = new IdeaFlowModel('test', null)
         eventHandler = new EventToIntervalHandler(timeService, model)
     }
 
