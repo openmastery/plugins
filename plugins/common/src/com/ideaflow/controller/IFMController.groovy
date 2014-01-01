@@ -6,7 +6,6 @@ import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.report.XMLTimelineSerializer
 
-import com.ideaflow.report.ReportGenerator
 import com.ideaflow.model.EventType
 
 class IFMController {
@@ -74,7 +73,6 @@ class IFMController {
             endFileEvent(null)
             addEvent(EventType.closed, "Stop IdeaFlow recording")
             flush()
-            createReports()
 
             ideaFlowModel = null
             eventToIntervalHandler = null
@@ -120,28 +118,6 @@ class IFMController {
 		return nameWithExtension
 	}
 
-    private void createReports() {
-        ReportGenerator generator = new ReportGenerator(ideaFlowModel.createSequencedTimeline())
-
-        Writer writer = new StringWriter()
-        generator.writeConsumptionReport(writer)
-        generator.writeConflictSummaryReport(writer)
-        generator.writeConflictDetailReport(writer)
-        ideService.createNewFile(reportFileName, writer.toString())
-
-        writer = new StringWriter()
-        generator.writeNormalizedTimeline(writer)
-        ideService.createNewFile(timelineFileName, writer.toString())
-    }
-
-    private String getReportFileName() {
-        ideaFlowModel.fileName.replace('.ifm', '-report.txt')
-    }
-
-    private String getTimelineFileName() {
-        ideaFlowModel.fileName.replace('.ifm', '-timeline.csv')
-    }
-
     private void flush() {
         if (ideaFlowModel) {
             String xml = new XMLTimelineSerializer().serialize(ideaFlowModel)
@@ -157,6 +133,5 @@ class IFMController {
             startFileEventForCurrentFile()
         }
     }
-
 
 }
