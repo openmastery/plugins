@@ -1,12 +1,12 @@
 package com.ideaflow.controller
 
+import com.ideaflow.dsl.DSLTimelineSerializer
+import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToIntervalHandler
 import com.ideaflow.model.Event
 import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.report.XMLTimelineSerializer
 
-import com.ideaflow.report.ReportGenerator
 import com.ideaflow.model.EventType
 
 class IFMController {
@@ -56,7 +56,7 @@ class IFMController {
         if (ideService.fileExists(relativePath)) {
             println("Resuming existing IdeaFlow: $relativePath")
             String xml = ideService.readFile(relativePath)
-            ideaFlowModel = new XMLTimelineSerializer().deserialize(xml)
+            ideaFlowModel = new IdeaFlowReader().readModel(xml)
             ideaFlowModel.fileName = relativePath
         } else {
             println("Creating new IdeaFlow: $relativePath")
@@ -74,7 +74,6 @@ class IFMController {
             endFileEvent(null)
             addEvent(EventType.closed, "Stop IdeaFlow recording")
             flush()
-            createReports()
 
             ideaFlowModel = null
             eventToIntervalHandler = null
@@ -120,31 +119,9 @@ class IFMController {
 		return nameWithExtension
 	}
 
-    private void createReports() {
-        ReportGenerator generator = new ReportGenerator(ideaFlowModel.createSequencedTimeline())
-
-        Writer writer = new StringWriter()
-        generator.writeConsumptionReport(writer)
-        generator.writeConflictSummaryReport(writer)
-        generator.writeConflictDetailReport(writer)
-        ideService.createNewFile(reportFileName, writer.toString())
-
-        writer = new StringWriter()
-        generator.writeNormalizedTimeline(writer)
-        ideService.createNewFile(timelineFileName, writer.toString())
-    }
-
-    private String getReportFileName() {
-        ideaFlowModel.fileName.replace('.ifm', '-report.txt')
-    }
-
-    private String getTimelineFileName() {
-        ideaFlowModel.fileName.replace('.ifm', '-timeline.csv')
-    }
-
     private void flush() {
         if (ideaFlowModel) {
-            String xml = new XMLTimelineSerializer().serialize(ideaFlowModel)
+            String xml = new DSLTimelineSerializer().serialize(ideaFlowModel)
             ideService.writeToFile(ideaFlowModel.fileName, xml)
         }
     }
@@ -152,11 +129,10 @@ class IFMController {
     private void addEvent(EventType type, String comment) {
         if (comment) {
             endFileEvent(null)
-            ideaFlowModel?.addEvent(new Event(type, comment))
+            ideaFlowModel?.addTimelineEvent(new Event(type, comment))
             flush()
             startFileEventForCurrentFile()
         }
     }
-
 
 }
