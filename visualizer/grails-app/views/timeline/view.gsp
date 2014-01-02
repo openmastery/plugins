@@ -36,6 +36,7 @@
 
     var sideMargin = 40;
     var bottomMargin = 30;
+    var bandMargin = 20;
     var topMargin = bottomMargin;
     var height = 180;
     var width = 800;
@@ -51,7 +52,51 @@
         drawEventsLayer(stage, data.events, secondsPerUnit);
         drawTimebandsLayer(stage, data.timeBands, secondsPerUnit);
         drawMainTimeline(stage, data);
+        drawWindow(stage);
+        alert('done');
+    }
 
+    function drawWindow(stage) {
+        var windowScale = 5;
+        var strokeWidth = 3;
+        var windowWidth = (width - (sideMargin * 2)) / 5;
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: sideMargin,
+            y: topMargin + bandMargin - windowScale,
+            width: windowWidth,
+            height: height - bottomMargin - topMargin - bandMargin + windowScale*2,
+            fill: "rgba(255,255,0, .1)",
+            stroke: "rgba(30,255,30, 1)",
+            strokeWidth: strokeWidth,
+            draggable: true,
+            dragBoundFunc: function(pos) {
+                var newX = pos.x;
+                var newY = pos.y;
+                if (newX < sideMargin) {
+                    newX = sideMargin;
+                } else if (newX > (width - windowWidth - sideMargin)) {
+                    newX = (width - windowWidth - sideMargin);
+                }
+                return {
+                    x: newX,
+                    y: this.getAbsolutePosition().y
+                }
+            }
+        });
+
+        rect.on('mouseover touchstart', function () {
+            this.setFill(highlight);
+            layer.draw();
+        });
+
+        rect.on('mouseout touchend', function () {
+            this.setFill(color);
+            layer.draw();
+        });
+
+        layer.add(rect);
+        stage.add(layer);
     }
 
     function drawMainTimeline(stage, data) {
@@ -99,8 +144,6 @@
         });
     }
 
-
-
     function drawEventsLayer(stage, events, secondsPerUnit) {
         var layer = new Kinetic.Layer();
         for (var i = 0; i < events.length; i++) {
@@ -111,7 +154,7 @@
     function drawEvent(layer, event, secondsPerUnit) {
         var offset = Math.round(event.offset / secondsPerUnit) + sideMargin;
         var tickHeight = 15;
-        var tickMargin = 5;
+        var tickMargin = 3;
 
         var eventLine = new Kinetic.Line({
             points: [
@@ -140,10 +183,17 @@
 
     }
 
+    function drawTimebandsLayer(stage, bands, secondsPerUnit) {
+        var layer = new Kinetic.Layer();
+        for (var i = 0; i < bands.length; i++) {
+            drawTimeband(layer, bands[i], secondsPerUnit);
+        }
+        stage.add(layer);
+    }
+
     function drawTimeband(layer, band, secondsPerUnit) {
         var offset = Math.round(band.offset / secondsPerUnit) + sideMargin;
         var size = Math.round(band.duration / secondsPerUnit);
-        var bandMargin = 20;
 
         var color
         var highlight
@@ -168,9 +218,6 @@
             strokeWidth: 1
         });
 
-        /*
-         * bind listeners
-         */
         rect.on('mouseover touchstart', function () {
             this.setFill(highlight);
             layer.draw();
@@ -182,18 +229,6 @@
         });
 
         layer.add(rect);
-    }
-
-    function createRectangle() {
-
-    }
-
-    function drawTimebandsLayer(stage, bands, secondsPerUnit) {
-        var layer = new Kinetic.Layer();
-        for (var i = 0; i < bands.length; i++) {
-            drawTimeband(layer, bands[i], secondsPerUnit);
-        }
-        stage.add(layer);
     }
 
     refreshTimeline();
