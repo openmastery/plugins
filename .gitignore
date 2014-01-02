@@ -1,7 +1,8 @@
 .idea
 .DS_Store
+out
 visualizer/target/
+plugins/.gradle
+plugins/build
 plugins/ideaflow/bineclipse
 plugins/common/libs
-plugins/.gradle
-out
