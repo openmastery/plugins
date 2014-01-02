@@ -1,0 +1,51 @@
+.fields {
+    width: 768px;
+    margin: 0px auto;
+}
+
+.xb-input {
+
+    zoom: 1;
+    display: inline-block;
+    *display: inline;
+
+    width: 550px;
+
+}
+
+.fieldcontain {
+
+    margin: 20px 0px;
+
+}
+
+.fieldcontain label {
+
+    text-align: right;
+
+    zoom: 1;
+    display: inline-block;
+
+    width: 190px;
+
+}
+
+.ie7 .fieldcontain label {
+
+    position: relative;
+    top: -8px;
+    right: 5px;
+
+}
+
+form .buttons input, form .buttons button, form .buttons a {
+
+    margin-top: 20px;
+    float: right;
+
+}
+
+.ie7 form .buttons input, .ie7 form .buttons a {
+    position: relative;
+    left: 20px;
+}

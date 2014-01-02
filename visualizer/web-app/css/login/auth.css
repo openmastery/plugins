@@ -1,0 +1,42 @@
+label[for="remember_me"], input[type="checkbox"] {
+    display: inline-block;
+}
+
+.checkbox-wrapper {
+
+    display: inline-block;
+
+    position: relative;
+
+    padding: 5px 0px;
+
+}
+
+.checkbox-wrapper label {
+
+    display: inline-block;
+    color:#DFDFDF;
+    line-height: 20px;
+
+}
+
+.field {
+
+    margin: 10px 0px;
+
+}
+
+#submit {
+    display: inline-block;
+    float: right;
+}
+
+.ie7 .checkbox-wrapper {
+    width: 150px;
+    float: left;
+}
+
+.ie7 .checkbox-wrapper label {
+    position: relative;
+    top: -7px;
+}

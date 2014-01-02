@@ -1,6 +1,6 @@
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
-// in the classpath in ConfigSlurper format
+// in the classpath in ConfigSlurper getFormatted
 
 // grails.config.locations = [ "classpath:${appName}-config.properties",
 //                             "classpath:${appName}-config.groovy",
@@ -12,7 +12,7 @@
 // }
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
-grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
+grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request getFormatted
 grails.mime.use.accept.header = false
 grails.mime.types = [
     all:           '*/*',

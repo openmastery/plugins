@@ -1,0 +1,56 @@
+.fieldcontain {
+
+    margin: 20px 0px;
+
+}
+
+.fieldcontain .property-label {
+
+    text-align: right;
+
+    zoom: 1;
+    display: inline-block;
+
+    width: 190px;
+
+    font-weight: bold;
+
+}
+
+.fieldcontain .property-value {
+
+    zoom: 1;
+    display: inline-block;
+
+    width: 550px;
+
+    margin-left: 30px;
+
+}
+
+form .buttons input, form .buttons button, form .buttons a {
+
+    margin-left: 10px;
+    margin-top: 20px;
+    float: right;
+
+}
+
+form .buttons a {
+
+    padding: 10px;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    text-align: center;
+
+}
+
+#confirmDeleteDialog .box-1 {
+
+    height: 100%;
+
+    box-sizing: border-box;
+
+}
