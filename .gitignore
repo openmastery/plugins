@@ -4,3 +4,4 @@ visualizer/target/
 plugins/ideaflow/bineclipse
 plugins/common/libs
 plugins/.gradle
+out
