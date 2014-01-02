@@ -6,3 +6,4 @@ plugins/.gradle
 plugins/build
 plugins/ideaflow/bineclipse
 plugins/common/libs
+plugins/eclipse/bin
