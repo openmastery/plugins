@@ -21,7 +21,10 @@ class TimePosition {
         if (toHours() != "0") {
             format += toHours() + "h "
         }
-        format += toMinutes() + "m " + toSeconds() + "s"
+        if (toMinutes() != "00") {
+            format += toMinutes() + "m "
+        }
+        format += toSeconds() + "s"
         return format
     }
 

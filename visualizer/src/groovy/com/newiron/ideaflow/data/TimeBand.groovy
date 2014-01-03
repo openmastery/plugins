@@ -32,8 +32,11 @@ class TimeBand {
         return duration.getDurationFormattedTime()
     }
 
-    String getStartTime() {
-        startPosition.shortTime
+    String getStartTime(boolean withSeconds = false) {
+        if (withSeconds) {
+            return startPosition.longTime
+        }
+        return startPosition.shortTime
     }
 
     String getEndTime() {

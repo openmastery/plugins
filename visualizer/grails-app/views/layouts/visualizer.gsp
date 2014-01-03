@@ -31,7 +31,9 @@
 <div id="timelineHolder"></div>
 <common:nav controller="${params.controller}" action="${params.action}"/>
 <g:layoutBody/>
-<div id="contentPanel"></div>
+<div id="contentPanel">
+    <g:include controller="event" action="list" />
+</div>
 <common:footer/>
 </body>
 </html>
