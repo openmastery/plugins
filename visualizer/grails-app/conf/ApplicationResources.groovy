@@ -6,7 +6,7 @@ modules = {
 
     monolith {
 
-        dependsOn 'jquery', 'reset', 'normalize', 'html5boilerplate', 'modernizr', 'pie', 'kineticjs', 'jqxbinputs', 'global'
+        dependsOn 'jquery', 'reset', 'normalize', 'html5boilerplate', 'modernizr', 'pie', 'jqxbinputs', 'global'
 
         overrides {
             jquery {
@@ -86,11 +86,14 @@ modules = {
     }
 
     kineticjs {
-
         dependsOn 'jquery'
-
         resource url: '/js/lib/kineticjs/kinetic-v4.7.4.min.js'
 
+    }
+
+    ideaflow {
+        dependsOn 'kineticjs'
+        resource url: '/js/ideaflow.js'
     }
 
     modernizr {
@@ -132,6 +135,8 @@ modules = {
         resource url: '/js/lib/jq-xbinputs/jq.xbinputs.js'
 
     }
+
+
 
     error {
 
@@ -203,5 +208,6 @@ modules = {
         resource url: '/js/login/auth.js'
 
     }
+
 
 }

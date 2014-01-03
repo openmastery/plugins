@@ -32,13 +32,13 @@ class TimelineController {
         timeline.events << new RelativeTime(7, 24, 0)
         timeline.events << new RelativeTime(9, 20, 0)
 
-        timeline.timeBands << new TimeBand(bandType: Conflict, position: new RelativeTime(5, 50, 0), duration: 10 * 60)
-        timeline.timeBands << new TimeBand(bandType: Conflict, position: new RelativeTime(7, 30, 0), duration: 24 * 60)
-        timeline.timeBands << new TimeBand(bandType: Conflict, position: new RelativeTime(8, 15, 0), duration: 18 * 60)
-        timeline.timeBands << new TimeBand(bandType: Conflict, position: new RelativeTime(8, 43, 0), duration: 11 * 60)
-        timeline.timeBands << new TimeBand(bandType: Learning, position: new RelativeTime(0, 0, 0), duration: 70 * 60)
-        timeline.timeBands << new TimeBand(bandType: Learning, position: new RelativeTime(2, 51, 0), duration: 104 * 60)
-        timeline.timeBands << new TimeBand(bandType: Rework,   position: new RelativeTime(5, 30, 0), duration: 20 * 60)
+        timeline.timeBands << new TimeBand(Conflict, new RelativeTime(5, 50, 0), 10 * 60)
+        timeline.timeBands << new TimeBand(Conflict, new RelativeTime(7, 30, 0), 24 * 60)
+        timeline.timeBands << new TimeBand(Conflict, new RelativeTime(8, 15, 0), 18 * 60)
+        timeline.timeBands << new TimeBand(Conflict, new RelativeTime(8, 43, 0), 11 * 60)
+        timeline.timeBands << new TimeBand(Learning, new RelativeTime(0, 0, 0), 70 * 60)
+        timeline.timeBands << new TimeBand(Learning, new RelativeTime(2, 51, 0), 104 * 60)
+        timeline.timeBands << new TimeBand(Rework, new RelativeTime(5, 30, 0), 20 * 60)
 
         render timeline as JSON
     }

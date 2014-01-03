@@ -16,6 +16,10 @@ class RelativeTime {
         toHours() + ":" + toMinutes() + ":" + toSeconds()
     }
 
+    String getDurationFormattedTime() {
+        toHours() + "h " + toMinutes() + "m " + toSeconds() + "s"
+    }
+
     String getShortTime() {
         toHours() + ":" + toMinutes()
     }
