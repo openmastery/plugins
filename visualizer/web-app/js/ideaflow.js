@@ -11,8 +11,23 @@ var topMargin = bottomMargin;
 var height = 180;
 var width = 800;
 
+var timelineWindow
+var stage
+
+function showTimelineWindow(flag) {
+    if (timelineWindow) {
+        if (flag) {
+            timelineWindow.show();
+        } else {
+            timelineWindow.hide();
+        }
+        //windowLayer.draw();
+        stage.draw();
+    }
+}
+
 function drawTimeline(data) {
-    var stage = new Kinetic.Stage({
+    stage = new Kinetic.Stage({
         container: 'timelineHolder',
         width: width,
         height: height
@@ -30,15 +45,16 @@ function drawWindow(stage) {
     var strokeWidth = 3;
     var windowWidth = (width - (sideMargin * 2)) / 5;
     var layer = new Kinetic.Layer();
-    var rect = new Kinetic.Rect({
+    timelineWindow = new Kinetic.Rect({
         x: sideMargin,
         y: topMargin + bandMargin - windowScale,
         width: windowWidth,
         height: height - bottomMargin - topMargin - bandMargin + windowScale*2,
-        fill: "rgba(255,255,0, .1)",
+        fill: "rgba(255,255,200, .1)",
         stroke: "rgba(30,255,30, 1)",
         strokeWidth: strokeWidth,
         draggable: true,
+        visible: false,
         dragBoundFunc: function(pos) {
             var newX = pos.x;
             var newY = pos.y;
@@ -54,17 +70,17 @@ function drawWindow(stage) {
         }
     });
 
-    rect.on('mouseover touchstart', function () {
-        this.setFill("rgba(255,255,30, .1)");
-        layer.draw();
-    });
-
-    rect.on('mouseout touchend', function () {
+    timelineWindow.on('mouseover touchstart', function () {
         this.setFill("rgba(255,255,0, .1)");
         layer.draw();
     });
 
-    layer.add(rect);
+    timelineWindow.on('mouseout touchend', function () {
+        this.setFill("rgba(255,255,200, .1)");
+        layer.draw();
+    });
+
+    layer.add(timelineWindow);
     stage.add(layer);
 }
 

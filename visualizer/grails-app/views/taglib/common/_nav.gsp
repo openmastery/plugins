@@ -1,14 +1,18 @@
 <div id="nav">
     <span class="menuButton">
-        <g:remoteLink controller="interval" action='list' update='contentPanel'>Timeline</g:remoteLink>
+        <g:remoteLink controller="interval" action='list' update='contentPanel'
+                      class="${'interval'.equals(controller) ? 'active' : ''}">Timeline</g:remoteLink>
     </span> |
     <span class="menuButton">
-        <g:remoteLink controller="event" action='list' update='contentPanel'>Events</g:remoteLink>
+        <g:remoteLink controller="event" action='list' update='contentPanel'
+                      class="${'event'.equals(controller) ? 'active' : ''}">Events</g:remoteLink>
     </span> |
     <span class="menuButton">
-        <g:remoteLink controller="timeBand" action='list' update='contentPanel'>Highlights</g:remoteLink>
+        <g:remoteLink controller="timeBand" action='list' update='contentPanel'
+                      class="${'timeBand'.equals(controller) ? 'active' : ''}">Highlights</g:remoteLink>
     </span> |
     <span class="menuButton">
-        <g:remoteLink controller="conflict" action='list' update='contentPanel'>Conflicts</g:remoteLink>
+        <g:remoteLink controller="conflict" action='list' update='contentPanel'
+                      class="${'conflict'.equals(controller) ? 'active' : ''}">Conflicts</g:remoteLink>
     </span>
 </div>

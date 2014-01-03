@@ -1,3 +1,5 @@
+<common:nav controller="${params.controller}" action="${params.action}"/>
+
 <div id="intervals">
     <table class="tabular">
         <tbody>
@@ -19,6 +21,7 @@
 </div>
 
 <script type="text/javascript">
+    showTimelineWindow(true);
     //turn ON green toggle
     //onHover, highlight position on timeline
     //onHover, highlight row and make X appear

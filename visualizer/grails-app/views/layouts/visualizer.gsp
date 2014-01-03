@@ -20,6 +20,11 @@
         background-color: #e0e0ff;
         text-align: center;
     }
+
+    .active {
+        background-color:#0000ff;
+        color:#ffffff;
+    }
     </style>
     <g:javascript library="monolith"/>
     <g:layoutHead/>
@@ -28,12 +33,7 @@
 
 <body>
 <common:header/>
-<div id="timelineHolder"></div>
-<common:nav controller="${params.controller}" action="${params.action}"/>
 <g:layoutBody/>
-<div id="contentPanel">
-    <g:include controller="event" action="list" />
-</div>
 <common:footer/>
 </body>
 </html>

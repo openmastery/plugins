@@ -1,3 +1,4 @@
+<common:nav controller="${params.controller}" action="${params.action}"/>
 
 <div id="events">
     <table class="tabular">
@@ -17,6 +18,7 @@
 </div>
 
 <script type="text/javascript">
+    showTimelineWindow(false);
     //turn off green toggle
     //onHover, highlight event on timeline
     //onHover, highlight row and make X appear
