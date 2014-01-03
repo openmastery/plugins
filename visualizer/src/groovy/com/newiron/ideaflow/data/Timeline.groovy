@@ -2,9 +2,9 @@ package com.newiron.ideaflow.data
 
 
 class Timeline {
-    RelativeTime start
-    RelativeTime end
-    List<RelativeTime> events = []
+    TimePosition start
+    TimePosition end
+    List<TimePosition> events = []
     List<TimeBand> timeBands = []
 
     //scale 1u = how much time

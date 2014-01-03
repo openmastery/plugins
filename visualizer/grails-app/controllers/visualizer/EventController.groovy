@@ -1,7 +1,6 @@
 package visualizer
 
 import com.newiron.ideaflow.data.Event
-import com.newiron.ideaflow.data.RelativeTime
 
 class EventController {
 

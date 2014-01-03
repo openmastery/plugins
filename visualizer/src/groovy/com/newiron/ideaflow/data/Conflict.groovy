@@ -10,7 +10,7 @@ class Conflict {
 
     @Delegate TimeBand timeBand
 
-    Conflict(String conflict, String resolution, RelativeTime startTime, int duration) {
+    Conflict(String conflict, String resolution, TimePosition startTime, int duration) {
         this.conflict = conflict
         this.resolution = resolution
         this.timeBand = new TimeBand(BandType.Conflict, startTime, duration, conflict)

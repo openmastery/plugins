@@ -23,7 +23,6 @@ function drawTimeline(data) {
     drawTimebandsLayer(stage, data.timeBands, secondsPerUnit);
     drawMainTimeline(stage, data);
     drawWindow(stage);
-    alert('done');
 }
 
 function drawWindow(stage) {
@@ -56,12 +55,12 @@ function drawWindow(stage) {
     });
 
     rect.on('mouseover touchstart', function () {
-        this.setFill(highlight);
+        this.setFill("rgba(255,255,30, .1)");
         layer.draw();
     });
 
     rect.on('mouseout touchend', function () {
-        this.setFill(color);
+        this.setFill("rgba(255,255,0, .1)");
         layer.draw();
     });
 

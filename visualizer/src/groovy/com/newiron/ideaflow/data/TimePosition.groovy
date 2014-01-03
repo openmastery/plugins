@@ -1,23 +1,28 @@
 package com.newiron.ideaflow.data
 
 
-class RelativeTime {
+class TimePosition {
     int offset
 
-    RelativeTime(int offset) {
+    TimePosition(int offset) {
         this.offset = offset
     }
 
-    RelativeTime(int hours, int minutes, int seconds) {
+    TimePosition(int hours, int minutes, int seconds) {
         this.offset = (hours * 60 * 60) + (minutes * 60) + seconds
     }
 
-    String getTime() {
+    String getLongTime() {
         toHours() + ":" + toMinutes() + ":" + toSeconds()
     }
 
     String getDurationFormattedTime() {
-        toHours() + "h " + toMinutes() + "m " + toSeconds() + "s"
+        String format = ""
+        if (toHours() != "0") {
+            format += toHours() + "h "
+        }
+        format += toMinutes() + "m " + toSeconds() + "s"
+        return format
     }
 
     String getShortTime() {

@@ -10,10 +10,23 @@
                 <td>Resolution:</td>
                 <td>${conflict.resolution}</td>
             </tr>
+            <g:if test="${conflict.mistakeType}">
             <tr>
-                <td>Resolution:</td>
-                <td>${conflict.resolution}</td>
+                <td>Mistake Type:</td>
+                <td>${conflict.mistakeType}</td>
             </tr>
+            </g:if>
+            <g:if test="${conflict.cause}">
+                <tr>
+                    <td>Cause:</td>
+                    <td>${conflict.cause}</td>
+                </tr>
+            </g:if>
+            <tr>
+                <td>Duration:</td>
+                <td>${conflict.durationFormattedTime}</td>
+            </tr>
+
         </g:each>
         </tbody>
     </table>

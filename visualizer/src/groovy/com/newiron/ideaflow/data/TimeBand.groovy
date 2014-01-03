@@ -3,31 +3,41 @@ package com.newiron.ideaflow.data
 
 class TimeBand {
     private BandType bandType
-    private RelativeTime offset
-    int duration
+    private TimePosition startPosition
+    private TimePosition endPosition
     String comment
 
 
-    TimeBand(BandType bandType, RelativeTime offset, int duration, String comment = "") {
+    TimeBand(BandType bandType, TimePosition position, int duration, String comment = "") {
         this.bandType = bandType
-        this.offset = offset
-        this.duration = duration
+        this.startPosition = position
+        this.endPosition = new TimePosition(startPosition.offset + duration)
         this.comment = comment
     }
+
     String getBandType() {
         bandType.name()
     }
 
-    String getOffset() {
-        offset.offset
+    int getOffset() {
+        startPosition.offset
+    }
+
+    int getDuration() {
+        endPosition.offset - startPosition.offset
+    }
+
+    String getDurationFormattedTime() {
+        TimePosition duration = new TimePosition(duration)
+        return duration.getDurationFormattedTime()
     }
 
     String getStartTime() {
-        offset.time
+        startPosition.shortTime
     }
 
     String getEndTime() {
-        new RelativeTime(offset.offset + duration).shortTime
+        endPosition.shortTime
     }
 
     String getColor() {
