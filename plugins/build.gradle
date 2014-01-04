@@ -27,7 +27,11 @@ sourceSets {
 	}
 }
 
+jar.baseName = 'ideaflow-common'
+
+
 task prepareLibs(type: Copy) {
 	into "common/libs"
 	from configurations.runtime
 }
+
