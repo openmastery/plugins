@@ -15,12 +15,16 @@ var isFocused = false;
 var timelineWindow;
 var stage;
 var colorBands;
+var eventLines;
+var eventLabels;
 
 var stopWindowDragCallback;
 var clickBandCallback;
 
 var leftStretcher;
 var rightStretcher;
+
+var timelineData;
 
 function showTimelineWindow(flag) {
     if (timelineWindow) {
@@ -38,6 +42,7 @@ function registerClickBandCallback(callback) {
 }
 
 function drawTimeline(data) {
+    timelineData = data;
     stage = new Kinetic.Stage({
         container: 'timelineHolder',
         width: width,
@@ -209,8 +214,12 @@ function createMainLine(tickHeight) {
 
 function drawEventsLayer(stage, events, secondsPerUnit) {
     var layer = new Kinetic.Layer();
+    eventLines = new Array();
+    eventLabels = new Array();
     for (var i = 0; i < events.length; i++) {
-        drawEvent(layer, events[i], secondsPerUnit);
+        var eventParts = drawEvent(layer, events[i], secondsPerUnit);
+        eventLines[i] = eventParts[0];
+        eventLabels[i] = eventParts[1];
     }
     stage.add(layer);
 }
@@ -238,20 +247,24 @@ function drawEvent(layer, event, secondsPerUnit) {
         fontFamily: 'Calibri',
         fill: 'black'
     });
-
     tickLabel.setOffset({x: tickLabel.getWidth() / 2});
 
     layer.add(eventLine);
     layer.add(tickLabel);
 
+    return [eventLine, tickLabel];
 }
 
 function drawTimebandsLayer(stage, bands, secondsPerUnit) {
     var layer = new Kinetic.Layer();
     colorBands = new Array();
+    conflictBands = new Array();
     for (var i = 0; i < bands.length; i++) {
         var colorBand = drawTimeband(layer, bands[i], secondsPerUnit);
         colorBands[i] = colorBand;
+        if (bands[i].bandType == 'Conflict') {
+            conflictBands[conflictBands.length] = colorBand;
+        }
     }
     stage.add(layer);
 }
@@ -300,8 +313,11 @@ function drawTimeband(layer, band, secondsPerUnit) {
 
 function resetColorBands() {
     isFocused = false;
+
     for (var i = 0; i < colorBands.length; i++) {
         colorBands[i].setOpacity('1');
+        var color = timelineData.timeBands[i].color;
+        colorBands[i].setFill(color);
     }
     leftStretcher.hide();
     rightStretcher.hide();
@@ -320,6 +336,28 @@ function focusColorBand(band) {
 
     leftStretcher.show();
     rightStretcher.show();
+}
 
+function highlightColorBand(index) {
+    colorBands[index].setFill(timelineData.timeBands[index].highlight);
+    stage.draw();
+}
 
+function highlightConflict(index) {
+    conflictBands[index].setOpacity('.7');
+    stage.draw();
+}
+
+function highlightEvent(index) {
+    eventLines[index].setStroke('#d3e0ff');
+    eventLabels[index].setFill('#79a1ff');
+    stage.draw();
+}
+
+function resetEventLines() {
+    for (var i = 0; i < eventLines.length; i++) {
+        eventLines[i].setStroke('gray');
+        eventLabels[i].setFill('black');
+    }
+    stage.draw();
 }

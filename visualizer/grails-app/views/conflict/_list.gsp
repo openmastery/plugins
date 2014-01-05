@@ -1,40 +1,63 @@
 <common:nav controller="${params.controller}" action="${params.action}"/>
+<style>
+.conflict:hover {
+    background-color: #d3e0ff;
+    cursor: pointer;
+}
+
+.conflict {
+    display: inline-block;
+    width: 700px;
+}
+.label {
+    vertical-align: top;
+    text-align: right;
+    display: inline-block;
+    width: 100px;
+}
+
+.description {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+</style>
 
 <div id="conflicts">
-    <table class="tabular">
-        <tbody>
-        <g:each in="${conflicts}" var="${conflict}" status="${index}">
-            <tr>
-                <td>Conflict:</td>
-                <td>${conflict.conflict}</td>
-            </tr>
-            <tr>
-                <td>Resolution:</td>
-                <td>${conflict.resolution}</td>
-            </tr>
+    <g:each in="${conflicts}" var="${conflict}" status="${index}">
+        <div class="conflict" onmouseover="highlightConflict(${index})" onmouseout="resetColorBands()">
+            <div>
+                <span class="label">Conflict:</span>
+                <span class="description">${conflict.conflict}</span>
+            </div>
+
+            <div>
+                <span class="label">Resolution:</span>
+                <span class="description">${conflict.resolution}</span>
+            </div>
             <g:if test="${conflict.mistakeType}">
-            <tr>
-                <td>Mistake Type:</td>
-                <td>${conflict.mistakeType}</td>
-            </tr>
+                <div>
+                    <span class="label">Mistake Type:</span>
+                    <span class="description">${conflict.mistakeType}</span>
+                </div>
             </g:if>
             <g:if test="${conflict.cause}">
-                <tr>
-                    <td>Cause:</td>
-                    <td>${conflict.cause}</td>
-                </tr>
+                <div>
+                    <span class="label">Cause:</span>
+                    <span class="description">${conflict.cause}</span>
+                </div>
             </g:if>
-            <tr>
-                <td>Duration:</td>
-                <td>${conflict.durationFormattedTime}</td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-            </tr>
-        </g:each>
-        </tbody>
-    </table>
+            <div>
+                <span class="label">Duration:</span>
+                <span class="description">${conflict.durationFormattedTime}</span>
+            </div>
+        </div>
+
+        <div>
+            <span>&nbsp;</span>
+            <span>&nbsp;</span>
+        </div>
+    </g:each>
 </div>
 
 <script type="text/javascript">

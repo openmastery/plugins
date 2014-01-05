@@ -1,10 +1,15 @@
 <common:nav controller="${params.controller}" action="${params.action}"/>
-
+<style>
+.eventrow:hover {
+    background-color: #d3e0ff;
+    cursor:pointer;
+}
+</style>
 <div id="timeBands">
     <table class="tabular">
         <tbody>
         <g:each in="${timeBands}" var="${band}" status="${index}">
-            <tr id="event_${index}" class="${(index % 2) == 0 ? 'even' : 'odd'}">
+            <tr id="event_${index}" class="eventrow" onmouseover="highlightColorBand(${index})" onmouseout="resetColorBands()">
                 <td style="background-color: ${band.color}">
                     &nbsp;&nbsp;&nbsp;
                 </td>
