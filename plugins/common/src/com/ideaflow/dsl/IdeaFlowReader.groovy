@@ -1,8 +1,10 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.Event
+import com.ideaflow.model.Conflict
+import com.ideaflow.model.GenericEvent
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Interval
+import com.ideaflow.model.Resolution
 
 import java.text.SimpleDateFormat
 
@@ -58,7 +60,17 @@ class IdeaFlowReader {
 
 		def event(Map eventMap) {
 			replaceCreatedStringWithDate(eventMap)
-			model.addTimelineEvent(new Event(eventMap))
+			model.addEvent(new GenericEvent(eventMap))
+		}
+
+		def conflict(Map eventMap) {
+			replaceCreatedStringWithDate(eventMap)
+			model.addEvent(new Conflict(eventMap))
+		}
+
+		def resolution(Map eventMap) {
+			replaceCreatedStringWithDate(eventMap)
+			model.addEvent(new Resolution(eventMap))
 		}
 
 		private void replaceCreatedStringWithDate(Map map) {

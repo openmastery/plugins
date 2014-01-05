@@ -15,7 +15,7 @@ class TestIdeaFlowModel extends GroovyTestCase {
     void testAddEvent_ShouldNotAdd_IfPaused() {
 
         model.isPaused = true
-        model.addTimelineEvent(createEvent(EventType.startConflict, NOW))
+        model.addEvent(createConflict(NOW))
 
         assert model.size() == 0
         assert model.isOpenConflict() == false
@@ -31,10 +31,10 @@ class TestIdeaFlowModel extends GroovyTestCase {
     void testAddEvent_ShouldToggleOpenConflict() {
         assert model.isOpenConflict() == false
 
-        model.addTimelineEvent(createEvent(EventType.startConflict, TIME1))
+        model.addEvent(createConflict(TIME1))
         assert model.isOpenConflict() == true
 
-        model.addTimelineEvent(createEvent(EventType.endConflict, TIME2))
+        model.addEvent(createResolution(TIME2))
         assert model.isOpenConflict() == false
     }
 

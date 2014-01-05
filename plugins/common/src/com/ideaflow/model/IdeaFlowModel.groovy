@@ -2,9 +2,7 @@ package com.ideaflow.model
 
 class IdeaFlowModel {
 
-    List<Interval> intervalList = []
-    List<Event> eventList = []
-	List intervalAndEventList = []
+	List itemList = []
     String fileName
 
     boolean isPaused = false
@@ -17,35 +15,42 @@ class IdeaFlowModel {
         this.created = created
     }
 
-    void addTimelineEvent(Event event) {
-        if (event && !isPaused) {
-            handleConflict(event)
-            eventList.add(event)
-			intervalAndEventList.add(event)
-        }
+	void addEvent(Conflict conflict) {
+		addItem(conflict) {
+			openConflict = true
+		}
+	}
+
+	void addEvent(Resolution resolution) {
+		addItem(resolution) {
+			openConflict = false
+		}
+	}
+
+    void addEvent(Event event) {
+		addItem(event)
     }
 
-    void addInterval(Interval interval) {
-        if (interval && interval.name && !isPaused) {
-            intervalList.add(interval)
-			intervalAndEventList.add(interval)
-        }
+	void addInterval(Interval interval) {
+		addItem(interval)
     }
+
+	private void addItem(def item, Closure action = null) {
+		if (item && !isPaused) {
+			itemList.add(item)
+
+			if (action) {
+				action()
+			}
+		}
+	}
 
     int size() {
-        intervalList.size() + eventList.size()
+        itemList.size()
     }
 
     boolean isOpenConflict() {
         openConflict
-    }
-
-    private void handleConflict(Event event) {
-        if (event.type == EventType.startConflict) {
-            openConflict = true
-        } else if (event.type == EventType.endConflict) {
-            openConflict = false
-        }
     }
 
 }

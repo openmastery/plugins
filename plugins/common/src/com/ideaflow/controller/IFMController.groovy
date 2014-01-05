@@ -3,7 +3,10 @@ package com.ideaflow.controller
 import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToIntervalHandler
+import com.ideaflow.model.Conflict
 import com.ideaflow.model.Event
+import com.ideaflow.model.GenericEvent
+import com.ideaflow.model.Resolution
 import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
 
@@ -39,16 +42,20 @@ class IFMController {
         isIdeaFlowOpen() && ideaFlowModel.isOpenConflict()
     }
 
-    void startConflict(comment) {
-        addEvent(EventType.startConflict, comment)
+    void startConflict(String question) {
+		if (question) {
+			addEvent(new Conflict(question))
+		}
     }
 
-    void endConflict(comment) {
-        addEvent(EventType.endConflict, comment)
+    void endConflict(String answer) {
+		if (answer) {
+			addEvent(new Resolution(answer))
+		}
     }
 
     void addNote(comment) {
-        addEvent(EventType.note, comment)
+        addGenericEvent(EventType.note, comment)
     }
 
     void newIdeaFlow(String relativePath) {
@@ -65,14 +72,14 @@ class IFMController {
         }
 
         eventToIntervalHandler = new EventToIntervalHandler(timeService, ideaFlowModel)
-        addEvent(EventType.open, "Start IdeaFlow recording")
+        addGenericEvent(EventType.open, "Start IdeaFlow recording")
         startFileEventForCurrentFile()
     }
 
     void closeIdeaFlow() {
         if (ideaFlowModel) {
             endFileEvent(null)
-            addEvent(EventType.closed, "Stop IdeaFlow recording")
+            addGenericEvent(EventType.closed, "Stop IdeaFlow recording")
             flush()
 
             ideaFlowModel = null
@@ -126,13 +133,17 @@ class IFMController {
         }
     }
 
-    private void addEvent(EventType type, String comment) {
+    private void addGenericEvent(EventType type, String comment) {
         if (comment) {
-            endFileEvent(null)
-            ideaFlowModel?.addTimelineEvent(new Event(type, comment))
-            flush()
-            startFileEventForCurrentFile()
+			addEvent(new GenericEvent(type, comment))
         }
     }
+
+	private void addEvent(Event event) {
+		endFileEvent(null)
+		ideaFlowModel?.addEvent(event)
+		flush()
+		startFileEventForCurrentFile()
+	}
 
 }

@@ -9,7 +9,7 @@ class DSLTimelineSerializer {
 		IdeaFlowWriter writer = new IdeaFlowWriter(stringWriter)
 
 		writer.writeInitialization(model.created)
-		model.intervalAndEventList.each {
+		model.itemList.each {
 			writer.write(it)
 		}
 

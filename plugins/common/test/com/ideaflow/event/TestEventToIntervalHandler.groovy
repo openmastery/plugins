@@ -98,7 +98,7 @@ class TestEventToIntervalHandler extends GroovyTestCase {
     }
 
     private Interval getInterval(int index) {
-        model.intervalList.get(index)
+        model.itemList.get(index)
     }
 
 }

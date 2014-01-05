@@ -1,8 +1,11 @@
 package test.support
 
+import com.ideaflow.model.Conflict
 import com.ideaflow.model.Event
 import com.ideaflow.model.EventType
+import com.ideaflow.model.GenericEvent
 import com.ideaflow.model.Interval
+import com.ideaflow.model.Resolution
 
 class FixtureSupport {
 
@@ -36,13 +39,33 @@ class FixtureSupport {
 
     }
 
-    private Event createEvent(String comment, long time) {
-        new Event(EventType.note, comment, new Date(time))
+    private GenericEvent createNote(String comment, long time) {
+		GenericEvent event = createGenericEvent(EventType.note, time)
+		event.comment = comment
+		event
     }
 
-    private Event createEvent(EventType type, long time) {
-        new Event(type, 'test', new Date(time))
+    private Event createGenericEvent(EventType type, long time) {
+		GenericEvent event = new GenericEvent(type, 'test')
+		setCreated(event, time)
+		event
     }
+
+	private Conflict createConflict(long time) {
+		Conflict conflict = new Conflict('question')
+		setCreated(conflict, time)
+		conflict
+	}
+
+	private Resolution createResolution(long time) {
+		Resolution resolution = new Resolution('answer')
+		setCreated(resolution, time)
+		resolution
+	}
+
+	private void setCreated(def item, long time) {
+		item.created = new Date(time)
+	}
 
     private Interval createInterval(String name, long time) {
         new Interval(new Date(time), name, 5)
