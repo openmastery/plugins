@@ -1,14 +1,14 @@
 package com.ideaflow.event
 
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Interval
+import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.TimeService
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
-class TestEventToIntervalHandler extends GroovyTestCase {
+class TestEventToEditorActivityHandler extends GroovyTestCase {
 
-    EventToIntervalHandler eventHandler
+    EventToEditorActivityHandler eventHandler
     IdeaFlowModel model
     def timeService
     def time
@@ -18,15 +18,15 @@ class TestEventToIntervalHandler extends GroovyTestCase {
         time = NOW
 
         model = new IdeaFlowModel('test', null)
-        eventHandler = new EventToIntervalHandler(timeService, model)
+        eventHandler = new EventToEditorActivityHandler(timeService, model)
     }
 
-    void testStartEvent_ShouldNotCreateInterval_IfNoPriorEvent() {
+    void testStartEvent_ShouldNotCreateEditorActivity_IfNoPriorEvent() {
         eventHandler.startEvent(FILE)
         assert 0 == model.size()
     }
 
-    void testStartEvent_ShouldNotCreateInterval_IfSameEvent() {
+    void testStartEvent_ShouldNotCreateEditorActivity_IfSameEvent() {
 
         eventHandler.startEvent(FILE)
         time = NOW + LONG_DELAY
@@ -35,7 +35,7 @@ class TestEventToIntervalHandler extends GroovyTestCase {
         assert 0 == model.size()
     }
 
-    void testStartEvent_ShouldCreateInterval_IfDifferentEvent() {
+    void testStartEvent_ShouldCreateEditorActivity_IfDifferentEvent() {
 
         eventHandler.startEvent(FILE)
         time = NOW + LONG_DELAY
@@ -43,14 +43,14 @@ class TestEventToIntervalHandler extends GroovyTestCase {
 
         assert 1 == model.size()
 
-        Interval interval = getInterval(0)
+        EditorActivity editorActivity = getEditorActivity(0)
         int seconds = LONG_DELAY / 1000
 
-        assert FILE == interval.name
-        assert seconds == interval.duration
+        assert FILE == editorActivity.name
+        assert seconds == editorActivity.duration
     }
 
-    void testStartEvent_ShouldNotCreateInterval_IfShortDelay() {
+    void testStartEvent_ShouldNotCreateEditorActivity_IfShortDelay() {
         eventHandler.startEvent(FILE)
         time = NOW + SHORT_DELAY
         eventHandler.startEvent(OTHER_FILE)
@@ -73,11 +73,11 @@ class TestEventToIntervalHandler extends GroovyTestCase {
 
         assert 1 == model.size()
 
-        Interval interval = getInterval(0)
+        EditorActivity editorActivity = getEditorActivity(0)
         int seconds = LONG_DELAY / 1000
 
-        assert FILE == interval.name
-        assert seconds == interval.duration
+        assert FILE == editorActivity.name
+        assert seconds == editorActivity.duration
     }
 
     void testEndEvent_ShouldNotEndCurrentEvent_IfDifferentEvent() {
@@ -97,7 +97,7 @@ class TestEventToIntervalHandler extends GroovyTestCase {
         assert 1 == model.size()
     }
 
-    private Interval getInterval(int index) {
+    private EditorActivity getEditorActivity(int index) {
         model.entityList.get(index)
     }
 

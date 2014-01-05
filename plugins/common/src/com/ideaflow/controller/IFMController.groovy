@@ -2,7 +2,7 @@ package com.ideaflow.controller
 
 import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
-import com.ideaflow.event.EventToIntervalHandler
+import com.ideaflow.event.EventToEditorActivityHandler
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.Event
 import com.ideaflow.model.ModelEntity
@@ -18,7 +18,7 @@ class IFMController {
 
     private IdeaFlowModel ideaFlowModel
     private TimeService timeService
-    private EventToIntervalHandler eventToIntervalHandler
+    private EventToEditorActivityHandler eventToIntervalHandler
     private IDEService ideService
 
     IFMController(TimeService timeService, IDEService ideService) {
@@ -74,7 +74,7 @@ class IFMController {
             ideaFlowModel = new IdeaFlowModel(relativePath, new Date(timeService.time))
         }
 
-        eventToIntervalHandler = new EventToIntervalHandler(timeService, ideaFlowModel)
+        eventToIntervalHandler = new EventToEditorActivityHandler(timeService, ideaFlowModel)
         addGenericEvent(EventType.open, "Start IdeaFlow recording")
         startFileEventForCurrentFile()
     }

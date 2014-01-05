@@ -16,14 +16,14 @@ class IdeaFlowReaderTest extends GroovyTestCase {
 
 	void testReadModel_ShouldReadContentWrittenByWriter() {
 		Date createDate = new Date(NOW)
-		Interval interval = createInterval(FILE, NOW)
+		EditorActivity editorActivity = createEditorActivity(FILE, NOW)
 		Note note = createNote("it's a happy note!", NOW)
 		Event event = createEvent(EventType.open, NOW)
 		Conflict conflict = createConflict(NOW)
 		Resolution resolution = createResolution(NOW)
 
 		writer.writeInitialization(createDate)
-		writer.write(interval)
+		writer.write(editorActivity)
 		writer.write(note)
 		writer.write(conflict)
 		writer.write(resolution)
@@ -31,7 +31,7 @@ class IdeaFlowReaderTest extends GroovyTestCase {
 		IdeaFlowModel model = new IdeaFlowReader().readModel(stringWriter.toString())
 
 		assert model.created == createDate
-		assert model.entityList[0] == interval
+		assert model.entityList[0] == editorActivity
 		assert model.entityList[1] == note
 		assert model.entityList[2] == conflict
 		assert model.entityList[3] == resolution

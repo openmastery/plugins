@@ -3,7 +3,7 @@ package test.support
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EventType
 import com.ideaflow.model.Event
-import com.ideaflow.model.Interval
+import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 
@@ -68,12 +68,12 @@ class FixtureSupport {
 		item.created = new Date(time)
 	}
 
-    private Interval createInterval(String name, long time) {
-        new Interval(new Date(time), name, 5)
+    private EditorActivity createEditorActivity(String name, long time) {
+        new EditorActivity(new Date(time), name, 5)
     }
 
-    private Interval createInterval(String name, int duration, long time) {
-        new Interval(new Date(time), name, duration)
+    private EditorActivity createEditorActivity(String name, int duration, long time) {
+        new EditorActivity(new Date(time), name, duration)
     }
 
 }

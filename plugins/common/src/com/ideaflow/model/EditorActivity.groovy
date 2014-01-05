@@ -3,21 +3,21 @@ package com.ideaflow.model
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode
-class Interval extends ModelEntity {
+class EditorActivity extends ModelEntity {
 
     String name
     int duration
 
-	Interval() {}
+	EditorActivity() {}
 
-    Interval(Date created, String name, int duration) {
+	EditorActivity(Date created, String name, int duration) {
 		super(created)
         this.name = name
         this.duration = duration
     }
 
     String toString() {
-        "Interval: $name : $duration"
+        "EditorActivity: $name : $duration"
     }
 
 }

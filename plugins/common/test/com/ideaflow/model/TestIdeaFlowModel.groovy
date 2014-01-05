@@ -23,7 +23,7 @@ class TestIdeaFlowModel extends GroovyTestCase {
 
     void testAddInterval_ShouldNotAdd_IfPaused() {
         model.isPaused = true
-        model.addModelEntity(createInterval('test', NOW))
+        model.addModelEntity(createEditorActivity('test', NOW))
 
         assert model.size() == 0
     }

@@ -29,7 +29,7 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 	}
 
 	void testWrite_ShouldWriteDslInterval() {
-		writer.write(createInterval(FILE, NOW))
+		writer.write(createEditorActivity(FILE, NOW))
 
 		List<String> lines = readDslLines()
 

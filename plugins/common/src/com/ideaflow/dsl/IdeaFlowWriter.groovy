@@ -2,7 +2,7 @@ package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.Event
-import com.ideaflow.model.Interval
+import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 
@@ -52,7 +52,7 @@ class IdeaFlowWriter {
 		writeItem('resolution', resolution, ['created', 'answer'])
 	}
 
-	void write(Interval interval) {
+	void write(EditorActivity interval) {
 		writeItem('interval', interval, ['created', 'name', 'duration'])
 	}
 

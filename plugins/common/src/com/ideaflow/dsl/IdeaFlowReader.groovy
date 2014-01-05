@@ -3,7 +3,7 @@ package com.ideaflow.dsl
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.Event
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Interval
+import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 
@@ -56,7 +56,7 @@ class IdeaFlowReader {
 
 		def interval(Map intervalMap) {
 			replaceCreatedStringWithDate(intervalMap)
-			model.addModelEntity(new Interval(intervalMap))
+			model.addModelEntity(new EditorActivity(intervalMap))
 		}
 
 		def event(Map eventMap) {
