@@ -1,8 +1,9 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.GenericEvent
+import com.ideaflow.model.Event
 import com.ideaflow.model.Interval
+import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 
 import java.text.SimpleDateFormat
@@ -35,8 +36,12 @@ class IdeaFlowWriter {
 		writer.flush()
 	}
 
-	void write(GenericEvent event) {
+	void write(Event event) {
 		writeItem('event', event, ['created', 'type', 'comment'])
+	}
+
+	void write(Note note) {
+		writeItem('note', note, ['created', 'comment'])
 	}
 
 	void write(Conflict conflict) {

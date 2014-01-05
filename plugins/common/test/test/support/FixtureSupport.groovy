@@ -2,8 +2,9 @@ package test.support
 
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EventType
-import com.ideaflow.model.GenericEvent
+import com.ideaflow.model.Event
 import com.ideaflow.model.Interval
+import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 
 class FixtureSupport {
@@ -38,14 +39,15 @@ class FixtureSupport {
 
     }
 
-    private GenericEvent createNote(String comment, long time) {
-		GenericEvent event = createGenericEvent(EventType.note, time)
-		event.comment = comment
-		event
+    private Note createNote(String comment, long time) {
+		Note note = new Note(comment)
+		setCreated(note, time)
+		note.comment = comment
+		note
     }
 
-    private GenericEvent createGenericEvent(EventType type, long time) {
-		GenericEvent event = new GenericEvent(type, 'test')
+    private Event createEvent(EventType type, long time) {
+		Event event = new Event(type, 'test')
 		setCreated(event, time)
 		event
     }

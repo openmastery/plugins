@@ -15,27 +15,23 @@ class IdeaFlowModel {
         this.created = created
     }
 
-	void addEvent(Conflict conflict) {
-		addModelEntity(conflict) {
+	void addModelEntity(Conflict conflict) {
+		addModelEntityInternal(conflict) {
 			openConflict = true
 		}
 	}
 
-	void addEvent(Resolution resolution) {
-		addModelEntity(resolution) {
+	void addModelEntity(Resolution resolution) {
+		addModelEntityInternal(resolution) {
 			openConflict = false
 		}
 	}
 
-    void addEvent(GenericEvent event) {
-		addModelEntity(event)
-    }
+	void addModelEntity(ModelEntity modelEntity) {
+		addModelEntityInternal(modelEntity, null)
+	}
 
-	void addInterval(Interval interval) {
-		addModelEntity(interval)
-    }
-
-	private void addModelEntity(ModelEntity modelEntity, Closure action = null) {
+	private void addModelEntityInternal(ModelEntity modelEntity, Closure action) {
 		if (modelEntity && !isPaused) {
 			entityList.add(modelEntity)
 			action?.call()

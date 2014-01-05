@@ -53,7 +53,7 @@ class EventToIntervalHandler {
     private void addInterval(Event lastEvent, Event newEvent) {
         int duration = (newEvent.time - lastEvent.time) / 1000
         if (duration >= SHORTEST_INTERVAL && isDifferent(lastEvent, newEvent)) {
-            model.addInterval(createInterval(lastEvent, duration))
+            model.addModelEntity(createInterval(lastEvent, duration))
         }
     }
 

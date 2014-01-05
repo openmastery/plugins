@@ -1,6 +1,7 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
+import com.ideaflow.model.EventType
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
@@ -36,13 +37,22 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		assert lines[0] == "interval (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
 	}
 
-	void testWrite_ShouldWriteDslGenericEvent() {
+	void testWrite_ShouldWriteDslEvent() {
+		writer.write(createEvent(EventType.open, NOW))
+
+		List<String> lines = readDslLines()
+
+		assert lines.size() == 1
+		assert lines[0] == "event (created: '${toDateString(NOW)}', type: 'open', comment: '''test''', )"
+	}
+
+	void testWrite_ShouldWriteDslNote() {
 		writer.write(createNote('happy note', NOW))
 
 		List<String> lines = readDslLines()
 
 		assert lines.size() == 1
-		assert lines[0] == "event (created: '${toDateString(NOW)}', type: 'note', comment: '''happy note''', )"
+		assert lines[0] == "note (created: '${toDateString(NOW)}', comment: '''happy note''', )"
 	}
 
 	void testWrite_ShouldWriteDslConflict() {

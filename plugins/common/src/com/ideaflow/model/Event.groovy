@@ -4,20 +4,20 @@ import groovy.transform.EqualsAndHashCode
 
 
 @EqualsAndHashCode
-class GenericEvent extends ModelEntity {
+class Event extends ModelEntity {
 
 	EventType type
 	String comment
 
-	GenericEvent() {}
+	Event() {}
 
-	GenericEvent(EventType type, String comment) {
+	Event(EventType type, String comment) {
 		this.type = type
 		this.comment = comment
 	}
 
 	String toString() {
-		"GenericEvent: $type, $created, $comment"
+		"Event: $type, $created, $comment"
 	}
 
 }

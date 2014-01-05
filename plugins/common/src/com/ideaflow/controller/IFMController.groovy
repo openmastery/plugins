@@ -4,7 +4,9 @@ import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToIntervalHandler
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.GenericEvent
+import com.ideaflow.model.Event
+import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
@@ -43,18 +45,20 @@ class IFMController {
 
     void startConflict(String question) {
 		if (question) {
-			addEvent(new Conflict(question))
+			addModelEntity(new Conflict(question))
 		}
     }
 
     void endConflict(String answer) {
 		if (answer) {
-			addEvent(new Resolution(answer))
+			addModelEntity(new Resolution(answer))
 		}
     }
 
     void addNote(comment) {
-        addGenericEvent(EventType.note, comment)
+		if (comment) {
+			addModelEntity(new Note(comment))
+		}
     }
 
     void newIdeaFlow(String relativePath) {
@@ -134,13 +138,13 @@ class IFMController {
 
     private void addGenericEvent(EventType type, String comment) {
         if (comment) {
-			addEvent(new GenericEvent(type, comment))
+			addModelEntity(new Event(type, comment))
         }
     }
 
-	private void addEvent(def event) {
+	private void addModelEntity(ModelEntity event) {
 		endFileEvent(null)
-		ideaFlowModel?.addEvent(event)
+		ideaFlowModel?.addModelEntity(event)
 		flush()
 		startFileEventForCurrentFile()
 	}
