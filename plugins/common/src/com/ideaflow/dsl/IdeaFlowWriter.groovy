@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 class IdeaFlowWriter {
 
-	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
 
 	private BufferedWriter writer
 	private SimpleDateFormat dateFormat
