@@ -18,22 +18,44 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		writer.dateFormat.format(date)
 	}
 
-	void testWriteInterval_ShouldWriteDslInterval() {
-		writer.writeInterval(createInterval(FILE, NOW))
+	private List<String> readDslLines() {
+		stringWriter.toString().readLines()
+	}
 
-		List<String> lines = stringWriter.toString().readLines()
+	void testWrite_ShouldWriteDslInterval() {
+		writer.write(createInterval(FILE, NOW))
+
+		List<String> lines = readDslLines()
 
 		assert lines.size() == 1
 		assert lines[0] == "interval (created: '${toDateString(NOW)}', name: '${FILE}', duration: 5, )"
 	}
 
-	void testWriteTimelineEvent_ShouldWriteDslTimelineEvents() {
-		writer.writeTimelineEvent(createEvent('happy note', NOW))
+	void testWrite_ShouldWriteDslGenericEvent() {
+		writer.write(createNote('happy note', NOW))
 
-		List<String> lines = stringWriter.toString().readLines()
+		List<String> lines = readDslLines()
 
 		assert lines.size() == 1
 		assert lines[0] == "event (created: '${toDateString(NOW)}', type: 'note', comment: '''happy note''', )"
+	}
+
+	void testWrite_ShouldWriteDslConflict() {
+		writer.write(createConflict(NOW))
+
+		List<String> lines = readDslLines()
+
+		assert lines.size() == 1
+		assert lines[0] == "conflict (created: '${toDateString(NOW)}', question: '''question''', )"
+	}
+
+	void testWrite_ShouldWriteDslResolution() {
+		writer.write(createResolution(NOW))
+
+		List<String> lines = readDslLines()
+
+		assert lines.size() == 1
+		assert lines[0] == "resolution (created: '${toDateString(NOW)}', answer: '''answer''', )"
 	}
 
 }

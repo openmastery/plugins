@@ -1,7 +1,9 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.Event
+import com.ideaflow.model.Conflict
+import com.ideaflow.model.GenericEvent
 import com.ideaflow.model.Interval
+import com.ideaflow.model.Resolution
 
 import java.text.SimpleDateFormat
 
@@ -33,28 +35,38 @@ class IdeaFlowWriter {
 		writer.flush()
 	}
 
-	void write(Event event) {
-		writeTimelineEvent(event)
+	void write(GenericEvent event) {
+		writeItem("event", event, [
+			"type: '${event.type}'",
+			"comment: '''${event.comment}'''"
+		])
+	}
+
+	void write(Conflict conflict) {
+		writeItem("conflict", conflict, [
+			"question: '''${conflict.question}'''"
+		])
+	}
+
+	void write(Resolution resolution) {
+		writeItem("resolution", resolution, [
+			"answer: '''${resolution.answer}'''"
+		])
 	}
 
 	void write(Interval interval) {
-		writeInterval(interval)
+		writeItem("interval", interval, [
+			"name: '${interval.name}'",
+			"duration: ${interval.duration}"
+		])
 	}
 
-	void writeTimelineEvent(Event event) {
-		writer.print "event ("
-		writer.print "created: '${dateFormat.format(event.created)}', "
-		writer.print "type: '${event.type}', "
-		writer.print "comment: '''${event.comment}''', "
-		writer.println ")"
-		writer.flush()
-	}
-
-	void writeInterval(Interval interval) {
-		writer.print "interval ("
-		writer.print "created: '${dateFormat.format(interval.created)}', "
-		writer.print "name: '${interval.name}', "
-		writer.print "duration: ${interval.duration}, "
+	private void writeItem(String name, def item, List<String> additionalLines = []) {
+		writer.print "${name} ("
+		writer.print "created: '${dateFormat.format(item.created)}', "
+		additionalLines.each { String line ->
+			writer.print "${line}, "
+		}
 		writer.println ")"
 		writer.flush()
 	}
