@@ -1,7 +1,8 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.Event
+import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.StateChange
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
@@ -36,8 +37,8 @@ class IdeaFlowWriter {
 		writer.flush()
 	}
 
-	void write(Event event) {
-		writeItem('event', event, ['created', 'type', 'comment'])
+	void write(StateChange event) {
+		writeItem('stateChange', event, ['created', 'type'])
 	}
 
 	void write(Note note) {
@@ -56,9 +57,9 @@ class IdeaFlowWriter {
 		writeItem('interval', interval, ['created', 'name', 'duration'])
 	}
 
-	private void writeItem(String name, def item, List orderedKeyList) {
-		Map properties = getPropertiesToWrite(item)
-		assertActualPropertyKeysMatchDeclaredKeyList(item, properties, orderedKeyList)
+	private void writeItem(String name, ModelEntity entity, List orderedKeyList) {
+		Map properties = getPropertiesToWrite(entity)
+		assertActualPropertyKeysMatchDeclaredKeyList(entity, properties, orderedKeyList)
 
 		writer.print "${name} ("
 		orderedKeyList.each { String key ->
@@ -84,8 +85,8 @@ class IdeaFlowWriter {
 		}
 	}
 
-	private void assertActualPropertyKeysMatchDeclaredKeyList(def item, Map map, List declaredKeylist) {
-		String simpleName = item.class.simpleName
+	private void assertActualPropertyKeysMatchDeclaredKeyList(ModelEntity entity, Map map, List declaredKeylist) {
+		String simpleName = entity.class.simpleName
 		List actualKeyList = map.keySet().asList()
 
 		List additionalProperties = actualKeyList - declaredKeylist
@@ -99,8 +100,8 @@ class IdeaFlowWriter {
 		}
 	}
 
-	private Map getPropertiesToWrite(def item) {
-		Map properties = item.getProperties()
+	private Map getPropertiesToWrite(ModelEntity entity) {
+		Map properties = entity.getProperties()
 		properties.remove('id')
 		properties.remove('class')
 		properties

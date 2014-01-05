@@ -4,14 +4,14 @@ import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToEditorActivityHandler
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.Event
+import com.ideaflow.model.StateChange
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
 
-import com.ideaflow.model.EventType
+import com.ideaflow.model.StateChangeType
 
 class IFMController {
 
@@ -75,14 +75,14 @@ class IFMController {
         }
 
         eventToIntervalHandler = new EventToEditorActivityHandler(timeService, ideaFlowModel)
-        addGenericEvent(EventType.open, "Start IdeaFlow recording")
+        addStateChange(StateChangeType.startIdeaFlowRecording)
         startFileEventForCurrentFile()
     }
 
     void closeIdeaFlow() {
         if (ideaFlowModel) {
             endFileEvent(null)
-            addGenericEvent(EventType.closed, "Stop IdeaFlow recording")
+            addStateChange(StateChangeType.stopIdeaFlowRecording)
             flush()
 
             ideaFlowModel = null
@@ -136,10 +136,8 @@ class IFMController {
         }
     }
 
-    private void addGenericEvent(EventType type, String comment) {
-        if (comment) {
-			addModelEntity(new Event(type, comment))
-        }
+    private void addStateChange(StateChangeType type) {
+		addModelEntity(new StateChange(type))
     }
 
 	private void addModelEntity(ModelEntity event) {

@@ -18,7 +18,7 @@ class IdeaFlowReaderTest extends GroovyTestCase {
 		Date createDate = new Date(NOW)
 		EditorActivity editorActivity = createEditorActivity(FILE, NOW)
 		Note note = createNote("it's a happy note!", NOW)
-		Event event = createEvent(EventType.open, NOW)
+		StateChange event = createStateChange(StateChangeType.startIdeaFlowRecording, NOW)
 		Conflict conflict = createConflict(NOW)
 		Resolution resolution = createResolution(NOW)
 

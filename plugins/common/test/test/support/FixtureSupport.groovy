@@ -1,11 +1,11 @@
 package test.support
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.EventType
-import com.ideaflow.model.Event
+import com.ideaflow.model.StateChangeType
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
+import com.ideaflow.model.StateChange
 
 class FixtureSupport {
 
@@ -46,8 +46,8 @@ class FixtureSupport {
 		note
     }
 
-    private Event createEvent(EventType type, long time) {
-		Event event = new Event(type, 'test')
+    private StateChange createStateChange(StateChangeType type, long time) {
+		StateChange event = new StateChange(type)
 		setCreated(event, time)
 		event
     }

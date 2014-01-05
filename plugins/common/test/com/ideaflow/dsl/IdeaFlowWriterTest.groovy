@@ -1,13 +1,14 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.EventType
+import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.StateChangeType
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
 class IdeaFlowWriterTest extends GroovyTestCase {
 
-	static class DummyEvent {
+	static class DummyEvent extends ModelEntity {
 	}
 
 
@@ -37,13 +38,13 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		assert lines[0] == "interval (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
 	}
 
-	void testWrite_ShouldWriteDslEvent() {
-		writer.write(createEvent(EventType.open, NOW))
+	void testWrite_ShouldWriteDslStateChange() {
+		writer.write(createStateChange(StateChangeType.startIdeaFlowRecording, NOW))
 
 		List<String> lines = readDslLines()
 
 		assert lines.size() == 1
-		assert lines[0] == "event (created: '${toDateString(NOW)}', type: 'open', comment: '''test''', )"
+		assert lines[0] == "stateChange (created: '${toDateString(NOW)}', type: 'startIdeaFlowRecording', )"
 	}
 
 	void testWrite_ShouldWriteDslNote() {
@@ -89,10 +90,10 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		DummyEvent dummy = new DummyEvent()
 
 		try {
-			writer.writeItem('dummy', dummy, ['oldProperty'])
+			writer.writeItem('dummy', dummy, ['created', 'missingProperty'])
 			fail()
 		} catch (RuntimeException ex) {
-			assert ex.message == "IdeaFlowWriter:write(DummyEvent) is configured to write out properties=[oldProperty] which are not declared in corresponding class."
+			assert ex.message == "IdeaFlowWriter:write(DummyEvent) is configured to write out properties=[missingProperty] which are not declared in corresponding class."
 		}
 	}
 

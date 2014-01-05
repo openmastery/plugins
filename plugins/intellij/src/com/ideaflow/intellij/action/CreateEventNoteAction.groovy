@@ -12,7 +12,7 @@ class CreateEventNoteAction extends AnAction {
     void actionPerformed(AnActionEvent e) {
         IFMController controller = IdeaFlowComponent.getIFMController(e.project)
 
-        String note = controller.promptForInput("Create Event Note", "Enter an IdeaFlow event note:")
+        String note = controller.promptForInput("Create Note", "Enter an IdeaFlow event note:")
         controller.addNote(note)
     }
 

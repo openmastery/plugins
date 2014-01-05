@@ -1,11 +1,11 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.Event
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
+import com.ideaflow.model.StateChange
 
 import java.text.SimpleDateFormat
 
@@ -59,9 +59,9 @@ class IdeaFlowReader {
 			model.addModelEntity(new EditorActivity(intervalMap))
 		}
 
-		def event(Map eventMap) {
+		def stateChange(Map eventMap) {
 			replaceCreatedStringWithDate(eventMap)
-			model.addModelEntity(new Event(eventMap))
+			model.addModelEntity(new StateChange(eventMap))
 		}
 
 		def note(Map noteMap) {
