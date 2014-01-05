@@ -1,9 +1,14 @@
 package com.ideaflow.dsl
 
+import com.ideaflow.model.Conflict
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
 class IdeaFlowWriterTest extends GroovyTestCase {
+
+	static class DummyEvent {
+	}
+
 
 	private StringWriter stringWriter
 	private IdeaFlowWriter writer
@@ -28,7 +33,7 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		List<String> lines = readDslLines()
 
 		assert lines.size() == 1
-		assert lines[0] == "interval (created: '${toDateString(NOW)}', name: '${FILE}', duration: 5, )"
+		assert lines[0] == "interval (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
 	}
 
 	void testWrite_ShouldWriteDslGenericEvent() {
@@ -56,6 +61,29 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 
 		assert lines.size() == 1
 		assert lines[0] == "resolution (created: '${toDateString(NOW)}', answer: '''answer''', )"
+	}
+
+	void testWrite_ShouldErrorIfObjectContainsAdditionalProperty() {
+		Conflict conflict = createConflict(NOW)
+		conflict.metaClass.newProperty = "value"
+
+		try {
+			writer.write(conflict)
+			fail()
+		} catch (RuntimeException ex) {
+			assert ex.message.contains("Object Conflict declares unknown properties=[newProperty]")
+		}
+	}
+
+	void testWrite_ShouldErrorIfObjectMissingDeclaredProperty() {
+		DummyEvent dummy = new DummyEvent()
+
+		try {
+			writer.writeItem('dummy', dummy, ['oldProperty'])
+			fail()
+		} catch (RuntimeException ex) {
+			assert ex.message == "IdeaFlowWriter:write(DummyEvent) is configured to write out properties=[oldProperty] which are not declared in corresponding class."
+		}
 	}
 
 }

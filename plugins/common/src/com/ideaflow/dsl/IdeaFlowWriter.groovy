@@ -36,39 +36,69 @@ class IdeaFlowWriter {
 	}
 
 	void write(GenericEvent event) {
-		writeItem("event", event, [
-			"type: '${event.type}'",
-			"comment: '''${event.comment}'''"
-		])
+		writeItem('event', event, ['created', 'type', 'comment'])
 	}
 
 	void write(Conflict conflict) {
-		writeItem("conflict", conflict, [
-			"question: '''${conflict.question}'''"
-		])
+		writeItem('conflict', conflict, ['created', 'mistakeType', 'question', 'cause', 'notes'])
 	}
 
 	void write(Resolution resolution) {
-		writeItem("resolution", resolution, [
-			"answer: '''${resolution.answer}'''"
-		])
+		writeItem('resolution', resolution, ['created', 'answer'])
 	}
 
 	void write(Interval interval) {
-		writeItem("interval", interval, [
-			"name: '${interval.name}'",
-			"duration: ${interval.duration}"
-		])
+		writeItem('interval', interval, ['created', 'name', 'duration'])
 	}
 
-	private void writeItem(String name, def item, List<String> additionalLines = []) {
+	private void writeItem(String name, def item, List orderedKeyList) {
+		Map properties = getPropertiesToWrite(item)
+		assertActualPropertyKeysMatchDeclaredKeyList(item, properties, orderedKeyList)
+
 		writer.print "${name} ("
-		writer.print "created: '${dateFormat.format(item.created)}', "
-		additionalLines.each { String line ->
-			writer.print "${line}, "
+		orderedKeyList.each { String key ->
+			writeItemEntry(key, properties[key])
 		}
 		writer.println ")"
 		writer.flush()
+
+	}
+
+	private void writeItemEntry(String key, value) {
+		if (value != null) {
+			if (value instanceof String) {
+				writer.print "${key}: '''${value}''', "
+			} else if (value instanceof Number) {
+				writer.print "${key}: ${value}, "
+			} else {
+				if (value instanceof Date) {
+					value = dateFormat.format(value)
+				}
+				writer.print "${key}: '${value}', "
+			}
+		}
+	}
+
+	private void assertActualPropertyKeysMatchDeclaredKeyList(def item, Map map, List declaredKeylist) {
+		String simpleName = item.class.simpleName
+		List actualKeyList = map.keySet().asList()
+
+		List additionalProperties = actualKeyList - declaredKeylist
+		if (additionalProperties) {
+			throw new RuntimeException("Object ${simpleName} declares unknown properties=${additionalProperties}.  Add properties to key list of method IdeaFlowWriter:write(${simpleName})")
+		}
+
+		List missingProperties = declaredKeylist - actualKeyList
+		if (missingProperties) {
+			throw new RuntimeException("IdeaFlowWriter:write(${simpleName}) is configured to write out properties=${missingProperties} which are not declared in corresponding class.")
+		}
+	}
+
+	private Map getPropertiesToWrite(def item) {
+		Map properties = item.getProperties()
+		properties.remove('id')
+		properties.remove('class')
+		properties
 	}
 
 }
