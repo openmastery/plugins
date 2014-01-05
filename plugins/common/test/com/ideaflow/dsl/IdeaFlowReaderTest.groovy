@@ -29,10 +29,10 @@ class IdeaFlowReaderTest extends GroovyTestCase {
 		IdeaFlowModel model = new IdeaFlowReader().readModel(stringWriter.toString())
 
 		assert model.created == createDate
-		assert model.itemList[0] == interval
-		assert model.itemList[1] == event
-		assert model.itemList[2] == conflict
-		assert model.itemList[3] == resolution
+		assert model.entityList[0] == interval
+		assert model.entityList[1] == event
+		assert model.entityList[2] == conflict
+		assert model.entityList[3] == resolution
 	}
 
 }

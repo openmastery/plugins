@@ -1,7 +1,6 @@
 package test.support
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.Event
 import com.ideaflow.model.EventType
 import com.ideaflow.model.GenericEvent
 import com.ideaflow.model.Interval
@@ -45,7 +44,7 @@ class FixtureSupport {
 		event
     }
 
-    private Event createGenericEvent(EventType type, long time) {
+    private GenericEvent createGenericEvent(EventType type, long time) {
 		GenericEvent event = new GenericEvent(type, 'test')
 		setCreated(event, time)
 		event

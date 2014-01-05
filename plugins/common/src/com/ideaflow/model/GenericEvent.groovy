@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 
 
 @EqualsAndHashCode
-class GenericEvent extends Event {
+class GenericEvent extends ModelEntity {
 
 	EventType type
 	String comment

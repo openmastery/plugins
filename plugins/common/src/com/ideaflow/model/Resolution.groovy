@@ -3,7 +3,7 @@ package com.ideaflow.model
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode
-class Resolution extends Event {
+class Resolution extends ModelEntity {
 
 	String answer
 

@@ -2,7 +2,7 @@ package com.ideaflow.model
 
 class IdeaFlowModel {
 
-	List itemList = []
+	List entityList = []
     String fileName
 
     boolean isPaused = false
@@ -16,37 +16,34 @@ class IdeaFlowModel {
     }
 
 	void addEvent(Conflict conflict) {
-		addItem(conflict) {
+		addModelEntity(conflict) {
 			openConflict = true
 		}
 	}
 
 	void addEvent(Resolution resolution) {
-		addItem(resolution) {
+		addModelEntity(resolution) {
 			openConflict = false
 		}
 	}
 
-    void addEvent(Event event) {
-		addItem(event)
+    void addEvent(GenericEvent event) {
+		addModelEntity(event)
     }
 
 	void addInterval(Interval interval) {
-		addItem(interval)
+		addModelEntity(interval)
     }
 
-	private void addItem(def item, Closure action = null) {
-		if (item && !isPaused) {
-			itemList.add(item)
-
-			if (action) {
-				action()
-			}
+	private void addModelEntity(ModelEntity modelEntity, Closure action = null) {
+		if (modelEntity && !isPaused) {
+			entityList.add(modelEntity)
+			action?.call()
 		}
 	}
 
     int size() {
-        itemList.size()
+        entityList.size()
     }
 
     boolean isOpenConflict() {

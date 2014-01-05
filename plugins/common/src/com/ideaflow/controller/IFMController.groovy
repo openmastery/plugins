@@ -4,7 +4,6 @@ import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToIntervalHandler
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.Event
 import com.ideaflow.model.GenericEvent
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.TimeService
@@ -139,7 +138,7 @@ class IFMController {
         }
     }
 
-	private void addEvent(Event event) {
+	private void addEvent(def event) {
 		endFileEvent(null)
 		ideaFlowModel?.addEvent(event)
 		flush()
