@@ -1,0 +1,2 @@
+initialize (dateFormat: "yyyy-MM-dd'T'HH:mm:ss", created: '2014-01-04T19:28:49', )
+event (created: '2014-01-04T19:28:49', type: 'open', comment: '''Start IdeaFlow recording''', )

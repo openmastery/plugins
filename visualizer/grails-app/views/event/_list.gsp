@@ -19,6 +19,7 @@
 
 <script type="text/javascript">
     showTimelineWindow(false);
+    resetColorBands();
     //turn off green toggle
     //onHover, highlight event on timeline
     //onHover, highlight row and make X appear

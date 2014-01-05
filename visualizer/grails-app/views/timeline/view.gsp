@@ -16,11 +16,19 @@
 </head>
 
 <body>
+<script type="text/javascript">
+    function hello() {
+        //alert('hello');
+    }
+    registerStopWindowDragCallback(hello);
+    registerClickBandCallback(hello);
+</script>
 <div id="timelineHolder"></div>
 <g:render template="timeline"/> <!-- this goes to timeline holder, will need to pass ifm file into template -->
 
 <div id="contentPanel">
     <g:include controller="event" action="list" params="[controller:'event']"/>
 </div>
+
 </body>
 </html>

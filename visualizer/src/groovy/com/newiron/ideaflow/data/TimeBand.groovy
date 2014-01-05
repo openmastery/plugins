@@ -7,7 +7,6 @@ class TimeBand {
     private TimePosition endPosition
     String comment
 
-
     TimeBand(BandType bandType, TimePosition position, int duration, String comment = "") {
         this.bandType = bandType
         this.startPosition = position
@@ -45,6 +44,10 @@ class TimeBand {
 
     String getColor() {
         bandType.color
+    }
+
+    String getHighlight() {
+        bandType.highlight
     }
 
 

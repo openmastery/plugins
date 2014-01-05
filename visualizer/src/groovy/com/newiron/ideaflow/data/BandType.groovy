@@ -2,15 +2,15 @@ package com.newiron.ideaflow.data
 
 
 enum BandType {
-    Conflict(255,0,120),
-    Learning(82,12,232),
-    Rework(255,203,1),
-    Interval(255,255,255)
+    Conflict("#ff0078","#ff4ca0"),
+    Learning("#520ce8","#8654ef"),
+    Rework("#ffcb01","#ffda4d"),
+    Interval("#ffffff", "#ffffff")
 
     String color
     String highlight
-    BandType(r, g, b) {
-        color = "rgba($r,$g,$b,1)"
-        highlight = "rgba($r,$g,$b,.6)"
+    BandType(color, highlight) {
+        this.color = color;
+        this.highlight = highlight;
     }
 }

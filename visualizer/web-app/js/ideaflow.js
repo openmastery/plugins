@@ -10,20 +10,31 @@ var bandMargin = 20;
 var topMargin = bottomMargin;
 var height = 180;
 var width = 800;
+var isFocused = false;
 
-var timelineWindow
-var stage
+var timelineWindow;
+var stage;
+var colorBands;
+
+var stopWindowDragCallback;
+var clickBandCallback;
+
+var leftStretcher;
+var rightStretcher;
 
 function showTimelineWindow(flag) {
     if (timelineWindow) {
-        if (flag) {
-            timelineWindow.show();
-        } else {
-            timelineWindow.hide();
-        }
-        //windowLayer.draw();
+        timelineWindow.setVisible(flag);
         stage.draw();
     }
+}
+
+function registerStopWindowDragCallback(callback) {
+    stopWindowDragCallback = callback;
+}
+
+function registerClickBandCallback(callback) {
+    clickBandCallback = callback;
 }
 
 function drawTimeline(data) {
@@ -34,10 +45,11 @@ function drawTimeline(data) {
     });
 
     var secondsPerUnit = data.end.offset / (width - (2 * sideMargin));
-    drawEventsLayer(stage, data.events, secondsPerUnit);
     drawTimebandsLayer(stage, data.timeBands, secondsPerUnit);
     drawMainTimeline(stage, data);
+    drawEventsLayer(stage, data.events, secondsPerUnit);
     drawWindow(stage);
+    drawStretchControls(stage);
 }
 
 function drawWindow(stage) {
@@ -72,16 +84,82 @@ function drawWindow(stage) {
 
     timelineWindow.on('mouseover touchstart', function () {
         this.setFill("rgba(255,255,0, .1)");
+        document.body.style.cursor = 'move';
         layer.draw();
     });
 
     timelineWindow.on('mouseout touchend', function () {
         this.setFill("rgba(255,255,200, .1)");
+        document.body.style.cursor = 'default';
         layer.draw();
     });
 
+    timelineWindow.on('dragend', stopWindowDragCallback);
+
     layer.add(timelineWindow);
     stage.add(layer);
+}
+
+function drawStretchControls(stage) {
+    var layer = new Kinetic.Layer();
+    leftStretcher = createStretcher(sideMargin);
+    leftStretcher.on('dragmove', function () {
+        if (isFocused) {
+            focusBand.setWidth(focusBand.getWidth() + focusBand.getX() - leftStretcher.getX());
+            focusBand.setX(leftStretcher.getX());
+            stage.draw();
+        }
+    });
+
+    rightStretcher = createStretcher(width - sideMargin);
+    rightStretcher.on('dragmove', function () {
+        if (isFocused) {
+            focusBand.setWidth(rightStretcher.getX() - focusBand.getX());
+            stage.draw();
+        }
+    });
+
+
+
+    layer.add(leftStretcher);
+    layer.add(rightStretcher);
+    stage.add(layer);
+}
+
+function createStretcher(xPosition) {
+    var size = 10;
+    var stretcher = new Kinetic.RegularPolygon({
+        x: xPosition,
+        y: height - bottomMargin + size+1,
+        sides: 3,
+        radius: size,
+        fill: 'gray',
+        stroke: 'black',
+        strokeWidth: 1,
+        visible: false,
+        draggable: true,
+        dragBoundFunc: function(pos) {
+            var newX = pos.x;
+            var newY = pos.y;
+            if (newX < sideMargin) {
+                newX = sideMargin;
+            } else if (newX > (width - sideMargin)) {
+                newX = (width - sideMargin);
+            }
+            return {
+                x: newX,
+                y: this.getAbsolutePosition().y
+            }
+        }
+    });
+    stretcher.on('mouseover touchstart', function () {
+        document.body.style.cursor = 'ew-resize';
+    });
+    stretcher.on('mouseout touchend', function () {
+        document.body.style.cursor = 'default';
+    });
+
+    return stretcher;
 }
 
 function drawMainTimeline(stage, data) {
@@ -170,8 +248,10 @@ function drawEvent(layer, event, secondsPerUnit) {
 
 function drawTimebandsLayer(stage, bands, secondsPerUnit) {
     var layer = new Kinetic.Layer();
+    colorBands = new Array();
     for (var i = 0; i < bands.length; i++) {
-        drawTimeband(layer, bands[i], secondsPerUnit);
+        var colorBand = drawTimeband(layer, bands[i], secondsPerUnit);
+        colorBands[i] = colorBand;
     }
     stage.add(layer);
 }
@@ -180,38 +260,66 @@ function drawTimeband(layer, band, secondsPerUnit) {
     var offset = Math.round(band.offset / secondsPerUnit) + sideMargin;
     var size = Math.round(band.duration / secondsPerUnit);
 
-    var color
-    var highlight
-    if (band.bandType == "Conflict") {
-        color = "rgba(255,0,120, 1)";
-        highlight = "rgba(255,0,120, .7)";
-    } else if (band.bandType == "Learning") {
-        color = "rgba(82,12,232, 1)";
-        highlight = "rgba(82,12,232, .7)";
-    } else if (band.bandType == "Rework") {
-        color = "rgba(255,203,1, 1)";
-        highlight = "rgba(255,203,1, .7)";
-    }
-
-    var rect = new Kinetic.Rect({
+    var colorBand = new Kinetic.Rect({
         x: offset,
         y: topMargin + bandMargin,
         width: size,
         height: height - bottomMargin - topMargin - bandMargin,
-        fill: color,
-        stroke: highlight,
+        fill: band.color,
+        stroke: band.highlight,
         strokeWidth: 1
     });
 
-    rect.on('mouseover touchstart', function () {
-        this.setFill(highlight);
-        layer.draw();
+    colorBand.on('mouseover touchstart', function () {
+        if (!isFocused) {
+            this.setOpacity('.7');
+            layer.draw();
+        }
     });
 
-    rect.on('mouseout touchend', function () {
-        this.setFill(color);
-        layer.draw();
+    colorBand.on('mouseout touchend', function () {
+        if (!isFocused) {
+            this.setOpacity('1');
+            layer.draw();
+        }
     });
 
-    layer.add(rect);
+    colorBand.on('click', function () {
+        isFocused = true;
+        focusColorBand(this);
+        stage.draw();
+        if (clickBandCallback) {
+            clickBandCallback();
+        }
+    });
+
+    layer.add(colorBand);
+    return colorBand;
+}
+
+
+function resetColorBands() {
+    isFocused = false;
+    for (var i = 0; i < colorBands.length; i++) {
+        colorBands[i].setOpacity('1');
+    }
+    leftStretcher.hide();
+    rightStretcher.hide();
+    stage.draw();
+
+}
+
+function focusColorBand(band) {
+    focusBand = band;
+    for (var i = 0; i < colorBands.length; i++) {
+        colorBands[i].setOpacity('.4');
+    }
+    focusBand.setOpacity('1');
+    leftStretcher.setX(focusBand.getX());
+    rightStretcher.setX(focusBand.getX() + focusBand.getWidth());
+
+    leftStretcher.show();
+    rightStretcher.show();
+
+
 }

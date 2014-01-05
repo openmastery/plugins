@@ -28,7 +28,10 @@
                 <td>Duration:</td>
                 <td>${conflict.durationFormattedTime}</td>
             </tr>
-
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
         </g:each>
         </tbody>
     </table>
@@ -36,6 +39,7 @@
 
 <script type="text/javascript">
     showTimelineWindow(false);
+    resetColorBands();
     //turn off green toggle
     //onHover, highlight event on timeline
     //onHover, highlight row and make X appear
