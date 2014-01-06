@@ -114,6 +114,7 @@ class IdeaFlowWriter {
 		Map properties = entity.getProperties()
 		properties.remove('id')
 		properties.remove('class')
+		properties.remove('metaClass')
 		properties
 	}
 
