@@ -1,9 +1,8 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.ModelEntity
-import com.ideaflow.model.StateChangeType
+import org.joda.time.DateTime
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
@@ -13,23 +12,10 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 	}
 
 
-	private StringWriter stringWriter
 	private IdeaFlowWriter writer
 
 	void setUp() {
-		stringWriter = new StringWriter()
-		writer = new IdeaFlowWriter(stringWriter)
-	}
-
-	private String toDateString(long millis) {
-		Date date = new Date(millis)
-		writer.dateFormat.format(date)
-	}
-
-	private String readSingleDslLine() {
-		List<String> lines = stringWriter.toString().readLines()
-		assert lines.size() == 1
-		lines[0]
+		writer = new IdeaFlowWriter(new StringWriter())
 	}
 
 	void testWrite_ShouldErrorIfObjectContainsAdditionalProperty() {

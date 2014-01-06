@@ -1,6 +1,7 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.*
+import org.joda.time.DateTime
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
@@ -15,7 +16,7 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 	}
 
 	void testReadModel_ShouldReadContentWrittenByWriter() {
-		Date createDate = new Date(NOW)
+		DateTime createDate = new DateTime(NOW)
 		EditorActivity editorActivity = createEditorActivity(FILE)
 		Note note = createNote("it's a happy note!")
 		StateChange event = createStateChange(StateChangeType.startIdeaFlowRecording)

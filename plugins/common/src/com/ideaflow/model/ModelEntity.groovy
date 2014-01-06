@@ -1,18 +1,19 @@
 package com.ideaflow.model
 
 import groovy.transform.EqualsAndHashCode
+import org.joda.time.DateTime
 
 @EqualsAndHashCode
 abstract class ModelEntity {
 
 	String id
-	Date created
+	DateTime created
 
 	ModelEntity() {
-		this(new Date())
+		this(new DateTime())
 	}
 
-	ModelEntity(Date created) {
+	ModelEntity(DateTime created) {
 		this.created = created
 	}
 

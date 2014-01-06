@@ -9,6 +9,7 @@ import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
+import org.joda.time.DateTime
 
 class FixtureSupport {
 
@@ -84,7 +85,7 @@ class FixtureSupport {
 	}
 
 	private void setCreated(def item, long time) {
-		item.created = new Date(time)
+		item.created = new DateTime(time)
 	}
 
 	private EditorActivity createEditorActivity(String name) {
@@ -92,11 +93,11 @@ class FixtureSupport {
 	}
 
     private EditorActivity createEditorActivity(String name, long time) {
-        new EditorActivity(new Date(time), name, 5)
+        new EditorActivity(new DateTime(time), name, 5)
     }
 
     private EditorActivity createEditorActivity(String name, int duration, long time) {
-        new EditorActivity(new Date(time), name, duration)
+        new EditorActivity(new DateTime(time), name, duration)
     }
 
 	private BandStart createBandStart() {
@@ -105,7 +106,7 @@ class FixtureSupport {
 
 	private BandStart createBandStart(BandType type, long time) {
 		BandStart start = new BandStart(type)
-		start.created = new Date(time)
+		start.created = new DateTime(time)
 		start
 	}
 
@@ -115,7 +116,7 @@ class FixtureSupport {
 
 	private BandEnd createBandEnd(BandType type, long time) {
 		BandEnd end = new BandEnd(type)
-		end.created = new Date(time)
+		end.created = new DateTime(time)
 		end
 	}
 

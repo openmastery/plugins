@@ -9,8 +9,9 @@ import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
-
-import java.text.SimpleDateFormat
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 
 class IdeaFlowReader {
 
@@ -44,7 +45,7 @@ class IdeaFlowReader {
 
 		IdeaFlowModel model
 		private int entityIdCounter
-		private SimpleDateFormat dateFormat
+		private DateTimeFormatter dateFormat
 
 		IdeaFlowModelLoader() {
 			model = new IdeaFlowModel('', null)
@@ -53,10 +54,10 @@ class IdeaFlowReader {
 
 		def initialize(Map initializeMap) {
 			String dateFormatString = initializeMap['dateFormat']
-			dateFormat = new SimpleDateFormat(dateFormatString)
+			dateFormat = DateTimeFormat.forPattern(dateFormatString)
 
 			String createdDateString = initializeMap['created'] as String
-			model.created = dateFormat.parse(createdDateString)
+			model.created = dateFormat.parseDateTime(createdDateString)
 		}
 
 		def editorActivity(Map editorActivityMap) {
@@ -100,8 +101,8 @@ class IdeaFlowReader {
 			constructorMap
 		}
 
-		private Date toDate(String dateString) {
-			dateFormat.parse(dateString)
+		private DateTime toDate(String dateString) {
+			dateFormat.parseDateTime(dateString)
 		}
 
 	}

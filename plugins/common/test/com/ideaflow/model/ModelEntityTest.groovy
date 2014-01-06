@@ -1,5 +1,6 @@
 package com.ideaflow.model
 
+import org.joda.time.DateTime
 import org.reflections.Reflections
 
 class ModelEntityTest extends GroovyTestCase {
@@ -10,7 +11,7 @@ class ModelEntityTest extends GroovyTestCase {
 			subType.newInstance() as ModelEntity
 		}
 
-		Date createdDate = new Date(500)
+		DateTime createdDate = new DateTime(500)
 		subTypeInstances.each { ModelEntity subTypeInstance ->
 			ModelEntity otherInstance = subTypeInstance.class.newInstance()
 

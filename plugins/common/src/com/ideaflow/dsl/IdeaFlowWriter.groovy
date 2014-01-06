@@ -8,19 +8,20 @@ import com.ideaflow.model.StateChange
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
-
-import java.text.SimpleDateFormat
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 
 class IdeaFlowWriter {
 
 	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
 
 	private BufferedWriter writer
-	private SimpleDateFormat dateFormat
+	private DateTimeFormatter dateFormat
 
 	IdeaFlowWriter(Writer writer) {
 		this.writer = createBufferedWriter(writer)
-		this.dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT)
+		this.dateFormat = DateTimeFormat.forPattern(DEFAULT_DATE_FORMAT)
 	}
 
 	private BufferedWriter createBufferedWriter(Writer writer) {
@@ -31,10 +32,10 @@ class IdeaFlowWriter {
 		writer.close()
 	}
 
-	void writeInitialization(Date created) {
+	void writeInitialization(DateTime created) {
 		writer.print "initialize ("
 		writer.print "dateFormat: \"${DEFAULT_DATE_FORMAT}\", "
-		writer.print "created: '${dateFormat.format(created)}', "
+		writer.print "created: '${dateFormat.print(created)}', "
 		writer.println ")"
 		writer.flush()
 	}
@@ -87,8 +88,8 @@ class IdeaFlowWriter {
 			} else if (value instanceof Number) {
 				writer.print "${key}: ${value}, "
 			} else {
-				if (value instanceof Date) {
-					value = dateFormat.format(value)
+				if (value instanceof DateTime) {
+					value = dateFormat.print(value)
 				}
 				writer.print "${key}: '${value}', "
 			}

@@ -8,21 +8,18 @@ import com.ideaflow.model.StateChange
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
-import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
 
 import com.ideaflow.model.StateChangeType
+import org.joda.time.DateTime
 
 class IFMController {
 
-
     private IdeaFlowModel ideaFlowModel
-    private TimeService timeService
     private EventToEditorActivityHandler eventToIntervalHandler
     private IDEService ideService
 
-    IFMController(TimeService timeService, IDEService ideService) {
-        this.timeService = timeService
+    IFMController(IDEService ideService) {
         this.ideService = ideService
     }
 	
@@ -71,10 +68,10 @@ class IFMController {
         } else {
             println("Creating new IdeaFlow: $relativePath")
             ideService.createNewFile(relativePath, "")
-            ideaFlowModel = new IdeaFlowModel(relativePath, new Date(timeService.time))
+            ideaFlowModel = new IdeaFlowModel(relativePath, new DateTime())
         }
 
-        eventToIntervalHandler = new EventToEditorActivityHandler(timeService, ideaFlowModel)
+        eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
         addStateChange(StateChangeType.startIdeaFlowRecording)
         startFileEventForCurrentFile()
     }

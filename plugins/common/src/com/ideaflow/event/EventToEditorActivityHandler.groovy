@@ -1,21 +1,19 @@
 package com.ideaflow.event
 
 import com.ideaflow.model.EditorActivity
-import com.ideaflow.model.TimeService
 import com.ideaflow.model.IdeaFlowModel
+import org.joda.time.DateTime
 
 class EventToEditorActivityHandler {
 
     private Event lastEvent
     private IdeaFlowModel model
-    private TimeService timeService
 
     private static final String DONE_EVENT = "***DONE***"
     private static final int SHORTEST_INTERVAL = 3
 
-	EventToEditorActivityHandler(TimeService timeService, IdeaFlowModel model) {
+	EventToEditorActivityHandler(IdeaFlowModel model) {
         this.model = model
-        this.timeService = timeService
     }
 
     void startEvent(String eventName) {
@@ -51,7 +49,7 @@ class EventToEditorActivityHandler {
     }
 
     private void addEditorActivity(Event lastEvent, Event newEvent) {
-        int duration = (newEvent.time - lastEvent.time) / 1000
+        int duration = (newEvent.time.millis - lastEvent.time.millis) / 1000
         if (duration >= SHORTEST_INTERVAL && isDifferent(lastEvent, newEvent)) {
             model.addModelEntity(createEditorActivity(lastEvent, duration))
         }
@@ -66,15 +64,15 @@ class EventToEditorActivityHandler {
     }
 
     private EditorActivity createEditorActivity(Event lastEvent, int duration) {
-        new EditorActivity(new Date(lastEvent.time), lastEvent.eventName, duration)
+        new EditorActivity(lastEvent.time, lastEvent.eventName, duration)
     }
 
     private Event createEvent(eventName) {
-        new Event(eventName: eventName, time: timeService.getTime())
+        new Event(eventName: eventName, time: new DateTime())
     }
 
     private static class Event {
-        long time
+        DateTime time
         String eventName
     }
 }

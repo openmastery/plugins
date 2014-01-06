@@ -1,6 +1,5 @@
 package com.ideaflow.controller
 
-import com.ideaflow.model.TimeService
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
@@ -8,14 +7,10 @@ class TestIFMController extends GroovyTestCase {
 
     IFMController controller
     IDEService stubIdeService
-    TimeService timeService
-    def time
 
     void setUp() {
         stubIdeService = createIdeServiceStub()
-        timeService = [getTime: { time }] as TimeService
-        time = NOW
-        controller = new IFMController(timeService, stubIdeService)
+        controller = new IFMController(stubIdeService)
     }
 
     void testAddEventWithoutComment_ShouldBeIgnored() {

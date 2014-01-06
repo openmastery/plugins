@@ -1,7 +1,5 @@
 package com.ideaflow.intellij
 
-import com.ideaflow.model.TimeService
-
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ProjectComponent
@@ -47,9 +45,8 @@ class IdeaFlowComponent implements ProjectComponent {
     void initComponent() {
         listener = new EventListener()
 
-        def timeService = new TimeService()
         ideService = new IDEServiceImpl(project)
-        controller = new IFMController(timeService, ideService)
+        controller = new IFMController(ideService)
     }
 
     void disposeComponent() {}

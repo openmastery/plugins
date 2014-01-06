@@ -1,6 +1,7 @@
 package com.ideaflow.model
 
 import groovy.transform.EqualsAndHashCode
+import org.joda.time.DateTime
 
 @EqualsAndHashCode(callSuper = true)
 class EditorActivity extends ModelEntity {
@@ -10,7 +11,7 @@ class EditorActivity extends ModelEntity {
 
 	EditorActivity() {}
 
-	EditorActivity(Date created, String name, int duration) {
+	EditorActivity(DateTime created, String name, int duration) {
 		super(created)
         this.name = name
         this.duration = duration

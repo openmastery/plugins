@@ -1,16 +1,18 @@
 package com.ideaflow.model
 
+import org.joda.time.DateTime
+
 class IdeaFlowModel {
 
 	List entityList = []
     String fileName
 
     boolean isPaused = false
-    Date created
+    DateTime created
 
     private boolean openConflict = false
 
-    IdeaFlowModel(String fileName, Date created) {
+    IdeaFlowModel(String fileName, DateTime created) {
         this.fileName = fileName
         this.created = created
     }
