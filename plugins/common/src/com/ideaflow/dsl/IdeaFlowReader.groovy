@@ -5,6 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -59,38 +60,37 @@ class IdeaFlowReader {
 		}
 
 		def editorActivity(Map editorActivityMap) {
-			Map ctorMap = createConstructorMap(editorActivityMap)
-			model.addModelEntity(new EditorActivity(ctorMap))
+			addModelEntity(EditorActivity, editorActivityMap)
 		}
 
 		def stateChange(Map eventMap) {
-			Map ctorMap = createConstructorMap(eventMap)
-			model.addModelEntity(new StateChange(ctorMap))
+			addModelEntity(StateChange, eventMap)
 		}
 
 		def note(Map noteMap) {
-			Map ctorMap = createConstructorMap(noteMap)
-			model.addModelEntity(new Note(ctorMap))
+			addModelEntity(Note, noteMap)
 		}
 
 		def conflict(Map eventMap) {
-			Map ctorMap = createConstructorMap(eventMap)
-			model.addModelEntity(new Conflict(ctorMap))
+			addModelEntity(Conflict, eventMap)
 		}
 
 		def resolution(Map resolutionMap) {
-			Map ctorMap = createConstructorMap(resolutionMap)
-			model.addModelEntity(new Resolution(ctorMap))
+			addModelEntity(Resolution, resolutionMap)
 		}
 
 		def bandStart(Map bandStartMap) {
-			Map ctorMap = createConstructorMap(bandStartMap)
-			model.addModelEntity(new BandStart(ctorMap))
+			addModelEntity(BandStart, bandStartMap)
 		}
 
 		def bandEnd(Map bandEndMap) {
-			Map ctorMap = createConstructorMap(bandEndMap)
-			model.addModelEntity(new BandEnd(ctorMap))
+			addModelEntity(BandEnd, bandEndMap)
+		}
+
+		private void addModelEntity(Class type, Map initialMap) {
+			Map constructorMap = createConstructorMap(initialMap)
+			ModelEntity entity = type.newInstance(constructorMap)
+			model.addModelEntity(entity)
 		}
 
 		private Map createConstructorMap(Map initialMap) {
