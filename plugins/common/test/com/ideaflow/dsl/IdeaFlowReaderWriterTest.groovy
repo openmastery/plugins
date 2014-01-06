@@ -4,7 +4,7 @@ import com.ideaflow.model.*
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
-class IdeaFlowReaderTest extends GroovyTestCase {
+class IdeaFlowReaderWriterTest extends GroovyTestCase {
 
 	private StringWriter stringWriter
 	private IdeaFlowWriter writer

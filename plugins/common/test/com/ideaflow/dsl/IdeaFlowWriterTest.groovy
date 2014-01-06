@@ -32,62 +32,6 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		lines[0]
 	}
 
-	void testWrite_ShouldWriteDslEditorActivity() {
-		writer.write(createEditorActivity(FILE, NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "editorActivity (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
-	}
-
-	void testWrite_ShouldWriteDslStateChange() {
-		writer.write(createStateChange(StateChangeType.startIdeaFlowRecording, NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "stateChange (created: '${toDateString(NOW)}', type: 'startIdeaFlowRecording', )"
-	}
-
-	void testWrite_ShouldWriteDslNote() {
-		writer.write(createNote('happy note', NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "note (created: '${toDateString(NOW)}', comment: '''happy note''', )"
-	}
-
-	void testWrite_ShouldWriteDslConflict() {
-		writer.write(createConflict(NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "conflict (created: '${toDateString(NOW)}', question: '''question''', )"
-	}
-
-	void testWrite_ShouldWriteDslResolution() {
-		writer.write(createResolution(NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "resolution (created: '${toDateString(NOW)}', answer: '''answer''', )"
-	}
-
-	void testWrite_ShouldWriteDslBandStart() {
-		writer.write(createBandStart(BandType.learning, NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "bandStart (created: '${toDateString(NOW)}', type: 'learning', )"
-	}
-
-	void testWrite_ShouldWriteDslBandEnd() {
-		writer.write(createBandEnd(BandType.learning, NOW))
-
-		String line = readSingleDslLine()
-
-		assert line == "bandEnd (created: '${toDateString(NOW)}', type: 'learning', )"
-	}
-
 	void testWrite_ShouldErrorIfObjectContainsAdditionalProperty() {
 		Conflict conflict = createConflict()
 		conflict.metaClass.newProperty = "value"
