@@ -16,11 +16,24 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../common/libs" />
+          <root url="file://$MODULE_DIR$/../common/libs/runtime" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../common/libs" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../common/libs/runtime" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../common/libs/test" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../common/libs/test" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../common/libs/test" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../common/libs/test" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
   </component>
