@@ -3,7 +3,7 @@ package com.ideaflow.model
 import groovy.transform.EqualsAndHashCode
 
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 class Note extends ModelEntity {
 
 	String comment
@@ -15,7 +15,7 @@ class Note extends ModelEntity {
 	}
 
 	String toString() {
-		"Note: $created, $comment"
+		"Note: $id, $created, $comment"
 	}
 
 }

@@ -2,7 +2,7 @@ package com.ideaflow.model
 
 import groovy.transform.EqualsAndHashCode
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 class EditorActivity extends ModelEntity {
 
     String name
@@ -17,7 +17,7 @@ class EditorActivity extends ModelEntity {
     }
 
     String toString() {
-        "EditorActivity: $name : $duration"
+        "EditorActivity: $id, $created, $name, $duration"
     }
 
 }

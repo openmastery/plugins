@@ -32,12 +32,12 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		lines[0]
 	}
 
-	void testWrite_ShouldWriteDslInterval() {
+	void testWrite_ShouldWriteDslEditorActivity() {
 		writer.write(createEditorActivity(FILE, NOW))
 
 		String line = readSingleDslLine()
 
-		assert line == "interval (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
+		assert line == "editorActivity (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
 	}
 
 	void testWrite_ShouldWriteDslStateChange() {

@@ -42,10 +42,12 @@ class IdeaFlowReader {
 	private static class IdeaFlowModelLoader {
 
 		IdeaFlowModel model
+		private int entityIdCounter
 		private SimpleDateFormat dateFormat
 
 		IdeaFlowModelLoader() {
 			model = new IdeaFlowModel('', null)
+			entityIdCounter = 1
 		}
 
 		def initialize(Map initializeMap) {
@@ -56,45 +58,50 @@ class IdeaFlowReader {
 			model.created = dateFormat.parse(createdDateString)
 		}
 
-		def interval(Map intervalMap) {
-			replaceCreatedStringWithDate(intervalMap)
-			model.addModelEntity(new EditorActivity(intervalMap))
+		def editorActivity(Map editorActivityMap) {
+			Map ctorMap = createConstructorMap(editorActivityMap)
+			model.addModelEntity(new EditorActivity(ctorMap))
 		}
 
 		def stateChange(Map eventMap) {
-			replaceCreatedStringWithDate(eventMap)
-			model.addModelEntity(new StateChange(eventMap))
+			Map ctorMap = createConstructorMap(eventMap)
+			model.addModelEntity(new StateChange(ctorMap))
 		}
 
 		def note(Map noteMap) {
-			replaceCreatedStringWithDate(noteMap)
-			model.addModelEntity(new Note(noteMap))
+			Map ctorMap = createConstructorMap(noteMap)
+			model.addModelEntity(new Note(ctorMap))
 		}
 
 		def conflict(Map eventMap) {
-			replaceCreatedStringWithDate(eventMap)
-			model.addModelEntity(new Conflict(eventMap))
+			Map ctorMap = createConstructorMap(eventMap)
+			model.addModelEntity(new Conflict(ctorMap))
 		}
 
-		def resolution(Map eventMap) {
-			replaceCreatedStringWithDate(eventMap)
-			model.addModelEntity(new Resolution(eventMap))
+		def resolution(Map resolutionMap) {
+			Map ctorMap = createConstructorMap(resolutionMap)
+			model.addModelEntity(new Resolution(ctorMap))
 		}
 
 		def bandStart(Map bandStartMap) {
-			replaceCreatedStringWithDate(bandStartMap)
-			model.addModelEntity(new BandStart(bandStartMap))
+			Map ctorMap = createConstructorMap(bandStartMap)
+			model.addModelEntity(new BandStart(ctorMap))
 		}
 
 		def bandEnd(Map bandEndMap) {
-			replaceCreatedStringWithDate(bandEndMap)
-			model.addModelEntity(new BandEnd(bandEndMap))
+			Map ctorMap = createConstructorMap(bandEndMap)
+			model.addModelEntity(new BandEnd(ctorMap))
 		}
 
-		private void replaceCreatedStringWithDate(Map map) {
-			String createdString = map['created']
-			Date createdDate = dateFormat.parse(createdString)
-			map['created'] = createdDate
+		private Map createConstructorMap(Map initialMap) {
+			Map constructorMap = initialMap.clone() as Map
+			constructorMap['created'] = toDate(constructorMap['created'] as String)
+			constructorMap['id'] = entityIdCounter++
+			constructorMap
+		}
+
+		private Date toDate(String dateString) {
+			dateFormat.parse(dateString)
 		}
 
 	}

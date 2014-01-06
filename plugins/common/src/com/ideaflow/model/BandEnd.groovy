@@ -2,7 +2,7 @@ package com.ideaflow.model
 
 import groovy.transform.EqualsAndHashCode
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 class BandEnd extends ModelEntity {
 
 	BandType type
@@ -14,7 +14,7 @@ class BandEnd extends ModelEntity {
 	}
 
 	String toString() {
-		"BandEnd: ${created}, ${type}"
+		"BandEnd: $id, $created, $type"
 	}
 
 }

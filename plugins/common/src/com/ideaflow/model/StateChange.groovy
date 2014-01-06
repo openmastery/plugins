@@ -2,8 +2,7 @@ package com.ideaflow.model
 
 import groovy.transform.EqualsAndHashCode
 
-
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 class StateChange extends ModelEntity {
 
 	StateChangeType type
@@ -15,7 +14,7 @@ class StateChange extends ModelEntity {
 	}
 
 	String toString() {
-		"StateChange: $type, $created"
+		"StateChange: $id, $type, $created"
 	}
 
 }

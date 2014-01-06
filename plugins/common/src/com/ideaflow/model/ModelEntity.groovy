@@ -1,7 +1,11 @@
 package com.ideaflow.model
 
+import groovy.transform.EqualsAndHashCode
+
+@EqualsAndHashCode
 abstract class ModelEntity {
 
+	String id
 	Date created
 
 	ModelEntity() {

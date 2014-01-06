@@ -34,6 +34,10 @@ class IdeaFlowReaderTest extends GroovyTestCase {
 		writer.write(bandEnd)
 		IdeaFlowModel model = new IdeaFlowReader().readModel(stringWriter.toString())
 
+		model.entityList.each { ModelEntity entity ->
+			assert entity.id != null
+			entity.id = null
+		}
 		assert model.created == createDate
 		assert model.entityList[0] == editorActivity
 		assert model.entityList[1] == note

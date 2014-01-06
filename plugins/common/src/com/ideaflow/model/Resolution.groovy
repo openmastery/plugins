@@ -2,7 +2,7 @@ package com.ideaflow.model
 
 import groovy.transform.EqualsAndHashCode
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 class Resolution extends ModelEntity {
 
 	String answer
@@ -14,7 +14,7 @@ class Resolution extends ModelEntity {
 	}
 
 	String toString() {
-		"Conflict: $created, $answer"
+		"Conflict: $id, $created, $answer"
 	}
 
 }
