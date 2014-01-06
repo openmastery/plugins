@@ -1,5 +1,7 @@
 package com.ideaflow.dsl
 
+import com.ideaflow.model.BandEnd
+import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.EditorActivity
@@ -77,6 +79,16 @@ class IdeaFlowReader {
 		def resolution(Map eventMap) {
 			replaceCreatedStringWithDate(eventMap)
 			model.addModelEntity(new Resolution(eventMap))
+		}
+
+		def bandStart(Map bandStartMap) {
+			replaceCreatedStringWithDate(bandStartMap)
+			model.addModelEntity(new BandStart(bandStartMap))
+		}
+
+		def bandEnd(Map bandEndMap) {
+			replaceCreatedStringWithDate(bandEndMap)
+			model.addModelEntity(new BandEnd(bandEndMap))
 		}
 
 		private void replaceCreatedStringWithDate(Map map) {

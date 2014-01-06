@@ -1,5 +1,7 @@
 package com.ideaflow.dsl
 
+import com.ideaflow.model.BandEnd
+import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.StateChange
@@ -53,8 +55,16 @@ class IdeaFlowWriter {
 		writeItem('resolution', resolution, ['created', 'answer'])
 	}
 
-	void write(EditorActivity interval) {
-		writeItem('interval', interval, ['created', 'name', 'duration'])
+	void write(EditorActivity editorActivity) {
+		writeItem('interval', editorActivity, ['created', 'name', 'duration'])
+	}
+
+	void write(BandStart bandStart) {
+		writeItem('bandStart', bandStart, ['created', 'type'])
+	}
+
+	void write(BandEnd bandEnd) {
+		writeItem('bandEnd', bandEnd, ['created', 'type'])
 	}
 
 	private void writeItem(String name, ModelEntity entity, List orderedKeyList) {

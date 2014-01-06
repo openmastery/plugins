@@ -1,5 +1,6 @@
 package com.ideaflow.dsl
 
+import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.StateChangeType
@@ -25,57 +26,70 @@ class IdeaFlowWriterTest extends GroovyTestCase {
 		writer.dateFormat.format(date)
 	}
 
-	private List<String> readDslLines() {
-		stringWriter.toString().readLines()
+	private String readSingleDslLine() {
+		List<String> lines = stringWriter.toString().readLines()
+		assert lines.size() == 1
+		lines[0]
 	}
 
 	void testWrite_ShouldWriteDslInterval() {
 		writer.write(createEditorActivity(FILE, NOW))
 
-		List<String> lines = readDslLines()
+		String line = readSingleDslLine()
 
-		assert lines.size() == 1
-		assert lines[0] == "interval (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
+		assert line == "interval (created: '${toDateString(NOW)}', name: '''${FILE}''', duration: 5, )"
 	}
 
 	void testWrite_ShouldWriteDslStateChange() {
 		writer.write(createStateChange(StateChangeType.startIdeaFlowRecording, NOW))
 
-		List<String> lines = readDslLines()
+		String line = readSingleDslLine()
 
-		assert lines.size() == 1
-		assert lines[0] == "stateChange (created: '${toDateString(NOW)}', type: 'startIdeaFlowRecording', )"
+		assert line == "stateChange (created: '${toDateString(NOW)}', type: 'startIdeaFlowRecording', )"
 	}
 
 	void testWrite_ShouldWriteDslNote() {
 		writer.write(createNote('happy note', NOW))
 
-		List<String> lines = readDslLines()
+		String line = readSingleDslLine()
 
-		assert lines.size() == 1
-		assert lines[0] == "note (created: '${toDateString(NOW)}', comment: '''happy note''', )"
+		assert line == "note (created: '${toDateString(NOW)}', comment: '''happy note''', )"
 	}
 
 	void testWrite_ShouldWriteDslConflict() {
 		writer.write(createConflict(NOW))
 
-		List<String> lines = readDslLines()
+		String line = readSingleDslLine()
 
-		assert lines.size() == 1
-		assert lines[0] == "conflict (created: '${toDateString(NOW)}', question: '''question''', )"
+		assert line == "conflict (created: '${toDateString(NOW)}', question: '''question''', )"
 	}
 
 	void testWrite_ShouldWriteDslResolution() {
 		writer.write(createResolution(NOW))
 
-		List<String> lines = readDslLines()
+		String line = readSingleDslLine()
 
-		assert lines.size() == 1
-		assert lines[0] == "resolution (created: '${toDateString(NOW)}', answer: '''answer''', )"
+		assert line == "resolution (created: '${toDateString(NOW)}', answer: '''answer''', )"
+	}
+
+	void testWrite_ShouldWriteDslBandStart() {
+		writer.write(createBandStart(BandType.learning, NOW))
+
+		String line = readSingleDslLine()
+
+		assert line == "bandStart (created: '${toDateString(NOW)}', type: 'learning', )"
+	}
+
+	void testWrite_ShouldWriteDslBandEnd() {
+		writer.write(createBandEnd(BandType.learning, NOW))
+
+		String line = readSingleDslLine()
+
+		assert line == "bandEnd (created: '${toDateString(NOW)}', type: 'learning', )"
 	}
 
 	void testWrite_ShouldErrorIfObjectContainsAdditionalProperty() {
-		Conflict conflict = createConflict(NOW)
+		Conflict conflict = createConflict()
 		conflict.metaClass.newProperty = "value"
 
 		try {
