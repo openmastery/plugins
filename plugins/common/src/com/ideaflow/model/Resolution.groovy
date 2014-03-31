@@ -14,7 +14,7 @@ class Resolution extends ModelEntity {
 	}
 
 	String toString() {
-		"Conflict: $id, $created, $answer"
+		"Resolution: $id, $created, $answer"
 	}
 
 }

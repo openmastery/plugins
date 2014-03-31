@@ -17,6 +17,8 @@ class IdeaFlowModel {
         this.created = created
     }
 
+    IdeaFlowModel() {}
+
 	void addModelEntity(Conflict conflict) {
 		addModelEntityInternal(conflict) {
 			openConflict = true
