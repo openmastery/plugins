@@ -5,12 +5,13 @@ import com.ideaflow.model.Resolution
 
 
 class ConflictBand extends RelativeTime {
+
+	int duration
 	Conflict conflict
 	Resolution resolution
 
-	ConflictBand(int offset, Conflict conflict, Resolution resolution) {
+	ConflictBand(int offset) {
 		super(offset)
-		this.conflict = conflict
-		this.resolution = resolution
 	}
+
 }

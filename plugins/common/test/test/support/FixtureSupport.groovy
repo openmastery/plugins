@@ -45,6 +45,10 @@ class FixtureSupport {
 
 	}
 
+	Note createNote() {
+		createNote("note")
+	}
+
 	Note createNote(String comment) {
 		createNote(comment, NOW)
 	}
@@ -54,6 +58,10 @@ class FixtureSupport {
 		setCreated(note, time)
 		note.comment = comment
 		note
+	}
+
+	StateChange createStateChange() {
+		createStateChange(StateChangeType.startIdeaFlowRecording)
 	}
 
 	StateChange createStateChange(StateChangeType type) {

@@ -1,8 +1,13 @@
 package test.support
 
-import com.ideaflow.model.BandType
+import com.ideaflow.model.BandEnd
+import com.ideaflow.model.BandStart
+import com.ideaflow.model.Conflict
+import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.StateChangeType
+import com.ideaflow.model.Note
+import com.ideaflow.model.Resolution
+import com.ideaflow.model.StateChange
 import org.joda.time.DateTime
 
 class IdeaFlowModelBuilder {
@@ -20,78 +25,43 @@ class IdeaFlowModelBuilder {
 		return this
 	}
 
-	IdeaFlowModelBuilder addBandEnd() {
-		ifm.addModelEntity(fs.createBandEnd())
+	IdeaFlowModelBuilder addBandEnd(BandEnd bandEnd) {
+		ifm.addModelEntity(bandEnd)
 		return this
 	}
 
-	IdeaFlowModelBuilder addBandEnd(BandType type, long time) {
-		ifm.addModelEntity(fs.createBandEnd(type, time))
+	IdeaFlowModelBuilder addBandStart(BandStart bandStart) {
+		ifm.addModelEntity(bandStart)
 		return this
 	}
 
-	IdeaFlowModelBuilder addBandStart() {
-		ifm.addModelEntity(fs.createBandStart())
+	IdeaFlowModelBuilder addConflict(Conflict conflict) {
+		ifm.addModelEntity(conflict)
 		return this
 	}
 
-	IdeaFlowModelBuilder addBandStart(BandType type, long time) {
-		ifm.addModelEntity(fs.createBandStart(type, time))
+	IdeaFlowModelBuilder addResolution(Resolution resolution) {
+		ifm.addModelEntity(resolution)
 		return this
 	}
 
-	IdeaFlowModelBuilder addConflict() {
-		ifm.addModelEntity(fs.createConflict())
+	IdeaFlowModelBuilder addEditorActivity(int duration) {
+		EditorActivity activity = fs.createEditorActivity('name', duration, fs.NOW)
+		return addEditorActivity(activity)
+	}
+
+	IdeaFlowModelBuilder addEditorActivity(EditorActivity activity) {
+		ifm.addModelEntity(activity)
 		return this
 	}
 
-	IdeaFlowModelBuilder addConflict(long time) {
-		ifm.addModelEntity(fs.createConflict(time))
+	IdeaFlowModelBuilder addNote(Note note) {
+		ifm.addModelEntity(note)
 		return this
 	}
 
-	IdeaFlowModelBuilder addEditorActivity(String name) {
-		ifm.addModelEntity(fs.createEditorActivity(name))
-		return this
-	}
-
-	IdeaFlowModelBuilder addEditorActivity(String name, int duration, long time) {
-		ifm.addModelEntity(fs.createEditorActivity(name, duration, time))
-		return this
-	}
-
-	IdeaFlowModelBuilder addEditorActivity(String name, long time) {
-		ifm.addModelEntity(fs.createEditorActivity(name, time))
-		return this
-	}
-
-	IdeaFlowModelBuilder addNote(String comment) {
-		ifm.addModelEntity(fs.createNote(comment))
-		return this
-	}
-
-	IdeaFlowModelBuilder addNote(String comment, long time) {
-		ifm.addModelEntity(fs.createNote(comment, time))
-		return this
-	}
-
-	IdeaFlowModelBuilder addResolution() {
-		ifm.addModelEntity(fs.createResolution())
-		return this
-	}
-
-	IdeaFlowModelBuilder addResolution(long time) {
-		ifm.addModelEntity(fs.createResolution(time))
-		return this
-	}
-
-	IdeaFlowModelBuilder addStateChange(StateChangeType type) {
-		ifm.addModelEntity(fs.createStateChange(type))
-		return this
-	}
-
-	IdeaFlowModelBuilder addStateChange(StateChangeType type, long time) {
-		ifm.addModelEntity(fs.createStateChange(type, time))
+	IdeaFlowModelBuilder addStateChange(StateChange stateChange) {
+		ifm.addModelEntity(stateChange)
 		return this
 	}
 

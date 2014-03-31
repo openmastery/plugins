@@ -1,10 +1,18 @@
 package com.ideaflow.timeline
 
+import com.ideaflow.model.BandEnd
+import com.ideaflow.model.BandStart
+import com.ideaflow.model.Conflict
+import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Note
+import com.ideaflow.model.Resolution
 import org.junit.Before
 import org.junit.Test
+import test.support.FixtureSupport
 import test.support.IdeaFlowModelBuilder
 
+@Mixin(FixtureSupport)
 class TestTimelineFactory {
 
 	TimelineFactory timelineFactory
@@ -16,20 +24,101 @@ class TestTimelineFactory {
 
 	@Test
 	void testCreate_ShouldCreateConflictBands() {
+		Conflict conflict = createConflict()
+		Resolution resolution = createResolution()
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
-				.addConflict()
-				.addResolution()
+				.addEditorActivity(10)
+				.addConflict(conflict)
+				.addEditorActivity(15)
+				.addResolution(resolution)
 				.build()
 
 		Timeline timeline = timelineFactory.create(ifm)
-		ConflictBand conflict = firstConflict(timeline)
 
-		//TODO this needs asserts!
+		ConflictBand conflictBand = firstAndOnlyConflict(timeline)
+		assert conflictBand.conflict == conflict
+		assert conflictBand.resolution == resolution
+		assert conflictBand.offset == 10
+		assert conflictBand.duration == 15
 	}
 
-	ConflictBand firstConflict(Timeline timeline) {
+	ConflictBand firstAndOnlyConflict(Timeline timeline) {
 		assert timeline.conflictBands.size() == 1
 		return timeline.conflictBands[0]
+	}
+
+	@Test
+	void testCreate_ShouldCreateTimeBands() {
+		BandStart bandStart = createBandStart()
+		BandEnd bandEnd = createBandEnd()
+		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
+				.addEditorActivity(10)
+				.addBandStart(bandStart)
+				.addEditorActivity(15)
+				.addBandEnd(bandEnd)
+				.build()
+
+		Timeline timeline = timelineFactory.create(ifm)
+
+		TimeBand timeBand = firstAndOnlyTimeBand(timeline)
+		assert timeBand.bandStart == bandStart
+		assert timeBand.bandEnd == bandEnd
+		assert timeBand.offset == 10
+		assert timeBand.duration == 15
+	}
+
+	private TimeBand firstAndOnlyTimeBand(Timeline timeline) {
+		assert timeline.timeBands.size() == 1
+		return timeline.timeBands[0]
+	}
+
+	@Test
+	void testCreate_ShouldCreateEvents() {
+		Note note = createNote()
+		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
+				.addEditorActivity(10)
+				.addNote(note)
+				.build()
+
+		Timeline timeline = timelineFactory.create(ifm)
+
+		Event event = firstAndOnlyEvent(timeline)
+		assert event.note == note
+		assert event.offset == 10
+	}
+
+	private Event firstAndOnlyEvent(Timeline timeline) {
+		assert timeline.events.size() == 1
+		return timeline.events[0]
+	}
+
+	@Test
+	void testCreate_ShouldCreateActivityDetail() {
+		EditorActivity editorActivity1 = createEditorActivity(FILE1, 10, TIME1)
+		EditorActivity editorActivity2 = createEditorActivity(FILE2, 15, TIME2)
+		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
+				.addEditorActivity(editorActivity1)
+				.addEditorActivity(editorActivity2)
+				.build()
+
+		Timeline timeline = timelineFactory.create(ifm)
+
+		ActivityDetail activityDetail1 = timeline.activityDetails[0]
+		assert activityDetail1.editorActivity == editorActivity1
+		assert activityDetail1.offset == 0
+		ActivityDetail activityDetail2 = timeline.activityDetails[1]
+		assert activityDetail2.editorActivity == editorActivity2
+		assert activityDetail2.offset == 10
+		assert timeline.activityDetails.size() == 2
+	}
+
+	@Test
+	void testCreate_StateChangeShouldNotExplode() {
+		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
+				.addStateChange(createStateChange())
+				.build()
+
+		timelineFactory.create(ifm)
 	}
 
 }
