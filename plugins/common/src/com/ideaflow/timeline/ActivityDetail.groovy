@@ -4,10 +4,10 @@ import com.ideaflow.model.EditorActivity
 
 
 class ActivityDetail extends RelativeTime {
-    EditorActivity editorActivity
+	EditorActivity editorActivity
 
-    ActivityDetail(int offset, EditorActivity editorActivity) {
-        super(offset)
-        this.editorActivity = editorActivity
-    }
+	ActivityDetail(int offset, EditorActivity editorActivity) {
+		super(offset)
+		this.editorActivity = editorActivity
+	}
 }

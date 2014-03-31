@@ -18,9 +18,9 @@ class ModelEntityTest extends GroovyTestCase {
 			otherInstance.created = createdDate
 			assert subTypeInstance == otherInstance
 
-			assert subTypeInstance.class.getAnnotation(EqualsAndHashCode) : "Ensure ${subTypeInstance.class.simpleName} is annotated @EqualsAndHashCode(callSuper = true)"
+			assert subTypeInstance.class.getAnnotation(EqualsAndHashCode): "Ensure ${subTypeInstance.class.simpleName} is annotated @EqualsAndHashCode(callSuper = true)"
 			subTypeInstance.created = null
-			assert subTypeInstance != otherInstance : "Ensure ${subTypeInstance.class.simpleName} is annotated with @EqualsAndHashCode(callSuper = true)"
+			assert subTypeInstance != otherInstance: "Ensure ${subTypeInstance.class.simpleName} is annotated with @EqualsAndHashCode(callSuper = true)"
 		}
 	}
 

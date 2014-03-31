@@ -3,8 +3,8 @@ package com.ideaflow.dsl
 import com.ideaflow.model.BandEnd
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution

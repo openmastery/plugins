@@ -4,10 +4,10 @@ import com.ideaflow.model.Note
 
 
 class Event extends RelativeTime {
-    Note note
+	Note note
 
-    Event(int offset, Note note) {
-        super(offset)
-        this.note = note
-    }
+	Event(int offset, Note note) {
+		super(offset)
+		this.note = note
+	}
 }

@@ -5,19 +5,19 @@ import org.joda.time.DateTime
 class IdeaFlowModel {
 
 	List<ModelEntity> entityList = []
-    String fileName
+	String fileName
 
-    boolean isPaused = false
-    DateTime created
+	boolean isPaused = false
+	DateTime created
 
-    private boolean openConflict = false
+	private boolean openConflict = false
 
-    IdeaFlowModel(String fileName, DateTime created) {
-        this.fileName = fileName
-        this.created = created
-    }
+	IdeaFlowModel(String fileName, DateTime created) {
+		this.fileName = fileName
+		this.created = created
+	}
 
-    IdeaFlowModel() {}
+	IdeaFlowModel() {}
 
 	void addModelEntity(Conflict conflict) {
 		addModelEntityInternal(conflict) {
@@ -42,12 +42,12 @@ class IdeaFlowModel {
 		}
 	}
 
-    int size() {
-        entityList.size()
-    }
+	int size() {
+		entityList.size()
+	}
 
-    boolean isOpenConflict() {
-        openConflict
-    }
+	boolean isOpenConflict() {
+		openConflict
+	}
 
 }

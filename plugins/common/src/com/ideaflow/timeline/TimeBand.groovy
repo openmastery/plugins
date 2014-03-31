@@ -6,13 +6,13 @@ import com.ideaflow.model.BandStart
 
 class TimeBand extends RelativeTime {
 
-    BandStart bandStart
-    BandEnd bandEnd
+	BandStart bandStart
+	BandEnd bandEnd
 
-    TimeBand(int offset, BandStart bandStart, BandEnd bandEnd) {
-        super(offset)
-        this.bandStart = bandStart
-        this.bandEnd = bandEnd
-    }
+	TimeBand(int offset, BandStart bandStart, BandEnd bandEnd) {
+		super(offset)
+		this.bandStart = bandStart
+		this.bandEnd = bandEnd
+	}
 
 }

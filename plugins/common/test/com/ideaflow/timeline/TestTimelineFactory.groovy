@@ -7,29 +7,29 @@ import test.support.IdeaFlowModelBuilder
 
 class TestTimelineFactory {
 
-    TimelineFactory timelineFactory
+	TimelineFactory timelineFactory
 
-    @Before
-    void setUp() {
-        timelineFactory = new TimelineFactory()
-    }
+	@Before
+	void setUp() {
+		timelineFactory = new TimelineFactory()
+	}
 
-    @Test
-    void testCreate_ShouldCreateConflictBands() {
-        IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
-                .addConflict()
-                .addResolution()
-                .build()
+	@Test
+	void testCreate_ShouldCreateConflictBands() {
+		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
+				.addConflict()
+				.addResolution()
+				.build()
 
-        Timeline timeline = timelineFactory.create(ifm)
-        ConflictBand conflict = firstConflict(timeline)
+		Timeline timeline = timelineFactory.create(ifm)
+		ConflictBand conflict = firstConflict(timeline)
 
-        //TODO this needs asserts!
-    }
+		//TODO this needs asserts!
+	}
 
-    ConflictBand firstConflict(Timeline timeline) {
-        assert timeline.conflictBands.size() == 1
-        return timeline.conflictBands[0]
-    }
+	ConflictBand firstConflict(Timeline timeline) {
+		assert timeline.conflictBands.size() == 1
+		return timeline.conflictBands[0]
+	}
 
 }

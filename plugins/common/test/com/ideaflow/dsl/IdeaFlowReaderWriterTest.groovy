@@ -1,6 +1,15 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.*
+import com.ideaflow.model.BandEnd
+import com.ideaflow.model.BandStart
+import com.ideaflow.model.Conflict
+import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.Note
+import com.ideaflow.model.Resolution
+import com.ideaflow.model.StateChange
+import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 import test.support.FixtureSupport
 

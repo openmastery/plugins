@@ -2,9 +2,9 @@ package com.ideaflow.timeline
 
 
 class RelativeTime {
-    int offset
+	int offset
 
-    RelativeTime(int offset) {
-        this.offset = offset
-    }
+	RelativeTime(int offset) {
+		this.offset = offset
+	}
 }

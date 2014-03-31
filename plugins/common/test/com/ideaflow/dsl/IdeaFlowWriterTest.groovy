@@ -2,7 +2,6 @@ package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.ModelEntity
-import org.joda.time.DateTime
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)

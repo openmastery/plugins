@@ -4,7 +4,7 @@ import com.ideaflow.model.IdeaFlowModel
 
 class DSLTimelineSerializer {
 
-    String serialize(IdeaFlowModel model) {
+	String serialize(IdeaFlowModel model) {
 		StringWriter stringWriter = new StringWriter()
 		IdeaFlowWriter writer = new IdeaFlowWriter(stringWriter)
 
@@ -15,7 +15,7 @@ class DSLTimelineSerializer {
 
 		writer.close()
 		stringWriter.toString()
-    }
+	}
 
 	IdeaFlowModel deserialize(File dslFile) {
 		IdeaFlowModel model = deserialize(dslFile.text)
@@ -23,8 +23,8 @@ class DSLTimelineSerializer {
 		model
 	}
 
-    IdeaFlowModel deserialize(String dslContent) {
+	IdeaFlowModel deserialize(String dslContent) {
 		new IdeaFlowReader().readModel(dslContent)
-    }
+	}
 
 }
