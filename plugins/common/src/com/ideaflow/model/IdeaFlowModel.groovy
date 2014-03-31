@@ -4,7 +4,7 @@ import org.joda.time.DateTime
 
 class IdeaFlowModel {
 
-	List entityList = []
+	List<ModelEntity> entityList = []
     String fileName
 
     boolean isPaused = false

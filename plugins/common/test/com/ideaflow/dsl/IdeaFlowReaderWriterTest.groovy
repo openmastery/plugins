@@ -15,7 +15,7 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		writer = new IdeaFlowWriter(stringWriter)
 	}
 
-	void testReadModel_ShouldReadContentWrittenByWriter() {
+	void testReadWriteSymmetryWithData() {
 		DateTime createDate = new DateTime(NOW)
 		EditorActivity editorActivity = createEditorActivity(FILE)
 		Note note = createNote("it's a happy note!")
@@ -48,6 +48,47 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		assert model.entityList[5] == bandStart
 		assert model.entityList[6] == bandEnd
 		assert model.size() == 7
+	}
+
+	void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {
+		List<ModelEntity> subTypeInstances = getInitializedModelEntitySubClassInstances()
+
+		writer.writeInitialization(new DateTime(NOW))
+		subTypeInstances.each { ModelEntity entity ->
+			try {
+				writer.write(entity)
+			} catch (MissingMethodException ex) {
+				throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
+						"ensure ${IdeaFlowWriter.simpleName} declares method write(${entity.class.simpleName})", ex)
+			}
+		}
+		IdeaFlowModel model
+		try {
+			model = new IdeaFlowReader().readModel(stringWriter.toString())
+		} catch (MissingMethodException ex) {
+			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
+					"ensure ${IdeaFlowReader.simpleName} declares appropriate read(<subtype>) method", ex)
+		}
+
+		model.entityList.each { ModelEntity entity ->
+			assert entity.id != null
+			entity.id = null
+		}
+		for (int i = 0; i < subTypeInstances.size(); i++) {
+			assert subTypeInstances[i] == model.entityList[i]
+		}
+		assert subTypeInstances.size() == model.size()
+	}
+
+	private List<ModelEntity> getInitializedModelEntitySubClassInstances() {
+		List<ModelEntity> subTypeInstances = getModelEntitySubClassInstances()
+		DateTime createDate = new DateTime(NOW)
+
+		subTypeInstances.each { ModelEntity entity ->
+			createDate = createDate.plusSeconds(1)
+			entity.created = createDate
+		}
+		subTypeInstances
 	}
 
 }

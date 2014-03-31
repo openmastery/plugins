@@ -17,6 +17,12 @@ class DSLTimelineSerializer {
 		stringWriter.toString()
     }
 
+	IdeaFlowModel deserialize(File dslFile) {
+		IdeaFlowModel model = deserialize(dslFile.text)
+		model.fileName = dslFile.absolutePath
+		model
+	}
+
     IdeaFlowModel deserialize(String dslContent) {
 		new IdeaFlowReader().readModel(dslContent)
     }

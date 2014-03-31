@@ -4,12 +4,14 @@ import com.ideaflow.model.BandEnd
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
+import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.StateChangeType
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import org.joda.time.DateTime
+import org.reflections.Reflections
 
 class FixtureSupport {
 
@@ -118,6 +120,13 @@ class FixtureSupport {
 		BandEnd end = new BandEnd(type)
 		end.created = new DateTime(time)
 		end
+	}
+
+	private List<ModelEntity> getModelEntitySubClassInstances() {
+		Reflections reflections = new Reflections(ModelEntity.package.name)
+		reflections.getSubTypesOf(ModelEntity).collect { Class subType ->
+			subType.newInstance() as ModelEntity
+		}
 	}
 
 }

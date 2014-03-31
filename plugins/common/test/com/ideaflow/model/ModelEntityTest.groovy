@@ -1,15 +1,14 @@
 package com.ideaflow.model
 
+import groovy.transform.EqualsAndHashCode
 import org.joda.time.DateTime
-import org.reflections.Reflections
+import test.support.FixtureSupport
 
+@Mixin(FixtureSupport)
 class ModelEntityTest extends GroovyTestCase {
 
 	void testAllSubclasses_ShouldBeAnnotedWithEqualsAndHashcodeWithCallSuperSetToTrue() {
-		Reflections reflections = new Reflections(ModelEntity.package.name)
-		List<ModelEntity> subTypeInstances = reflections.getSubTypesOf(ModelEntity).collect { Class subType ->
-			subType.newInstance() as ModelEntity
-		}
+		List<ModelEntity> subTypeInstances = getModelEntitySubClassInstances()
 
 		DateTime createdDate = new DateTime(500)
 		subTypeInstances.each { ModelEntity subTypeInstance ->
@@ -19,6 +18,7 @@ class ModelEntityTest extends GroovyTestCase {
 			otherInstance.created = createdDate
 			assert subTypeInstance == otherInstance
 
+			assert subTypeInstance.class.getAnnotation(EqualsAndHashCode) : "Ensure ${subTypeInstance.class.simpleName} is annotated @EqualsAndHashCode(callSuper = true)"
 			subTypeInstance.created = null
 			assert subTypeInstance != otherInstance : "Ensure ${subTypeInstance.class.simpleName} is annotated with @EqualsAndHashCode(callSuper = true)"
 		}
