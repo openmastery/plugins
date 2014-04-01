@@ -1,7 +1,7 @@
 package com.ideaflow.timeline
 
 
-class RelativeTime {
+abstract class RelativeTime {
 	int offset
 
 	RelativeTime(int offset) {

@@ -1,17 +1,11 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
+interface TimeBand {
 
+	TimePosition getStartPosition()
 
-class TimeBand extends RelativeTime {
+	TimePosition getEndPosition()
 
-	int duration
-	BandStart bandStart
-	BandEnd bandEnd
-
-	TimeBand(int offset) {
-		super(offset)
-	}
+	TimeDuration getDuration()
 
 }

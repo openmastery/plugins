@@ -2,16 +2,20 @@ package com.ideaflow.timeline
 
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.Resolution
+import org.joda.time.DateTime
 
 
-class ConflictBand extends RelativeTime {
+class ConflictBand extends AbstractTimeBand {
 
-	int duration
 	Conflict conflict
 	Resolution resolution
 
-	ConflictBand(int offset) {
-		super(offset)
+	protected void setActivityStartCreated(DateTime created) {
+		conflict.created = created
+	}
+
+	protected void setActivityEndCreated(DateTime created) {
+		resolution.created = created
 	}
 
 }

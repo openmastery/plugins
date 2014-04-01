@@ -2,12 +2,12 @@ package com.ideaflow.timeline
 
 class Timeline {
 	List<ConflictBand> conflictBands = []
-	List<TimeBand> timeBands = []
+	List<GenericBand> genericBands = []
 	List<Event> events = []
 	List<ActivityDetail> activityDetails = []
 
-	void addTimeBand(TimeBand timeBand) {
-		timeBands.add(timeBand)
+	void addGenericBand(GenericBand timeBand) {
+		genericBands.add(timeBand)
 	}
 
 	void addActivityDetail(ActivityDetail activityDetail) {

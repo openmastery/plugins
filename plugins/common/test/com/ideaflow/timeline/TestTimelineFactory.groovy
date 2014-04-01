@@ -24,8 +24,8 @@ class TestTimelineFactory {
 
 	@Test
 	void testCreate_ShouldCreateConflictBands() {
-		Conflict conflict = createConflict()
-		Resolution resolution = createResolution()
+		Conflict conflict = createConflict(TIME1)
+		Resolution resolution = createResolution(TIME2)
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
 				.addEditorActivity(10)
 				.addConflict(conflict)
@@ -38,8 +38,9 @@ class TestTimelineFactory {
 		ConflictBand conflictBand = firstAndOnlyConflict(timeline)
 		assert conflictBand.conflict == conflict
 		assert conflictBand.resolution == resolution
-		assert conflictBand.offset == 10
-		assert conflictBand.duration == 15
+		assert conflictBand.startPosition == new TimePosition(conflict.created, 10)
+		assert conflictBand.endPosition == new TimePosition(resolution.created, 25)
+		assert conflictBand.duration == new TimeDuration(15)
 	}
 
 	ConflictBand firstAndOnlyConflict(Timeline timeline) {
@@ -48,7 +49,7 @@ class TestTimelineFactory {
 	}
 
 	@Test
-	void testCreate_ShouldCreateTimeBands() {
+	void testCreate_ShouldCreateGenericBands() {
 		BandStart bandStart = createBandStart()
 		BandEnd bandEnd = createBandEnd()
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
@@ -60,16 +61,17 @@ class TestTimelineFactory {
 
 		Timeline timeline = timelineFactory.create(ifm)
 
-		TimeBand timeBand = firstAndOnlyTimeBand(timeline)
-		assert timeBand.bandStart == bandStart
-		assert timeBand.bandEnd == bandEnd
-		assert timeBand.offset == 10
-		assert timeBand.duration == 15
+		GenericBand genericBand = firstAndOnlyGenericBand(timeline)
+		assert genericBand.bandStart == bandStart
+		assert genericBand.bandEnd == bandEnd
+		assert genericBand.startPosition == new TimePosition(bandStart.created, 10)
+		assert genericBand.endPosition == new TimePosition(bandEnd.created, 25)
+		assert genericBand.duration == new TimeDuration(15)
 	}
 
-	private TimeBand firstAndOnlyTimeBand(Timeline timeline) {
-		assert timeline.timeBands.size() == 1
-		return timeline.timeBands[0]
+	private GenericBand firstAndOnlyGenericBand(Timeline timeline) {
+		assert timeline.genericBands.size() == 1
+		return timeline.genericBands[0]
 	}
 
 	@Test
