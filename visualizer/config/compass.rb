@@ -1,5 +1,6 @@
 # Require any additional compass plugins here.
 require 'sassy-buttons'
+require 'font-awesome-sass'
 
 # Set this to the root of your project when deployed:
 http_path = "/"

@@ -1,6 +1,9 @@
 /* line 6, ../../src/stylesheets/foundation/_base.scss */
 a:link, a:visited, a:hover { color: #33339b; }
 
+/* line 10, ../../src/stylesheets/foundation/_base.scss */
+body { background-color: #f7f4f9; }
+
 /* FONT STACK */
 /* line 3, ../../src/stylesheets/foundation/_grails-default.scss */
 body, input, select, textarea { font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; }
@@ -281,8 +284,11 @@ a.skip { position: absolute; left: -9999px; }
 /* line 3, ../../src/stylesheets/components/_footer.scss */
 #footer { background-color: #e0e0ff; text-align: center; }
 
-/* line 3, ../../src/stylesheets/components/_timeline.scss */
-.timeline-holder { margin-left: auto; margin-right: auto; width: 800px; }
+/* line 6, ../../src/stylesheets/components/_timeline.scss */
+.timeline-holder { -webkit-border-radius: 10px 10px; -moz-border-radius: 10px / 10px; border-radius: 10px / 10px; background-color: white; margin-left: auto; margin-right: auto; margin-top: 10px; margin-top: 10px; padding: 20px; width: 800px; }
 
 /* line 3, ../../src/stylesheets/components/_content-panel.scss */
 #contentpanel .nav { margin-left: auto; margin-right: auto; margin-top: 20px; height: 40px; width: 760px; }
+
+/* line 1, ../../src/stylesheets/components/_table.scss */
+table.tabular { background-color: white; }

@@ -18,3 +18,4 @@ $menubutton-conflicts-color: #ff0078;
     @include sassy-button("matte", 8px, 10px, $menubutton-conflicts-color);
     @include sassy-button-style("push", $menubutton-conflicts-color);
 }
+

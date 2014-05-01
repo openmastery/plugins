@@ -1,7 +1,15 @@
 $timeline-holder-width: 800px;
+$timeline-holder-top-margin: 10px;
+$timeline-holder-bottom-margin: 10px;
+$timeline-holder-padding: 20px;
 
 .timeline-holder {
+    @include border-radius(10px, 10px);
+    background-color: white;
     margin-left: auto;
     margin-right: auto;
+    margin-top: $timeline-holder-top-margin;
+    margin-top: $timeline-holder-bottom-margin;
+    padding: $timeline-holder-padding;
     width: $timeline-holder-width;
 }
