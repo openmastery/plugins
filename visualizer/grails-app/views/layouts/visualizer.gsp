@@ -10,14 +10,18 @@
 <html>
 <head>
     <title><g:layoutTitle default="Visualizer"/></title>
-    <g:javascript library="monolith"/>
+    
+    <r:require module="layouts/visualizer"/>
+    
     <g:layoutHead/>
     <r:layoutResources/>
+
 </head>
 
 <body>
-<common:header/>
-<g:layoutBody/>
-<common:footer/>
+    <common:header/>
+    <g:layoutBody/>
+    <common:footer/>
+    <r:layoutResources/>
 </body>
 </html>

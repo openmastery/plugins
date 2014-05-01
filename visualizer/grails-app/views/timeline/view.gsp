@@ -11,6 +11,7 @@
 <head>
     <meta name="layout" content="visualizer"/>
     <g:javascript library="ideaflow"/>
+    <r:require module="layouts/visualizer"/>
 
     <r:layoutResources/>
 </head>

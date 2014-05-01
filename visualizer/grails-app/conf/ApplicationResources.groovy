@@ -6,7 +6,7 @@ modules = {
 
     monolith {
 
-        dependsOn 'jquery', 'reset', 'normalize', 'html5boilerplate', 'modernizr', 'pie', 'jqxbinputs', 'global'
+        dependsOn 'jquery', 'reset', 'normalize', 'html5boilerplate', 'modernizr', 'pie', 'jqxbinputs', 'global', 'main'
 
         overrides {
             jquery {
@@ -184,5 +184,16 @@ modules = {
 
     }
 
+    main {
+
+        resource url: '/css/main.css'
+
+    }
+
+    'layouts/visualizer' {
+
+        dependsOn 'monolith'
+
+    }
 
 }

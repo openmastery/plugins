@@ -273,7 +273,7 @@ th:hover, tr:hover { background: #E1F2B6; }
 a.skip { position: absolute; left: -9999px; }
 
 /* line 1, ../../src/stylesheets/components/_header.scss */
-#header { background-color: #ffe0e0; text-align: center; }
+#header { background-color: #ffe0e0 !important; text-align: center; }
 
 /* line 3, ../../src/stylesheets/components/_footer.scss */
 #footer { background-color: #e0e0ff; text-align: center; }
