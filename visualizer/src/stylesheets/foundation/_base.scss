@@ -1,7 +1,8 @@
 
 $base-font-color: #333333;
 $brand-color: #ff00ff;
+$link-color: #33339b;
 
-#header {
-    background-color: #ff0000;
+a:link, a:visited, a:hover {
+    color: $link-color;
 }

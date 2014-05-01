@@ -24,7 +24,7 @@
     registerStopWindowDragCallback(hello);
     registerClickBandCallback(hello);
 </script>
-<div id="timelineHolder"></div>
+<div id="timelineHolder" class="timeline-holder"></div>
 <g:render template="timeline"/> <!-- this goes to timeline holder, will need to pass ifm file into template -->
 
 <div id="contentPanel">

@@ -1,0 +1,12 @@
+@import "sassy-buttons";
+
+.menubutton {
+    @include sassy-button("matte", 8px, 10px, #876b99);
+    @include sassy-button-style("push", #876b99);
+    a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 12px;
+    }
+}

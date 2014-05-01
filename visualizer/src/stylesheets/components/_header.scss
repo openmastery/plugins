@@ -1,4 +1,17 @@
-#header {
-    background-color: #ffe0e0 !important;
+.header {
+    background-color: #ffe0e0;
     text-align: center;
+    .nav {
+        height: 60px;
+        img {
+            height: 60px;
+        }
+        a {
+            color: $link-color;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
 }
