@@ -1,5 +1,5 @@
 /* line 5, ../../src/stylesheets/foundation/_base.scss */
-body { background-color: magenta; }
+#header { background-color: #ff0000; }
 
 /* FONT STACK */
 /* line 3, ../../src/stylesheets/foundation/_grails-default.scss */
@@ -10,279 +10,270 @@ h1, h2, h3, h4, h5, h6 { line-height: 1.1; }
 
 /* BASE LAYOUT */
 /* line 13, ../../src/stylesheets/foundation/_grails-default.scss */
-html { background-color: #ddd; background-image: -moz-linear-gradient(center top, #aaaaaa, #dddddd); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #aaaaaa), color-stop(1, #dddddd)); background-image: linear-gradient(top, #aaaaaa, #dddddd); filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#aaaaaa', EndColorStr = '#dddddd'); background-repeat: no-repeat; height: 100%; /* change the box model to exclude the padding from the calculation of 100% height (IE8+) */ -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
-
-/* line 27, ../../src/stylesheets/foundation/_grails-default.scss */
-html.no-cssgradients { background-color: #aaa; }
-
-/* line 31, ../../src/stylesheets/foundation/_grails-default.scss */
-.ie6 html { height: 100%; }
-
-/* line 35, ../../src/stylesheets/foundation/_grails-default.scss */
-html * { margin: 0; }
-
-/* line 39, ../../src/stylesheets/foundation/_grails-default.scss */
-body { background: #ffffff; color: #333333; margin: 0 auto; max-width: 960px; overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */ -moz-box-shadow: 0 0 0.3em #255b17; -webkit-box-shadow: 0 0 0.3em #255b17; box-shadow: 0 0 0.3em #255b17; }
-
-/* line 50, ../../src/stylesheets/foundation/_grails-default.scss */
 #grailsLogo { background-color: #abbf78; }
 
 /* replace with .no-boxshadow body if you have modernizr available */
-/* line 57, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 20, ../../src/stylesheets/foundation/_grails-default.scss */
 .ie6 body, .ie7 body, .ie8 body { border-color: #255b17; border-style: solid; border-width: 0 1px; }
 
-/* line 63, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 26, ../../src/stylesheets/foundation/_grails-default.scss */
 .ie6 body { height: 100%; }
 
-/* line 67, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 30, ../../src/stylesheets/foundation/_grails-default.scss */
 a:link, a:visited, a:hover { color: #48802c; }
 
-/* line 71, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 34, ../../src/stylesheets/foundation/_grails-default.scss */
 a:hover, a:active { outline: none; /* prevents outline in webkit on active links but retains it for tab focus */ }
 
-/* line 75, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 38, ../../src/stylesheets/foundation/_grails-default.scss */
 h1 { color: #48802c; font-weight: normal; font-size: 1.25em; margin: 0.8em 0 0.3em 0; }
 
-/* line 82, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 45, ../../src/stylesheets/foundation/_grails-default.scss */
 ul { padding: 0; }
 
-/* line 86, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 49, ../../src/stylesheets/foundation/_grails-default.scss */
 img { border: 0; }
 
 /* GENERAL */
-/* line 92, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 55, ../../src/stylesheets/foundation/_grails-default.scss */
 #grailsLogo a { display: inline-block; margin: 1em; }
 
-/* line 100, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 63, ../../src/stylesheets/foundation/_grails-default.scss */
 .content h1 { border-bottom: 1px solid #CCCCCC; margin: 0.8em 1em 0.3em; padding: 0 0.25em; }
 
-/* line 106, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 69, ../../src/stylesheets/foundation/_grails-default.scss */
 .scaffold-list h1 { border: none; }
 
-/* line 110, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 73, ../../src/stylesheets/foundation/_grails-default.scss */
 .footer { background: #abbf78; color: #000; clear: both; font-size: 0.8em; margin-top: 1.5em; padding: 1em; min-height: 1em; }
 
-/* line 120, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 83, ../../src/stylesheets/foundation/_grails-default.scss */
 .footer a { color: #255b17; }
 
-/* line 124, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 87, ../../src/stylesheets/foundation/_grails-default.scss */
 .spinner { background: url(../images/spinner.gif) 50% 50% no-repeat transparent; height: 16px; width: 16px; padding: 0.5em; position: absolute; right: 0; top: 0; text-indent: -9999px; }
 
 /* NAVIGATION MENU */
-/* line 137, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 100, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav { background-color: #efefef; padding: 0.5em 0.75em; -moz-box-shadow: 0 0 3px 1px #aaaaaa; -webkit-box-shadow: 0 0 3px 1px #aaaaaa; box-shadow: 0 0 3px 1px #aaaaaa; zoom: 1; }
 
-/* line 146, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 109, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav ul { overflow: hidden; padding-left: 0; zoom: 1; }
 
-/* line 152, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 115, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav li { display: block; float: left; list-style-type: none; margin-right: 0.5em; padding: 0; }
 
-/* line 160, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 123, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a { color: #666666; display: block; padding: 0.25em 0.7em; text-decoration: none; -moz-border-radius: 0.3em; -webkit-border-radius: 0.3em; border-radius: 0.3em; }
 
-/* line 170, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 133, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a:active, .nav a:visited { color: #666666; }
 
-/* line 174, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 137, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a:focus, .nav a:hover { background-color: #999999; color: #ffffff; outline: none; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8); }
 
-/* line 181, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 144, ../../src/stylesheets/foundation/_grails-default.scss */
 .no-borderradius .nav a:focus, .no-borderradius .nav a:hover { background-color: transparent; color: #444444; text-decoration: underline; }
 
-/* line 187, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 150, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a.home, .nav a.list, .nav a.create { background-position: 0.7em center; background-repeat: no-repeat; text-indent: 25px; }
 
-/* line 193, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 156, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a.home { background-image: url(../images/skin/house.png); }
 
-/* line 197, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 160, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a.list { background-image: url(../images/skin/database_table.png); }
 
-/* line 201, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 164, ../../src/stylesheets/foundation/_grails-default.scss */
 .nav a.create { background-image: url(../images/skin/database_add.png); }
 
 /* CREATE/EDIT FORMS AND SHOW PAGES */
-/* line 208, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 171, ../../src/stylesheets/foundation/_grails-default.scss */
 fieldset, .property-list { margin: 0.6em 1.25em 0 1.25em; padding: 0.3em 1.8em 1.25em; position: relative; zoom: 1; border: none; }
 
-/* line 216, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 179, ../../src/stylesheets/foundation/_grails-default.scss */
 .property-list .fieldcontain { list-style: none; overflow: hidden; zoom: 1; }
 
-/* line 222, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 185, ../../src/stylesheets/foundation/_grails-default.scss */
 .fieldcontain { margin-top: 1em; }
 
-/* line 227, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 190, ../../src/stylesheets/foundation/_grails-default.scss */
 .fieldcontain label, .fieldcontain .property-label { color: #666666; text-align: right; width: 25%; }
 
-/* line 233, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 196, ../../src/stylesheets/foundation/_grails-default.scss */
 .fieldcontain .property-label { float: left; }
 
-/* line 237, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 200, ../../src/stylesheets/foundation/_grails-default.scss */
 .fieldcontain .property-value { display: block; margin-left: 27%; }
 
-/* line 242, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 205, ../../src/stylesheets/foundation/_grails-default.scss */
 label { cursor: pointer; display: inline-block; margin: 0 0.25em 0 0; }
 
-/* line 248, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 211, ../../src/stylesheets/foundation/_grails-default.scss */
 input, select, textarea { background-color: #fcfcfc; border: 1px solid #cccccc; font-size: 1em; padding: 0.2em 0.4em; }
 
-/* line 255, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 218, ../../src/stylesheets/foundation/_grails-default.scss */
 select { padding: 0.2em 0.2em 0.2em 0; }
 
-/* line 259, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 222, ../../src/stylesheets/foundation/_grails-default.scss */
 select[multiple] { vertical-align: top; }
 
-/* line 263, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 226, ../../src/stylesheets/foundation/_grails-default.scss */
 textarea { width: 250px; height: 150px; overflow: auto; /* IE always renders vertical scrollbar without this */ vertical-align: top; }
 
-/* line 270, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 233, ../../src/stylesheets/foundation/_grails-default.scss */
 input[type=checkbox], input[type=radio] { background-color: transparent; border: 0; padding: 0; }
 
-/* line 276, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 239, ../../src/stylesheets/foundation/_grails-default.scss */
 input:focus, select:focus, textarea:focus { background-color: #ffffff; border: 1px solid #eeeeee; outline: 0; -moz-box-shadow: 0 0 0.5em #ffffff; -webkit-box-shadow: 0 0 0.5em #ffffff; box-shadow: 0 0 0.5em #ffffff; }
 
-/* line 285, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 248, ../../src/stylesheets/foundation/_grails-default.scss */
 .required-indicator { color: #48802C; display: inline-block; font-weight: bold; margin-left: 0.3em; position: relative; top: 0.1em; }
 
-/* line 294, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 257, ../../src/stylesheets/foundation/_grails-default.scss */
 ul.one-to-many { display: inline-block; list-style-position: inside; vertical-align: top; }
 
-/* line 300, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 263, ../../src/stylesheets/foundation/_grails-default.scss */
 .ie6 ul.one-to-many, .ie7 ul.one-to-many { display: inline; zoom: 1; }
 
-/* line 305, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 268, ../../src/stylesheets/foundation/_grails-default.scss */
 ul.one-to-many li.add { list-style-type: none; }
 
 /* EMBEDDED PROPERTIES */
-/* line 311, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 274, ../../src/stylesheets/foundation/_grails-default.scss */
 fieldset.embedded { background-color: transparent; border: 1px solid #CCCCCC; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 
-/* line 323, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 286, ../../src/stylesheets/foundation/_grails-default.scss */
 fieldset.embedded legend { margin: 0 1em; }
 
 /* MESSAGES AND ERRORS */
-/* line 330, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 293, ../../src/stylesheets/foundation/_grails-default.scss */
 .errors, .message { font-size: 0.8em; line-height: 2; margin: 1em 2em; padding: 0.25em; }
 
-/* line 337, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 300, ../../src/stylesheets/foundation/_grails-default.scss */
 .message { background: #f3f3ff; border: 1px solid #b2d1ff; color: #006dba; -moz-box-shadow: 0 0 0.25em #b2d1ff; -webkit-box-shadow: 0 0 0.25em #b2d1ff; box-shadow: 0 0 0.25em #b2d1ff; }
 
-/* line 346, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 309, ../../src/stylesheets/foundation/_grails-default.scss */
 .errors { background: #fff3f3; border: 1px solid #ffaaaa; color: #cc0000; -moz-box-shadow: 0 0 0.25em #ff8888; -webkit-box-shadow: 0 0 0.25em #ff8888; box-shadow: 0 0 0.25em #ff8888; }
 
-/* line 356, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 319, ../../src/stylesheets/foundation/_grails-default.scss */
 .errors ul, .message { padding: 0; }
 
-/* line 360, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 323, ../../src/stylesheets/foundation/_grails-default.scss */
 .errors li { list-style: none; background: transparent url(../images/skin/exclamation.png) 0.5em 50% no-repeat; text-indent: 2.2em; }
 
-/* line 366, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 329, ../../src/stylesheets/foundation/_grails-default.scss */
 .message { background: transparent url(../images/skin/information.png) 0.5em 50% no-repeat; text-indent: 2.2em; }
 
 /* form fields with errors */
-/* line 373, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 336, ../../src/stylesheets/foundation/_grails-default.scss */
 .error input, .error select, .error textarea { background: #fff3f3; border-color: #ffaaaa; color: #cc0000; }
 
-/* line 379, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 342, ../../src/stylesheets/foundation/_grails-default.scss */
 .error input:focus, .error select:focus, .error textarea:focus { -moz-box-shadow: 0 0 0.5em #ffaaaa; -webkit-box-shadow: 0 0 0.5em #ffaaaa; box-shadow: 0 0 0.5em #ffaaaa; }
 
 /* same effects for browsers that support HTML5 client-side validation (these have to be specified separately or IE will ignore the entire rule) */
-/* line 387, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 350, ../../src/stylesheets/foundation/_grails-default.scss */
 input:invalid, select:invalid, textarea:invalid { background: #fff3f3; border-color: #ffaaaa; color: #cc0000; }
 
-/* line 393, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 356, ../../src/stylesheets/foundation/_grails-default.scss */
 input:invalid:focus, select:invalid:focus, textarea:invalid:focus { -moz-box-shadow: 0 0 0.5em #ffaaaa; -webkit-box-shadow: 0 0 0.5em #ffaaaa; box-shadow: 0 0 0.5em #ffaaaa; }
 
 /* TABLES */
-/* line 401, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 364, ../../src/stylesheets/foundation/_grails-default.scss */
 table { border-top: 1px solid #DFDFDF; border-collapse: collapse; width: 100%; margin-bottom: 1em; }
 
-/* line 408, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 371, ../../src/stylesheets/foundation/_grails-default.scss */
 tr { border: 0; }
 
-/* line 412, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 375, ../../src/stylesheets/foundation/_grails-default.scss */
 tr > td:first-child, tr > th:first-child { padding-left: 1.25em; }
 
-/* line 416, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 379, ../../src/stylesheets/foundation/_grails-default.scss */
 tr > td:last-child, tr > th:last-child { padding-right: 1.25em; }
 
-/* line 420, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 383, ../../src/stylesheets/foundation/_grails-default.scss */
 td, th { line-height: 1.5em; padding: 0.5em 0.6em; text-align: left; vertical-align: top; }
 
-/* line 427, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 390, ../../src/stylesheets/foundation/_grails-default.scss */
 th { background-color: #efefef; background-image: -moz-linear-gradient(top, white, #eaeaea); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, white), color-stop(1, #eaeaea)); filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#ffffff', EndColorStr = '#eaeaea'); -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', EndColorStr='#eaeaea')"; color: #666666; font-weight: bold; line-height: 1.7em; padding: 0.2em 0.6em; }
 
-/* line 439, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 402, ../../src/stylesheets/foundation/_grails-default.scss */
 thead th { white-space: nowrap; }
 
-/* line 443, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 406, ../../src/stylesheets/foundation/_grails-default.scss */
 th a { display: block; text-decoration: none; }
 
-/* line 448, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 411, ../../src/stylesheets/foundation/_grails-default.scss */
 th a:link, th a:visited { color: #666666; }
 
-/* line 452, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 415, ../../src/stylesheets/foundation/_grails-default.scss */
 th a:hover, th a:focus { color: #333333; }
 
-/* line 456, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 419, ../../src/stylesheets/foundation/_grails-default.scss */
 th.sortable a { background-position: right; background-repeat: no-repeat; padding-right: 1.1em; }
 
-/* line 462, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 425, ../../src/stylesheets/foundation/_grails-default.scss */
 th.asc a { background-image: url(../images/skin/sorted_asc.gif); }
 
-/* line 466, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 429, ../../src/stylesheets/foundation/_grails-default.scss */
 th.desc a { background-image: url(../images/skin/sorted_desc.gif); }
 
-/* line 470, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 433, ../../src/stylesheets/foundation/_grails-default.scss */
 .odd { background: #f7f7f7; }
 
-/* line 474, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 437, ../../src/stylesheets/foundation/_grails-default.scss */
 .even { background: #ffffff; }
 
-/* line 478, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 441, ../../src/stylesheets/foundation/_grails-default.scss */
 th:hover, tr:hover { background: #E1F2B6; }
 
 /* PAGINATION */
-/* line 484, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 447, ../../src/stylesheets/foundation/_grails-default.scss */
 .pagination { border-top: 0; margin: 0; padding: 0.3em 0.2em; text-align: center; -moz-box-shadow: 0 0 3px 1px #AAAAAA; -webkit-box-shadow: 0 0 3px 1px #AAAAAA; box-shadow: 0 0 3px 1px #AAAAAA; background-color: #EFEFEF; }
 
-/* line 496, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 459, ../../src/stylesheets/foundation/_grails-default.scss */
 .pagination a, .pagination .currentStep { color: #666666; display: inline-block; margin: 0 0.1em; padding: 0.25em 0.7em; text-decoration: none; -moz-border-radius: 0.3em; -webkit-border-radius: 0.3em; border-radius: 0.3em; }
 
-/* line 508, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 471, ../../src/stylesheets/foundation/_grails-default.scss */
 .pagination a:hover, .pagination a:focus, .pagination .currentStep { background-color: #999999; color: #ffffff; outline: none; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8); }
 
-/* line 516, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 479, ../../src/stylesheets/foundation/_grails-default.scss */
 .no-borderradius .pagination a:hover, .no-borderradius .pagination a:focus, .no-borderradius .pagination .currentStep { background-color: transparent; color: #444444; text-decoration: underline; }
 
 /* ACTION BUTTONS */
-/* line 524, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 487, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons { background-color: #efefef; overflow: hidden; padding: 0.3em; -moz-box-shadow: 0 0 3px 1px #aaaaaa; -webkit-box-shadow: 0 0 3px 1px #aaaaaa; box-shadow: 0 0 3px 1px #aaaaaa; margin: 0.1em 0 0 0; border: none; }
 
-/* line 536, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 499, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons input, .buttons a { background-color: transparent; border: 0; color: #666666; cursor: pointer; display: inline-block; margin: 0 0.25em 0; overflow: visible; padding: 0.25em 0.7em; text-decoration: none; -moz-border-radius: 0.3em; -webkit-border-radius: 0.3em; border-radius: 0.3em; }
 
-/* line 553, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 516, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons input:hover, .buttons input:focus, .buttons a:hover, .buttons a:focus { background-color: #999999; color: #ffffff; outline: none; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8); -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 
-/* line 564, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 527, ../../src/stylesheets/foundation/_grails-default.scss */
 .no-borderradius .buttons input:hover, .no-borderradius .buttons input:focus, .no-borderradius .buttons a:hover, .no-borderradius .buttons a:focus { background-color: transparent; color: #444444; text-decoration: underline; }
 
-/* line 570, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 533, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons .delete, .buttons .edit, .buttons .save { background-position: 0.7em center; background-repeat: no-repeat; text-indent: 25px; }
 
-/* line 577, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 540, ../../src/stylesheets/foundation/_grails-default.scss */
 .ie6 .buttons input.delete, .ie6 .buttons input.edit, .ie6 .buttons input.save, .ie7 .buttons input.delete, .ie7 .buttons input.edit, .ie7 .buttons input.save { padding-left: 36px; }
 
-/* line 581, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 544, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons .delete { background-image: url(../images/skin/database_delete.png); }
 
-/* line 585, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 548, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons .edit { background-image: url(../images/skin/database_edit.png); }
 
-/* line 589, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 552, ../../src/stylesheets/foundation/_grails-default.scss */
 .buttons .save { background-image: url(../images/skin/database_save.png); }
 
-/* line 593, ../../src/stylesheets/foundation/_grails-default.scss */
+/* line 556, ../../src/stylesheets/foundation/_grails-default.scss */
 a.skip { position: absolute; left: -9999px; }
+
+/* line 1, ../../src/stylesheets/components/_header.scss */
+#header { background-color: #ffe0e0; text-align: center; }
+
+/* line 3, ../../src/stylesheets/components/_footer.scss */
+#footer { background-color: #e0e0ff; text-align: center; }

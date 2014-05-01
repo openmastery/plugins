@@ -10,22 +10,6 @@
 <html>
 <head>
     <title><g:layoutTitle default="Visualizer"/></title>
-    <style>
-    #header {
-        background-color: #ffe0e0;
-        text-align: center;
-    }
-
-    #footer {
-        background-color: #e0e0ff;
-        text-align: center;
-    }
-
-    .active {
-        background-color:#0000ff;
-        color:#ffffff;
-    }
-    </style>
     <g:javascript library="monolith"/>
     <g:layoutHead/>
     <r:layoutResources/>
