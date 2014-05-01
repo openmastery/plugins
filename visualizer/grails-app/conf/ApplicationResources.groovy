@@ -175,24 +175,6 @@ modules = {
 
     }
 
-    'layouts/main' {
-
-        dependsOn 'monolith'
-
-        resource url: '/css/layouts/main.css'
-        resource url: '/js/layouts/main.js'
-
-    }
-
-    'layouts/login' {
-
-        dependsOn 'monolith'
-
-        resource url: '/css/layouts/login.css'
-        resource url: '/js/layouts/login.js'
-
-    }
-
     'login/auth' {
 
         dependsOn 'monolith'
