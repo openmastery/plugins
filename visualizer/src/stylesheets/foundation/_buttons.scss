@@ -1,12 +1,20 @@
 @import "sassy-buttons";
 
-.menubutton {
-    @include sassy-button("matte", 8px, 10px, #876b99);
-    @include sassy-button-style("push", #876b99);
+$menubutton-color: #876767;
+$menubutton-conflicts-color: #ff0078;
+
+.menuButton {
+    @include sassy-button("matte", 8px, 10px, $menubutton-color);
+    @include sassy-button-style("push", $menubutton-color);
     a {
         color: #fff;
         text-decoration: none;
-        font-weight: bold;
         font-size: 12px;
+        letter-spacing:1px
     }
+}
+
+.menuButton.conflicts {
+    @include sassy-button("matte", 8px, 10px, $menubutton-conflicts-color);
+    @include sassy-button-style("push", $menubutton-conflicts-color);
 }
