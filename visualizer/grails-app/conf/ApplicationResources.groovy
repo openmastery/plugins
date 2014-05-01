@@ -37,13 +37,6 @@ modules = {
 
         dependsOn 'jquery-ui', 'jquery-theme', 'jqueryForms'
 
-        resource url: '/css/global/boxes.css'
-        resource url: '/css/global/buttons.css'
-        resource url: '/css/global/errors.css'
-        resource url: '/css/global/utils.css'
-        resource url: '/css/global/jqueryui-override.css'
-        resource url: '/css/global/pagination.css'
-        resource url: '/css/global/tables.css'
         resource url: '/js/global/global.js'
 
     }
