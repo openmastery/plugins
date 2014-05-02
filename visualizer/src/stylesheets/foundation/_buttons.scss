@@ -2,10 +2,13 @@
 
 $menubutton-color: #876767;
 $menubutton-conflicts-color: #ff0078;
+$delete-button-color: $danger-color;
+$edit-button-color: $green;
+$cancel-button-color: #876767;
+$save-button-color: blue;
 
 .menuButton {
     @include sassy-button("matte", 8px, 10px, $menubutton-color);
-    @include sassy-button-style("push", $menubutton-color);
     a {
         color: #fff;
         text-decoration: none;
@@ -16,6 +19,57 @@ $menubutton-conflicts-color: #ff0078;
 
 .menuButton.conflicts {
     @include sassy-button("matte", 8px, 10px, $menubutton-conflicts-color);
-    @include sassy-button-style("push", $menubutton-conflicts-color);
 }
 
+button.pushbutton, span.pushbutton {
+    min-width: 20px;
+    height: 22px;
+    position: relative;
+    
+}
+
+.delete {
+    @include sassy-button("matte", 8px, 10px, $danger-color);
+    @include sassy-button-style("push", $danger-color);
+    &:before {
+        content: "\f014";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: #fff;
+        font-size: 18px;
+        padding-right: 0.5em;
+        position: absolute;
+        left: 8px;
+        top: 2px;
+    }
+}
+
+.edit {
+    @include sassy-button("matte", 8px, 10px, $edit-button-color);
+    @include sassy-button-style("push", $edit-button-color);
+    &:before {
+        content: "\f040";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: #fff;
+        font-size: 18px;
+        padding-right: 0.5em;
+        position: absolute;
+        left: 8px;
+        top: 2px;
+    }
+}
+
+.save {
+    @include sassy-button("matte", 8px, 10px, $save-button-color);
+    @include sassy-button-style("push", $save-button-color);
+}
+
+.cancel {
+    @include sassy-button("matte", 8px, 10px, $cancel-button-color);
+    @include sassy-button-style("push", $cancel-button-color);
+}
