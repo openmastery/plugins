@@ -2,6 +2,8 @@
 
 $menubutton-color: #876767;
 $menubutton-conflicts-color: #ff0078;
+$active-menubutton-conflicts-color: lighten($menubutton-conflicts-color, 20%);
+$active-menubutton-color: lighten($menubutton-color, 20%);
 $delete-button-color: $danger-color;
 $edit-button-color: $green;
 $cancel-button-color: #876767;
@@ -17,8 +19,16 @@ $save-button-color: blue;
     }
 }
 
+.menuButton.active {
+    @include sassy-button("matte", 8px, 10px, $active-menubutton-color);
+}
+
 .menuButton.conflicts {
     @include sassy-button("matte", 8px, 10px, $menubutton-conflicts-color);
+}
+
+.menuButton.conflicts.active {
+     @include sassy-button("matte", 8px, 10px, $active-menubutton-conflicts-color);
 }
 
 button.pushbutton, span.pushbutton {

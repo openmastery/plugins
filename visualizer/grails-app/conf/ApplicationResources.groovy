@@ -13,20 +13,6 @@ modules = {
                 defaultBundle 'monolith'
             }
 
-            'jquery-ui' {
-
-                defaultBundle 'monolith'
-
-                dependsOn 'reset', 'normalize', 'html5boilerplate'
-            }
-
-            'jquery-theme' {
-
-                dependsOn 'jquery-ui'
-
-                resource id: 'theme', bundle: 'monolith'
-
-            }
         }
 
     }
