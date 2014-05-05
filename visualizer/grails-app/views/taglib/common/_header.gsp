@@ -1,5 +1,5 @@
 <div class="header">
-    <div class="nav">
+    <div class="nav option1">
         <ul>
             <li class="active"><a href="#">Navigation Option</a></li>
             <li><a href="#">Navigation Option</a></li>

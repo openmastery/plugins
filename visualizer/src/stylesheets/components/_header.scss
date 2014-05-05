@@ -1,12 +1,20 @@
 $nav-color1: $light-blue;
 $nav-color2: $pink;
-
-$nav-color: $nav-color1;
+$nav-color3: $tangerine;
 
 .header {
-    background-color: $nav-color;
+    .option1 {
+        background-color: $nav-color1;
+    }
+    .option2 {
+        background-color: $nav-color2;
+    }
+    .option3 {
+        background-color: $nav-color3;
+        }
     .nav {
         height: 60px;
+        min-width: 460px;
         img {
             float: right;
             height: 60px;
@@ -23,7 +31,7 @@ $nav-color: $nav-color1;
                 height: 100%;
             }
             li.active {
-                background-color: darken($nav-color, 5%);
+                background: rgba(#3333e0, 0.2);
             }
         }
         a {
