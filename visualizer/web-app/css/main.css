@@ -333,15 +333,21 @@ button.pushbutton, span.pushbutton { min-width: 20px; height: 22px; position: re
 /* line 8, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-styles.sass */
 .cancel:active { top: 0.3em; -webkit-box-shadow: #705555 0 0.2em 0px; -moz-box-shadow: #705555 0 0.2em 0px; box-shadow: #705555 0 0.2em 0px; }
 
-/* line 1, ../../src/stylesheets/components/_header.scss */
-.header { background-color: #ffe0e0; text-align: center; }
-/* line 4, ../../src/stylesheets/components/_header.scss */
-.header .nav { height: 60px; }
 /* line 6, ../../src/stylesheets/components/_header.scss */
-.header .nav img { height: 60px; }
-/* line 9, ../../src/stylesheets/components/_header.scss */
-.header .nav a { color: #33339b; text-decoration: none; }
-/* line 12, ../../src/stylesheets/components/_header.scss */
+.header { background-color: #e0e0ff; }
+/* line 8, ../../src/stylesheets/components/_header.scss */
+.header .nav { height: 60px; }
+/* line 10, ../../src/stylesheets/components/_header.scss */
+.header .nav img { float: right; height: 60px; margin: 0; }
+/* line 16, ../../src/stylesheets/components/_header.scss */
+.header .nav ul { float: left; height: 60px; width: 70%; margin: 0; }
+/* line 21, ../../src/stylesheets/components/_header.scss */
+.header .nav ul li { float: left; height: 100%; }
+/* line 25, ../../src/stylesheets/components/_header.scss */
+.header .nav ul li.active { background-color: #c6c6ff; }
+/* line 29, ../../src/stylesheets/components/_header.scss */
+.header .nav a { display: inline-block; color: #33339b; text-decoration: none; margin: 18px; }
+/* line 34, ../../src/stylesheets/components/_header.scss */
 .header .nav a:hover { text-decoration: underline; }
 
 /* line 3, ../../src/stylesheets/components/_footer.scss */

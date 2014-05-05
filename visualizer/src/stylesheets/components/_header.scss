@@ -1,14 +1,36 @@
+$nav-color1: $light-blue;
+$nav-color2: $pink;
+
+$nav-color: $nav-color1;
+
 .header {
-    background-color: #ffe0e0;
-    text-align: center;
+    background-color: $nav-color;
     .nav {
         height: 60px;
         img {
+            float: right;
             height: 60px;
+            margin: 0;
+            
+        }
+        ul {
+            float: left;
+            height: 60px;
+            width: 70%;
+            margin: 0;
+            li {
+                float: left;
+                height: 100%;
+            }
+            li.active {
+                background-color: darken($nav-color, 5%);
+            }
         }
         a {
+            display: inline-block;
             color: $link-color;
             text-decoration: none;
+            margin: 18px;
             &:hover {
                 text-decoration: underline;
             }
