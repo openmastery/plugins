@@ -22,6 +22,7 @@ $save-button-color: blue;
 }
 
 button.pushbutton, span.pushbutton {
+    display: block;
     min-width: 20px;
     height: 22px;
     position: relative;

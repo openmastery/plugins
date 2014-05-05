@@ -267,9 +267,9 @@ a.skip { position: absolute; left: -9999px; }
 .menuButton.conflicts::-moz-focus-inner { padding: 0 !important; margin: -1px !important; }
 
 /* line 24, ../../src/stylesheets/foundation/_buttons.scss */
-button.pushbutton, span.pushbutton { min-width: 20px; height: 22px; position: relative; }
+button.pushbutton, span.pushbutton { display: block; min-width: 20px; height: 22px; position: relative; }
 
-/* line 31, ../../src/stylesheets/foundation/_buttons.scss */
+/* line 32, ../../src/stylesheets/foundation/_buttons.scss */
 .delete { font-size: 10px; padding: 0.5em 1.5em; display: inline-block; cursor: pointer; -webkit-border-radius: 8px; -moz-border-radius: 8px; -ms-border-radius: 8px; -o-border-radius: 8px; border-radius: 8px; *zoom: 1; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFFF0000', endColorstr='#FF990000'); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ff4d4d), color-stop(70%, #ff0000)); background: -webkit-linear-gradient(#ff4d4d, #ff0000 70%); background: -moz-linear-gradient(#ff4d4d, #ff0000 70%); background: -o-linear-gradient(#ff4d4d, #ff0000 70%); background: linear-gradient(#ff4d4d, #ff0000 70%); -webkit-box-shadow: #ff9999 0 1px 0 inset; -moz-box-shadow: #ff9999 0 1px 0 inset; box-shadow: #ff9999 0 1px 0 inset; border: 1px solid #e60000; color: white; text-shadow: #c40000 0 -1px 0; position: relative; -webkit-box-shadow: #c20000 0 0.4em 0px, #ff5c5c 0 1px 0 inset; -moz-box-shadow: #c20000 0 0.4em 0px, #ff5c5c 0 1px 0 inset; box-shadow: #c20000 0 0.4em 0px, #ff5c5c 0 1px 0 inset; border-bottom: solid 1px red; }
 /* line 15, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-pseudo-states.sass */
 .delete:hover { text-decoration: none; }
@@ -283,10 +283,10 @@ button.pushbutton, span.pushbutton { min-width: 20px; height: 22px; position: re
 .delete::-moz-focus-inner { padding: 0 !important; margin: -1px !important; }
 /* line 8, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-styles.sass */
 .delete:active { top: 0.3em; -webkit-box-shadow: #d60000 0 0.2em 0px; -moz-box-shadow: #d60000 0 0.2em 0px; box-shadow: #d60000 0 0.2em 0px; }
-/* line 34, ../../src/stylesheets/foundation/_buttons.scss */
+/* line 35, ../../src/stylesheets/foundation/_buttons.scss */
 .delete:before { content: "\f014"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; color: #fff; font-size: 18px; padding-right: 0.5em; position: absolute; left: 8px; top: 2px; }
 
-/* line 49, ../../src/stylesheets/foundation/_buttons.scss */
+/* line 50, ../../src/stylesheets/foundation/_buttons.scss */
 .edit { font-size: 10px; padding: 0.5em 1.5em; display: inline-block; cursor: pointer; -webkit-border-radius: 8px; -moz-border-radius: 8px; -ms-border-radius: 8px; -o-border-radius: 8px; border-radius: 8px; *zoom: 1; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF48A248', endColorstr='#FF295B29'); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #75c275), color-stop(70%, #48a248)); background: -webkit-linear-gradient(#75c275, #48a248 70%); background: -moz-linear-gradient(#75c275, #48a248 70%); background: -o-linear-gradient(#75c275, #48a248 70%); background: linear-gradient(#75c275, #48a248 70%); -webkit-box-shadow: #aad9aa 0 1px 0 inset; -moz-box-shadow: #aad9aa 0 1px 0 inset; box-shadow: #aad9aa 0 1px 0 inset; border: 1px solid #409040; color: white; text-shadow: #367936 0 -1px 0; position: relative; -webkit-box-shadow: #357835 0 0.4em 0px, #7fc67f 0 1px 0 inset; -moz-box-shadow: #357835 0 0.4em 0px, #7fc67f 0 1px 0 inset; box-shadow: #357835 0 0.4em 0px, #7fc67f 0 1px 0 inset; border-bottom: solid 1px #48a248; }
 /* line 15, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-pseudo-states.sass */
 .edit:hover { text-decoration: none; }
@@ -300,10 +300,10 @@ button.pushbutton, span.pushbutton { min-width: 20px; height: 22px; position: re
 .edit::-moz-focus-inner { padding: 0 !important; margin: -1px !important; }
 /* line 8, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-styles.sass */
 .edit:active { top: 0.3em; -webkit-box-shadow: #3b863b 0 0.2em 0px; -moz-box-shadow: #3b863b 0 0.2em 0px; box-shadow: #3b863b 0 0.2em 0px; }
-/* line 52, ../../src/stylesheets/foundation/_buttons.scss */
+/* line 53, ../../src/stylesheets/foundation/_buttons.scss */
 .edit:before { content: "\f040"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; color: #fff; font-size: 18px; padding-right: 0.5em; position: absolute; left: 8px; top: 2px; }
 
-/* line 67, ../../src/stylesheets/foundation/_buttons.scss */
+/* line 68, ../../src/stylesheets/foundation/_buttons.scss */
 .save { font-size: 10px; padding: 0.5em 1.5em; display: inline-block; cursor: pointer; -webkit-border-radius: 8px; -moz-border-radius: 8px; -ms-border-radius: 8px; -o-border-radius: 8px; border-radius: 8px; *zoom: 1; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF0000FF', endColorstr='#FF000099'); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4d4dff), color-stop(70%, #0000ff)); background: -webkit-linear-gradient(#4d4dff, #0000ff 70%); background: -moz-linear-gradient(#4d4dff, #0000ff 70%); background: -o-linear-gradient(#4d4dff, #0000ff 70%); background: linear-gradient(#4d4dff, #0000ff 70%); -webkit-box-shadow: #9999ff 0 1px 0 inset; -moz-box-shadow: #9999ff 0 1px 0 inset; box-shadow: #9999ff 0 1px 0 inset; border: 1px solid #0000e6; color: white; text-shadow: #0000c4 0 -1px 0; position: relative; -webkit-box-shadow: #0000c2 0 0.4em 0px, #5c5cff 0 1px 0 inset; -moz-box-shadow: #0000c2 0 0.4em 0px, #5c5cff 0 1px 0 inset; box-shadow: #0000c2 0 0.4em 0px, #5c5cff 0 1px 0 inset; border-bottom: solid 1px blue; }
 /* line 15, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-pseudo-states.sass */
 .save:hover { text-decoration: none; }
@@ -318,7 +318,7 @@ button.pushbutton, span.pushbutton { min-width: 20px; height: 22px; position: re
 /* line 8, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-styles.sass */
 .save:active { top: 0.3em; -webkit-box-shadow: #0000d6 0 0.2em 0px; -moz-box-shadow: #0000d6 0 0.2em 0px; box-shadow: #0000d6 0 0.2em 0px; }
 
-/* line 72, ../../src/stylesheets/foundation/_buttons.scss */
+/* line 73, ../../src/stylesheets/foundation/_buttons.scss */
 .cancel { font-size: 10px; padding: 0.5em 1.5em; display: inline-block; cursor: pointer; -webkit-border-radius: 8px; -moz-border-radius: 8px; -ms-border-radius: 8px; -o-border-radius: 8px; border-radius: 8px; *zoom: 1; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF876767', endColorstr='#FF4D3B3B'); background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aa9090), color-stop(70%, #876767)); background: -webkit-linear-gradient(#aa9090, #876767 70%); background: -moz-linear-gradient(#aa9090, #876767 70%); background: -o-linear-gradient(#aa9090, #876767 70%); background: linear-gradient(#aa9090, #876767 70%); -webkit-box-shadow: #cbbbbb 0 1px 0 inset; -moz-box-shadow: #cbbbbb 0 1px 0 inset; box-shadow: #cbbbbb 0 1px 0 inset; border: 1px solid #795c5c; color: white; text-shadow: #664e4e 0 -1px 0; position: relative; -webkit-box-shadow: #644d4d 0 0.4em 0px, #b19999 0 1px 0 inset; -moz-box-shadow: #644d4d 0 0.4em 0px, #b19999 0 1px 0 inset; box-shadow: #644d4d 0 0.4em 0px, #b19999 0 1px 0 inset; border-bottom: solid 1px #876767; }
 /* line 15, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/sassy-buttons-0.2.6/stylesheets/sassy-buttons/_sassy-button-pseudo-states.sass */
 .cancel:hover { text-decoration: none; }
@@ -351,7 +351,11 @@ button.pushbutton, span.pushbutton { min-width: 20px; height: 22px; position: re
 .header .nav a:hover { text-decoration: underline; }
 
 /* line 3, ../../src/stylesheets/components/_footer.scss */
-#footer { background-color: #e0e0ff; text-align: center; }
+#footer { height: 60px; padding: 12px; text-align: center; }
+/* line 7, ../../src/stylesheets/components/_footer.scss */
+#footer i { margin-left: 20px; }
+/* line 9, ../../src/stylesheets/components/_footer.scss */
+#footer i:before { content: "\f02d"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; color: #333; font-size: 18px; }
 
 /* line 6, ../../src/stylesheets/components/_timeline.scss */
 .timeline-holder { -webkit-border-radius: 10px 10px; -moz-border-radius: 10px / 10px; border-radius: 10px / 10px; background-color: white; margin-left: auto; margin-right: auto; margin-top: 10px; margin-top: 10px; padding: 20px; width: 800px; }
