@@ -147,7 +147,7 @@ input:invalid:focus, select:invalid:focus, textarea:invalid:focus { -moz-box-sha
 
 /* TABLES */
 /* line 291, ../../src/stylesheets/foundation/_grails-default.scss */
-table { border-top: 1px solid #DFDFDF; border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+table { border-top: 1px solid #DDDDDD; border-collapse: collapse; width: 100%; margin-bottom: 1em; }
 
 /* line 298, ../../src/stylesheets/foundation/_grails-default.scss */
 tr { border: 0; }
@@ -395,3 +395,6 @@ button.pushbutton, span.pushbutton { display: block; min-width: 20px; height: 22
 
 /* line 1, ../../src/stylesheets/components/_table.scss */
 table.tabular { background-color: white; }
+
+/* line 1, ../../src/stylesheets/components/_conflicts.scss */
+#conflicts { background-color: white; padding: 1em; border-top: solid 1px #dddddd; }
