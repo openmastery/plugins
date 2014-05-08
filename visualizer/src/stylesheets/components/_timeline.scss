@@ -1,10 +1,10 @@
-$timeline-holder-width: 800px;
-$timeline-holder-top-margin: 10px;
-$timeline-holder-bottom-margin: 10px;
-$timeline-holder-padding: 20px;
+$timeline-holder-width: $unit * 80;
+$timeline-holder-top-margin: $unit;
+$timeline-holder-bottom-margin: $unit;
+$timeline-holder-padding: $unit * 2;
 
 .timeline-holder {
-    @include border-radius(10px, 10px);
+    @include border-radius($unit, $unit);
     background-color: white;
     margin-left: auto;
     margin-right: auto;

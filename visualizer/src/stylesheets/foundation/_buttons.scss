@@ -10,25 +10,26 @@ $cancel-button-color: #876767;
 $save-button-color: blue;
 
 .menuButton {
-    @include sassy-button("matte", 8px, 10px, $menubutton-color);
+    @include sassy-button("matte", 3px, 0px, $menubutton-color);
     a {
+        display: block;
         color: #fff;
         text-decoration: none;
         font-size: 12px;
-        letter-spacing:1px
+        letter-spacing:1px;
+        margin-bottom:  0px;
+        min-width: 96px;
+        text-align: center;
+        padding: 5px;
     }
 }
 
 .menuButton.active {
-    @include sassy-button("matte", 8px, 10px, $active-menubutton-color);
-}
-
-.menuButton.conflicts {
-    @include sassy-button("matte", 8px, 10px, $menubutton-conflicts-color);
+    @include sassy-button("matte", 8px, $unit, $active-menubutton-color);
 }
 
 .menuButton.conflicts.active {
-     @include sassy-button("matte", 8px, 10px, $active-menubutton-conflicts-color);
+     @include sassy-button("matte", 8px, $unit, $active-menubutton-conflicts-color);
 }
 
 button.pushbutton, span.pushbutton {
@@ -40,7 +41,7 @@ button.pushbutton, span.pushbutton {
 }
 
 .delete {
-    @include sassy-button("matte", 8px, 10px, $danger-color);
+    @include sassy-button("matte", 8px, $unit, $danger-color);
     @include sassy-button-style("push", $danger-color);
     &:before {
         content: "\f014";
@@ -58,7 +59,7 @@ button.pushbutton, span.pushbutton {
 }
 
 .edit {
-    @include sassy-button("matte", 8px, 10px, $edit-button-color);
+    @include sassy-button("matte", 8px, $unit, $edit-button-color);
     @include sassy-button-style("push", $edit-button-color);
     &:before {
         content: "\f040";
@@ -76,11 +77,20 @@ button.pushbutton, span.pushbutton {
 }
 
 .save {
-    @include sassy-button("matte", 8px, 10px, $save-button-color);
+    @include sassy-button("matte", 8px, $unit, $save-button-color);
     @include sassy-button-style("push", $save-button-color);
 }
 
 .cancel {
-    @include sassy-button("matte", 8px, 10px, $cancel-button-color);
+    @include sassy-button("matte", 8px, $unit, $cancel-button-color);
     @include sassy-button-style("push", $cancel-button-color);
+}
+
+@mixin tab-border-radius {
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }

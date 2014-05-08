@@ -1,5 +1,46 @@
+$conflict-header-background-color: #ffefef;
+$conflict-border-color: $violet; 
+
 #conflicts {
     background-color: white;
     padding: 1em;
     border-top: solid 1px #dddddd;
+}
+
+.conflict {
+    display: block;
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    @include border-radius($unit, $unit);
+    border: 1px solid $violet;
+    .header {
+        border-bottom: 1px solid $violet;
+        @include tab-border-radius;
+        background-color: $conflict-header-background-color;
+        color: $light-font-color;
+        font-weight: bold;
+        padding: $unit /2;
+    }
+    .content {
+    display: inline-block;
+    padding: $unit;
+    }
+}
+
+.conflict:hover {
+    background-color: #d3e0ff;
+    cursor: pointer;
+}
+
+.label {
+    vertical-align: top;
+    text-align: right;
+    display: inline-block;
+    width: 100px;
+}
+
+.description {
+    display: inline-block;
+    margin-left: 20px;
 }

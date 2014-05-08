@@ -11,7 +11,7 @@
         <g:remoteLink controller="timeBand" action='list' update='contentPanel'
                       class="${'timeBand'.equals(controller) ? 'active' : ''}">Highlights</g:remoteLink>
     </span>
-    <span class="menuButton conflicts">
+    <span class="menuButton">
         <g:remoteLink controller="conflict" action='list' update='contentPanel'
                       class="${'conflict'.equals(controller) ? 'active' : ''}">Conflicts</g:remoteLink>
     </span>

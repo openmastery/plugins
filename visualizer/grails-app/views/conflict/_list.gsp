@@ -1,55 +1,33 @@
 <common:nav controller="${params.controller}" action="${params.action}"/>
-<style>
-.conflict:hover {
-    background-color: #d3e0ff;
-    cursor: pointer;
-}
-
-.conflict {
-    display: inline-block;
-    width: 700px;
-}
-.label {
-    vertical-align: top;
-    text-align: right;
-    display: inline-block;
-    width: 100px;
-}
-
-.description {
-    display: inline-block;
-    margin-left: 20px;
-}
-
-</style>
 
 <div id="conflicts">
     <g:each in="${conflicts}" var="${conflict}" status="${index}">
         <div class="conflict" onmouseover="highlightConflict(${index})" onmouseout="resetColorBands()">
-            <div>
+            <div class="header">
                 <span class="label">Conflict:</span>
                 <span class="description">${conflict.conflict}</span>
             </div>
-
-            <div>
-                <span class="label">Resolution:</span>
-                <span class="description">${conflict.resolution}</span>
-            </div>
-            <g:if test="${conflict.mistakeType}">
+            <div class="content">
                 <div>
-                    <span class="label">Mistake Type:</span>
-                    <span class="description">${conflict.mistakeType}</span>
+                    <span class="label">Resolution:</span>
+                    <span class="description">${conflict.resolution}</span>
                 </div>
-            </g:if>
-            <g:if test="${conflict.cause}">
+                <g:if test="${conflict.mistakeType}">
+                    <div>
+                        <span class="label">Mistake Type:</span>
+                        <span class="description">${conflict.mistakeType}</span>
+                    </div>
+                </g:if>
+                <g:if test="${conflict.cause}">
+                    <div>
+                        <span class="label">Cause:</span>
+                        <span class="description">${conflict.cause}</span>
+                    </div>
+                </g:if>
                 <div>
-                    <span class="label">Cause:</span>
-                    <span class="description">${conflict.cause}</span>
+                    <span class="label">Duration:</span>
+                    <span class="description">${conflict.durationFormattedTime}</span>
                 </div>
-            </g:if>
-            <div>
-                <span class="label">Duration:</span>
-                <span class="description">${conflict.durationFormattedTime}</span>
             </div>
         </div>
 
