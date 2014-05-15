@@ -2,15 +2,17 @@
 
 $menubutton-color: #876767;
 $menubutton-conflicts-color: #ff0078;
+$menubutton-radius: 3px;
+$menubutton-padding: 0px;
 $active-menubutton-conflicts-color: lighten($menubutton-conflicts-color, 20%);
-$active-menubutton-color: lighten($menubutton-color, 20%);
+$active-menubutton-color: adjust-color($menubutton-color, $lightness: +10%, $saturation: +10%);
 $delete-button-color: $danger-color;
 $edit-button-color: $green;
 $cancel-button-color: #876767;
 $save-button-color: blue;
 
 .menuButton {
-    @include sassy-button("matte", 3px, 0px, $menubutton-color);
+    @include sassy-button("matte", $menubutton-radius, $menubutton-padding, $menubutton-color);
     a {
         display: block;
         color: #fff;
@@ -25,7 +27,7 @@ $save-button-color: blue;
 }
 
 .menuButton.active {
-    @include sassy-button("matte", 8px, $unit, $active-menubutton-color);
+    @include sassy-button("matte", $menubutton-radius, $menubutton-padding, $active-menubutton-color);
 }
 
 .menuButton.conflicts.active {
@@ -43,6 +45,8 @@ button.pushbutton, span.pushbutton {
 .delete {
     @include sassy-button("matte", 8px, $unit, $danger-color);
     @include sassy-button-style("push", $danger-color);
+    display: inline-block;
+    height: 24px;
     &:before {
         content: "\f014";
         font-family: FontAwesome;
