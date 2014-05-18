@@ -1,10 +1,14 @@
 package visualizer
 
-import static com.newiron.ideaflow.data.BandType.*
-import com.newiron.ideaflow.data.TimePosition
 import com.newiron.ideaflow.data.TimeBand
+import com.newiron.ideaflow.data.TimePosition
 import com.newiron.ideaflow.data.Timeline
 import grails.converters.JSON
+import groovy.json.JsonBuilder
+
+import static com.newiron.ideaflow.data.BandType.Conflict
+import static com.newiron.ideaflow.data.BandType.Learning
+import static com.newiron.ideaflow.data.BandType.Rework
 
 
 class TimelineController {
@@ -40,7 +44,13 @@ class TimelineController {
         timeline.timeBands << new TimeBand(Conflict, new TimePosition(8, 15, 0), 18 * 60)
         timeline.timeBands << new TimeBand(Conflict, new TimePosition(8, 43, 0), 11 * 60)
 
-        render timeline as JSON
+	    JsonBuilder jsonBuilder = new JsonBuilder()
+        jsonBuilder(timeline)
+	    String json = jsonBuilder.toString()
+	    json = json.substring(1, json.length() - 1)
+
+	    response.setContentType("application/json")
+	    render json
     }
 
     def showBook() {

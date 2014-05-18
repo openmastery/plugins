@@ -1,12 +1,19 @@
 package com.newiron.ideaflow.data
 
+import com.ideaflow.model.Note
 
-class Event {
+
+class Event extends com.ideaflow.timeline.Event {
     @Delegate TimePosition time
-    String comment
 
-    Event(int hour, int min, int seconds, String comment) {
-        this.time = new TimePosition(hour, min, seconds)
-        this.comment = comment
-    }
+	Event(int hour, int min, int seconds, String comment) {
+		super(0, new Note(comment))
+		time = new TimePosition(hour, min, seconds)
+		offset = time.relativeOffset
+	}
+
+	String getComment() {
+		note.comment
+	}
+
 }

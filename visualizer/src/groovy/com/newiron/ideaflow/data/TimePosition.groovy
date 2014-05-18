@@ -1,16 +1,21 @@
 package com.newiron.ideaflow.data
 
+import org.joda.time.DateTime
 
-class TimePosition {
-    int offset
+class TimePosition extends com.ideaflow.timeline.TimePosition {
 
-    TimePosition(int offset) {
-        this.offset = offset
-    }
+	TimePosition(int relativeOffset) {
+		// TODO: new DateTime(..) is causing stack overflow when executed w/in grails
+		super(new DateTime(relativeOffset), relativeOffset)
+	}
 
     TimePosition(int hours, int minutes, int seconds) {
-        this.offset = (hours * 60 * 60) + (minutes * 60) + seconds
+	    this((hours * 60 * 60) + (minutes * 60) + seconds)
     }
+
+	int getOffset() {
+		relativeOffset
+	}
 
     String getLongTime() {
         toHours() + ":" + toMinutes() + ":" + toSeconds()
