@@ -1,4 +1,5 @@
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
 
 repositories {
 	mavenCentral()
@@ -47,3 +48,11 @@ task prepareLibs {
      dependsOn { [prepareRuntimeLibs, prepareTestLibs] }
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project.ext.artifactId
+            from components.java
+        }
+    }
+}
