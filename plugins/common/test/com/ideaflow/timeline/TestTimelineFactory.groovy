@@ -107,10 +107,10 @@ class TestTimelineFactory {
 
 		ActivityDetail activityDetail1 = timeline.activityDetails[0]
 		assert activityDetail1.editorActivity == editorActivity1
-		assert activityDetail1.offset == 0
+		assert activityDetail1.time.relativeOffset == 0
 		ActivityDetail activityDetail2 = timeline.activityDetails[1]
 		assert activityDetail2.editorActivity == editorActivity2
-		assert activityDetail2.offset == 10
+		assert activityDetail2.time.relativeOffset == 10
 		assert timeline.activityDetails.size() == 2
 	}
 

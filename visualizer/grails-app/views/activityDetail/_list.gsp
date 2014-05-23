@@ -16,16 +16,16 @@
         </tr>
         </thead>
         <tbody>
-        <g:each in="${intervals}" var="${interval}" status="${index}">
+        <g:each in="${activities}" var="${activity}" status="${index}">
             <tr id="interval_${index}">
                 <td>
-                    ${interval.getStartTime(true)}
+                    ${activity.time.relativeOffset}
                 </td>
                 <td>
-                    ${interval.comment}
+                    ${activity.activityName}
                 </td>
                 <td>
-                    ${interval.durationFormattedTime}
+                    ${activity.duration}
                 </td>
             </tr>
         </g:each>

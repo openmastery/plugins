@@ -4,20 +4,21 @@ import com.ideaflow.model.EditorActivity
 import org.joda.time.DateTime
 
 
-class ActivityDetail extends RelativeTime {
+class ActivityDetail {
 
-	EditorActivity editorActivity
+	private EditorActivity editorActivity
+	final TimePosition time
+	final TimeDuration duration
 
-	ActivityDetail(int offset) {
-		super(offset)
+	ActivityDetail(TimePosition timePosition, EditorActivity editorActivity) {
+		this.editorActivity = editorActivity
+		this.time = timePosition
+		this.duration = new TimeDuration(editorActivity.duration)
 	}
 
-	int getDuration() {
-		editorActivity.duration
+	String getActivityName() {
+		editorActivity.name
 	}
 
-	DateTime getCreated() {
-		editorActivity.created
-	}
 
 }

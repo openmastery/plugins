@@ -1,6 +1,6 @@
 <div id="nav" class="nav">
     <span class="menuButton default">
-        <g:remoteLink controller="interval" action='list' update='contentPanel'
+        <g:remoteLink controller="activityDetail" action='list' update='contentPanel'
                       class="${'interval'.equals(controller) ? 'active' : ''}">Timeline</g:remoteLink>
     </span>
     <span class="menuButton default">

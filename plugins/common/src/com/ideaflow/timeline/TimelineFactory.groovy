@@ -51,8 +51,8 @@ class TimelineFactory {
 		}
 
 		void addEntity(EditorActivity editorActivity) {
-			ActivityDetail activityDetail = new ActivityDetail(relativeTime)
-			activityDetail.editorActivity = editorActivity
+			TimePosition time = createTimePositionWithRelativeTimeAsOffset(editorActivity.created)
+			ActivityDetail activityDetail = new ActivityDetail(time, editorActivity)
 			timeline.addActivityDetail(activityDetail)
 			relativeTime += editorActivity.duration
 		}
