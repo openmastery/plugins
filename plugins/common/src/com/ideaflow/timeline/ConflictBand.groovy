@@ -38,4 +38,8 @@ class ConflictBand extends AbstractTimeBand {
 		conflict.notes
 	}
 
+	String getBandType() {
+		"conflict"
+	}
+
 }

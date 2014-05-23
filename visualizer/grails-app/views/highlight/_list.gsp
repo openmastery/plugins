@@ -10,14 +10,17 @@
         <tbody>
         <g:each in="${timeBands}" var="${band}" status="${index}">
             <tr id="event_${index}" class="eventrow" onmouseover="highlightColorBand(${index})" onmouseout="resetColorBands()">
-                <td style="background-color: ${band.color}">
+                <td class="${band.bandType}type">
                     &nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
-                    ${band.startTime} - ${band.endTime}
+                    ${band.startPosition.relativeOffset} - ${band.endPosition.relativeOffset}
                 </td>
                 <td>
-                    ${band.bandType} ${band.comment ? '-' : ''} ${band.comment}
+                    ${band.bandType}
+                    <g:if test="${band.bandType == "conflict"}">
+                     - ${band.question}
+                    </g:if>
                 </td>
             </tr>
         </g:each>

@@ -1,3 +1,15 @@
 table.tabular {
     background-color: white;
 }
+
+.learningtype {
+  background-color: $learning-color;
+}
+
+.reworktype {
+  background-color: $rework-color;
+}
+
+.conflicttype {
+  background-color: $conflict-color;
+}

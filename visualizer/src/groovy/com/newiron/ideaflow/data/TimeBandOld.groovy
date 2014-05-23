@@ -1,13 +1,13 @@
 package com.newiron.ideaflow.data
 
 
-class TimeBand {
+class TimeBandOld {
     private BandType bandType
     private TimePosition startPosition
     private TimePosition endPosition
     String comment
 
-    TimeBand(BandType bandType, TimePosition position, int duration, String comment = "") {
+	TimeBandOld(BandType bandType, TimePosition position, int duration, String comment = "") {
         this.bandType = bandType
         this.startPosition = position
         this.endPosition = new TimePosition(startPosition.offset + duration)

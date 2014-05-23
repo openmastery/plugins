@@ -1,5 +1,7 @@
 package com.ideaflow.timeline
 
+import com.ideaflow.model.BandType
+
 interface TimeBand {
 
 	TimePosition getStartPosition()
@@ -11,4 +13,6 @@ interface TimeBand {
 	void setStartPosition(TimePosition startPosition)
 
 	void setEndPosition(TimePosition endPosition)
+
+	String getBandType()
 }

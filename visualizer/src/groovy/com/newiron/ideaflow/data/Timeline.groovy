@@ -5,7 +5,7 @@ class Timeline {
     TimePosition start
     TimePosition end
     List<TimePosition> events = []
-    List<TimeBand> timeBands = []
+    List<TimeBandOld> timeBands = []
 
     //intervals are not in here.
 

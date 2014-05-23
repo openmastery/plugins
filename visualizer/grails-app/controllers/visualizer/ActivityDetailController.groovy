@@ -2,8 +2,6 @@ package visualizer
 
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.timeline.ActivityDetail
-import com.newiron.ideaflow.data.BandType
-import com.newiron.ideaflow.data.TimeBand
 import com.newiron.ideaflow.data.TimePosition
 import org.joda.time.DateTime
 

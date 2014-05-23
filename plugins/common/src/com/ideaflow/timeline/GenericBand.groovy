@@ -18,7 +18,7 @@ class GenericBand extends AbstractTimeBand {
 		bandEnd.created = created
 	}
 
-	BandType getBandType() {
-		bandStart.type
+	String getBandType() {
+		bandStart.type.name()
 	}
 }

@@ -8,7 +8,7 @@
                       class="${'event'.equals(controller) ? 'active' : ''}">Events</g:remoteLink>
     </span>
     <span class="menuButton default">
-        <g:remoteLink controller="timeBand" action='list' update='contentPanel'
+        <g:remoteLink controller="highlight" action='list' update='contentPanel'
                       class="${'timeBand'.equals(controller) ? 'active' : ''}">Highlights</g:remoteLink>
     </span>
     <span class="menuButton">
