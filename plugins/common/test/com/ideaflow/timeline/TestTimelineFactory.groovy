@@ -86,7 +86,7 @@ class TestTimelineFactory {
 
 		Event event = firstAndOnlyEvent(timeline)
 		assert event.note == note
-		assert event.offset == 10
+		assert event.time.relativeOffset == 10
 	}
 
 	private Event firstAndOnlyEvent(Timeline timeline) {

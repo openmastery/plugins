@@ -3,7 +3,7 @@ package visualizer
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.Resolution
 import com.ideaflow.timeline.ConflictBand
-import com.newiron.ideaflow.data.TimePosition
+import com.ideaflow.timeline.TimePosition
 
 class ConflictController {
 
@@ -23,14 +23,14 @@ class ConflictController {
 		conflicts << createConflict(
 			"Why isn't the chart showing up?",
 			"Forgot to add chart name to dictionary",
-			new TimePosition(8, 15, 0), new TimePosition(6, 33, 24))
+			new TimePosition(8, 15, 0), new TimePosition(8, 33, 24))
 
 		conflicts << createConflict(
 			"Why are the bars overlapping?",
 			"Need to adjust scale on axis manually",
 			new TimePosition(8, 43, 0), new TimePosition(8, 54, 35))
 
-        render(template: "list", model: [conflictBands: conflicts])
+        render(template: "list", model: [conflicts: conflicts])
     }
 
     def show() {

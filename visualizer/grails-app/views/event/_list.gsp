@@ -11,7 +11,7 @@
         <g:each in="${events}" var="${event}" status="${index}">
             <tr id="event_${index}" class="eventrow" onmouseover="highlightEvent(${index})" onmouseout="resetEventLines()">
                 <td>
-                    ${event.shortTime}
+                    ${event.time.relativeOffset}
                 </td>
                 <td>
                     ${event.comment}

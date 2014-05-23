@@ -77,7 +77,8 @@ class TimelineFactory {
 		}
 
 		void addEntity(Note note) {
-			timeline.addEvent(new Event(relativeTime, note))
+			TimePosition timePosition = createTimePositionWithRelativeTimeAsOffset(note.created)
+			timeline.addEvent(new Event(timePosition, note))
 		}
 
 		void addEntity(StateChange stateChange) {

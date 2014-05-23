@@ -1,32 +1,32 @@
 <common:nav controller="${params.controller}" action="${params.action}"/>
 
 <div id="conflicts">
-    <g:each in="${conflicts}" var="${conflictBand}" status="${index}">
+    <g:each in="${conflicts}" var="${conflict}" status="${index}">
         <div class="conflict" onmouseover="highlightConflict(${index})" onmouseout="resetColorBands()">
             <div class="header">
                 <span class="label">Conflict:</span>
-                <span class="description">${band.conflict.question}</span>
+                <span class="description">${conflict.question}</span>
             </div>
             <div class="content">
                 <div>
                     <span class="label">Resolution:</span>
-                    <span class="description">${band.resolution.answer}</span>
+                    <span class="description">${conflict.answer}</span>
                 </div>
-                <g:if test="${band.conflict.mistakeType}">
+                <g:if test="${conflict.mistakeType}">
                     <div>
                         <span class="label">Mistake Type:</span>
-                        <span class="description">${band.conflict.mistakeType}</span>
+                        <span class="description">${conflict.mistakeType}</span>
                     </div>
                 </g:if>
-                <g:if test="${band.conflict.cause}">
+                <g:if test="${conflict.cause}">
                     <div>
                         <span class="label">Cause:</span>
-                        <span class="description">${band.conflict.cause}</span>
+                        <span class="description">${conflict.cause}</span>
                     </div>
                 </g:if>
                 <div>
                     <span class="label">Duration:</span>
-                    <span class="description">${band.duration}</span>
+                    <span class="description">${conflict.duration}</span>
                 </div>
             </div>
         </div>
