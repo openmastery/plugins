@@ -2,6 +2,7 @@ package com.ideaflow.timeline
 
 import com.ideaflow.model.BandEnd
 import com.ideaflow.model.BandStart
+import com.ideaflow.model.BandType
 import org.joda.time.DateTime
 
 class GenericBand extends AbstractTimeBand {
@@ -17,4 +18,7 @@ class GenericBand extends AbstractTimeBand {
 		bandEnd.created = created
 	}
 
+	BandType getBandType() {
+		bandStart.type
+	}
 }

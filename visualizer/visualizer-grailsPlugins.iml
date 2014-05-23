@@ -19,6 +19,10 @@
       <sourceFolder url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/cache-1.0.1/grails-app/services" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/cache-1.0.1/grails-app/taglib" isTestSource="false" />
     </content>
+    <content url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/compass-sass-0.7">
+      <sourceFolder url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/compass-sass-0.7/src/groovy" isTestSource="false" />
+      <sourceFolder url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/compass-sass-0.7/grails-app/i18n" isTestSource="false" />
+    </content>
     <content url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/jquery-1.8.3">
       <sourceFolder url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/jquery-1.8.3/src/groovy" isTestSource="false" />
       <sourceFolder url="file://$USER_HOME$/.grails/2.2.4/projects/visualizer/plugins/jquery-1.8.3/grails-app/i18n" isTestSource="false" />
@@ -51,9 +55,13 @@
           <root url="jar://$USER_HOME$/.grails/ivy-cache/org.eclipse.jdt.core.compiler/ecj/jars/ecj-3.7.2.jar!/" />
           <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.tomcat.embed/tomcat-embed-logging-log4j/jars/tomcat-embed-logging-log4j-7.0.42.jar!/" />
           <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.tomcat.embed/tomcat-embed-core/jars/tomcat-embed-core-7.0.42.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/ideaflow/core/jars/core-0.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/joda-time/joda-time/jars/joda-time-2.3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../plugins/common/src" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

@@ -8,4 +8,7 @@ interface TimeBand {
 
 	TimeDuration getDuration()
 
+	void setStartPosition(TimePosition startPosition)
+
+	void setEndPosition(TimePosition endPosition)
 }

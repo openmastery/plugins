@@ -6,7 +6,7 @@ class TimePosition extends com.ideaflow.timeline.TimePosition {
 
 	TimePosition(int relativeOffset) {
 		// TODO: new DateTime(..) is causing stack overflow when executed w/in grails
-		super(new DateTime(relativeOffset), relativeOffset)
+		super(null, relativeOffset)
 	}
 
     TimePosition(int hours, int minutes, int seconds) {
