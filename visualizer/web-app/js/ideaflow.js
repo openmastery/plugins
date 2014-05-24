@@ -262,7 +262,7 @@ function drawTimebandsLayer(stage, bands, secondsPerUnit) {
     for (var i = 0; i < bands.length; i++) {
         var colorBand = drawTimeband(layer, bands[i], secondsPerUnit);
         colorBands[i] = colorBand;
-        if (bands[i].bandType == 'Conflict') {
+        if (bands[i].bandType == 'conflict') {
             conflictBands[conflictBands.length] = colorBand;
         }
     }
@@ -278,8 +278,8 @@ function drawTimeband(layer, band, secondsPerUnit) {
         y: topMargin + bandMargin,
         width: size,
         height: height - bottomMargin - topMargin - bandMargin,
-        fill: band.color,
-        stroke: band.highlight,
+        fill: lookupBandColors(band.bandType)[0],
+        stroke: lookupBandColors(band.bandType)[1],
         strokeWidth: 1
     });
 
@@ -310,6 +310,17 @@ function drawTimeband(layer, band, secondsPerUnit) {
     return colorBand;
 }
 
+function lookupBandColors(bandType) {
+    if (bandType == 'conflict') {
+        return ['#ff0078', '#ff4ca0']
+    } else if (bandType == 'learning') {
+        return ['#520ce8', '#8654ef']
+    } else if (bandType == 'rework') {
+        return ['#ffcb01', '#ffda4d']
+    } else {
+        throw "Unable to find color for bandType: "+bandType
+    }
+}
 
 function resetColorBands() {
     isFocused = false;

@@ -10,19 +10,19 @@ class TestRelativeTime {
 
     @Test
     void testFormat_ShouldDivideIntoHoursMinSeconds() {
-        TimePosition time = new TimePosition(THREE_HOURS + TWO_MINUTES + TWENTY_SEC)
+        TimePositionOld time = new TimePositionOld(THREE_HOURS + TWO_MINUTES + TWENTY_SEC)
         assert time.getLongTime() == "3:02:20"
     }
 
     @Test
     void testFormat_ShouldLeftPadMinutes() {
-        TimePosition time = new TimePosition(TWENTY_SEC)
+        TimePositionOld time = new TimePositionOld(TWENTY_SEC)
         assert time.getLongTime() == "0:00:20"
     }
 
     @Test
     void testFormat_ShouldLeftPadSeconds() {
-        TimePosition time = new TimePosition(TWO_MINUTES)
+        TimePositionOld time = new TimePositionOld(TWO_MINUTES)
         assert time.getLongTime() == "0:02:00"
     }
 

@@ -2,7 +2,7 @@ package visualizer
 
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.timeline.ActivityDetail
-import com.newiron.ideaflow.data.TimePosition
+import com.ideaflow.timeline.TimePosition
 import org.joda.time.DateTime
 
 class ActivityDetailController {

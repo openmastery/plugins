@@ -21,4 +21,12 @@ class Timeline {
 	void addEvent(Event event) {
 		events.add(event)
 	}
+
+	List<TimeBand> getTimeBands() {
+		(conflictBands + genericBands).sort {
+			TimeBand timeBand ->
+				timeBand.startPosition.relativeOffset
+		}
+	}
+
 }

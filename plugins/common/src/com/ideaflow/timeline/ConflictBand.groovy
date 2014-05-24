@@ -7,8 +7,8 @@ import org.joda.time.DateTime
 
 class ConflictBand extends AbstractTimeBand {
 
-	Conflict conflict
-	Resolution resolution
+	private Conflict conflict
+	private Resolution resolution
 
 	protected void setActivityStartCreated(DateTime created) {
 		conflict.created = created
@@ -40,6 +40,10 @@ class ConflictBand extends AbstractTimeBand {
 
 	String getBandType() {
 		"conflict"
+	}
+
+	String toString() {
+		"ConflictBand: $question"
 	}
 
 }

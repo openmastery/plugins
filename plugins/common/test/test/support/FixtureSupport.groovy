@@ -10,6 +10,9 @@ import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
+import com.ideaflow.timeline.ConflictBand
+import com.ideaflow.timeline.GenericBand
+import com.ideaflow.timeline.TimePosition
 import org.joda.time.DateTime
 import org.reflections.Reflections
 
@@ -32,6 +35,11 @@ class FixtureSupport {
 	static final long TIME3
 	static final long TIME4
 
+	static final TimePosition NOW_POSITION
+	static final TimePosition TIME1_POSITION
+	static final TimePosition TIME2_POSITION
+	static final TimePosition TIME3_POSITION
+	static final TimePosition TIME4_POSITION
 
 	static {
 		def cal = Calendar.getInstance()
@@ -43,7 +51,14 @@ class FixtureSupport {
 		TIME3 = TIME2 + LONG_DELAY
 		TIME4 = TIME3 + LONG_DELAY
 
+		NOW_POSITION = new TimePosition(new DateTime(NOW), 0)
+		TIME1_POSITION = new TimePosition(new DateTime(TIME1), (int)TIME1 - NOW)
+		TIME2_POSITION = new TimePosition(new DateTime(TIME2), (int)TIME2 - NOW)
+		TIME3_POSITION = new TimePosition(new DateTime(TIME3), (int)TIME3 - NOW)
+		TIME4_POSITION = new TimePosition(new DateTime(TIME4), (int)TIME4 - NOW)
+
 	}
+
 
 	Note createNote() {
 		createNote("note")
@@ -129,6 +144,32 @@ class FixtureSupport {
 		end.created = new DateTime(time)
 		end
 	}
+
+	GenericBand createGenericBand() {
+		createGenericBand(NOW_POSITION)
+	}
+
+	GenericBand createGenericBand(TimePosition timePosition) {
+		GenericBand band = new GenericBand()
+		band.bandStart = new BandStart(BandType.learning)
+		band.bandEnd = new BandEnd(BandType.learning)
+		band.setStartPosition(timePosition)
+		band.setEndPosition(timePosition)
+		return band
+	}
+
+	ConflictBand createConflictBand() {
+		createConflictBand(NOW_POSITION)
+	}
+	ConflictBand createConflictBand(TimePosition timePosition) {
+		ConflictBand band = new ConflictBand()
+		band.conflict = new Conflict("Conflict Question")
+		band.resolution = new Resolution("Resolution Answer")
+		band.setStartPosition(timePosition)
+		band.setEndPosition(timePosition)
+		return band
+	}
+
 
 	List<ModelEntity> getModelEntitySubClassInstances() {
 		Reflections reflections = new Reflections(ModelEntity.package.name)
