@@ -1,0 +1,11 @@
+DSL doesn't handle backslashes in conflict/resolve
+
+When resolving a conflict, prompt the user with the original question they asked from the active conflict.  Easy to forget what we were doing.
+
+Put the active conflict question in a tooltip or some other place where we can see it.
+
+Track what file we were modifying during an interval and add to exported state.
+
+Understanding what's making duplicate IF activities and see if we can collapse.
+
+See if we can automatically add commits as events in IFM if they are run through IDE.
