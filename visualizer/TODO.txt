@@ -1,0 +1,34 @@
+Format the data for the UI using a mixin that translates the data into different formats
+
+Ability to open an IFM file in the visualizer
+
+Ability to save any changes made back to the IFM file.
+
+Ability to compile css with jruby (fix compasee error), fix the color display on highlights page
+
+Ability to open a conflict and record mistake type(s), cause, delay, notes. If these fields are already populated in the IFM, should be visible when the file is reopened. 
+
+------
+
+Add scrolly window to the activity detail display and ability to scroll with movement of the timeline window.
+
+Display modified state in blue text.
+
+Display band highlights as background color in the activity detail.
+
+Display events in the activity detail window (in some crude way for now).
+
+-----
+
+Create the ability to add a new highlight by picking the start/end activity
+
+Allow rework and learning highlights to overlap conflicts.
+
+-----
+
+Add context information to the IFM display, like who, what, when
+
+Add a legend for the colors.
+
+
+
