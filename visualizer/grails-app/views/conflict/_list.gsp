@@ -26,7 +26,7 @@
                 </g:if>
                 <div>
                     <span class="label">Duration:</span>
-                    <span class="description">${conflict.duration}</span>
+                    <span class="description">${conflict.duration.hourMinSec}</span>
                 </div>
             </div>
         </div>

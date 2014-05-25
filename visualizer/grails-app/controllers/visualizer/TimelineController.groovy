@@ -82,8 +82,6 @@ class TimelineController {
 	}
 
 
-
-
     def showBook() {
         Book book = new Book(id:'123', title:"Three Little Pigs")
         render book as JSON

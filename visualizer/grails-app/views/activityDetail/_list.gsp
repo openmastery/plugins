@@ -10,7 +10,7 @@
             <td>
                 File
             </td>
-            <td>
+            <td class="right">
                 Duration (s)
             </td>
         </tr>
@@ -24,8 +24,8 @@
                 <td>
                     ${activity.activityName}
                 </td>
-                <td>
-                    ${activity.duration}
+                <td class="right">
+                    ${activity.duration.hourMinSec}
                 </td>
             </tr>
         </g:each>

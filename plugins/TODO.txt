@@ -9,3 +9,7 @@ Track what file we were modifying during an interval and add to exported state.
 Understanding what's making duplicate IF activities and see if we can collapse.
 
 See if we can automatically add commits as events in IFM if they are run through IDE.
+
+Add support for 'process' snippets in the DSL.  Process bands can overlap other generic band types.  Learning and rework bands can't overlap with anything except conflicts.
+
+Add a 'timeline scrubber' to be able to go back in time to a commit snapshot with any event thats recorded and open up files that were open around that time.  Can go back and try to remember what happened.  Do the same thing for conflicts.
