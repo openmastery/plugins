@@ -38,11 +38,11 @@ class TimelineChart {
 
 	String toJSON() {
 		def timelineData = [
-			start: [offset: start.relativeOffset, shortTime: 'Z:ZZ'],
-			end: [offset: end.relativeOffset, shortTime: 'Z:ZZ'],
+			start: [offset: start.relativeOffset, shortTime: start.shortTime],
+			end: [offset: end.relativeOffset, shortTime: end.shortTime],
 			events: eventPositions.collect { TimePosition time ->
 				[offset: time.relativeOffset,
-				 shortTime: 'Z:ZZ']
+				 shortTime: time.shortTime]
 			},
 			timeBands: timeBands.collect { TimeBand timeBand ->
 				[bandType: timeBand.bandType,

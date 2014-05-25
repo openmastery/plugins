@@ -2,6 +2,7 @@ package visualizer
 
 import com.ideaflow.model.*
 import com.ideaflow.timeline.*
+import com.newiron.ideaflow.presentation.TimePositionDecoratorMixin
 import com.newiron.ideaflow.presentation.TimelineChart
 import grails.converters.JSON
 import org.joda.time.DateTime

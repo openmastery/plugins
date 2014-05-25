@@ -14,7 +14,7 @@
                     &nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
-                    ${band.startPosition.relativeOffset} - ${band.endPosition.relativeOffset}
+                    ${band.startPosition.shortTime} - ${band.endPosition.shortTime}
                 </td>
                 <td>
                     ${band.bandType}

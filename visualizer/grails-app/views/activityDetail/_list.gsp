@@ -19,7 +19,7 @@
         <g:each in="${activities}" var="${activity}" status="${index}">
             <tr id="interval_${index}">
                 <td>
-                    ${activity.time.relativeOffset}
+                    ${activity.time.longTime}
                 </td>
                 <td>
                     ${activity.activityName}
