@@ -1,18 +1,15 @@
 package visualizer
 
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.Resolution
 import com.ideaflow.timeline.ConflictBand
-import com.ideaflow.timeline.TimePosition
 import com.ideaflow.timeline.Timeline
 
 class ConflictController {
 
-	IdeaFlowMapService ideaFlowMapService
+	IfmService ifmService
 
     def list() {
 
-		Timeline timeline = ideaFlowMapService.activeTimeline
+		Timeline timeline = ifmService.activeTimeline
 		List<ConflictBand> conflicts = timeline.conflictBands
 
         render(template: "list", model: [conflicts: conflicts])

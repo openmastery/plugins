@@ -6,13 +6,14 @@ import com.newiron.ideaflow.presentation.TimelineChart
 class TimelineController {
 
     static defaultAction = "view"
-	IdeaFlowMapService ideaFlowMapService
+	IfmService ifmService
 
     def view() {
+		ifmService.refresh()
     }
 
     def showTimeline() {
-		Timeline timeline = ideaFlowMapService.activeTimeline
+		Timeline timeline = ifmService.activeTimeline
 		TimelineChart chart = new TimelineChart(timeline)
 
 	    response.setContentType("application/json")

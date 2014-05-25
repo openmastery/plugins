@@ -1,15 +1,14 @@
 package visualizer
 
-import com.ideaflow.model.*
 import com.ideaflow.timeline.*
 
 class HighlightController {
 
-	IdeaFlowMapService ideaFlowMapService
+	IfmService ifmService
 
     def list() {
 
-		Timeline timeline = ideaFlowMapService.activeTimeline
+		Timeline timeline = ifmService.activeTimeline
 		List<TimeBand> timeBands = timeline.timeBands
 
 		render(template: "list", model: [timeBands: timeBands])

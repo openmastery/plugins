@@ -5,14 +5,20 @@ import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.timeline.Timeline
 import com.ideaflow.timeline.TimelineFactory
 
-class IdeaFlowMapService {
+class IfmService {
 
 	Timeline activeTimeline
+	String filePath
 
-	IdeaFlowMapService() {
-		File file = new File("/Users/katrea/code/ideaflow/ifm/convert_to_ifm_model.ifm")
+	void loadIdeaFlowMap(String filePath) {
+		this.filePath = filePath
+		File file = new File(filePath)
 		IdeaFlowModel model = new DSLTimelineSerializer().deserialize(file)
 		activeTimeline = new TimelineFactory().create(model)
+	}
+
+	void refresh() {
+		loadIdeaFlowMap(filePath)
 	}
 
 }
