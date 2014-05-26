@@ -9,7 +9,7 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-
+import com.intellij.openapi.vfs.VirtualFile
 import javax.swing.*
 
 @Mixin(ActionSupport)
@@ -37,10 +37,10 @@ class ToggleOpenIdeaFlow extends ToggleAction {
 
     @Override
     public void update(AnActionEvent e) {
-        super.update(e);
+        super.update(e)
         Presentation presentation = e.getPresentation()
 
-        if (isIdeaFlowOpen()) {
+        if (isIdeaFlowOpen(e)) {
             presentation.setText(CLOSE_TITLE)
         } else {
             presentation.setText(OPEN_TITLE)
@@ -54,11 +54,11 @@ class ToggleOpenIdeaFlow extends ToggleAction {
             return
         }
 
-        String newFileName = createNewFile(e.project)
+	    String ideaFlowMapFileName = getSelectedOrCreateNewIdeaFlowMapFileName(module, e)
 
-        if (newFileName != null) {
+        if (ideaFlowMapFileName != null) {
             IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-            controller.newIdeaFlow(newFileName)
+            controller.newIdeaFlow(ideaFlowMapFileName)
         }
     }
 
@@ -66,7 +66,19 @@ class ToggleOpenIdeaFlow extends ToggleAction {
         return ModuleManager.getInstance(project).findModuleByName('ideaflow')
     }
 
-    private String createNewFile(Project project) {
+	private String getSelectedOrCreateNewIdeaFlowMapFileName(Module module, AnActionEvent e) {
+		VirtualFile ideaFlowMapFile = getSelectedIdeaFlowMapFile(e)
+
+		String ideaFlowMapRelativeFileName
+		if (ideaFlowMapFile) {
+			ideaFlowMapRelativeFileName = ideaFlowMapFile.path - module.moduleFile.parent.path
+		} else {
+			ideaFlowMapRelativeFileName = createNewFile(e.project)
+		}
+		ideaFlowMapRelativeFileName
+	}
+
+	private String createNewFile(Project project) {
 
         String newFileName
 
