@@ -26,26 +26,6 @@ var rightStretcher;
 
 var timelineData;
 
-
-//TODO needs to go into some library code or something
-$.fn.scrollTo = function( target, options, callback ){
-    if(typeof options == 'function' && arguments.length == 2){ callback = options; options = target; }
-    var settings = $.extend({
-        scrollTarget  : target,
-        offsetTop     : 50,
-        duration      : 500,
-        easing        : 'swing'
-    }, options);
-    return this.each(function(){
-        var scrollPane = $(this);
-        var scrollTarget = (typeof settings.scrollTarget == "number") ? settings.scrollTarget : $(settings.scrollTarget);
-        var scrollY = (typeof scrollTarget == "number") ? scrollTarget : scrollTarget.offset().top + scrollPane.scrollTop() - parseInt(settings.offsetTop);
-        scrollPane.animate({scrollTop : scrollY }, parseInt(settings.duration), settings.easing, function(){
-            if (typeof callback == 'function') { callback.call(this); }
-        });
-    });
-}
-
 function refreshTimeline() {
     $.ajax({
         type: 'GET',
@@ -86,38 +66,15 @@ function scrollToTimePosition() {
             function( index ) {
                 if (offset >= $( this ).text()) {
                     closestActivity = index;
-                    console.log( index + ": " + $( this ).text());
                 }
             }
     );
 
-    $("#timeline_scrollwindow").scrollTo($("#detail_"+closestActivity));
+    $("#timeline_scrollwindow").scrollTo("#detail_"+closestActivity, 500);
+}
 
-
-    //alert($("#timeline_scrollwindow").attr('id'));
-    //$("#timeline_scrollwindow").scrollTo($("#detail_20"));
-    //
-    //element.scrollTo('#detail_20');
-
-    //var element = document.getElementById("detail_20");
-    //alert('element : '+element);
-    //element.scrollIntoView(true);
-
-
-    //offset of the window location can be translated into a scroll position by looking up the time...
-
-    //scrollToTimePosition() -- looks up position, finds the row, and scrolls it into view
-    //moveWindowToTimePosition() -- gets the time from the current row, then moves the window to that time
-    //should do this at the start when loading the timeline detail view too
-
-    //when I scroll below, it should also update the position, but I can do that based on the relativeTime
-    //the timeline could lookup the detail by relative time as well...
-
-    //need a data collection that has sorted list by timeposition where I can find the nearest entry.
-    //Maybe I can leave labels off that collide, but show the lines, then show the labels on mouseover
-    //the left most position 'wins' in terms of getting to show it's data
-    //should animate to new position
-    //alert('hello');
+function updateTimelineWindowPosition() {
+    console.log("Window scroll top: "+$("#timeline_scrollwindow").scrollTop())
 }
 
 

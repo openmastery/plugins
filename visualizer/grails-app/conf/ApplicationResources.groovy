@@ -70,8 +70,14 @@ modules = {
 
     }
 
+	scrollto {
+		dependsOn 'jquery'
+		resource url: '/js/lib/scrollTo/jquery.scrollTo.js'
+
+	}
+
     ideaflow {
-        dependsOn 'kineticjs'
+        dependsOn 'kineticjs', 'scrollto'
         resource url: '/js/ideaflow.js'
     }
 
