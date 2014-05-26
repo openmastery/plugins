@@ -2,8 +2,11 @@ package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowComponent
+import com.ideaflow.intellij.file.IdeaFlowMapFileType
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.Presentation
+import com.intellij.openapi.vfs.VirtualFile
 
 class ActionSupport {
 
@@ -54,5 +57,16 @@ class ActionSupport {
         return isPaused
     }
 
+	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {
+		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)
+
+		selectedFiles.find { VirtualFile file ->
+			isIdeaFlowMap(file)
+		}
+	}
+
+	private boolean isIdeaFlowMap(VirtualFile file) {
+		return IdeaFlowMapFileType.IFM_EXTENSION.equalsIgnoreCase(file.extension)
+	}
 
 }

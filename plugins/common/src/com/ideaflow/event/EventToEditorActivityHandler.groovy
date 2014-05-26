@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 
 class EventToEditorActivityHandler {
 
-	private Event lastEvent
+	private Event activeEvent
 	private IdeaFlowModel model
 
 	private static final String DONE_EVENT = "***DONE***"
@@ -22,41 +22,45 @@ class EventToEditorActivityHandler {
 		}
 
 		Event newEvent = createEvent(eventName)
-		addEditorActivityForLastEvent(newEvent)
+		addEditorActivityForActiveEvent(newEvent)
 
-		if (isDifferent(lastEvent, newEvent)) {
-			lastEvent = newEvent
+		if (isDifferent(activeEvent, newEvent)) {
+			activeEvent = newEvent
 		}
 	}
 
+	void activeEventModified() {
+		activeEvent?.modified = true
+	}
+
 	void endEvent(String eventName) {
-		if (isSameAsLastEvent(eventName)) {
+		if (isSameAsActiveEvent(eventName)) {
 			endEvent()
 		}
 	}
 
 	void endEvent() {
 		Event doneEvent = createEvent(DONE_EVENT)
-		addEditorActivityForLastEvent(doneEvent)
+		addEditorActivityForActiveEvent(doneEvent)
 
-		lastEvent = null
+		activeEvent = null
 	}
 
-	private addEditorActivityForLastEvent(Event newEvent) {
-		if (lastEvent) {
-			addEditorActivity(lastEvent, newEvent)
+	private addEditorActivityForActiveEvent(Event newEvent) {
+		if (activeEvent) {
+			addEditorActivity(activeEvent, newEvent)
 		}
 	}
 
-	private void addEditorActivity(Event lastEvent, Event newEvent) {
-		int duration = (newEvent.time.millis - lastEvent.time.millis) / 1000
-		if (duration >= SHORTEST_INTERVAL && isDifferent(lastEvent, newEvent)) {
-			model.addModelEntity(createEditorActivity(lastEvent, duration))
+	private void addEditorActivity(Event oldEvent, Event newEvent) {
+		int duration = (newEvent.time.millis - oldEvent.time.millis) / 1000
+		if (duration >= SHORTEST_INTERVAL && isDifferent(oldEvent, newEvent)) {
+			model.addModelEntity(createEditorActivity(oldEvent, duration))
 		}
 	}
 
-	private boolean isSameAsLastEvent(String eventName) {
-		eventName == null || (lastEvent != null && lastEvent.eventName == eventName)
+	private boolean isSameAsActiveEvent(String eventName) {
+		eventName == null || (activeEvent != null && activeEvent.eventName == eventName)
 	}
 
 	private boolean isDifferent(Event lastEvent, Event newEvent) {
@@ -64,15 +68,16 @@ class EventToEditorActivityHandler {
 	}
 
 	private EditorActivity createEditorActivity(Event lastEvent, int duration) {
-		new EditorActivity(lastEvent.time, lastEvent.eventName, duration)
+		new EditorActivity(lastEvent.time, lastEvent.eventName, lastEvent.modified, duration)
 	}
 
 	private Event createEvent(eventName) {
-		new Event(eventName: eventName, time: new DateTime())
+		new Event(eventName: eventName, time: new DateTime(), modified: false)
 	}
 
 	private static class Event {
 		DateTime time
 		String eventName
+		boolean modified
 	}
 }

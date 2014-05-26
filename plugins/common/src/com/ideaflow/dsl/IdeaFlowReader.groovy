@@ -61,6 +61,10 @@ class IdeaFlowReader {
 		}
 
 		def editorActivity(Map editorActivityMap) {
+			if (editorActivityMap.containsKey("modified")) {
+				String modifiedString = editorActivityMap["modified"]
+				editorActivityMap["modified"] = Boolean.valueOf(modifiedString)
+			}
 			addModelEntity(EditorActivity, editorActivityMap)
 		}
 

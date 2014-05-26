@@ -32,6 +32,7 @@
       <action id="IdeaFlow.ToggleOpenIdeaFlow" class="com.ideaflow.intellij.action.ToggleOpenIdeaFlow"
               icon="/icons/record.png">
           <add-to-group group-id="MainToolBar" anchor="first"/>
+	      <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
       </action>
 
 	  <action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open IFM in Browser"

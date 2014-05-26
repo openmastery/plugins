@@ -8,17 +8,19 @@ class EditorActivity extends ModelEntity {
 
 	String name
 	int duration
+	boolean modified
 
 	EditorActivity() {}
 
-	EditorActivity(DateTime created, String name, int duration) {
+	EditorActivity(DateTime created, String name, boolean modified, int duration) {
 		super(created)
 		this.name = name
+		this.modified = modified
 		this.duration = duration
 	}
 
 	String toString() {
-		"EditorActivity: $id, $created, $name, $duration"
+		"EditorActivity: $id, $created, ${modified ? "*" : ""}${name}, $duration"
 	}
 
 }

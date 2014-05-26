@@ -1,13 +1,12 @@
 package com.ideaflow.intellij.action
 
-import com.ideaflow.intellij.file.IdeaFlowMapFileType
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.vfs.VirtualFile
 
+@Mixin(ActionSupport)
 class OpenInBrowserAction extends AnAction {
 
 	@Override
@@ -25,18 +24,6 @@ class OpenInBrowserAction extends AnAction {
 		if (file) {
 			openInBrowser(file)
 		}
-	}
-
-	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {
-		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)
-
-		selectedFiles.find { VirtualFile file ->
-			isIdeaFlowMap(file)
-		}
-	}
-
-	private boolean isIdeaFlowMap(VirtualFile file) {
-		return IdeaFlowMapFileType.IFM_EXTENSION.equalsIgnoreCase(file.extension)
 	}
 
 	public void openInBrowser(VirtualFile file) {

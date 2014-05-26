@@ -1,8 +1,14 @@
 package com.ideaflow.intellij
 
+import com.ideaflow.controller.IDEService
+import com.ideaflow.controller.IFMController
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ProjectComponent
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.event.DocumentAdapter
+import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
@@ -10,8 +16,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.util.messages.MessageBusConnection
-import com.ideaflow.controller.IFMController
-import com.ideaflow.controller.IDEService
+import org.jetbrains.annotations.NotNull
 
 class IdeaFlowComponent implements ProjectComponent {
 
@@ -66,6 +71,8 @@ class IdeaFlowComponent implements ProjectComponent {
 
     private class EventListener implements FileEditorManagerListener, ApplicationActivationListener {
 
+	    private FileModificationAdapter fileModificationAdapter = new FileModificationAdapter()
+
         void fileOpened(FileEditorManager source, VirtualFile file) {
             controller.startFileEvent(file.name)
         }
@@ -75,7 +82,11 @@ class IdeaFlowComponent implements ProjectComponent {
         }
 
         void selectionChanged(FileEditorManagerEvent event) {
+	        fileModificationAdapter.clearActiveFile()
             controller.startFileEvent(event.newFile?.name)
+	        if (event.newFile) {
+		        fileModificationAdapter.setActiveFile(event.newFile)
+	        }
         }
 
         void applicationActivated(IdeFrame ideFrame) {
@@ -87,4 +98,35 @@ class IdeaFlowComponent implements ProjectComponent {
         }
 
     }
+
+	private class FileModificationAdapter extends DocumentAdapter {
+
+		private VirtualFile activeFile;
+		private Document activeDocument;
+
+		void setActiveFile(@NotNull VirtualFile file) {
+			if (activeFile) {
+				clearActiveFile()
+			}
+
+			Document document = FileDocumentManager.instance.getCachedDocument(file)
+			if (document) {
+				activeFile = file
+				activeDocument = document
+				activeDocument.addDocumentListener(this)
+			}
+		}
+
+		void clearActiveFile() {
+			activeDocument?.removeDocumentListener(this)
+			activeDocument = null
+			activeFile = null
+		}
+
+		@Override
+		void documentChanged(DocumentEvent event) {
+			controller.activeEventModified()
+		}
+	}
+
 }
