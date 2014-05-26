@@ -74,10 +74,46 @@ function scrollToTimePosition() {
 }
 
 function updateTimelineWindowPosition() {
-    console.log("Window scroll top: "+$("#timeline_scrollwindow").scrollTop())
+    var scrollTop = $("#timeline_scrollwindow").scrollTop();
+    var closestOffset;
+
+    $("td.hiddenOffset").each(
+            function( index ) {
+                var isVisible = isElementVisibleInContainer("#detail_"+index, "#timeline_scrollwindow");
+                if (isVisible) {
+                    closestOffset = $(this).text()
+                }
+            }
+    );
+    if (!closestOffset) {
+        closestOffset = 0;
+    }
+
+    var newPosition = (closestOffset / getSecondsPerUnit())
+    console.log("New position: "+closestOffset+", "+ newPosition);
+    if (newPosition > (width - timelineWindow.getWidth())) {
+        newPosition  = (width - timelineWindow.getWidth());
+    }
+
+    timelineWindow.setPosition(newPosition - sideMargin, timelineWindow.getPosition().y);
+    showTimelineWindow(true);
 }
 
+function isElementVisibleInContainer(elementSelector, containerSelector) {
+    var isVisible = false;
+    var containerViewTop = $(containerSelector).offset().top;
 
+    if ($(elementSelector).offset()) {
+        var elementTop = $(elementSelector).offset().top;
+        isVisible = elementTop < containerViewTop;
+    }
+
+    return isVisible
+}
+
+function getSecondsPerUnit() {
+    return (timelineData.end.offset / (width - (2 * sideMargin)));
+}
 
 function drawTimeline(data) {
     timelineData = data;
@@ -87,7 +123,7 @@ function drawTimeline(data) {
         height: height
     });
 
-    var secondsPerUnit = data.end.offset / (width - (2 * sideMargin));
+    var secondsPerUnit = getSecondsPerUnit();
     drawTimebandsLayer(stage, data.timeBands, secondsPerUnit);
     drawMainTimeline(stage, data);
     drawEventsLayer(stage, data.events, secondsPerUnit);

@@ -14,7 +14,7 @@
         <tbody>
         <g:each in="${detailEntries}" var="${detail}" status="${index}">
             <g:if test="${detail instanceof ActivityDetail}">
-                <tr id="detail_${index}" class="${detail.activeBandType? "${detail.activeBandType}type": ""}">
+                <tr id="detail_${index}" class="${detail.activeBandType ? "${detail.activeBandType}type" : ""}">
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
                     </td>
@@ -28,9 +28,9 @@
                         ${detail.duration.hourMinSec}
                     </td>
                 </tr>
-           </g:if>
+            </g:if>
             <g:if test="${detail instanceof Event}">
-                <tr id="detail_${index}" class="${detail.activeBandType? "${detail.activeBandType}type": ""}">
+                <tr id="detail_${index}" class="${detail.activeBandType ? "${detail.activeBandType}type" : ""}">
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
                     </td>
@@ -50,7 +50,13 @@
 <script type="text/javascript">
     showTimelineWindow(true);
     resetColorBands();
-    //turn ON green toggle
+    $("#timeline_scrollwindow").on("scrollstop", {latency: 650}, updateTimelineWindowPosition);
+
+    //$("#timeline_scrollwindow").on("scrollstop",
+    //        function (event) {
+    //            alert('hello');
+    //            updateTimelineWindowPosition();
+    //        });
     //onHover, highlight position on timeline
     //onHover, highlight row and make X appear
     //onClick, toggle to form

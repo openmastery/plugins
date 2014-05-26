@@ -1,3 +1,5 @@
+Add the duration to the conflict highlights page.
+
 Format the data for the UI using a mixin that translates the data into different formats
 
 Ability to open an IFM file in the visualizer
@@ -30,5 +32,8 @@ Add context information to the IFM display, like who, what, when
 
 Add a legend for the colors.
 
+----
+
+Add a plugin to create a ticket in your jira system from the IFM tool.
 
 
