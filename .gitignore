@@ -7,3 +7,7 @@ plugins/build
 plugins/ideaflow/bineclipse
 plugins/common/libs
 plugins/eclipse/bin
+visualizer/.sass-cache
+plugins/eclipse/plugins.jar
+plugins/gradle/.gradle/
+plugins/intellij/ideaflow-plugin.zip

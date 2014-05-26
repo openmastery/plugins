@@ -10,6 +10,7 @@ import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
+import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand
 import com.ideaflow.timeline.GenericBand
 import com.ideaflow.timeline.TimePosition
@@ -143,6 +144,10 @@ class FixtureSupport {
 		BandEnd end = new BandEnd(type)
 		end.created = new DateTime(time)
 		end
+	}
+
+	ActivityDetail createActivityDetail(TimePosition time) {
+		new ActivityDetail(time, createEditorActivity('file1.txt'))
 	}
 
 	GenericBand createGenericBand() {

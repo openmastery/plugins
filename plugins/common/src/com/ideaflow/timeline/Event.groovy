@@ -3,7 +3,7 @@ package com.ideaflow.timeline
 import com.ideaflow.model.Note
 
 
-class Event {
+class Event implements TimeEntry {
 	TimePosition time
 	Note note
 

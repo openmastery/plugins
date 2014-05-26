@@ -45,4 +45,22 @@ class TestTimeline {
 		assert timeline.timeBands[3] == time4_conflictBand
 
 	}
+
+	@Test
+	void getSequencedTimelineDetail_ShouldSortBandsBeforeDetail_IfStartSameTime() {
+		def activityDetail = createActivityDetail(TIME1_POSITION)
+		def conflictBand = createConflictBand(TIME1_POSITION)
+		def activityDetail2 = createActivityDetail(TIME2_POSITION)
+		def conflictBand2 = createConflictBand(TIME2_POSITION)
+
+		timeline.addActivityDetail(activityDetail)
+		timeline.addConflictBand(conflictBand)
+		timeline.addConflictBand(conflictBand2)
+		timeline.addActivityDetail(activityDetail2)
+
+		assert timeline.sequencedTimelineDetail[0] == conflictBand
+		assert timeline.sequencedTimelineDetail[1] == activityDetail
+		assert timeline.sequencedTimelineDetail[2] == conflictBand2
+		assert timeline.sequencedTimelineDetail[3] == activityDetail2
+	}
 }

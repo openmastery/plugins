@@ -29,4 +29,13 @@ class Timeline {
 		}
 	}
 
+	List<TimeEntry> getSequencedTimelineDetail() {
+		(conflictBands + genericBands + events + activityDetails).sort {
+			TimeEntry timeEntry ->
+				timeEntry.time.relativeOffset
+		}
+	}
+
+
+
 }

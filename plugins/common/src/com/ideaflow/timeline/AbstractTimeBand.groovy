@@ -2,7 +2,7 @@ package com.ideaflow.timeline
 
 import org.joda.time.DateTime
 
-abstract class AbstractTimeBand implements TimeBand {
+abstract class AbstractTimeBand implements TimeBand, TimeEntry {
 
 	TimePosition startPosition
 	TimePosition endPosition
@@ -22,6 +22,10 @@ abstract class AbstractTimeBand implements TimeBand {
 		this.endPosition = endPosition
 		setActivityEndCreated(endPosition.actualTime)
 		initDuration()
+	}
+
+	TimePosition getTime() {
+		return startPosition
 	}
 
 	private void initDuration() {

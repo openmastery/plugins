@@ -14,5 +14,5 @@ interface TimeBand {
 
 	void setEndPosition(TimePosition endPosition)
 
-	String getBandType()
+	BandType getBandType()
 }

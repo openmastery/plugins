@@ -1,5 +1,6 @@
 package com.ideaflow.timeline
 
+import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.Resolution
 import org.joda.time.DateTime
@@ -38,8 +39,8 @@ class ConflictBand extends AbstractTimeBand {
 		conflict.notes
 	}
 
-	String getBandType() {
-		"conflict"
+	BandType getBandType() {
+		BandType.conflict
 	}
 
 	String toString() {
