@@ -18,7 +18,9 @@ class IfmService {
 	}
 
 	void refresh() {
-		loadIdeaFlowMap(filePath)
+		if (filePath) {
+			loadIdeaFlowMap(filePath)
+		}
 	}
 
 }

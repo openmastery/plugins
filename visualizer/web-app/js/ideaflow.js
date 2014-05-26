@@ -26,6 +26,15 @@ var rightStretcher;
 
 var timelineData;
 
+function refreshTimeline() {
+    $.ajax({
+        type: 'GET',
+        url: '/visualizer/timeline/showTimeline',
+        success: drawTimeline,
+        error: handleError
+    });
+}
+
 function showTimelineWindow(flag) {
     if (timelineWindow) {
         timelineWindow.setVisible(flag);

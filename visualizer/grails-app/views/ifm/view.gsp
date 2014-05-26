@@ -17,16 +17,17 @@
 </head>
 
 <body>
+
+<div id="timelineHolder" class="timeline-holder"></div>
+
 <script type="text/javascript">
     function hello() {
         //alert('hello');
     }
     registerStopWindowDragCallback(hello);
     registerClickBandCallback(hello);
+    refreshTimeline();
 </script>
-<div id="timelineHolder" class="timeline-holder"></div>
-<g:render template="timeline"/> <!-- this goes to timeline holder, will need to pass ifm file into template -->
-
 <div id="contentPanel">
     <g:include controller="event" action="list" params="[controller:'event']"/>
 </div>
