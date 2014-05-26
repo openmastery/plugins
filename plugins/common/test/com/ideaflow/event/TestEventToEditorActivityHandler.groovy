@@ -83,7 +83,6 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 		eventHandler.endEvent(OTHER_FILE)
 
 		assert 0 == model.size()
-
 	}
 
 	void testEndEvent_ShouldEndCurrentEvent_IfNull() {
@@ -92,6 +91,25 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 		eventHandler.endEvent(null)
 
 		assert 1 == model.size()
+	}
+
+	void testEndEvent_ShouldNotCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedNotCalled() {
+		eventHandler.startEvent(FILE)
+		DateTimeUtils.setCurrentMillisFixed(NOW + LONG_DELAY)
+		eventHandler.endEvent(null)
+
+		assert 1 == model.size()
+		assert getEditorActivity(0).modified == false
+	}
+
+	void testEndEvent_ShouldCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedCalled() {
+		eventHandler.startEvent(FILE)
+		DateTimeUtils.setCurrentMillisFixed(NOW + LONG_DELAY)
+		eventHandler.activeEventModified()
+		eventHandler.endEvent(null)
+
+		assert 1 == model.size()
+		assert getEditorActivity(0).modified
 	}
 
 	private EditorActivity getEditorActivity(int index) {

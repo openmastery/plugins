@@ -26,7 +26,9 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 
 	void testReadWriteSymmetryWithData() {
 		DateTime createDate = new DateTime(NOW)
-		EditorActivity editorActivity = createEditorActivity(FILE)
+		EditorActivity modifiedEditorActivity = createEditorActivity(FILE)
+		modifiedEditorActivity.modified = true
+		EditorActivity unmodifiedEditorActivity = createEditorActivity(FILE)
 		Note note = createNote("it's a happy note!")
 		StateChange event = createStateChange(StateChangeType.startIdeaFlowRecording)
 		Conflict conflict = createConflict()
@@ -35,7 +37,8 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		BandEnd bandEnd = createBandEnd()
 
 		writer.writeInitialization(createDate)
-		writer.write(editorActivity)
+		writer.write(modifiedEditorActivity)
+		writer.write(unmodifiedEditorActivity)
 		writer.write(note)
 		writer.write(conflict)
 		writer.write(resolution)
@@ -49,14 +52,15 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 			entity.id = null
 		}
 		assert model.created == createDate
-		assert model.entityList[0] == editorActivity
-		assert model.entityList[1] == note
-		assert model.entityList[2] == conflict
-		assert model.entityList[3] == resolution
-		assert model.entityList[4] == event
-		assert model.entityList[5] == bandStart
-		assert model.entityList[6] == bandEnd
-		assert model.size() == 7
+		assert model.entityList.remove(0) == modifiedEditorActivity
+		assert model.entityList.remove(0) == unmodifiedEditorActivity
+		assert model.entityList.remove(0) == note
+		assert model.entityList.remove(0) == conflict
+		assert model.entityList.remove(0) == resolution
+		assert model.entityList.remove(0) == event
+		assert model.entityList.remove(0) == bandStart
+		assert model.entityList.remove(0) == bandEnd
+		assert model.size() == 0
 	}
 
 	void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {

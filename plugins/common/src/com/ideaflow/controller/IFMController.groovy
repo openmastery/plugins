@@ -91,6 +91,10 @@ class IFMController {
 		flush()
 	}
 
+	void activeEventModified() {
+		eventToIntervalHandler?.activeEventModified()
+	}
+
 	void startFileEventForCurrentFile() {
 		String fileName = ideService.getActiveFileSelection()
 		startFileEvent(fileName)

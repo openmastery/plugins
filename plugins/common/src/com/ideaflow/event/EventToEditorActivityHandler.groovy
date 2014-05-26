@@ -29,6 +29,10 @@ class EventToEditorActivityHandler {
 		}
 	}
 
+	void activeEventModified() {
+		activeEvent?.modified = true
+	}
+
 	void endEvent(String eventName) {
 		if (isSameAsActiveEvent(eventName)) {
 			endEvent()
@@ -64,15 +68,16 @@ class EventToEditorActivityHandler {
 	}
 
 	private EditorActivity createEditorActivity(Event lastEvent, int duration) {
-		new EditorActivity(lastEvent.time, lastEvent.eventName, duration)
+		new EditorActivity(lastEvent.time, lastEvent.eventName, lastEvent.modified, duration)
 	}
 
 	private Event createEvent(eventName) {
-		new Event(eventName: eventName, time: new DateTime())
+		new Event(eventName: eventName, time: new DateTime(), modified: false)
 	}
 
 	private static class Event {
 		DateTime time
 		String eventName
+		boolean modified
 	}
 }

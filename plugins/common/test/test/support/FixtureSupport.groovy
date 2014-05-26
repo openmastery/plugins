@@ -119,11 +119,11 @@ class FixtureSupport {
 	}
 
 	EditorActivity createEditorActivity(String name, long time) {
-		new EditorActivity(new DateTime(time), name, 5)
+		createEditorActivity(name, 5, time)
 	}
 
 	EditorActivity createEditorActivity(String name, int duration, long time) {
-		new EditorActivity(new DateTime(time), name, duration)
+		new EditorActivity(new DateTime(time), name, false, duration)
 	}
 
 	BandStart createBandStart() {

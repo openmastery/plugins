@@ -57,7 +57,7 @@ class IdeaFlowWriter {
 	}
 
 	void write(EditorActivity editorActivity) {
-		writeItem('editorActivity', editorActivity, ['created', 'name', 'duration'])
+		writeItem('editorActivity', editorActivity, ['created', 'name', 'duration', 'modified'])
 	}
 
 	void write(BandStart bandStart) {
