@@ -34,9 +34,13 @@
           <add-to-group group-id="MainToolBar" anchor="first"/>
       </action>
 
-
+	  <action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open IFM in Browser"
+	          description="Open the currently selected IdeaFlow map in preferred browser" icon="/icons/ideaflow.png">
+		  <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+	  </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
+	  <fileTypeFactory implementation="com.ideaflow.intellij.file.IdeaFlowMapFileTypeLoader"/>
   </extensions>
 </idea-plugin>
