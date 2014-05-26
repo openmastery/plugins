@@ -21,10 +21,12 @@
 <div id="timelineHolder" class="timeline-holder"></div>
 
 <script type="text/javascript">
+
+
     function hello() {
-        //alert('hello');
+
     }
-    registerStopWindowDragCallback(hello);
+    registerStopWindowDragCallback(scrollToTimePosition);
     registerClickBandCallback(hello);
     refreshTimeline();
 </script>

@@ -5,6 +5,7 @@ import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand
 import com.ideaflow.timeline.Event
 import com.ideaflow.timeline.GenericBand
+import com.ideaflow.timeline.TimeBand
 import com.ideaflow.timeline.TimeEntry
 import com.ideaflow.timeline.TimePosition
 import com.ideaflow.timeline.Timeline
@@ -17,39 +18,48 @@ class TimelineDetail {
 
 	TimelineDetail(Timeline timeline) {
 		this.timeline = timeline
+		initializeActiveBandTypes()
 	}
 
-	void initializeActiveBandTypes() {
+	List<TimeEntry> listRows() {
+		timeline.sequencedTimelineDetail
+	}
+
+	private void initializeActiveBandTypes() {
 		timeline.sequencedTimelineDetail.each { TimeEntry entry ->
 			handleTimeEntry(entry)
 		}
 	}
 
-	ConflictBand activeConflict
-	GenericBand activeBand
+	private ConflictBand activeConflict
+	private GenericBand activeBand
 
-	void handleTimeEntry(ConflictBand conflictBand) {
+	private void handleTimeEntry(ConflictBand conflictBand) {
 		activeConflict = conflictBand
 	}
 
-	void handleTimeEntry(GenericBand genericBand) {
+	private void handleTimeEntry(GenericBand genericBand) {
 		activeBand = genericBand
 	}
 
-	void handleTimeEntry(ActivityDetail activityDetail) {
+	private void handleTimeEntry(ActivityDetail activityDetail) {
 		disableEndingBands(activityDetail.time)
+		decorateWithActiveBand(activityDetail)
+	}
+
+	private void handleTimeEntry(Event event) {
+		decorateWithActiveBand(event)
+	}
+
+	private decorateWithActiveBand(TimeEntry entry) {
 		if (activeConflict) {
-			activityDetail.activeBandType = activeConflict.bandType
+			entry.activeBandType = activeConflict.bandType
 		} else if (activeBand) {
-			activityDetail.activeBandType = activeBand.bandType
+			entry.activeBandType = activeBand.bandType
 		}
 	}
 
-	void handleTimeEntry(TimeEntry entry) {
-
-	}
-
-	void disableEndingBands(TimePosition time) {
+	private void disableEndingBands(TimePosition time) {
 		if (activeConflict?.endPosition?.relativeOffset <= time.relativeOffset) {
 			activeConflict = null
 		}

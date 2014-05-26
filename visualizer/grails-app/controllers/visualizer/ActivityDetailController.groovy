@@ -1,7 +1,7 @@
 package visualizer
 
-import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.Timeline
+import com.newiron.ideaflow.presentation.TimelineDetail
 
 class ActivityDetailController {
 
@@ -10,9 +10,9 @@ class ActivityDetailController {
     def list() {
 
 		Timeline timeline = ifmService.activeTimeline
-		List<ActivityDetail> activities = timeline.activityDetails
+		TimelineDetail detail = new TimelineDetail(timeline)
 
-        render(template: "list", model: [activities: activities])
+        render(template: "list", model: [detailEntries: detail.listRows()])
     }
 
     def delete() {

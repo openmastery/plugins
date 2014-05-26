@@ -385,15 +385,18 @@ button.pushbutton, span.pushbutton { display: block; min-width: 20px; height: 22
 table.tabular { background-color: white; }
 
 /* line 5, ../../src/stylesheets/components/_table.scss */
-.learningtype { background-color: #520ce8; }
+div.timedetail { overflow: scroll; height: 400px; }
 
 /* line 9, ../../src/stylesheets/components/_table.scss */
-.reworktype { background-color: #ffcb01; }
+.learningtype { background-color: #520ce8; }
 
 /* line 13, ../../src/stylesheets/components/_table.scss */
-.conflicttype { background-color: #ff0078; }
+.reworktype { background-color: #ffcb01; }
 
 /* line 17, ../../src/stylesheets/components/_table.scss */
+.conflicttype { background-color: #ff0078; }
+
+/* line 21, ../../src/stylesheets/components/_table.scss */
 .right { text-align: right; }
 
 /* line 4, ../../src/stylesheets/components/_conflicts.scss */
