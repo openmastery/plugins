@@ -9,8 +9,8 @@ import com.ideaflow.timeline.TimePosition
 class DecoratorLayerInitializer {
 
 	static void init() {
-		TimePosition.mixin(TimePositionDecoratorMixin)
-		TimeDuration.mixin(TimeDurationDecoratorMixin)
+		TimePosition.mixin(ClockTimeDecoratorMixin)
+		TimeDuration.mixin(DurationDecoratorMixin)
 		ActivityDetail.mixin(ActiveBandDecoratorMixin)
 		Event.mixin(ActiveBandDecoratorMixin)
 	}
