@@ -71,6 +71,8 @@ class VcsCommitToIdeaFlowNoteAdapter extends ChangeListAdapter implements VcsLis
 		Map<VcsRoot, CommittedChangeList> latestVcsRootToLastCommitMap = getLastCommittedChangeListForAllVcsRoots()
 		final List<String> commitMessages = affectedVcsRoots.collect { VcsRoot affectedRoot ->
 			getLatestCommitMessageIfNewCommit(affectedRoot, latestVcsRootToLastCommitMap)
+		}.findAll {
+			it != null
 		}
 		vcsRootToLastCommitMap = latestVcsRootToLastCommitMap
 
