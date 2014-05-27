@@ -2,6 +2,7 @@ package com.ideaflow.intellij
 
 import com.ideaflow.controller.IDEService
 import com.ideaflow.controller.IFMController
+import com.ideaflow.intellij.vcs.VcsCommitToIdeaFlowNoteAdapter
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ProjectComponent
@@ -23,8 +24,9 @@ class IdeaFlowComponent implements ProjectComponent {
     private Project project
     private EventListener listener
 
-    private MessageBusConnection appConnection;
-    private MessageBusConnection projectConnection;
+    private MessageBusConnection appConnection
+    private MessageBusConnection projectConnection
+	private VcsCommitToIdeaFlowNoteAdapter vcsCommitToIdeaFlowNoteAdapter
 
     private IFMController controller
     private IDEService ideService
@@ -48,10 +50,11 @@ class IdeaFlowComponent implements ProjectComponent {
     }
 
     void initComponent() {
-        listener = new EventListener()
-
         ideService = new IDEServiceImpl(project)
         controller = new IFMController(ideService)
+
+	    listener = new EventListener()
+	    vcsCommitToIdeaFlowNoteAdapter = new VcsCommitToIdeaFlowNoteAdapter(project, controller)
     }
 
     void disposeComponent() {}
@@ -62,11 +65,14 @@ class IdeaFlowComponent implements ProjectComponent {
 
         projectConnection = project.getMessageBus().connect()
         projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
+
+	    vcsCommitToIdeaFlowNoteAdapter.connect()
     }
 
-    void projectClosed() {
+	void projectClosed() {
         appConnection.disconnect()
         projectConnection.disconnect()
+		vcsCommitToIdeaFlowNoteAdapter.disconnect()
     }
 
     private class EventListener implements FileEditorManagerListener, ApplicationActivationListener {
