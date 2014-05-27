@@ -1,6 +1,10 @@
 ------- MVP
 
 Understanding what's making duplicate IF activities and see if we can collapse.
+ - has to do with EventToEditorActivityHandler:SHORTEST_INTERVAL
+   to duplicate: open file, wait for 4 seconds (longer than shortest interval), open another file and immediately close
+
+Rename EventToEditorActivityHandler:SHORTEST_INTERVAL to shortest activity   
 
 Add toggle for learning and rework and support a comment for the band so you can make them while tracking IF.  The comments will show up in the highlights section.  
 
