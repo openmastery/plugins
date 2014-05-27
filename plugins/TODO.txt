@@ -1,9 +1,5 @@
 ------- MVP
 
-DSL doesn't handle backslashes in conflict/resolve
-
-DSL doesn't handle single quotes at the end of a comment string
-
 When resolving a conflict, prompt the user with the original question they asked from the active conflict.  Easy to forget what we were doing.
 
 Understanding what's making duplicate IF activities and see if we can collapse.

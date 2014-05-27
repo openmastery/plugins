@@ -106,6 +106,10 @@ class IdeaFlowReader {
 		}
 
 		private DateTime toDate(String dateString) {
+			if (dateFormat == null) {
+				throw new RuntimeException("Invalid IdeaFlowMap, initialize should be the first entry in the map")
+			}
+
 			dateFormat.parseDateTime(dateString)
 		}
 

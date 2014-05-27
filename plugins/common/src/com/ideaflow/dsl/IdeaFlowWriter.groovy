@@ -81,10 +81,15 @@ class IdeaFlowWriter {
 
 	}
 
+	private String sanitizeString(String string) {
+		string.replace("\\", "\\\\")
+				.replace("'", "\\'")
+	}
+
 	private void writeItemEntry(String key, value) {
 		if (value != null) {
 			if (value instanceof String) {
-				writer.print "${key}: '''${value}''', "
+				writer.print "${key}: '''${sanitizeString(value)}''', "
 			} else if (value instanceof Number) {
 				writer.print "${key}: ${value}, "
 			} else {
