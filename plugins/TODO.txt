@@ -1,7 +1,5 @@
 ------- MVP
 
-When resolving a conflict, prompt the user with the original question they asked from the active conflict.  Easy to forget what we were doing.
-
 Understanding what's making duplicate IF activities and see if we can collapse.
 
 Add toggle for learning and rework and support a comment for the band so you can make them while tracking IF.  The comments will show up in the highlights section.  
