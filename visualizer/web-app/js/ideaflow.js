@@ -89,13 +89,13 @@ function updateTimelineWindowPosition() {
         closestOffset = 0;
     }
 
-    var newPosition = (closestOffset / getSecondsPerUnit())
-    console.log("New position: "+closestOffset+", "+ newPosition);
-    if (newPosition > (width - timelineWindow.getWidth())) {
-        newPosition  = (width - timelineWindow.getWidth());
+    var newPosition = (closestOffset / getSecondsPerUnit()) + sideMargin;
+    if (newPosition > (width - timelineWindow.getWidth()) - sideMargin) {
+        newPosition  = (width - timelineWindow.getWidth()) - sideMargin;
     }
 
-    timelineWindow.setPosition(newPosition - sideMargin, timelineWindow.getPosition().y);
+    console.log("New position: offset="+closestOffset+", pixelPosition="+ newPosition);
+    timelineWindow.setPosition(newPosition, timelineWindow.getPosition().y);
     showTimelineWindow(true);
 }
 

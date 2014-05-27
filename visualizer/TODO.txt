@@ -1,38 +1,48 @@
+------ MVP
+
 Add the duration to the conflict highlights page.
 
-Format the data for the UI using a mixin that translates the data into different formats
-
-Ability to open an IFM file in the visualizer
-
-Ability to save any changes made back to the IFM file.
-
-Ability to compile css with jruby (fix compasee error), fix the color display on highlights page
-
-Ability to open a conflict and record mistake type(s), cause, delay, notes. If these fields are already populated in the IFM, should be visible when the file is reopened. 
-
-------
-
-Add scrolly window to the activity detail display and ability to scroll with movement of the timeline window.
+Sort all the conflicts by duration in the UI (give some visual indication of size)
 
 Display modified state in blue text.
 
-Display band highlights as background color in the activity detail.
-
-Display events in the activity detail window (in some crude way for now).
-
------
-
-Create the ability to add a new highlight by picking the start/end activity
+Ability to open a conflict and record mistake type(s), cause, delay, notes. If these fields are already populated in the IFM, should be visible when the file is reopened. 
 
 Allow rework and learning highlights to overlap conflicts.
 
------
+------ BOOK RELEASE
 
-Add context information to the IFM display, like who, what, when
+Clean up overlapping timeline text so you can read it.
+
+Add the ability to sort by sequential or duration on highlights page.
+
+Ability to attach rework or learning to a conflict (which would effect sorting size)
 
 Add a legend for the colors.
 
-----
+Add context information to the IFM display like who, what, when
+
+Edit event text
+
+Delete an event
+
+Edit the comment on a highlight
+
+Create the ability to add a new highlight by picking the start/end activity
+
+Delete a highlight
+
+Create a process snippet timeband
+
+-----
+
+Delete a file activity
+
+Show tooltips in timeline for event notes and timeband comments.
+
+Document: compile css with jruby (fix compasee error), fix the color display on highlights page
+
+---- FUTURE
 
 Add a plugin to create a ticket in your jira system from the IFM tool.
 
