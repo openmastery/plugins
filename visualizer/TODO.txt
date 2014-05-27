@@ -36,6 +36,14 @@ Create a process snippet timeband
 
 -----
 
+Create new page to list all available IFM files that can be opened
+
+Attach the list of IFM files available to a git repository
+
+Attach a user login session to use a particular git repository and allow different users to have different IFMs opened.
+
+Ability to update the server git repository
+
 Delete a file activity
 
 Show tooltips in timeline for event notes and timeband comments.
