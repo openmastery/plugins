@@ -45,12 +45,9 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		writer.write(event)
 		writer.write(bandStart)
 		writer.write(bandEnd)
-		IdeaFlowModel model = new IdeaFlowReader().readModel(stringWriter.toString())
 
-		model.entityList.each { ModelEntity entity ->
-			assert entity.id != null
-			entity.id = null
-		}
+		IdeaFlowModel model = readModelAndClearIds()
+
 		assert model.created == createDate
 		assert model.entityList.remove(0) == modifiedEditorActivity
 		assert model.entityList.remove(0) == unmodifiedEditorActivity
@@ -61,6 +58,16 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		assert model.entityList.remove(0) == bandStart
 		assert model.entityList.remove(0) == bandEnd
 		assert model.size() == 0
+	}
+
+	private IdeaFlowModel readModelAndClearIds() {
+		IdeaFlowModel model = new IdeaFlowReader().readModel(stringWriter.toString())
+
+		model.entityList.each { ModelEntity entity ->
+			assert entity.id != null
+			entity.id = null
+		}
+		model
 	}
 
 	void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {
@@ -102,6 +109,49 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 			entity.created = createDate
 		}
 		subTypeInstances
+	}
+
+	public void testBackslashInText_ShouldNotExplode() {
+		Conflict conflict = createConflict()
+		conflict.question = /What's up with this regex: \s+\S+\s+/
+
+		writer.writeInitialization(new DateTime(NOW))
+		writer.write(conflict)
+
+		IdeaFlowModel model = readModelAndClearIds()
+
+		assert model.entityList.remove(0) == conflict
+		assert model.entityList.size() == 0
+	}
+
+	public void testQuoteAtStartOrEnd_ShouldNotExplode() {
+		Note singleQuoteNote = createNote("'here' is a single 'quote'")
+		Note doubleQuoteNote = createNote('"here" is a double "quote"')
+
+		writer.writeInitialization(new DateTime(NOW))
+		writer.write(singleQuoteNote)
+		writer.write(doubleQuoteNote)
+
+		IdeaFlowModel model = readModelAndClearIds()
+
+		assert model.entityList.remove(0) == singleQuoteNote
+		assert model.entityList.remove(0) == doubleQuoteNote
+		assert model.entityList.size() == 0
+	}
+
+	public void testTripleQuotesInString_ShouldNotExpode() {
+		Note tripleSingleQuoteNote = createNote("here is a '''triple''' quote")
+		Note tripleDoubleQuoteNote = createNote('here is a """double""" quote')
+
+		writer.writeInitialization(new DateTime(NOW))
+		writer.write(tripleSingleQuoteNote)
+		writer.write(tripleDoubleQuoteNote)
+
+		IdeaFlowModel model = readModelAndClearIds()
+
+		assert model.entityList.remove(0) == tripleSingleQuoteNote
+		assert model.entityList.remove(0) == tripleDoubleQuoteNote
+		assert model.entityList.size() == 0
 	}
 
 }

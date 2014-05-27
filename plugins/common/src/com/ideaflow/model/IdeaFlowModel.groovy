@@ -10,7 +10,7 @@ class IdeaFlowModel {
 	boolean isPaused = false
 	DateTime created
 
-	private boolean openConflict = false
+	private Conflict activeConflict = null
 
 	IdeaFlowModel(String fileName, DateTime created) {
 		this.fileName = fileName
@@ -21,13 +21,13 @@ class IdeaFlowModel {
 
 	void addModelEntity(Conflict conflict) {
 		addModelEntityInternal(conflict) {
-			openConflict = true
+			activeConflict = conflict
 		}
 	}
 
 	void addModelEntity(Resolution resolution) {
 		addModelEntityInternal(resolution) {
-			openConflict = false
+			activeConflict = null
 		}
 	}
 
@@ -46,8 +46,12 @@ class IdeaFlowModel {
 		entityList.size()
 	}
 
+	Conflict getActiveConflict() {
+		activeConflict
+	}
+
 	boolean isOpenConflict() {
-		openConflict
+		activeConflict != null
 	}
 
 }

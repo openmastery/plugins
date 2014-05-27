@@ -35,8 +35,12 @@ class IFMController {
 		ideaFlowModel != null
 	}
 
+	Conflict getActiveConflict() {
+		return (isIdeaFlowOpen() ? ideaFlowModel.getActiveConflict() : null)
+	}
+
 	boolean isOpenConflict() {
-		isIdeaFlowOpen() && ideaFlowModel.isOpenConflict()
+		getActiveConflict() != null
 	}
 
 	void startConflict(String question) {
