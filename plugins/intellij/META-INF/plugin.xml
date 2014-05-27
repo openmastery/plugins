@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <name>IdeaFlow</name>
   <description>IdeaFlow mapping tool</description>
-  <version>0.1</version>
+  <version>0.6</version>
   <vendor>NewIron Group</vendor>
 
   <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
