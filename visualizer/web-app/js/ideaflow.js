@@ -444,3 +444,10 @@ function resetEventLines() {
     }
     stage.draw();
 }
+
+function drawPies() {
+    $("span.pie").peity("pie", {
+        fill: [lookupBandColors('conflict')[0], '#CCCCCC'],
+        diameter: 20
+    });
+}

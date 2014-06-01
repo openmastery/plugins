@@ -81,13 +81,13 @@ modules = {
 		resource url: '/js/lib/scrollstop/jquery.scrollstop.js'
 	}
 
-	circles {
+	peity {
 		dependsOn 'jquery'
-		resource url: '/js/lib/circles/circles.min.js'
+		resource url: '/js/lib/peity/jquery.peity.min.js'
 	}
 
     ideaflow {
-        dependsOn 'kineticjs', 'scrollto', 'scrollstop', 'circles'
+        dependsOn 'kineticjs', 'scrollto', 'scrollstop', 'peity'
         resource url: '/js/ideaflow.js'
     }
 

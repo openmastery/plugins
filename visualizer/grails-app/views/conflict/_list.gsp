@@ -4,6 +4,7 @@
     <g:each in="${conflicts}" var="${conflict}" status="${index}">
         <div class="conflict" onmouseover="highlightConflict(${index})" onmouseout="resetColorBands()">
             <div class="header">
+                <span class="pie">${conflict.percent}/100</span>
                 <span class="label">Conflict:</span>
                 <span class="description">${conflict.question}</span>
             </div>
@@ -41,6 +42,7 @@
 <script type="text/javascript">
     showTimelineWindow(false);
     resetColorBands();
+    drawPies();
     //turn off green toggle
     //onHover, highlight event on timeline
     //onHover, highlight row and make X appear

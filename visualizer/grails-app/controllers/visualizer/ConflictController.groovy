@@ -10,7 +10,7 @@ class ConflictController {
     def list() {
 
 		Timeline timeline = ifmService.activeTimeline
-		List<ConflictBand> conflicts = timeline.conflictBands
+		List<ConflictBand> conflicts = timeline.conflictBands.sort { it.duration.duration }.reverse()
 
         render(template: "list", model: [conflicts: conflicts])
     }
