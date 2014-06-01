@@ -10,7 +10,7 @@ class EventToEditorActivityHandler {
 	private IdeaFlowModel model
 
 	private static final String DONE_EVENT = "***DONE***"
-	private static final int SHORTEST_INTERVAL = 3
+	private static final int SHORTEST_ACTIVITY = 3
 
 	EventToEditorActivityHandler(IdeaFlowModel model) {
 		this.model = model
@@ -54,7 +54,7 @@ class EventToEditorActivityHandler {
 
 	private void addEditorActivity(Event oldEvent, Event newEvent) {
 		int duration = (newEvent.time.millis - oldEvent.time.millis) / 1000
-		if (duration >= SHORTEST_INTERVAL && isDifferent(oldEvent, newEvent)) {
+		if (duration >= SHORTEST_ACTIVITY && isDifferent(oldEvent, newEvent)) {
 			model.addModelEntity(createEditorActivity(oldEvent, duration))
 		}
 	}
