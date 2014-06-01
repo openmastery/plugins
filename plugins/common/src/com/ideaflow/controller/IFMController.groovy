@@ -26,11 +26,6 @@ class IFMController {
 		ideService.promptForInput(title, message)
 	}
 
-	void validateFilePath(String relativePath) {
-		String pathWithExtension = addExtension(relativePath)
-		ideService.validateFilePath(pathWithExtension)
-	}
-
 	boolean isIdeaFlowOpen() {
 		ideaFlowModel != null
 	}
@@ -61,17 +56,17 @@ class IFMController {
 		}
 	}
 
-	void newIdeaFlow(String relativePath) {
-		relativePath = addExtension(relativePath)
-		if (ideService.fileExists(relativePath)) {
-			println("Resuming existing IdeaFlow: $relativePath")
-			String xml = ideService.readFile(relativePath)
-			ideaFlowModel = new IdeaFlowReader().readModel(xml)
-			ideaFlowModel.fileName = relativePath
+	void newIdeaFlow(File file) {
+		file = addExtension(file)
+		if (ideService.fileExists(file)) {
+			println("Resuming existing IdeaFlow: ${file.absolutePath}")
+			String xml = ideService.readFile(file)
+			ideaFlowModel = new IdeaFlowReader().readModel(file, xml)
+			ideaFlowModel.file = file
 		} else {
-			println("Creating new IdeaFlow: $relativePath")
-			ideService.createNewFile(relativePath, "")
-			ideaFlowModel = new IdeaFlowModel(relativePath, new DateTime())
+			println("Creating new IdeaFlow: ${file.absolutePath}")
+			ideService.createNewFile(file, "")
+			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
 		}
 
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
@@ -125,18 +120,18 @@ class IFMController {
 		ideaFlowModel != null && ideaFlowModel.isPaused
 	}
 
-	private String addExtension(String fileName) {
-		String nameWithExtension = fileName
-		if (fileName != null && !fileName.endsWith(".ifm")) {
-			nameWithExtension = fileName + ".ifm"
+	private File addExtension(File file) {
+		File fileWithExtension = file
+		if (file.name.endsWith(".ifm") == false) {
+			fileWithExtension = new File(file.absolutePath + ".ifm")
 		}
-		return nameWithExtension
+		return fileWithExtension
 	}
 
 	private void flush() {
 		if (ideaFlowModel) {
 			String xml = new DSLTimelineSerializer().serialize(ideaFlowModel)
-			ideService.writeToFile(ideaFlowModel.fileName, xml)
+			ideService.writeFile(ideaFlowModel.file, xml)
 		}
 	}
 

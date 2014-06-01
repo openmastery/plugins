@@ -9,7 +9,7 @@ class TestIdeaFlowModel extends GroovyTestCase {
 
 
 	void setUp() {
-		model = new IdeaFlowModel('test', null)
+		model = new IdeaFlowModel(new File('test'), null)
 	}
 
 	void testAddEvent_ShouldNotAdd_IfPaused() {

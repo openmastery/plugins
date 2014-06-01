@@ -14,7 +14,7 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 	void setUp() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
 
-		model = new IdeaFlowModel('test', null)
+		model = new IdeaFlowModel(new File('test'), null)
 		eventHandler = new EventToEditorActivityHandler(model)
 	}
 

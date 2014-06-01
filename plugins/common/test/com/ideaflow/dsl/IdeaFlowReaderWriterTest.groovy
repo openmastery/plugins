@@ -61,7 +61,7 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 	}
 
 	private IdeaFlowModel readModelAndClearIds() {
-		IdeaFlowModel model = new IdeaFlowReader().readModel(stringWriter.toString())
+		IdeaFlowModel model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
 
 		model.entityList.each { ModelEntity entity ->
 			assert entity.id != null
@@ -84,7 +84,7 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		}
 		IdeaFlowModel model
 		try {
-			model = new IdeaFlowReader().readModel(stringWriter.toString())
+			model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
 		} catch (MissingMethodException ex) {
 			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
 					"ensure ${IdeaFlowReader.simpleName} declares appropriate read(<subtype>) method", ex)

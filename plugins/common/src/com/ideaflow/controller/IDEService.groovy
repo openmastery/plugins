@@ -5,15 +5,13 @@ public interface IDEService {
 
 	String getActiveFileSelection()
 
-	void createNewFile(String relativePath, String initialContent)
+	void createNewFile(File file, String initialContent)
 
-	boolean fileExists(String relativePath)
+	boolean fileExists(File file)
 
-	String readFile(String relativePath)
+	String readFile(File file)
 
-	void writeToFile(String relativePath, String contents)
-
-	void validateFilePath(String relativePath)
+	void writeFile(File file, String contents)
 
 	String promptForInput(String title, String message)
 

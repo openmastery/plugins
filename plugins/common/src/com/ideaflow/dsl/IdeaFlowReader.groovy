@@ -15,8 +15,8 @@ import org.joda.time.format.DateTimeFormatter
 
 class IdeaFlowReader {
 
-	IdeaFlowModel readModel(String dslContent) {
-		IdeaFlowModelLoader loader = new IdeaFlowModelLoader()
+	IdeaFlowModel readModel(File modelFile, String dslContent) {
+		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(modelFile)
 		String wrappedDslContent = "ideaFlowModel {${dslContent}}"
 		Script dslScript = new GroovyShell().parse(wrappedDslContent)
 
@@ -47,8 +47,8 @@ class IdeaFlowReader {
 		private int entityIdCounter
 		private DateTimeFormatter dateFormat
 
-		IdeaFlowModelLoader() {
-			model = new IdeaFlowModel('', null)
+		IdeaFlowModelLoader(File modelFile) {
+			model = new IdeaFlowModel(modelFile, new DateTime())
 			entityIdCounter = 1
 		}
 

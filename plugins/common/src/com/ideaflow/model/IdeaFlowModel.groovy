@@ -5,15 +5,14 @@ import org.joda.time.DateTime
 class IdeaFlowModel {
 
 	List<ModelEntity> entityList = []
-	String fileName
-
 	boolean isPaused = false
+	File file
 	DateTime created
 
 	private Conflict activeConflict = null
 
-	IdeaFlowModel(String fileName, DateTime created) {
-		this.fileName = fileName
+	IdeaFlowModel(File file, DateTime created) {
+		this.file = file
 		this.created = created
 	}
 

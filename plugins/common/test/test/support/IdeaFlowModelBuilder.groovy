@@ -21,7 +21,7 @@ class IdeaFlowModelBuilder {
 
 	IdeaFlowModelBuilder defaults() {
 		ifm.created = new DateTime(fs.NOW)
-		ifm.fileName = fs.FILE
+		ifm.file = new File(fs.FILE)
 		return this
 	}
 

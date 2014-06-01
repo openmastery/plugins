@@ -1,21 +1,19 @@
 package com.ideaflow.intellij
 
 import com.ideaflow.controller.IDEService
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.command.CommandProcessor
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VfsUtil
-import com.intellij.ui.UIBundle
-import com.intellij.openapi.module.ModuleManager
-import com.intellij.openapi.module.Module
 import com.intellij.openapi.ui.Messages
-
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.ui.UIBundle
 
 class IDEServiceImpl implements IDEService {
 
-    Project project
+    private Project project
 
     IDEServiceImpl(Project project) {
         this.project = project
@@ -23,8 +21,8 @@ class IDEServiceImpl implements IDEService {
 
     String getActiveFileSelection() {
         String file = null
-        def files = FileEditorManager.getInstance(project).getSelectedFiles()
-        if (files.size() > 0) {
+	    VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles()
+        if (files.length > 0) {
             file = files[0].name
         }
         return file
@@ -37,18 +35,18 @@ class IDEServiceImpl implements IDEService {
 
     }
 
-    void createNewFile(String relativePath, String contents) {
-        FileHandler handler = createHandler(relativePath)
-        handler.validateFolder()
+    void createNewFile(File file, String contents) {
+	    file.parentFile.mkdirs()
+	    file.createNewFile()
+        FileHandler handler = createHandler(file)
 
         runWriteAction {
-            handler.create(contents)
+            handler.write(contents)
         }
     }
 
-    void writeToFile(String relativePath, String contents) {
-        FileHandler handler = createHandler(relativePath)
-        handler.validateFolder()
+    void writeFile(File file, String contents) {
+        FileHandler handler = createHandler(file)
         handler.validateFileExists()
 
         runWriteAction {
@@ -56,29 +54,29 @@ class IDEServiceImpl implements IDEService {
         }
     }
 
-    boolean fileExists(String relativePath) {
-        FileHandler handler = createHandler(relativePath)
-        handler.fileExists()
+    boolean fileExists(File file) {
+	    findVirtualFile(file) != null
     }
 
-    void validateFilePath(String relativePath) {
-        FileHandler handler = createHandler(relativePath)
-        handler.validateFolder()
-    }
-
-    String readFile(String relativePath) {
-        FileHandler handler = createHandler(relativePath)
+    String readFile(File file) {
+        FileHandler handler = createHandler(file)
         handler.validateFileExists()
         handler.read()
     }
 
-    private FileHandler createHandler(String relativePath) {
-        Module module = ModuleManager.getInstance(project).findModuleByName('ideaflow')
-        if (module.moduleFile == null) {
-            throw new Exception("Module file missing! Did you accidentally delete it?")
-        }
-        new FileHandler(module.moduleFile.parent, relativePath)
+    private FileHandler createHandler(File file) {
+	    VirtualFile virtualFile = findVirtualFile(file)
+
+	    if (virtualFile == null) {
+		    throw new Exception("Unable to locate IDEA file, path=" + file.absolutePath)
+	    }
+        new FileHandler(virtualFile)
     }
+
+	private VirtualFile findVirtualFile(File file) {
+		LocalFileSystem.getInstance().refreshIoFiles([file])
+		LocalFileSystem.getInstance().findFileByIoFile(file)
+	}
 
     private void runWriteAction(Closure closure) {
         WriteAction action = new WriteAction(closure)
@@ -112,79 +110,28 @@ class IDEServiceImpl implements IDEService {
 
     private static class FileHandler {
 
-        VirtualFile baseFolder
-        String relativePath
-        String subFolder
-        String fileName
+        VirtualFile file
 
-        FileHandler(VirtualFile baseFolder, String relativePath) {
-            this.baseFolder = baseFolder
-            this.relativePath = relativePath
-            parseSubFolder()
-            parseFileName()
-        }
-
-        private String parseSubFolder() {
-            int index = relativePath.lastIndexOf('/')
-            if (index >= 0) {
-                subFolder = relativePath.substring(0, index)
-            }
-        }
-
-        private String parseFileName() {
-            int index = relativePath.lastIndexOf('/')
-            if (index >= 0) {
-                fileName = relativePath.substring(index + 1)
-            } else {
-                fileName = relativePath
-            }
-        }
-
-        void validateFolder() {
-            if (subFolder) {
-                VirtualFile folder = baseFolder.findFileByRelativePath(subFolder)
-                if (folder == null || !folder.isDirectory() || !folder.exists()) {
-                    throw new Exception("Invalid folder: $subFolder")
-                }
-            }
+	    FileHandler(VirtualFile file) {
+		    this.file = file
         }
 
         void validateFileExists() {
             if (!fileExists()) {
-                throw new Exception("Invalid file: $fileName")
+                throw new Exception("Invalid file: $file.path")
             }
         }
 
         boolean fileExists() {
-            VirtualFile file = getFile()
             file != null && !file.isDirectory() && file.exists()
         }
 
         String read() {
-            VirtualFile file = getFile()
             VfsUtil.loadText(file)
         }
 
-        void create(String contents) {
-            VirtualFile file = findSubFolder().createChildData(this, fileName);
-            VfsUtil.saveText(file, contents);
-        }
-
         void write(String contents) {
-            VirtualFile file = getFile()
             VfsUtil.saveText(file, contents)
-        }
-
-        VirtualFile getFile() {
-            baseFolder.findFileByRelativePath(relativePath)
-        }
-
-        VirtualFile findSubFolder() {
-            VirtualFile folder = baseFolder
-            if (subFolder) {
-                folder = baseFolder.findFileByRelativePath(subFolder)
-            }
-            return folder
         }
 
     }

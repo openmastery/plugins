@@ -14,19 +14,19 @@ class TestIFMController extends GroovyTestCase {
 	}
 
 	void testAddEventWithoutComment_ShouldBeIgnored() {
-		controller.newIdeaFlow('test')
+		controller.newIdeaFlow(new File('test'))
 		controller.startConflict(null)
 		assert false == controller.isOpenConflict()
 	}
 
 	void testAddEventWithComment_ShouldChangeState() {
-		controller.newIdeaFlow('test')
+		controller.newIdeaFlow(new File('test'))
 		controller.startConflict('conflict')
 		assert true == controller.isOpenConflict()
 	}
 
 	void testIsIdeaFlowOpen() {
-		controller.newIdeaFlow('test')
+		controller.newIdeaFlow(new File('test'))
 		assert true == controller.isIdeaFlowOpen()
 
 		controller.closeIdeaFlow()
@@ -38,7 +38,7 @@ class TestIFMController extends GroovyTestCase {
 				getActiveFileSelection: { 'testfile' },
 				fileExists: { false },
 				createNewFile: { file, contents -> },
-				writeToFile: { file, contents -> }
+				writeFile: { file, contents -> }
 		] as IDEService
 	}
 
