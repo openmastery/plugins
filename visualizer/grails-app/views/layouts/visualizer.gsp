@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title><g:layoutTitle default="Visualizer"/></title>
+    <title><g:layoutTitle default="Idea Flow Visualizer"/></title>
     
     <r:require module="layouts/visualizer"/>
     

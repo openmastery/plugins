@@ -14,6 +14,7 @@
     <r:require module="layouts/visualizer"/>
 
     <r:layoutResources/>
+    <link rel="shortcut icon" href="${createLink(uri: '/images/favicon.ico?v=2')}" type="image/x-icon" />
 </head>
 
 <body>
