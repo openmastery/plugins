@@ -61,7 +61,7 @@ class IdeaFlowWriter {
 	}
 
 	void write(BandStart bandStart) {
-		writeItem('bandStart', bandStart, ['created', 'type'])
+		writeItem('bandStart', bandStart, ['created', 'type', 'comment'])
 	}
 
 	void write(BandEnd bandEnd) {

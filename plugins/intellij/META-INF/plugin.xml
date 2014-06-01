@@ -23,6 +23,12 @@
 		<action id="IdeaFlow.ToggleConflict" class="com.ideaflow.intellij.action.ToggleConflict"
 		        icon="/icons/conflict.png">
 		</action>
+		<action id="IdeaFlow.ToggleLearning" class="com.ideaflow.intellij.action.ToggleLearning"
+		        icon="/icons/learning.png">
+		</action>
+		<action id="IdeaFlow.ToggleRework" class="com.ideaflow.intellij.action.ToggleRework"
+		        icon="/icons/rework.png">
+		</action>
 		<action id="IdeaFlow.TogglePause" class="com.ideaflow.intellij.action.TogglePause"
 		        icon="/icons/pause.png">
 		</action>
@@ -41,6 +47,8 @@
 			<reference ref="IdeaFlow.ToggleOpenIdeaFlow"/>
 			<reference ref="IdeaFlow.TogglePause"/>
 			<reference ref="IdeaFlow.ToggleConflict"/>
+			<reference ref="IdeaFlow.ToggleLearning"/>
+			<reference ref="IdeaFlow.ToggleRework"/>
 			<reference ref="IdeaFlow.Note"/>
 			<separator/>
 		</group>

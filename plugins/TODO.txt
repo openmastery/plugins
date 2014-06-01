@@ -1,6 +1,6 @@
 ------- MVP
 
-Add toggle for learning and rework and support a comment for the band so you can make them while tracking IF.  The comments will show up in the highlights section.  
+DONE!
 
 ------- BOOK RELEASE
 
