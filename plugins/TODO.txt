@@ -8,7 +8,15 @@ Add toggle for learning and rework and support a comment for the band so you can
 
 Plugin explodes when project is started up without an IF module already defined.
 
+Detatch the IFM files from the ideaflow module thing.  Should be able to put files wherever we want.
+
+Add vertical bar in buttons to make it it's own group
+
 ------- BOOK RELEASE
+
+Create a "New IFM" handler that we can right click and create, or click record and create.
+
+Make ifm files show up with icon but still associated with Groovy file editor
 
 Add support for 'process' snippets in the DSL.  Process bands can overlap other generic band types.  Learning and rework bands can't overlap with anything except conflicts.
 
