@@ -1,7 +1,7 @@
 package com.newiron.ideaflow.presentation
 
 
-class ClockTimeDecoratorMixin {
+class ClockTimeDecorationMixin {
 
 	String getShortTime() {
 		toHours() + ":" + toMinutes()

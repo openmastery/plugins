@@ -1,9 +1,11 @@
-import com.newiron.ideaflow.presentation.DecoratorLayerInitializer
+import com.newiron.ideaflow.presentation.TimelineDecorator
+import com.newiron.ideaflow.presentation.TimelineDecorator
+import com.newiron.ideaflow.presentation.TimelineDecorator
 
 class BootStrap {
 
     def init = { servletContext ->
-		DecoratorLayerInitializer.init()
+		TimelineDecorator.initMixins()
     }
     def destroy = {
     }

@@ -1,7 +1,7 @@
 package com.newiron.ideaflow.presentation
 
 
-class DurationDecoratorMixin {
+class DurationDecorationMixin {
 
 	String getHourMinSec() {
 		String format = ""

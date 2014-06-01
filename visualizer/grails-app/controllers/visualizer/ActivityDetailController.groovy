@@ -10,9 +10,8 @@ class ActivityDetailController {
     def list() {
 
 		Timeline timeline = ifmService.activeTimeline
-		TimelineDetail detail = new TimelineDetail(timeline)
 
-        render(template: "list", model: [detailEntries: detail.listRows()])
+        render(template: "list", model: [detailEntries: timeline.sequencedTimelineDetail])
     }
 
     def delete() {

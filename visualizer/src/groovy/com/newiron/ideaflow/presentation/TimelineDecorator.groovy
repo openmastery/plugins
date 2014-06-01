@@ -1,32 +1,44 @@
 package com.newiron.ideaflow.presentation
 
-import com.ideaflow.model.BandType
 import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand
 import com.ideaflow.timeline.Event
 import com.ideaflow.timeline.GenericBand
-import com.ideaflow.timeline.TimeBand
+import com.ideaflow.timeline.TimeDuration
 import com.ideaflow.timeline.TimeEntry
 import com.ideaflow.timeline.TimePosition
 import com.ideaflow.timeline.Timeline
 
 
-class TimelineDetail {
+class TimelineDecorator {
 
-	//activity detail has a color
-	Timeline timeline
-
-	TimelineDetail(Timeline timeline) {
-		this.timeline = timeline
-		initializeActiveBandTypes()
+	static void initMixins() {
+		TimePosition.mixin(ClockTimeDecorationMixin)
+		TimeDuration.mixin(DurationDecorationMixin)
+		ActivityDetail.mixin(ActiveBandDecorationMixin)
+		Event.mixin(ActiveBandDecorationMixin)
+		ConflictBand.mixin(PercentDecorationMixin)
 	}
 
-	List<TimeEntry> listRows() {
-		timeline.sequencedTimelineDetail
+	void decorate(Timeline timeline) {
+		decorateConflicts(timeline.conflictBands)
+		decorateActiveBandTypes(timeline.sequencedTimelineDetail)
 	}
 
-	private void initializeActiveBandTypes() {
-		timeline.sequencedTimelineDetail.each { TimeEntry entry ->
+	private decorateConflicts(List<ConflictBand> conflictBands) {
+		ConflictBand longestConflict = conflictBands.max { ConflictBand conflict ->
+			conflict.duration.duration
+		}
+
+		if (longestConflict) {
+			conflictBands.each { ConflictBand band ->
+				band.percent = 100 * (band.duration.duration / longestConflict.duration.duration)
+			}
+		}
+	}
+
+	private void decorateActiveBandTypes(List<TimeEntry> timeEntries) {
+		timeEntries.each { TimeEntry entry ->
 			handleTimeEntry(entry)
 		}
 	}
@@ -67,6 +79,5 @@ class TimelineDetail {
 			activeBand = null
 		}
 	}
-
 
 }

@@ -1,5 +1,7 @@
 package com.newiron.ideaflow.presentation
 
 
-class PercentDecoratorMixin {
+class PercentDecorationMixin {
+
+	int percent
 }
