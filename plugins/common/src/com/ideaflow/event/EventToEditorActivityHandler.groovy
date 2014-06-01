@@ -7,6 +7,7 @@ import org.joda.time.DateTime
 class EventToEditorActivityHandler {
 
 	private Event activeEvent
+	private EditorActivity lastEditorActivity
 	private IdeaFlowModel model
 
 	private static final String DONE_EVENT = "***DONE***"
@@ -55,7 +56,13 @@ class EventToEditorActivityHandler {
 	private void addEditorActivity(Event oldEvent, Event newEvent) {
 		int duration = (newEvent.time.millis - oldEvent.time.millis) / 1000
 		if (duration >= SHORTEST_ACTIVITY && isDifferent(oldEvent, newEvent)) {
-			model.addModelEntity(createEditorActivity(oldEvent, duration))
+			EditorActivity editorActivity = createEditorActivity(oldEvent, duration)
+			if (editorActivity.name != lastEditorActivity?.name) {
+				model.addModelEntity(editorActivity)
+				lastEditorActivity = editorActivity
+			} else {
+				lastEditorActivity.duration += editorActivity.duration
+			}
 		}
 	}
 

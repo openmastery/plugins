@@ -112,6 +112,26 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 		assert getEditorActivity(0).modified
 	}
 
+	void testEndEvent_ShouldIncrementDurationOnExistingEditorActivityAndNotCreateNewActivity() {
+		int activityLengthLongEnoughToTriggerEvent = EventToEditorActivityHandler.SHORTEST_ACTIVITY + 1
+		int activityLengthTooShortToTriggerEvent = EventToEditorActivityHandler.SHORTEST_ACTIVITY - 1
+		long currentTime = NOW
+
+		eventHandler.startEvent(FILE1)
+		currentTime += activityLengthLongEnoughToTriggerEvent * 1000
+		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		eventHandler.startEvent(FILE2)
+		currentTime += activityLengthTooShortToTriggerEvent * 1000
+		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		eventHandler.startEvent(FILE1)
+		currentTime += activityLengthLongEnoughToTriggerEvent * 1000
+		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		eventHandler.endEvent()
+
+		assert 1 == model.size()
+		assert getEditorActivity(0).duration == activityLengthLongEnoughToTriggerEvent * 2
+	}
+
 	private EditorActivity getEditorActivity(int index) {
 		model.entityList.get(index)
 	}
