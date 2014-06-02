@@ -10,7 +10,8 @@
         <tbody>
         <g:each in="${timeBands}" var="${band}" status="${index}">
             <tr id="event_${index}" class="eventrow" onmouseover="highlightColorBand(${index})" onmouseout="resetColorBands()">
-                <td class="${band.bandType}type">
+                <td>
+                    <span class="${band.bandType}pie">${band.percent}/100</span>
                     &nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
@@ -31,6 +32,7 @@
 <script type="text/javascript">
     showTimelineWindow(false);
     resetColorBands();
+    drawHighlightPies();
     //turn off green toggle
     //onHover, highlight band on timeline
     //onHover, highlight row and make X appear

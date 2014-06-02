@@ -384,11 +384,11 @@ function drawTimeband(layer, band, secondsPerUnit) {
 
 function lookupBandColors(bandType) {
     if (bandType == 'conflict') {
-        return ['#ff0078', '#ff4ca0']
+        return ['#ff0078', '#FFDEF6']
     } else if (bandType == 'learning') {
         return ['#520ce8', '#8654ef']
     } else if (bandType == 'rework') {
-        return ['#ffcb01', '#ffda4d']
+        return ['#ffcb01', '#FFFFCC']
     } else {
         throw "Unable to find color for bandType: "+bandType
     }
@@ -399,7 +399,7 @@ function resetColorBands() {
 
     for (var i = 0; i < colorBands.length; i++) {
         colorBands[i].setOpacity('1');
-        var color = timelineData.timeBands[i].color;
+        var color = lookupBandColors(timelineData.timeBands[i].bandType)[0];
         colorBands[i].setFill(color);
     }
     leftStretcher.hide();
@@ -422,7 +422,10 @@ function focusColorBand(band) {
 }
 
 function highlightColorBand(index) {
-    colorBands[index].setOpacity('.6');
+    //colorBands[index].setOpacity('.6');
+    colorBands[index].setFill(lookupBandColors(timelineData.timeBands[index].bandType)[1]);
+    colorBands[index].setStroke(lookupBandColors(timelineData.timeBands[index].bandType)[0]);
+
     stage.draw();
 }
 
@@ -448,6 +451,21 @@ function resetEventLines() {
 function drawPies() {
     $("span.pie").peity("pie", {
         fill: [lookupBandColors('conflict')[0], '#CCCCCC'],
+        diameter: 20
+    });
+}
+
+function drawHighlightPies() {
+    $("span.conflictpie").peity("pie", {
+        fill: [lookupBandColors('conflict')[0], lookupBandColors('conflict')[1]],
+        diameter: 20
+    });
+    $("span.reworkpie").peity("pie", {
+        fill: [lookupBandColors('rework')[0], lookupBandColors('rework')[1]],
+        diameter: 20
+    });
+    $("span.learningpie").peity("pie", {
+        fill: [lookupBandColors('learning')[0], lookupBandColors('learning')[1]],
         diameter: 20
     });
 }

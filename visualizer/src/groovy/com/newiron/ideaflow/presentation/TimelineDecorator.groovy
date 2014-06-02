@@ -1,5 +1,6 @@
 package com.newiron.ideaflow.presentation
 
+import com.ideaflow.model.BandType
 import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand
 import com.ideaflow.timeline.Event
@@ -18,11 +19,14 @@ class TimelineDecorator {
 		ActivityDetail.mixin(ActiveBandDecorationMixin)
 		Event.mixin(ActiveBandDecorationMixin)
 		ConflictBand.mixin(PercentDecorationMixin)
+		GenericBand.mixin(PercentDecorationMixin)
 	}
 
 	void decorate(Timeline timeline) {
 		decorateConflicts(timeline.conflictBands)
 		decorateActiveBandTypes(timeline.sequencedTimelineDetail)
+		decorateBands(timeline.genericBands, BandType.learning)
+		decorateBands(timeline.genericBands, BandType.rework)
 	}
 
 	private decorateConflicts(List<ConflictBand> conflictBands) {
@@ -33,6 +37,19 @@ class TimelineDecorator {
 		if (longestConflict) {
 			conflictBands.each { ConflictBand band ->
 				band.percent = 100 * (band.duration.duration / longestConflict.duration.duration)
+			}
+		}
+	}
+
+	private decorateBands(List<GenericBand> genericBands, BandType bandType) {
+		List<GenericBand> bandsMatchingType = genericBands.findAll { it.bandType == bandType }
+		GenericBand longestBand = bandsMatchingType.max { GenericBand band ->
+			band.duration.duration
+		}
+
+		if (longestBand) {
+			bandsMatchingType.each { GenericBand band ->
+				band.percent = 100 * (band.duration.duration / longestBand.duration.duration)
 			}
 		}
 	}
