@@ -422,12 +422,12 @@ function focusColorBand(band) {
 }
 
 function highlightColorBand(index) {
-    colorBands[index].setFill(timelineData.timeBands[index].highlight);
+    colorBands[index].setOpacity('.6');
     stage.draw();
 }
 
 function highlightConflict(index) {
-    conflictBands[index].setOpacity('.7');
+    conflictBands[index].setOpacity('.6');
     stage.draw();
 }
 

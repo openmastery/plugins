@@ -1,6 +1,6 @@
 <common:nav controller="${params.controller}" action="${params.action}"/>
 
-<div id="conflicts">
+<div id="conflicts" class="tabcontent">
     <g:each in="${conflicts}" var="${conflict}" status="${index}">
         <div class="conflict" onmouseover="highlightConflict(${index})" onmouseout="resetColorBands()">
             <div class="header">

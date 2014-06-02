@@ -1,7 +1,7 @@
 <%@ page import="com.ideaflow.timeline.Event; com.ideaflow.timeline.ActivityDetail" %>
 <common:nav controller="${params.controller}" action="${params.action}"/>
 
-<div id="timeline_scrollwindow" class="timedetail">
+<div id="timeline_scrollwindow" class="tabcontent">
     <table class="tabular">
         <thead>
         <tr>

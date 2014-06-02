@@ -2,13 +2,15 @@
 
 Add the duration to the conflict highlights page.
 
-Sort all the conflicts by duration in the UI (give some visual indication of size)
-
 Display modified state in blue text.
 
 Ability to open a conflict and record mistake type(s), cause, delay, notes. If these fields are already populated in the IFM, should be visible when the file is reopened. 
 
 Allow rework and learning highlights to overlap conflicts.
+
+Highlight active tab with a style
+
+scroll conflicts so you can see the highlights, make the rollovers more prominent
 
 ------ BOOK RELEASE
 

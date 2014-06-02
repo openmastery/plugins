@@ -5,7 +5,7 @@
     cursor:pointer;
 }
 </style>
-<div id="timeBands">
+<div id="timeBands" class="tabcontent">
     <table class="tabular">
         <tbody>
         <g:each in="${timeBands}" var="${band}" status="${index}">

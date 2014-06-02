@@ -381,22 +381,22 @@ button.pushbutton, span.pushbutton { display: block; min-width: 20px; height: 22
 /* line 3, ../../src/stylesheets/components/_content-panel.scss */
 #contentpanel .nav { margin-left: auto; margin-right: auto; margin-top: 20px; height: 40px; width: 760px; }
 
+/* line 12, ../../src/stylesheets/components/_content-panel.scss */
+div.tabcontent { overflow: scroll; height: 400px; }
+
 /* line 1, ../../src/stylesheets/components/_table.scss */
 table.tabular { background-color: white; }
 
-/* line 5, ../../src/stylesheets/components/_table.scss */
-div.timedetail { overflow: scroll; height: 400px; }
-
-/* line 9, ../../src/stylesheets/components/_table.scss */
+/* line 6, ../../src/stylesheets/components/_table.scss */
 .learningtype { background-color: #520ce8; }
 
-/* line 13, ../../src/stylesheets/components/_table.scss */
+/* line 10, ../../src/stylesheets/components/_table.scss */
 .reworktype { background-color: #ffcb01; }
 
-/* line 17, ../../src/stylesheets/components/_table.scss */
+/* line 14, ../../src/stylesheets/components/_table.scss */
 .conflicttype { background-color: #ff0078; }
 
-/* line 21, ../../src/stylesheets/components/_table.scss */
+/* line 18, ../../src/stylesheets/components/_table.scss */
 .right { text-align: right; }
 
 /* line 4, ../../src/stylesheets/components/_conflicts.scss */

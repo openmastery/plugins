@@ -5,7 +5,7 @@
       cursor:pointer;
 }
 </style>
-<div id="events">
+<div id="events" class="tabcontent">
     <table class="tabular">
         <tbody>
         <g:each in="${events}" var="${event}" status="${index}">

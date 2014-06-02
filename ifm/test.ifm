@@ -1,2 +1,0 @@
-initialize (dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ", created: '2014-01-04T19:22:16.425-0600', )
-event (created: '2014-01-04T19:22:16.425-0600', type: 'open', comment: '''Start IdeaFlow recording''', )
