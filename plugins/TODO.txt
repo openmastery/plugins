@@ -1,12 +1,6 @@
 ------- MVP
 
-Add toggle for learning and rework and support a comment for the band so you can make them while tracking IF.  The comments will show up in the highlights section.  
-
-Plugin explodes when project is started up without an IF module already defined.
-
-Detatch the IFM files from the ideaflow module thing.  Should be able to put files wherever we want.
-
-Add vertical bar in buttons to make it it's own group
+DONE!
 
 ------- BOOK RELEASE
 

@@ -10,6 +10,7 @@ class IdeaFlowModel {
 	DateTime created
 
 	private Conflict activeConflict = null
+	private BandStart activeBandStart = null
 
 	IdeaFlowModel(File file, DateTime created) {
 		this.file = file
@@ -30,6 +31,18 @@ class IdeaFlowModel {
 		}
 	}
 
+	void addModelEntity(BandStart bandStart) {
+		addModelEntityInternal(bandStart) {
+			activeBandStart = bandStart
+		}
+	}
+
+	void addModelEntity(BandEnd bandEnd) {
+		addModelEntityInternal(bandEnd) {
+			activeBandStart = null
+		}
+	}
+
 	void addModelEntity(ModelEntity modelEntity) {
 		addModelEntityInternal(modelEntity, null)
 	}
@@ -47,6 +60,10 @@ class IdeaFlowModel {
 
 	Conflict getActiveConflict() {
 		activeConflict
+	}
+
+	BandStart getActiveBandStart() {
+		activeBandStart
 	}
 
 	boolean isOpenConflict() {

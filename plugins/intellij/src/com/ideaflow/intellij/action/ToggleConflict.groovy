@@ -35,15 +35,13 @@ class ToggleConflict extends ToggleAction {
         }
     }
 
-
-
     @Override
     public void update(AnActionEvent e) {
         super.update(e);
         Presentation presentation = e.getPresentation()
         disableWhenNoIdeaFlow(e)
 
-        if (isOpenConflict()) {
+        if (isOpenConflict(e)) {
             presentation.setText(END_CONFLICT_TITLE)
         } else {
             presentation.setText(START_CONFLICT_TITLE)

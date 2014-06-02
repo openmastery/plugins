@@ -3,6 +3,9 @@ package com.ideaflow.controller
 import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToEditorActivityHandler
+import com.ideaflow.model.BandEnd
+import com.ideaflow.model.BandStart
+import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.ModelEntity
@@ -34,8 +37,16 @@ class IFMController {
 		return (isIdeaFlowOpen() ? ideaFlowModel.getActiveConflict() : null)
 	}
 
+	BandStart getActiveBandStart() {
+		return (isIdeaFlowOpen() ? ideaFlowModel.getActiveBandStart() : null)
+	}
+
 	boolean isOpenConflict() {
 		getActiveConflict() != null
+	}
+
+	boolean isOpenBand() {
+		getActiveBandStart() != null
 	}
 
 	void startConflict(String question) {
@@ -47,6 +58,18 @@ class IFMController {
 	void endConflict(String answer) {
 		if (answer) {
 			addModelEntity(new Resolution(answer))
+		}
+	}
+
+	void startBand(String comment, BandType bandType) {
+		if (comment) {
+			addModelEntity(new BandStart(bandType, comment))
+		}
+	}
+
+	void endBand(BandType bandType) {
+		if (bandType) {
+			addModelEntity(new BandEnd(bandType))
 		}
 	}
 
