@@ -2,8 +2,6 @@
 
 Add the duration to the conflict highlights page.
 
-Add band comments to highlights page.
-
 Display modified state in blue text.
 
 Display any manually added mistake type, cause, or delay in conflicts.
@@ -19,6 +17,8 @@ make the rollovers consistent (get rid of opacity change and use colors)
 make mouse over of timeline highlight and scrollto the conflict/highlight below.
 
 Put ideaflow map title in banner and author on left.
+
+scroll conflicts so you can see the highlights, make the rollovers more prominent
 
 ------ BOOK RELEASE
 
