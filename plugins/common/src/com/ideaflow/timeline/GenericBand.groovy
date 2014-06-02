@@ -22,6 +22,10 @@ class GenericBand extends AbstractTimeBand {
 		bandStart.type
 	}
 
+	String getId() {
+		bandStart.getId()
+	}
+
 	String toString() {
 		"GenericBand: $bandType"
 	}

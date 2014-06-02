@@ -47,7 +47,8 @@ class TimelineChart {
 			timeBands: timeBands.collect { TimeBand timeBand ->
 				[bandType: timeBand.bandType,
 				 duration: timeBand.duration.duration,
-				 offset: timeBand.startPosition.relativeOffset]
+				 offset: timeBand.startPosition.relativeOffset,
+				id: timeBand.id]
 			}
 		]
 

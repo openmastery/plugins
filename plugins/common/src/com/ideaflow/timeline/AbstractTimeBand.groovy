@@ -12,6 +12,8 @@ abstract class AbstractTimeBand implements TimeBand, TimeEntry {
 
 	protected abstract void setActivityEndCreated(DateTime created)
 
+	abstract String getId()
+
 	void setStartPosition(TimePosition startPosition) {
 		this.startPosition = startPosition
 		setActivityStartCreated(startPosition.actualTime)
@@ -27,6 +29,7 @@ abstract class AbstractTimeBand implements TimeBand, TimeEntry {
 	TimePosition getTime() {
 		return startPosition
 	}
+
 
 	private void initDuration() {
 		if (startPosition && endPosition) {

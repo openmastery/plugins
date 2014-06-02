@@ -2,7 +2,7 @@
 
 <div id="conflicts" class="tabcontent">
     <g:each in="${conflicts}" var="${conflict}" status="${index}">
-        <div class="conflict" onmouseover="highlightConflict(${index})" onmouseout="resetColorBands()">
+        <div class="conflict" onmouseover="highlightConflict(${conflict.id})" onmouseout="resetColorBands()">
             <div class="header">
                 <span class="pie">${conflict.percent}/100</span>
                 <span class="label">Conflict:</span>

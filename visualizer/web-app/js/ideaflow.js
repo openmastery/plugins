@@ -335,7 +335,7 @@ function drawTimebandsLayer(stage, bands, secondsPerUnit) {
         var colorBand = drawTimeband(layer, bands[i], secondsPerUnit);
         colorBands[i] = colorBand;
         if (bands[i].bandType == 'conflict') {
-            conflictBands[conflictBands.length] = colorBand;
+            conflictBands[bands[i].id] = colorBand;
         }
     }
     stage.add(layer);
@@ -426,8 +426,8 @@ function highlightColorBand(index) {
     stage.draw();
 }
 
-function highlightConflict(index) {
-    conflictBands[index].setOpacity('.6');
+function highlightConflict(id) {
+    conflictBands[id].setOpacity('.6');
     stage.draw();
 }
 

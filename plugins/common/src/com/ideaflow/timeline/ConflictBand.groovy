@@ -19,6 +19,10 @@ class ConflictBand extends AbstractTimeBand {
 		resolution.created = created
 	}
 
+	String getId() {
+		conflict.getId()
+	}
+
 	String getQuestion() {
 		conflict.question
 	}
