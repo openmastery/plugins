@@ -5,13 +5,8 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	compile 'org.codehaus.groovy:groovy-all:1.8.6'
-	compile 'joda-time:joda-time:2.3'
-
-	testCompile 'junit:junit:4.8.1'
-	testCompile 'org.reflections:reflections:0.9.9-RC1'
-	testCompile 'org.slf4j:slf4j-api:1.7.5'
+configurations {
+    ftpAntTask
 }
 
 sourceSets {
@@ -29,6 +24,21 @@ sourceSets {
 			srcDir 'common/test'
 		}
 	}
+}
+
+dependencies {
+	ftpAntTask("org.apache.ant:ant-commons-net:1.9.3") {
+		module("commons-net:commons-net:1.4.1") {
+			dependencies "oro:oro:2.0.8:jar"
+		}
+	}
+
+	compile 'org.codehaus.groovy:groovy-all:1.8.6'
+	compile 'joda-time:joda-time:2.3'
+
+	testCompile 'junit:junit:4.8.1'
+	testCompile 'org.reflections:reflections:0.9.9-RC1'
+	testCompile 'org.slf4j:slf4j-api:1.7.5'
 }
 
 jar.baseName = 'ideaflow-common'
@@ -55,4 +65,35 @@ publishing {
             from components.java
         }
     }
+}
+
+task publishLocal(dependsOn: publishToMavenLocal)
+
+
+task copyAndRenameIntellijPlugin(type: Copy) {
+	from 'intellij/ideaflow-plugin.zip'
+	into 'build/libs'
+	rename ('ideaflow-plugin.zip', 'ideaflow.zip')
+}
+
+String ftpPassword = null
+task uploadIdeaPlugin(dependsOn: copyAndRenameIntellijPlugin) {
+	doFirst {
+		def console = System.console()
+		if (console != null) {
+			ftpPassword = console.readPassword('> Please enter FTP password: ') as String
+		} else {
+			throw new GradleException("System.console is null, make sure you're not running gradle in daemon mode")
+		}
+	}
+	doLast {
+		ant {
+			taskdef(name: 'ftp',
+					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+					classpath: configurations.ftpAntTask.asPath)
+			ftp(server: 'ideaflow.org', userid: 'ideaflow', password: ftpPassword, passive: 'yes') {
+				fileset(dir: 'build/libs')
+			}
+		}
+	}
 }
