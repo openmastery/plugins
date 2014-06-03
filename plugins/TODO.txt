@@ -2,6 +2,7 @@
 
 Configure build script to update version numbers for the plugin
 
+Test whether collapsing of events takes modification flags into account and that it collapses deactives too.
 ------- BOOK RELEASE
 
 Create a "New IFM" handler that we can right click and create, or click record and create.
