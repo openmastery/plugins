@@ -8,6 +8,11 @@ import test.support.FixtureSupport
 @Mixin(FixtureSupport)
 class TestEventToEditorActivityHandler extends GroovyTestCase {
 
+	private static final int PERSISTABLE_ACTIVITY_DURATION = EventToEditorActivityHandler.SHORTEST_ACTIVITY + 1
+	private static final long PERSISTABLE_ACTIVITY_DURATION_MILLIS = PERSISTABLE_ACTIVITY_DURATION * 1000
+	private static final int DOES_NOT_PERSIST_ACTIVITY_DURATION = EventToEditorActivityHandler.SHORTEST_ACTIVITY - 1
+	private static final long DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS = DOES_NOT_PERSIST_ACTIVITY_DURATION * 1000
+
 	EventToEditorActivityHandler eventHandler
 	IdeaFlowModel model
 
@@ -112,24 +117,42 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 		assert getEditorActivity(0).modified
 	}
 
-	void testEndEvent_ShouldIncrementDurationOnExistingEditorActivityAndNotCreateNewActivity() {
-		int activityLengthLongEnoughToTriggerEvent = EventToEditorActivityHandler.SHORTEST_ACTIVITY + 1
-		int activityLengthTooShortToTriggerEvent = EventToEditorActivityHandler.SHORTEST_ACTIVITY - 1
+	void testDuplicateEvents_ShouldIncrementDurationOnExistingEditorActivityAndNotCreateNewActivity_IfShortActivityComesBetweenTwoSameActivities() {
 		long currentTime = NOW
 
 		eventHandler.startEvent(FILE1)
-		currentTime += activityLengthLongEnoughToTriggerEvent * 1000
+		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
 		DateTimeUtils.setCurrentMillisFixed(currentTime)
 		eventHandler.startEvent(FILE2)
-		currentTime += activityLengthTooShortToTriggerEvent * 1000
+		currentTime += DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS
 		DateTimeUtils.setCurrentMillisFixed(currentTime)
 		eventHandler.startEvent(FILE1)
-		currentTime += activityLengthLongEnoughToTriggerEvent * 1000
+		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
 		DateTimeUtils.setCurrentMillisFixed(currentTime)
 		eventHandler.endEvent()
 
 		assert 1 == model.size()
-		assert getEditorActivity(0).duration == activityLengthLongEnoughToTriggerEvent * 2
+		assert getEditorActivity(0).duration == PERSISTABLE_ACTIVITY_DURATION * 2
+	}
+
+	void testDuplicateEvents_ShouldCreateNewEvent_IfShortActivityComesBetweenTwoActivitiesWithSameNameButDifferentInModifiedState() {
+		long currentTime = NOW
+
+		eventHandler.startEvent(FILE1)
+		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
+		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		eventHandler.startEvent(FILE2)
+		currentTime += DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS
+		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		eventHandler.startEvent(FILE1)
+		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
+		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		eventHandler.activeEventModified()
+		eventHandler.endEvent()
+
+		assert 2 == model.size()
+		assert getEditorActivity(0).duration == PERSISTABLE_ACTIVITY_DURATION
+		assert getEditorActivity(1).duration == PERSISTABLE_ACTIVITY_DURATION
 	}
 
 	private EditorActivity getEditorActivity(int index) {

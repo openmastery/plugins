@@ -57,12 +57,20 @@ class EventToEditorActivityHandler {
 		int duration = (newEvent.time.millis - oldEvent.time.millis) / 1000
 		if (duration >= SHORTEST_ACTIVITY && isDifferent(oldEvent, newEvent)) {
 			EditorActivity editorActivity = createEditorActivity(oldEvent, duration)
-			if (editorActivity.name != lastEditorActivity?.name) {
+			if (isEquivalentActivity(editorActivity, lastEditorActivity)) {
+				lastEditorActivity.duration += editorActivity.duration
+			} else {
 				model.addModelEntity(editorActivity)
 				lastEditorActivity = editorActivity
-			} else {
-				lastEditorActivity.duration += editorActivity.duration
 			}
+		}
+	}
+
+	private boolean isEquivalentActivity(EditorActivity activity1, EditorActivity activity2) {
+		if (activity1 && activity2) {
+			return (activity1.name == activity2.name) && (activity1.modified == activity2.modified)
+		} else {
+			return false
 		}
 	}
 
