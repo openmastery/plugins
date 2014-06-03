@@ -3,8 +3,7 @@ apply plugin: 'maven-publish'
 
 
 File uploadDir = file('build/upload')
-// TODO: get this directly from plugin.xml
-String uploadPluginFileName = 'IdeaFlow.zip'
+String pluginFileName = 'ideaflow-plugin.zip'
 
 repositories {
 	mavenCentral()
@@ -97,29 +96,41 @@ task upload(dependsOn: ['createUpdatePluginXmlFile', 'copyAndRenameIntellijPlugi
 	}
 }
 
-task copyAndRenameIntellijPlugin(type: Copy) {
-	from 'intellij/ideaflow-plugin.zip'
+task copyAndRenameIntellijPlugin(type: Copy, dependsOn: clean) {
+	from "intellij/${pluginFileName}"
 	into uploadDir
-	rename ('ideaflow-plugin.zip', uploadPluginFileName)
+	mustRunAfter clean
 }
 
-task createUpdatePluginXmlFile << {
+task createUpdatePluginXmlFile(dependsOn: clean) {
+	mustRunAfter clean
 
-	String pluginVersion = getPluginVersion()
+	doLast {
+		String pluginId = getPluginId()
+		String pluginVersion = getPluginVersion()
 
-	uploadDir.mkdirs()
-	new File(uploadDir, 'updatePlugins.xml').write """<plugins>
-    <plugin id="org.ideaflow" url="http://ideaflow.org/${uploadPluginFileName}" version="${pluginVersion}"/>
+		uploadDir.mkdirs()
+		new File(uploadDir, 'updatePlugins.xml').write """<plugins>
+    <plugin id="${pluginId}" url="http://ideaflow.org/${pluginFileName}" version="${pluginVersion}"/>
 </plugins>
 """
+	}
+}
 
+private String getPluginId() {
+	getPluginString("id", /(?m)<id>(\S+)<.id>/)
 }
 
 private String getPluginVersion() {
+	getPluginString("version", /(?m)<version>(\d+\.\d+)<.version>/)
+}
+
+private String getPluginString(String description, String regex) {
 	String pluginXmlContent = file('intellij/META-INF/plugin.xml').text
-	def matcher = pluginXmlContent =~ /(?m).version.(\d+\.\d+)..version./
+	def matcher = pluginXmlContent =~ regex
 	if (!matcher) {
-		throw new GradleException("Unable to determine plugin version")
+		throw new GradleException("Unable to determine plugin ${description}")
 	}
 	matcher.group(1)
+
 }
