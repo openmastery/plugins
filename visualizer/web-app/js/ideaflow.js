@@ -357,14 +357,14 @@ function drawTimeband(layer, band, secondsPerUnit) {
 
     colorBand.on('mouseover touchstart', function () {
         if (!isFocused) {
-            this.setOpacity('.7');
+            this.setFill(lookupBandColors(band.bandType)[1]);
             layer.draw();
         }
     });
 
     colorBand.on('mouseout touchend', function () {
         if (!isFocused) {
-            this.setOpacity('1');
+            this.setFill(lookupBandColors(band.bandType)[0]);
             layer.draw();
         }
     });
@@ -384,11 +384,11 @@ function drawTimeband(layer, band, secondsPerUnit) {
 
 function lookupBandColors(bandType) {
     if (bandType == 'conflict') {
-        return ['#ff0078', '#FFDEF6']
+        return ['#ff0078', '#FF90D1', '#FFDEF6']
     } else if (bandType == 'learning') {
-        return ['#520ce8', '#8654ef']
+        return ['#520ce8', '#9694E8', '#8654ef']
     } else if (bandType == 'rework') {
-        return ['#ffcb01', '#FFFFCC']
+        return ['#ffcb01', '#FFEA7C', '#FFFFCC']
     } else {
         throw "Unable to find color for bandType: "+bandType
     }
@@ -424,13 +424,16 @@ function focusColorBand(band) {
 function highlightColorBand(index) {
     //colorBands[index].setOpacity('.6');
     colorBands[index].setFill(lookupBandColors(timelineData.timeBands[index].bandType)[1]);
-    colorBands[index].setStroke(lookupBandColors(timelineData.timeBands[index].bandType)[0]);
-
     stage.draw();
 }
 
 function highlightConflict(id) {
-    conflictBands[id].setOpacity('.6');
+    for (var i = 0; i < colorBands.length; i++) {
+        if (colorBands[i] == conflictBands[id]) {
+            colorBands[i].setFill(lookupBandColors(timelineData.timeBands[i].bandType)[1]);
+        }
+    }
+//    conflictBands[id].setOpacity('.6');
     stage.draw();
 }
 
@@ -457,15 +460,15 @@ function drawPies() {
 
 function drawHighlightPies() {
     $("span.conflictpie").peity("pie", {
-        fill: [lookupBandColors('conflict')[0], lookupBandColors('conflict')[1]],
+        fill: [lookupBandColors('conflict')[0], lookupBandColors('conflict')[2]],
         diameter: 20
     });
     $("span.reworkpie").peity("pie", {
-        fill: [lookupBandColors('rework')[0], lookupBandColors('rework')[1]],
+        fill: [lookupBandColors('rework')[0], lookupBandColors('rework')[2]],
         diameter: 20
     });
     $("span.learningpie").peity("pie", {
-        fill: [lookupBandColors('learning')[0], lookupBandColors('learning')[1]],
+        fill: [lookupBandColors('learning')[0], lookupBandColors('learning')[2]],
         diameter: 20
     });
 }

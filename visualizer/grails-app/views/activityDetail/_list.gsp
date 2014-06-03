@@ -49,7 +49,7 @@
 <script type="text/javascript">
     showTimelineWindow(true);
     resetColorBands();
-    $("#timeline_scrollwindow").on("scrollstop", {latency: 650}, updateTimelineWindowPosition);
+    $("#timeline_scrollwindow").on("scrollstop", {latency: 100}, updateTimelineWindowPosition);
 
     //$("#timeline_scrollwindow").on("scrollstop",
     //        function (event) {

@@ -2,16 +2,6 @@
 
 Display any manually added mistake type, cause, or delay in conflicts.
 
-Allow rework and learning highlights to overlap conflicts.
-
-make the rollovers more prominent
-
-make the rollovers consistent (get rid of opacity change and use colors)
-
-make mouse over of timeline highlight and scrollto the conflict/highlight below.
-
-scroll conflicts so you can see the highlights, make the rollovers more prominent
-
 ------ BOOK RELEASE
 
 Ability to open a conflict and record mistake type, cause, delay, notes.
