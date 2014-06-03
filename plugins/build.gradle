@@ -1,6 +1,9 @@
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
+
+File uploadDir = file('build/upload')
+
 repositories {
 	mavenCentral()
 }
@@ -70,18 +73,12 @@ publishing {
 task publishLocal(dependsOn: publishToMavenLocal)
 
 
-task copyAndRenameIntellijPlugin(type: Copy) {
-	from 'intellij/ideaflow-plugin.zip'
-	into 'build/libs'
-	rename ('ideaflow-plugin.zip', 'ideaflow.zip')
-}
-
 String ftpPassword = null
-task uploadIdeaPlugin(dependsOn: copyAndRenameIntellijPlugin) {
+task upload(dependsOn: ['createUpdatePluginXmlFile', 'copyAndRenameIntellijPlugin']) {
 	doFirst {
 		def console = System.console()
 		if (console != null) {
-			ftpPassword = console.readPassword('> Please enter FTP password: ') as String
+			ftpPassword = console.readPassword('> Please enter ideaflow.org FTP password: ') as String
 		} else {
 			throw new GradleException("System.console is null, make sure you're not running gradle in daemon mode")
 		}
@@ -92,8 +89,35 @@ task uploadIdeaPlugin(dependsOn: copyAndRenameIntellijPlugin) {
 					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
 					classpath: configurations.ftpAntTask.asPath)
 			ftp(server: 'ideaflow.org', userid: 'ideaflow', password: ftpPassword, passive: 'yes') {
-				fileset(dir: 'build/libs')
+				fileset(dir: 'build/upload')
 			}
 		}
 	}
+}
+
+task copyAndRenameIntellijPlugin(type: Copy) {
+	from 'intellij/ideaflow-plugin.zip'
+	into uploadDir
+	rename ('ideaflow-plugin.zip', 'ideaflow.zip')
+}
+
+task createUpdatePluginXmlFile << {
+
+	String pluginVersion = getPluginVersion()
+
+	uploadDir.mkdirs()
+	new File(uploadDir, 'updatePlugins.xml').write """<plugins>
+    <plugin id="org.ideaflow" url="http://ideaflow.org/ideaflow.zip" version="${pluginVersion}"/>
+</plugins>
+"""
+
+}
+
+private String getPluginVersion() {
+	String pluginXmlContent = file('intellij/META-INF/plugin.xml').text
+	def matcher = pluginXmlContent =~ /(?m).version.(\d+\.\d+)..version./
+	if (!matcher) {
+		throw new GradleException("Unable to determine plugin version")
+	}
+	matcher.group(1)
 }

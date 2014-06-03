@@ -1,6 +1,5 @@
 ------- MVP
 
-Configure build script to update version numbers for the plugin
 
 ------- BOOK RELEASE
 
