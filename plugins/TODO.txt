@@ -1,6 +1,5 @@
 ------- MVP
 
-Configure build script to update version numbers for the plugin
 
 Test whether collapsing of events takes modification flags into account and that it collapses deactives too.
 ------- BOOK RELEASE
