@@ -98,7 +98,7 @@ task upload(dependsOn: ['createUpdatePluginXmlFile', 'copyAndRenameIntellijPlugi
 task copyAndRenameIntellijPlugin(type: Copy) {
 	from 'intellij/ideaflow-plugin.zip'
 	into uploadDir
-	rename ('ideaflow-plugin.zip', 'ideaflow.zip')
+	rename ('ideaflow-plugin.zip', 'IdeaFlow.zip')
 }
 
 task createUpdatePluginXmlFile << {
