@@ -3,6 +3,8 @@ apply plugin: 'maven-publish'
 
 
 File uploadDir = file('build/upload')
+// TODO: get this directly from plugin.xml
+String uploadPluginFileName = 'IdeaFlow.zip'
 
 repositories {
 	mavenCentral()
@@ -98,7 +100,7 @@ task upload(dependsOn: ['createUpdatePluginXmlFile', 'copyAndRenameIntellijPlugi
 task copyAndRenameIntellijPlugin(type: Copy) {
 	from 'intellij/ideaflow-plugin.zip'
 	into uploadDir
-	rename ('ideaflow-plugin.zip', 'IdeaFlow.zip')
+	rename ('ideaflow-plugin.zip', uploadPluginFileName)
 }
 
 task createUpdatePluginXmlFile << {
@@ -107,7 +109,7 @@ task createUpdatePluginXmlFile << {
 
 	uploadDir.mkdirs()
 	new File(uploadDir, 'updatePlugins.xml').write """<plugins>
-    <plugin id="org.ideaflow" url="http://ideaflow.org/ideaflow.zip" version="${pluginVersion}"/>
+    <plugin id="org.ideaflow" url="http://ideaflow.org/${uploadPluginFileName}" version="${pluginVersion}"/>
 </plugins>
 """
 
