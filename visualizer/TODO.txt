@@ -1,7 +1,5 @@
 ------ MVP
 
-Add the duration to the conflict highlights page.
-
 Display modified state in blue text.
 
 Display any manually added mistake type, cause, or delay in conflicts.

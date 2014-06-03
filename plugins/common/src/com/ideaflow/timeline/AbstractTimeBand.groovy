@@ -14,6 +14,8 @@ abstract class AbstractTimeBand implements TimeBand, TimeEntry {
 
 	abstract String getId()
 
+	abstract String getComment()
+
 	void setStartPosition(TimePosition startPosition) {
 		this.startPosition = startPosition
 		setActivityStartCreated(startPosition.actualTime)

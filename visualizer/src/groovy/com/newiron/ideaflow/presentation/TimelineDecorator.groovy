@@ -1,10 +1,12 @@
 package com.newiron.ideaflow.presentation
 
 import com.ideaflow.model.BandType
+import com.ideaflow.timeline.AbstractTimeBand
 import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand
 import com.ideaflow.timeline.Event
 import com.ideaflow.timeline.GenericBand
+import com.ideaflow.timeline.TimeBand
 import com.ideaflow.timeline.TimeDuration
 import com.ideaflow.timeline.TimeEntry
 import com.ideaflow.timeline.TimePosition
@@ -30,25 +32,22 @@ class TimelineDecorator {
 	}
 
 	private decorateConflicts(List<ConflictBand> conflictBands) {
-		ConflictBand longestConflict = conflictBands.max { ConflictBand conflict ->
-			conflict.duration.duration
-		}
-
-		if (longestConflict) {
-			conflictBands.each { ConflictBand band ->
-				band.percent = 100 * (band.duration.duration / longestConflict.duration.duration)
-			}
-		}
+		decoratePercents(conflictBands)
 	}
 
 	private decorateBands(List<GenericBand> genericBands, BandType bandType) {
-		List<GenericBand> bandsMatchingType = genericBands.findAll { it.bandType == bandType }
-		GenericBand longestBand = bandsMatchingType.max { GenericBand band ->
+		List<TimeBand> bandsMatchingType = genericBands.findAll { it.bandType == bandType }
+		decoratePercents(bandsMatchingType)
+
+	}
+
+	private decoratePercents(List<TimeBand> timeBands) {
+		TimeBand longestBand = timeBands.max { TimeBand band ->
 			band.duration.duration
 		}
 
 		if (longestBand) {
-			bandsMatchingType.each { GenericBand band ->
+			timeBands.each { TimeBand band ->
 				band.percent = 100 * (band.duration.duration / longestBand.duration.duration)
 			}
 		}

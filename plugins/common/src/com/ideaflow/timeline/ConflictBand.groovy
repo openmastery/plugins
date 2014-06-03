@@ -23,6 +23,10 @@ class ConflictBand extends AbstractTimeBand {
 		conflict.getId()
 	}
 
+	String getComment() {
+		conflict.question
+	}
+
 	String getQuestion() {
 		conflict.question
 	}

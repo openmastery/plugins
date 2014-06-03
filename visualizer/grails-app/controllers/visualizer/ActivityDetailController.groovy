@@ -1,7 +1,6 @@
 package visualizer
 
 import com.ideaflow.timeline.Timeline
-import com.newiron.ideaflow.presentation.TimelineDetail
 
 class ActivityDetailController {
 

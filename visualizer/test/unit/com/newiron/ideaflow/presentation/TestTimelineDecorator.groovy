@@ -109,7 +109,7 @@ class TestTimelineDecorator {
 
 	private GenericBand createGenericBand(BandType bandType, TimePosition start, TimePosition end) {
 		GenericBand band = new GenericBand()
-		band.bandStart = new BandStart(bandType)
+		band.bandStart = new BandStart(bandType, 'test')
 		band.bandEnd = new BandEnd(bandType)
 		band.setStartPosition(start)
 		band.setEndPosition(end)

@@ -10,18 +10,18 @@
         <tbody>
         <g:each in="${timeBands}" var="${band}" status="${index}">
             <tr id="event_${index}" class="eventrow" onmouseover="highlightColorBand(${index})" onmouseout="resetColorBands()">
-                <td>
-                    <span class="${band.bandType}pie">${band.percent}/100</span>
+                <td class="${band.bandType}type">
                     &nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
                     ${band.startPosition.shortTime} - ${band.endPosition.shortTime}
                 </td>
                 <td>
-                    ${band.bandType}
-                    <g:if test="${band.bandType == "conflict"}">
-                     - ${band.question}
-                    </g:if>
+                    ${band.bandType.toString().capitalize()} - ${band.comment}
+                </td>
+                <td>
+                    <span class="${band.bandType}pie">${band.percent}/100</span>&nbsp;
+                    ${band.duration.hourMinSec}
                 </td>
             </tr>
         </g:each>

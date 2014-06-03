@@ -17,4 +17,6 @@ interface TimeBand {
 	BandType getBandType()
 
 	String getId()
+
+	String getComment()
 }
