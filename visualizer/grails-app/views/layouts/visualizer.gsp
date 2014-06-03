@@ -19,7 +19,6 @@
 </head>
 
 <body>
-    <common:header/>
     <g:layoutBody/>
     <common:footer/>
     <r:layoutResources/>

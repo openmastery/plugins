@@ -18,7 +18,15 @@
 </head>
 
 <body>
-
+<div class="header">
+    <div class="nav option1">
+        <ul>
+            <li class="active"><a href="#">${createdDate}</a></li>
+            <li><a href="#">${ifmName}</a></li>
+        </ul>
+        <img src="${resource(dir: 'images', file: 'flow.svg')}" alt="Idea Flow"/></a>
+    </div>
+</div>
 <div id="timelineHolder" class="timeline-holder"></div>
 
 <script type="text/javascript">

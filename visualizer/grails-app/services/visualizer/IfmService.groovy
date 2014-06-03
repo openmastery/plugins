@@ -9,14 +9,16 @@ import com.newiron.ideaflow.presentation.TimelineDecorator
 class IfmService {
 
 	Timeline activeTimeline
+	IdeaFlowModel activeModel
 	String filePath
 
 
 	void loadIdeaFlowMap(String filePath) {
 		this.filePath = filePath
 		File file = new File(filePath)
-		IdeaFlowModel model = new DSLTimelineSerializer().deserialize(file)
-		activeTimeline = new TimelineFactory().create(model)
+		activeModel = new DSLTimelineSerializer().deserialize(file)
+		activeTimeline = new TimelineFactory().create(activeModel)
+
 		new TimelineDecorator().decorate(activeTimeline)
 	}
 
