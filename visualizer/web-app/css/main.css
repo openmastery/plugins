@@ -387,16 +387,22 @@ div.tabcontent { overflow: scroll; height: 400px; }
 /* line 1, ../../src/stylesheets/components/_table.scss */
 table.tabular { background-color: white; }
 
-/* line 6, ../../src/stylesheets/components/_table.scss */
-.learningtype { background-color: #520ce8; }
+/* line 5, ../../src/stylesheets/components/_table.scss */
+td.modified { color: blue; font-style: italic; }
 
 /* line 10, ../../src/stylesheets/components/_table.scss */
-.reworktype { background-color: #ffcb01; }
+td.hiddenOffset { display: none; }
 
 /* line 14, ../../src/stylesheets/components/_table.scss */
-.conflicttype { background-color: #ff0078; }
+.learningtype { background-color: #520ce8; }
 
 /* line 18, ../../src/stylesheets/components/_table.scss */
+.reworktype { background-color: #ffcb01; }
+
+/* line 22, ../../src/stylesheets/components/_table.scss */
+.conflicttype { background-color: #ff0078; }
+
+/* line 26, ../../src/stylesheets/components/_table.scss */
 .right { text-align: right; }
 
 /* line 4, ../../src/stylesheets/components/_conflicts.scss */

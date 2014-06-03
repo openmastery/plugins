@@ -2,6 +2,14 @@ table.tabular {
     background-color: white;
 }
 
+td.modified {
+  color: $modified-color;
+  font-style:italic;
+}
+
+td.hiddenOffset {
+  display:none;
+}
 
 .learningtype {
   background-color: $learning-color;

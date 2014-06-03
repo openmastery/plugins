@@ -20,5 +20,9 @@ class ActivityDetail implements TimeEntry {
 		editorActivity.name
 	}
 
+	
+	boolean isModified() {
+		editorActivity.modified
+	}
 
 }

@@ -5,7 +5,6 @@
     <table class="tabular">
         <thead>
         <tr>
-            <td>Raw Time</td>
             <td>Time (h:m:s)</td>
             <td>File</td>
             <td class="right">Duration (s)</td>
@@ -21,7 +20,7 @@
                     <td>
                         ${detail.time.longTime}
                     </td>
-                    <td>
+                    <td class="${detail.isModified() ? "modified" : ""}">
                         ${detail.activityName}
                     </td>
                     <td class="right">
