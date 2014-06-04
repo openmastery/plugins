@@ -3,7 +3,8 @@ apply plugin: 'maven-publish'
 
 
 File uploadDir = file('build/upload')
-String pluginFileName = 'ideaflow-plugin.zip'
+File pluginFile = file('intellij/ideaflow-plugin.zip')
+File pluginXmlFile = file('intellij/META-INF/plugin.xml')
 
 repositories {
 	mavenCentral()
@@ -75,7 +76,7 @@ task publishLocal(dependsOn: publishToMavenLocal)
 
 
 String ftpPassword = null
-task upload(dependsOn: ['createUpdatePluginXmlFile', 'copyAndRenameIntellijPlugin']) {
+task upload(dependsOn: ['assertPackagedPluginVersionMatchesVersionInSource', 'prepareFilesForUpload']) {
 	doFirst {
 		def console = System.console()
 		if (console != null) {
@@ -96,8 +97,10 @@ task upload(dependsOn: ['createUpdatePluginXmlFile', 'copyAndRenameIntellijPlugi
 	}
 }
 
-task copyAndRenameIntellijPlugin(type: Copy, dependsOn: clean) {
-	from "intellij/${pluginFileName}"
+task prepareFilesForUpload(dependsOn: ['createUpdatePluginXmlFile', 'copyIntellijPluginToUploadDir'])
+
+task copyIntellijPluginToUploadDir(type: Copy, dependsOn: clean) {
+	from pluginFile
 	into uploadDir
 	mustRunAfter clean
 }
@@ -106,31 +109,61 @@ task createUpdatePluginXmlFile(dependsOn: clean) {
 	mustRunAfter clean
 
 	doLast {
-		String pluginId = getPluginId()
-		String pluginVersion = getPluginVersion()
+		String pluginId = getPluginId(pluginXmlFile)
+		String pluginVersion = getPluginVersion(pluginXmlFile)
 
 		uploadDir.mkdirs()
 		new File(uploadDir, 'updatePlugins.xml').write """<plugins>
-    <plugin id="${pluginId}" url="http://ideaflow.org/${pluginFileName}" version="${pluginVersion}"/>
+    <plugin id="${pluginId}" url="http://ideaflow.org/${pluginFile.name}" version="${pluginVersion}"/>
 </plugins>
 """
 	}
 }
 
-private String getPluginId() {
-	getPluginString("id", /(?m)<id>(\S+)<.id>/)
+private String getPluginId(File pluginXmlFile) {
+	getPluginString(pluginXmlFile, "id", /(?m)<id>(\S+)<.id>/)
 }
 
-private String getPluginVersion() {
-	getPluginString("version", /(?m)<version>(\d+\.\d+)<.version>/)
+private String getPluginVersion(File pluginXmlFile) {
+	getPluginString(pluginXmlFile, "version", /(?m)<version>(\d+\.\d+)<.version>/)
 }
 
-private String getPluginString(String description, String regex) {
-	String pluginXmlContent = file('intellij/META-INF/plugin.xml').text
+private String getPluginString(File file, String description, String regex) {
+	String pluginXmlContent = file.text
 	def matcher = pluginXmlContent =~ regex
 	if (!matcher) {
 		throw new GradleException("Unable to determine plugin ${description}")
 	}
 	matcher.group(1)
+}
 
+
+
+task extractPluginJarFromPluginArtifact(type: Copy) {
+	from zipTree(pluginFile)
+	into "build/tmp/"
+	include "ideaflow-plugin/lib/ideaflow-plugin.jar"
+	eachFile { FileCopyDetails details ->
+		if (details.relativePath.isFile()) {
+			details.relativePath = RelativePath.parse(true, "ideaflow-plugin.jar")
+		}
+	}
+}
+
+task extractPluginXmlFromPluginArtifact(type: Copy, dependsOn: extractPluginJarFromPluginArtifact) {
+	from zipTree("build/tmp/ideaflow-plugin.jar")
+	into "build/tmp/"
+	include "META-INF/plugin.xml"
+}
+
+
+task assertPackagedPluginVersionMatchesVersionInSource(dependsOn: extractPluginXmlFromPluginArtifact) << {
+	File packagedPluginXmlFile = file("build/tmp/META-INF/plugin.xml")
+
+	String sourcePluginVersion = getPluginVersion(pluginXmlFile)
+	String packagedPluginVersion = getPluginVersion(packagedPluginXmlFile)
+	if (sourcePluginVersion != packagedPluginVersion) {
+		throw new GradleException("Plugin source version=${sourcePluginVersion} does not match packaged version=${packagedPluginVersion} - "
+				+ "make sure you prepared the plugin via IDEA before uploading (see Readme.md)")
+	}
 }
