@@ -1,5 +1,8 @@
 ------- MVP
 
+Why are [[deactivated]] activities being shown as modified?
+
+Is activity being collapsed correctly when there's a modification?
 
 ------- BOOK RELEASE
 
