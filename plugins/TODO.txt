@@ -6,11 +6,7 @@ If active IFM is deleted when open, no further IFM action is possible (except fo
 
 ------- BOOK RELEASE
 
-Make ifm files show up with icon but still associated with Groovy file editor
-
 Add support for 'process' snippets in the DSL.  Process bands can overlap other generic band types.  Learning and rework bands can't overlap with anything except conflicts.
-
-Associate the IFM files with the groovy editor to make it easier for people to hand-edit correctly
 
 Support 'by hand' process of generating an IFM file
 
