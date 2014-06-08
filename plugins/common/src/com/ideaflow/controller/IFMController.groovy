@@ -117,8 +117,8 @@ class IFMController {
 		flush()
 	}
 
-	void activeEventModified() {
-		eventToIntervalHandler?.activeEventModified()
+	void fileModified(String eventName) {
+		eventToIntervalHandler?.activeEventModified(eventName)
 	}
 
 	void startFileEventForCurrentFile() {

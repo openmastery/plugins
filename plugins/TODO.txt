@@ -1,7 +1,5 @@
 ------- MVP
 
-Why are [[deactivated]] activities being shown as modified?
-
 If active IFM is deleted when open, no further IFM action is possible (except for spewing errors) - fix this
 
 ------- BOOK RELEASE
