@@ -2,8 +2,6 @@
 
 ------- BOOK RELEASE
 
-Add support for 'process' snippets in the DSL.  Process bands can overlap other generic band types.  Learning and rework bands can't overlap with anything except conflicts.
-
 Support 'by hand' process of generating an IFM file
 
 Refactor tests to use builders
