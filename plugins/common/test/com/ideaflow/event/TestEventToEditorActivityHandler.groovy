@@ -110,7 +110,7 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 	void testEndEvent_ShouldCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedCalled() {
 		eventHandler.startEvent(FILE)
 		DateTimeUtils.setCurrentMillisFixed(NOW + LONG_DELAY)
-		eventHandler.activeEventModified()
+		eventHandler.activeEventModified(FILE)
 		eventHandler.endEvent(null)
 
 		assert 1 == model.size()
@@ -147,7 +147,7 @@ class TestEventToEditorActivityHandler extends GroovyTestCase {
 		eventHandler.startEvent(FILE1)
 		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
 		DateTimeUtils.setCurrentMillisFixed(currentTime)
-		eventHandler.activeEventModified()
+		eventHandler.activeEventModified(FILE1)
 		eventHandler.endEvent()
 
 		assert 2 == model.size()
