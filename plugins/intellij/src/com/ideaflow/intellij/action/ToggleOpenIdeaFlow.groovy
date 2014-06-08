@@ -4,8 +4,6 @@ import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowComponent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
-import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
@@ -15,13 +13,27 @@ import com.intellij.psi.search.GlobalSearchScope
 import javax.swing.*
 
 @Mixin(ActionSupport)
-class ToggleOpenIdeaFlow extends ToggleAction {
+class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 
-    private static final String OPEN_TITLE = "Open IdeaFlow"
-    private static final String CLOSE_TITLE = "Close IdeaFlow"
+	private static final String OPEN_TITLE = "Open IdeaFlow"
+	private static final String CLOSE_TITLE = "Close IdeaFlow"
 
+	@Override
+	protected boolean isPresentationEnabled(AnActionEvent e) {
+		return true
+	}
 
-    @Override
+	@Override
+	protected String getPresentationText(AnActionEvent e) {
+		return isIdeaFlowOpen(e) ? CLOSE_TITLE : OPEN_TITLE
+	}
+
+	@Override
+	protected String getPresentationDescription(AnActionEvent e) {
+		return "${getPresentationText(e)}: ${getActiveIdeaFlowName(e)}"
+	}
+
+	@Override
     boolean isSelected(AnActionEvent e) {
         return isIdeaFlowOpen(e)
     }
@@ -34,18 +46,6 @@ class ToggleOpenIdeaFlow extends ToggleAction {
             controller.closeIdeaFlow()
         } else {
             createNewIdeaFlow(e)
-        }
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-        super.update(e)
-        Presentation presentation = e.getPresentation()
-
-        if (isIdeaFlowOpen(e)) {
-            presentation.setText(CLOSE_TITLE)
-        } else {
-            presentation.setText(OPEN_TITLE)
         }
     }
 
@@ -108,7 +108,7 @@ class ToggleOpenIdeaFlow extends ToggleAction {
         return Messages.showInputDialog(spec.message, spec.title, spec.icon)
     }
 
-    private static class MessageSpec {
+	private static class MessageSpec {
         String title
         String message
         Icon icon

@@ -29,6 +29,10 @@ class IFMController {
 		ideService.promptForInput(title, message)
 	}
 
+	String getActiveIdeaFlowName() {
+		ideaFlowModel?.file?.name
+	}
+
 	boolean isIdeaFlowOpen() {
 		ideaFlowModel != null
 	}

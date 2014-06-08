@@ -3,17 +3,29 @@ package com.ideaflow.intellij.action
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowComponent
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.actionSystem.ToggleAction
 
 @Mixin(ActionSupport)
-class TogglePause extends ToggleAction {
+class TogglePause extends IdeaFlowToggleAction {
 
-    private static final String PAUSE_TITLE = "Pause IdeaFlow"
-    private static final String RESUME_TITLE = "Resume IdeaFlow"
+	private static final String PAUSE_TITLE = "Pause IdeaFlow"
+	private static final String RESUME_TITLE = "Resume IdeaFlow"
 
+	@Override
+	protected boolean isPresentationEnabled(AnActionEvent e) {
+		return isIdeaFlowOpen(e)
+	}
 
-    @Override
+	@Override
+	protected String getPresentationText(AnActionEvent e) {
+		return isPaused(e) ? RESUME_TITLE : PAUSE_TITLE
+	}
+
+	@Override
+	protected String getPresentationDescription(AnActionEvent e) {
+		return "${getPresentationText(e)}: ${getActiveIdeaFlowName(e)}"
+	}
+
+	@Override
     boolean isSelected(AnActionEvent e) {
         return isPaused(e)
     }
@@ -27,20 +39,6 @@ class TogglePause extends ToggleAction {
         } else {
             controller.pause()
         }
-    }
-
-    @Override
-    public void update(AnActionEvent e) {
-        super.update(e);
-        Presentation presentation = e.getPresentation()
-        presentation.setEnabled(isIdeaFlowOpen(e));
-
-        if (isPaused()) {
-            presentation.setText(RESUME_TITLE)
-        } else {
-            presentation.setText(PAUSE_TITLE)
-        }
-
     }
 
 }

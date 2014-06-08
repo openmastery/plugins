@@ -5,11 +5,9 @@ import com.ideaflow.intellij.IdeaFlowComponent
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.actionSystem.ToggleAction
 
 @Mixin(ActionSupport)
-abstract class ToggleBandStart extends ToggleAction {
+abstract class ToggleBandStart extends IdeaFlowToggleAction {
 
 	private BandType bandType
 	private String startBandTitle
@@ -21,6 +19,34 @@ abstract class ToggleBandStart extends ToggleAction {
 		this.startBandTitle = startBandTitle
 		this.startBandMessage = startBandMessage
 		this.endBandTitle = endBandTitle
+	}
+
+	@Override
+	protected boolean isPresentationEnabled(AnActionEvent e) {
+		boolean enabled = isIdeaFlowOpenAndNotPaused(e)
+
+		if (enabled) {
+			BandType activeBandStartType = getActiveBandStartType(e)
+			enabled = (activeBandStartType == null) || (activeBandStartType == bandType)
+		}
+		return enabled
+	}
+
+	@Override
+	protected String getPresentationText(AnActionEvent e) {
+		BandStart bandStart = getActiveBandStart(e)
+		return bandStart ? endBandTitle : startBandTitle
+	}
+
+	@Override
+	protected String getPresentationDescription(AnActionEvent e) {
+		BandStart bandStart = getActiveBandStart(e)
+
+		if (bandType == bandStart?.type) {
+			return bandStart ? "${endBandTitle}: ${bandStart.comment}" : startBandTitle
+		} else {
+			return getPresentationText(e)
+		}
 	}
 
 	@Override
@@ -39,32 +65,6 @@ abstract class ToggleBandStart extends ToggleAction {
 			String comment = controller.promptForInput(startBandTitle, startBandMessage)
 			controller.startBand(comment, bandType)
 		}
-	}
-
-	@Override
-	public void update(AnActionEvent e) {
-		super.update(e);
-		disableWhenOtherBandTypeOpen(e)
-
-		Presentation presentation = e.getPresentation()
-		if (isOpenBand(e)) {
-			presentation.setText(endBandTitle)
-		} else {
-			presentation.setText(startBandTitle)
-		}
-
-	}
-
-	private void disableWhenOtherBandTypeOpen(AnActionEvent e) {
-		boolean enabled = isIdeaFlowOpenAndNotPaused(e)
-
-		if (enabled) {
-			BandType activeBandStartType = getActiveBandStartType(e)
-			enabled = (activeBandStartType == null) || (activeBandStartType == bandType)
-		}
-
-		Presentation presentation = e.getPresentation()
-		presentation.setEnabled(enabled);
 	}
 
 }
