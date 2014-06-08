@@ -1,7 +1,5 @@
 ------- MVP
 
-If active IFM is deleted when open, no further IFM action is possible (except for spewing errors) - fix this
-
 ------- BOOK RELEASE
 
 Add support for 'process' snippets in the DSL.  Process bands can overlap other generic band types.  Learning and rework bands can't overlap with anything except conflicts.
