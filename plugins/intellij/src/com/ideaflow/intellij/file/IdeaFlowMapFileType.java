@@ -12,7 +12,7 @@ public class IdeaFlowMapFileType implements FileType {
     public static final IdeaFlowMapFileType IMF_FILE_TYPE = new IdeaFlowMapFileType();
     public static final String IFM_EXTENSION = "ifm";
 
-	private static final Icon IFM_ICON = IconLoader.findIcon("/icons/ideaflow.png");
+	public static final Icon IFM_ICON = IconLoader.findIcon("/icons/ideaflow.png");
 
     private IdeaFlowMapFileType() {}
 

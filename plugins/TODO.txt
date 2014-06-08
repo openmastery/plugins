@@ -2,11 +2,9 @@
 
 Why are [[deactivated]] activities being shown as modified?
 
-Is activity being collapsed correctly when there's a modification?
+If active IFM is deleted when open, no further IFM action is possible (except for spewing errors) - fix this
 
 ------- BOOK RELEASE
-
-Create a "New IFM" handler that we can right click and create, or click record and create.
 
 Make ifm files show up with icon but still associated with Groovy file editor
 
