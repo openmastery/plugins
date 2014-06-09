@@ -131,7 +131,9 @@ class IdeaFlowComponent implements ProjectComponent {
 
 		@Override
 		void documentChanged(DocumentEvent event) {
-			controller.activeEventModified()
+			if (activeFile) {
+				controller.fileModified(activeFile.name)
+			}
 		}
 	}
 

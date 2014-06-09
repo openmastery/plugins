@@ -33,11 +33,16 @@
 		<action id="IdeaFlow.TogglePause" class="com.ideaflow.intellij.action.TogglePause"
 		        icon="/icons/pause.png">
 		</action>
+
+		<action id="IdeaFlow.NewIFMFile" class="com.ideaflow.intellij.action.NewIfmFileAction"
+		        text="IFM File" description="Create new IFM file">
+			<add-to-group group-id="NewGroup" anchor="last"/>
+		</action>
+
 		<action id="IdeaFlow.ToggleOpenIdeaFlow" class="com.ideaflow.intellij.action.ToggleOpenIdeaFlow"
 		        icon="/icons/record.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 		</action>
-
 		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open IFM in Browser"
 		        description="Open the currently selected IdeaFlow map in preferred browser" icon="/icons/ideaflow.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>

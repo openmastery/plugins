@@ -5,6 +5,7 @@ import com.ideaflow.intellij.IdeaFlowComponent
 import com.ideaflow.intellij.file.IdeaFlowMapFileType
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
+import com.ideaflow.model.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.Presentation
@@ -26,59 +27,53 @@ class ActionSupport {
 		isIdeaFlowOpen(e) && !isPaused(e)
 	}
 
+	private IFMController getIFMController(AnActionEvent e) {
+		IFMController controller = null
+		if (e?.project != null) {
+			controller = IdeaFlowComponent.getIFMController(e.project)
+		}
+		return controller
+	}
+
+	private String getActiveIdeaFlowName(AnActionEvent e) {
+		getIFMController(e)?.activeIdeaFlowName
+	}
+
     private boolean isIdeaFlowOpen(AnActionEvent e) {
-        boolean isOpen = false
-        if (e?.project != null) {
-            IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-            isOpen = controller.isIdeaFlowOpen()
-        }
-        return isOpen
+	    getIFMController(e)?.isIdeaFlowOpen()
     }
 
     private boolean isIdeaFlowClosed(AnActionEvent e) {
         return !isIdeaFlowOpen(e)
     }
 
+	private BandStart getActiveBandStart(AnActionEvent e) {
+		getIFMController(e)?.getActiveBandStart()
+	}
+
 	private boolean isOpenBand(AnActionEvent e) {
-		boolean isOpen = false
-		if (e?.project != null) {
-			IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-			isOpen = controller.isOpenBand()
-		}
-		return isOpen
+		getIFMController(e)?.isOpenBand()
 	}
 
 	private BandType getActiveBandStartType(AnActionEvent e) {
-		BandType activeBandStartType = null
-		if (e?.project != null) {
-			IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-			BandStart activeBandStart = controller.getActiveBandStart()
-			activeBandStartType = activeBandStart?.type
-		}
-		activeBandStartType
+		BandStart activeBandStart = getIFMController(e)?.activeBandStart
+		activeBandStart?.type
+	}
+
+	private Conflict getActiveConflict(AnActionEvent e) {
+		getIFMController(e)?.getActiveConflict()
 	}
 
     private boolean isOpenConflict(AnActionEvent e) {
-        boolean isOpen = false
-        if (e?.project != null) {
-            IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-            isOpen = controller.isOpenConflict()
-        }
-        return isOpen
+	    getIFMController(e)?.isOpenConflict()
     }
 
     private boolean isNotPaused(AnActionEvent e) {
         !isPaused(e)
     }
 
-
     private boolean isPaused(AnActionEvent e) {
-        boolean isPaused = false
-        if (e?.project != null) {
-            IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-            isPaused = controller.isPaused()
-        }
-        return isPaused
+	    getIFMController(e)?.isPaused()
     }
 
 	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {

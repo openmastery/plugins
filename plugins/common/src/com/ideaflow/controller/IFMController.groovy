@@ -15,7 +15,7 @@ import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 
-class IFMController {
+class IFMController implements GroovyInterceptable {
 
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
@@ -25,8 +25,20 @@ class IFMController {
 		this.ideService = ideService
 	}
 
+	def invokeMethod(String name, args) {
+		if (ideaFlowModel && !ideaFlowModel.file.exists()) {
+			ideaFlowModel = null
+		}
+
+		metaClass.getMetaMethod(name, args).invoke(this, args)
+	}
+
 	String promptForInput(String title, String message) {
 		ideService.promptForInput(title, message)
+	}
+
+	String getActiveIdeaFlowName() {
+		ideaFlowModel?.file?.name
 	}
 
 	boolean isIdeaFlowOpen() {
@@ -113,8 +125,8 @@ class IFMController {
 		flush()
 	}
 
-	void activeEventModified() {
-		eventToIntervalHandler?.activeEventModified()
+	void fileModified(String eventName) {
+		eventToIntervalHandler?.activeEventModified(eventName)
 	}
 
 	void startFileEventForCurrentFile() {

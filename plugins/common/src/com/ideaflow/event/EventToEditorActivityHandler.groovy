@@ -30,8 +30,10 @@ class EventToEditorActivityHandler {
 		}
 	}
 
-	void activeEventModified() {
-		activeEvent?.modified = true
+	void activeEventModified(String eventName) {
+		if (eventName == activeEvent?.eventName) {
+			activeEvent.modified = true
+		}
 	}
 
 	void endEvent(String eventName) {
@@ -55,7 +57,7 @@ class EventToEditorActivityHandler {
 
 	private void addEditorActivity(Event oldEvent, Event newEvent) {
 		int duration = (newEvent.time.millis - oldEvent.time.millis) / 1000
-		if (duration >= SHORTEST_ACTIVITY && isDifferent(oldEvent, newEvent)) {
+		if (shouldRecordEvent(oldEvent, newEvent, duration)) {
 			EditorActivity editorActivity = createEditorActivity(oldEvent, duration)
 			if (isEquivalentActivity(editorActivity, lastEditorActivity)) {
 				lastEditorActivity.duration += editorActivity.duration
@@ -64,6 +66,10 @@ class EventToEditorActivityHandler {
 				lastEditorActivity = editorActivity
 			}
 		}
+	}
+
+	private boolean shouldRecordEvent(Event oldEvent, Event newEvent, int duration) {
+		isDifferent(oldEvent, newEvent) && (oldEvent.modified || (duration >= SHORTEST_ACTIVITY))
 	}
 
 	private boolean isEquivalentActivity(EditorActivity activity1, EditorActivity activity2) {
