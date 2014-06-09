@@ -12,8 +12,13 @@ class IfmController {
 	IfmService ifmService
 
 	def view() {
-		ifmService.refresh()
-		renderView()
+		if (ifmService.activeModel) {
+			ifmService.refresh()
+			renderView()
+		} else {
+			render "Open an IFM file in your IDE to view"
+		}
+
 	}
 
 	def open(String filePath) {

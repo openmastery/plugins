@@ -386,9 +386,9 @@ function lookupBandColors(bandType) {
     if (bandType == 'conflict') {
         return ['#ff0078', '#FF90D1', '#FFDEF6']
     } else if (bandType == 'learning') {
-        return ['#520ce8', '#9694E8', '#8654ef']
+        return ['#520ce8', '#9694E8', '#EDE2FD']
     } else if (bandType == 'rework') {
-        return ['#ffcb01', '#FFEA7C', '#FFFFCC']
+        return ['#ffcb01', '#FFEA7C', '#FFF5A7']
     } else {
         throw "Unable to find color for bandType: "+bandType
     }

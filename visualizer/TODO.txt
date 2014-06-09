@@ -1,7 +1,5 @@
 ------ MVP
 
-Display any manually added mistake type, cause, or delay in conflicts.
-
 ------ BOOK RELEASE
 
 Ability to open a conflict and record mistake type, cause, delay, notes.

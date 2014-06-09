@@ -42,13 +42,13 @@ class TimelineDecorator {
 	}
 
 	private decoratePercents(List<TimeBand> timeBands) {
-		TimeBand longestBand = timeBands.max { TimeBand band ->
+		Integer totalDuration = timeBands.sum { TimeBand band ->
 			band.duration.duration
 		}
 
-		if (longestBand) {
+		if (totalDuration > 0) {
 			timeBands.each { TimeBand band ->
-				band.percent = 100 * (band.duration.duration / longestBand.duration.duration)
+				band.percent = 100 * (band.duration.duration / totalDuration)
 			}
 		}
 	}

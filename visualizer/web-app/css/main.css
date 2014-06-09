@@ -394,15 +394,24 @@ td.modified { color: blue; font-style: italic; }
 td.hiddenOffset { display: none; }
 
 /* line 14, ../../src/stylesheets/components/_table.scss */
-.learningtype { background-color: #520ce8; }
+tr.learningtype { background-color: #9694e8; }
 
 /* line 18, ../../src/stylesheets/components/_table.scss */
-.reworktype { background-color: #ffcb01; }
+tr.reworktype { background-color: #ffea7c; }
 
 /* line 22, ../../src/stylesheets/components/_table.scss */
-.conflicttype { background-color: #ff0078; }
+tr.conflicttype { background-color: #ff90d1; }
 
 /* line 26, ../../src/stylesheets/components/_table.scss */
+td.learningtype { background-color: #520ce8; }
+
+/* line 30, ../../src/stylesheets/components/_table.scss */
+td.reworktype { background-color: #ffcb01; }
+
+/* line 34, ../../src/stylesheets/components/_table.scss */
+td.conflicttype { background-color: #ff0078; }
+
+/* line 38, ../../src/stylesheets/components/_table.scss */
 .right { text-align: right; }
 
 /* line 4, ../../src/stylesheets/components/_conflicts.scss */
