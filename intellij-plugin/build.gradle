@@ -1,10 +1,10 @@
 apply plugin: 'groovy'
-apply plugin: 'maven-publish'
+apply plugin: 'idea'
 
-
-File uploadDir = file('build/upload')
-File pluginFile = file('intellij/ideaflow-plugin.zip')
-File pluginXmlFile = file('intellij/META-INF/plugin.xml')
+File intellijDir = file('intellij')
+File uploadDir = new File(buildDir, 'upload')
+File pluginFile = new File(intellijDir, 'ideaflow-plugin.zip')
+File pluginXmlFile = new File(intellijDir, 'META-INF/plugin.xml')
 
 repositories {
 	mavenCentral()
@@ -14,23 +14,6 @@ configurations {
     ftpAntTask
 }
 
-sourceSets {
-	main {
-		groovy {
-			srcDir 'common/src'
-		}
-		resources {
-			srcDir 'common/resources'
-		}
-	}
-
-	test {
-		groovy {
-			srcDir 'common/test'
-		}
-	}
-}
-
 dependencies {
 	ftpAntTask("org.apache.ant:ant-commons-net:1.9.3") {
 		module("commons-net:commons-net:1.4.1") {
@@ -38,41 +21,28 @@ dependencies {
 		}
 	}
 
-	compile 'org.codehaus.groovy:groovy-all:1.8.6'
-	compile 'joda-time:joda-time:2.3'
-
-	testCompile 'junit:junit:4.8.1'
-	testCompile 'org.reflections:reflections:0.9.9-RC1'
-	testCompile 'org.slf4j:slf4j-api:1.7.5'
+	compile project(":core")
 }
 
-jar.baseName = 'ideaflow-common'
 
+idea {
+	module {
+		name = 'ideaflow-plugin'
 
-task prepareRuntimeLibs(type: Copy) {
-	into "common/libs/runtime"
-	from configurations.runtime
+		iml {
+			withXml {
+				Node module = it.asNode()
+				module['@type'] = 'PLUGIN_MODULE'
+				module.appendNode('component', [name: 'DevKit.ModuleBuildProperties', url: 'file://$MODULE_DIR$/META-INF/plugin.xml'])
+
+				Node moduleRootManager = module.component.find { it['@name'] == 'ModuleRootManager' }
+				if (moduleRootManager) {
+					module.remove(moduleRootManager)
+				}
+			}
+		}
+	}
 }
-
-task prepareTestLibs(type: Copy) {
-	into "common/libs/test"
-	from configurations.testRuntime
-}
-
-task prepareLibs {
-     dependsOn { [prepareRuntimeLibs, prepareTestLibs] }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId project.ext.artifactId
-            from components.java
-        }
-    }
-}
-
-task publishLocal(dependsOn: publishToMavenLocal)
 
 
 String ftpPassword = null

@@ -1,0 +1,30 @@
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+
+
+repositories {
+        mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-all:1.8.6'
+	compile 'joda-time:joda-time:2.3'
+
+	testCompile 'junit:junit:4.8.1'
+	testCompile 'org.reflections:reflections:0.9.9-RC1'
+	testCompile 'org.slf4j:slf4j-api:1.7.5'
+}
+
+jar.baseName = 'ideaflow-core'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId project.ext.artifactId
+            from components.java
+        }
+    }
+}
+
+task publishLocal(dependsOn: publishToMavenLocal)
