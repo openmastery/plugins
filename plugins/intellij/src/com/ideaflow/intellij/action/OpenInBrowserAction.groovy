@@ -32,7 +32,7 @@ class OpenInBrowserAction extends AnAction {
 	}
 
 	private String buildIfmUrl(VirtualFile file) {
-		return "http://localhost:8080/visualizer/ifm/open?filePath=${file.path}"
+		return "http://localhost:8989/visualizer/ifm/open?filePath=${file.path}"
 	}
 
 }
