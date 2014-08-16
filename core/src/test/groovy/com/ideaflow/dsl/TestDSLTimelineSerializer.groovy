@@ -2,6 +2,7 @@ package com.ideaflow.dsl
 
 import com.ideaflow.model.IdeaFlowModel
 import org.joda.time.DateTime
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -13,8 +14,13 @@ class TestDSLTimelineSerializer {
 	@Before
 	void setUp() {
 		serializer = new DSLTimelineSerializer()
-		emptyFile = new File('empty.txt')
+		emptyFile = File.createTempFile('empty', '.txt')
 		emptyFile.createNewFile()
+	}
+
+	@After
+	void cleanUp() {
+		emptyFile.delete()
 	}
 
 	@Test

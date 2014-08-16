@@ -1,5 +1,7 @@
 ------- MVP
 
+add intellij plugin tests
+
 ------- BOOK RELEASE
 
 Support 'by hand' process of generating an IFM file
