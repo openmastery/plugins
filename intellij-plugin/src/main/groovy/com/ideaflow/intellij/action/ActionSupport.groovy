@@ -1,7 +1,7 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowComponent
+import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.intellij.file.IdeaFlowMapFileType
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
@@ -30,7 +30,7 @@ class ActionSupport {
 	private IFMController getIFMController(AnActionEvent e) {
 		IFMController controller = null
 		if (e?.project != null) {
-			controller = IdeaFlowComponent.getIFMController(e.project)
+			controller = IdeaFlowApplicationComponent.getIFMController()
 		}
 		return controller
 	}

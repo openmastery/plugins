@@ -9,11 +9,14 @@
 	<idea-version since-build="107.105"/>
 
 	<application-components>
+		<component>
+			<implementation-class>com.ideaflow.intellij.IdeaFlowApplicationComponent</implementation-class>
+		</component>
 	</application-components>
 
 	<project-components>
 		<component>
-			<implementation-class>com.ideaflow.intellij.IdeaFlowComponent</implementation-class>
+			<implementation-class>com.ideaflow.intellij.IdeaFlowProjectComponent</implementation-class>
 		</component>
 	</project-components>
 

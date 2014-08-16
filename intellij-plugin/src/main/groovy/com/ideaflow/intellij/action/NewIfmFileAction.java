@@ -1,7 +1,7 @@
 package com.ideaflow.intellij.action;
 
 import com.ideaflow.controller.IFMController;
-import com.ideaflow.intellij.IdeaFlowComponent;
+import com.ideaflow.intellij.IdeaFlowApplicationComponent;
 import com.ideaflow.intellij.file.IdeaFlowMapFileType;
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.CreateElementActionBase;
@@ -76,7 +76,7 @@ class NewIfmFileAction extends CreateElementActionBase {
 	}
 
 	private void openIdeaFlowMap(final Project project, final File file) {
-		final IFMController<Project> controller = IdeaFlowComponent.getIFMController(project);
+		final IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController();
 
 		ApplicationManager.getApplication().invokeLater(new Runnable() {
 			public void run() {

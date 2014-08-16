@@ -1,7 +1,7 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowComponent
+import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -56,7 +56,7 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 
 	@Override
 	void setSelected(AnActionEvent e, boolean state) {
-		IFMController controller = IdeaFlowComponent.getIFMController(e.project)
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		BandStart activeBandStart = controller.getActiveBandStart()
 
 		if ((activeBandStart != null) && (activeBandStart.type == bandType)) {

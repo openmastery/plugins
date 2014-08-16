@@ -1,10 +1,7 @@
 package com.ideaflow.intellij
 
-import com.ideaflow.controller.IDEService
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.vcs.VcsCommitToIdeaFlowNoteAdapter
-import com.intellij.openapi.application.ApplicationActivationListener
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ProjectComponent
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentAdapter
@@ -15,50 +12,39 @@ import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.IdeFrame
 import com.intellij.util.messages.MessageBusConnection
 import org.jetbrains.annotations.NotNull
 
-class IdeaFlowComponent implements ProjectComponent {
+class IdeaFlowProjectComponent implements ProjectComponent {
 
     private Project project
     private EventListener listener
 
-    private MessageBusConnection appConnection
     private MessageBusConnection projectConnection
 	private VcsCommitToIdeaFlowNoteAdapter vcsCommitToIdeaFlowNoteAdapter
 
-    private IFMController<Project> controller
-    private IDEService<Project> ideService
-
     private static String NAME = "IdeaFlow.Component"
 
-    IdeaFlowComponent(Project project) {
+    IdeaFlowProjectComponent(Project project) {
         this.project = project
-    }
-
-    static IFMController<Project> getIFMController(Project project) {
-        project.getComponent(NAME).controller
     }
 
     String getComponentName() {
         return NAME
     }
 
-    void initComponent() {
-        ideService = new IDEServiceImpl()
-        controller = new IFMController(ideService)
+    private IFMController<Project> getController() {
+        IdeaFlowApplicationComponent.getIFMController()
+    }
 
+    void initComponent() {
 	    listener = new EventListener()
-	    vcsCommitToIdeaFlowNoteAdapter = new VcsCommitToIdeaFlowNoteAdapter(project, controller)
+	    vcsCommitToIdeaFlowNoteAdapter = new VcsCommitToIdeaFlowNoteAdapter(project, getController())
     }
 
     void disposeComponent() {}
 
     void projectOpened() {
-        appConnection = ApplicationManager.getApplication().getMessageBus().connect()
-        appConnection.subscribe(ApplicationActivationListener.TOPIC, listener)
-
         projectConnection = project.getMessageBus().connect()
         projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
 
@@ -66,37 +52,28 @@ class IdeaFlowComponent implements ProjectComponent {
     }
 
 	void projectClosed() {
-        appConnection.disconnect()
         projectConnection.disconnect()
 		vcsCommitToIdeaFlowNoteAdapter.disconnect()
     }
 
-    private class EventListener implements FileEditorManagerListener, ApplicationActivationListener {
+    private class EventListener implements FileEditorManagerListener {
 
 	    private FileModificationAdapter fileModificationAdapter = new FileModificationAdapter()
 
         void fileOpened(FileEditorManager source, VirtualFile file) {
-            controller.startFileEvent(source.getProject(), file.name)
+            getController().startFileEvent(source.getProject(), file.name)
         }
 
         void fileClosed(FileEditorManager source, VirtualFile file) {
-            controller.endFileEvent(file.name)
+            getController().endFileEvent(file.name)
         }
 
         void selectionChanged(FileEditorManagerEvent event) {
 	        fileModificationAdapter.clearActiveFile()
-            controller.startFileEvent(event.manager.getProject(), event.newFile?.name)
+            getController().startFileEvent(event.manager.getProject(), event.newFile?.name)
 	        if (event.newFile) {
 		        fileModificationAdapter.setActiveFile(event.newFile)
 	        }
-        }
-
-        void applicationActivated(IdeFrame ideFrame) {
-            controller.startFileEventForCurrentFile(ideFrame.getProject())
-        }
-
-        void applicationDeactivated(IdeFrame ideFrame) {
-            controller.startFileEvent(ideFrame.getProject(), "[[deactivated]]")
         }
 
     }
@@ -128,7 +105,7 @@ class IdeaFlowComponent implements ProjectComponent {
 		@Override
 		void documentChanged(DocumentEvent event) {
 			if (activeFile) {
-				controller.fileModified(activeFile.name)
+				getController().fileModified(activeFile.name)
 			}
 		}
 	}

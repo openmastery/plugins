@@ -1,7 +1,7 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowComponent
+import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 @Mixin(ActionSupport)
@@ -32,7 +32,7 @@ class TogglePause extends IdeaFlowToggleAction {
 
     @Override
     void setSelected(AnActionEvent e, boolean state) {
-        IFMController controller = IdeaFlowComponent.getIFMController(e.project)
+        IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
         if (controller.isPaused()) {
             controller.resume(e.project)

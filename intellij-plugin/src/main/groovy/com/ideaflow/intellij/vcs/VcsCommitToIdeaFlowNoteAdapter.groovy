@@ -26,12 +26,12 @@ import com.intellij.util.messages.MessageBusConnection
 class VcsCommitToIdeaFlowNoteAdapter extends ChangeListAdapter implements VcsListener {
 
 	private Project project
-	private IFMController controller
+	private IFMController<Project> controller
 	private MessageBusConnection projectConnection;
 	private List<VcsRoot> allVcsRoots = []
 	private Map<VcsRoot, CommittedChangeList> vcsRootToLastCommitMap = [:]
 
-	public VcsCommitToIdeaFlowNoteAdapter(Project project, IFMController controller) {
+	public VcsCommitToIdeaFlowNoteAdapter(Project project, IFMController<Project> controller) {
 		this.project = project
 		this.controller = controller
 	}
@@ -82,13 +82,11 @@ class VcsCommitToIdeaFlowNoteAdapter extends ChangeListAdapter implements VcsLis
 	}
 
 	private void addCommitNotes(final List<String> commitMessages) {
-		final IFMController ifmController = controller
-
 		ApplicationManager.getApplication().invokeLater(new Runnable() {
 			@Override
 			void run() {
 				commitMessages.each { String commitMessage ->
-					ifmController.addNote(project, "Commit: ${commitMessage}")
+					controller.addNote(project, "Commit: ${commitMessage}")
 				}
 			}
 		})

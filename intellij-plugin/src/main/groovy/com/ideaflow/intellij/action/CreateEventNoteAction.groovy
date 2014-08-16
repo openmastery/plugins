@@ -1,7 +1,7 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowComponent
+import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 
@@ -10,7 +10,7 @@ class CreateEventNoteAction extends AnAction {
 
     @Override
     void actionPerformed(AnActionEvent e) {
-        IFMController controller = IdeaFlowComponent.getIFMController(e.project)
+        IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
         String note = controller.promptForInput(e.project, "Create Note", "Enter an IdeaFlow event note:")
         controller.addNote(e.project, note)

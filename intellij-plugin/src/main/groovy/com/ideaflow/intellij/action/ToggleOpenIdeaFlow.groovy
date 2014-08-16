@@ -1,7 +1,7 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowComponent
+import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.module.Module
@@ -40,7 +40,7 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 
     @Override
     void setSelected(AnActionEvent e, boolean state) {
-        IFMController controller = IdeaFlowComponent.getIFMController(e.project)
+        IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
         if (controller.isIdeaFlowOpen()) {
             controller.closeIdeaFlow(e.project)
@@ -53,7 +53,7 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 	    File ideaFlowMapFile = getSelectedOrCreateNewIdeaFlowMapFile(e)
 
         if (ideaFlowMapFile != null) {
-            IFMController controller = IdeaFlowComponent.getIFMController(e.project)
+            IFMController controller = IdeaFlowApplicationComponent.getIFMController()
             controller.newIdeaFlow(e.project, ideaFlowMapFile)
         }
     }
