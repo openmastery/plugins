@@ -60,10 +60,10 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 		BandStart activeBandStart = controller.getActiveBandStart()
 
 		if ((activeBandStart != null) && (activeBandStart.type == bandType)) {
-			controller.endBand(bandType)
+			controller.endBand(e.project, bandType)
 		} else {
-			String comment = controller.promptForInput(startBandTitle, startBandMessage)
-			controller.startBand(comment, bandType)
+			String comment = controller.promptForInput(e.project, startBandTitle, startBandMessage)
+			controller.startBand(e.project, comment, bandType)
 		}
 	}
 

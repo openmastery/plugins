@@ -28,8 +28,8 @@ class IdeaFlowComponent implements ProjectComponent {
     private MessageBusConnection projectConnection
 	private VcsCommitToIdeaFlowNoteAdapter vcsCommitToIdeaFlowNoteAdapter
 
-    private IFMController controller
-    private IDEService ideService
+    private IFMController<Project> controller
+    private IDEService<Project> ideService
 
     private static String NAME = "IdeaFlow.Component"
 
@@ -37,12 +37,8 @@ class IdeaFlowComponent implements ProjectComponent {
         this.project = project
     }
 
-    static IFMController getIFMController(Project project) {
+    static IFMController<Project> getIFMController(Project project) {
         project.getComponent(NAME).controller
-    }
-
-    static IDEService getIDEService(Project project) {
-        project.getComponent(NAME).ideService
     }
 
     String getComponentName() {
@@ -50,7 +46,7 @@ class IdeaFlowComponent implements ProjectComponent {
     }
 
     void initComponent() {
-        ideService = new IDEServiceImpl(project)
+        ideService = new IDEServiceImpl()
         controller = new IFMController(ideService)
 
 	    listener = new EventListener()
@@ -80,7 +76,7 @@ class IdeaFlowComponent implements ProjectComponent {
 	    private FileModificationAdapter fileModificationAdapter = new FileModificationAdapter()
 
         void fileOpened(FileEditorManager source, VirtualFile file) {
-            controller.startFileEvent(file.name)
+            controller.startFileEvent(source.getProject(), file.name)
         }
 
         void fileClosed(FileEditorManager source, VirtualFile file) {
@@ -89,18 +85,18 @@ class IdeaFlowComponent implements ProjectComponent {
 
         void selectionChanged(FileEditorManagerEvent event) {
 	        fileModificationAdapter.clearActiveFile()
-            controller.startFileEvent(event.newFile?.name)
+            controller.startFileEvent(event.manager.getProject(), event.newFile?.name)
 	        if (event.newFile) {
 		        fileModificationAdapter.setActiveFile(event.newFile)
 	        }
         }
 
         void applicationActivated(IdeFrame ideFrame) {
-            controller.startFileEventForCurrentFile()
+            controller.startFileEventForCurrentFile(ideFrame.getProject())
         }
 
         void applicationDeactivated(IdeFrame ideFrame) {
-            controller.startFileEvent("[[deactivated]]")
+            controller.startFileEvent(ideFrame.getProject(), "[[deactivated]]")
         }
 
     }

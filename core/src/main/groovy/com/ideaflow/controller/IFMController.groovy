@@ -15,13 +15,13 @@ import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 
-class IFMController implements GroovyInterceptable {
+class IFMController<T> implements GroovyInterceptable {
 
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
-	private IDEService ideService
+	private IDEService<T> ideService
 
-	IFMController(IDEService ideService) {
+	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
 	}
 
@@ -33,8 +33,8 @@ class IFMController implements GroovyInterceptable {
 		metaClass.getMetaMethod(name, args).invoke(this, args)
 	}
 
-	String promptForInput(String title, String message) {
-		ideService.promptForInput(title, message)
+	String promptForInput(T context, String title, String message) {
+		ideService.promptForInput(context, title, message)
 	}
 
 	String getActiveIdeaFlowName() {
@@ -61,94 +61,94 @@ class IFMController implements GroovyInterceptable {
 		getActiveBandStart() != null
 	}
 
-	void startConflict(String question) {
+	void startConflict(T context, String question) {
 		if (question) {
-			addModelEntity(new Conflict(question))
+			addModelEntity(context, new Conflict(question))
 		}
 	}
 
-	void endConflict(String answer) {
+	void endConflict(T context, String answer) {
 		if (answer) {
-			addModelEntity(new Resolution(answer))
+			addModelEntity(context, new Resolution(answer))
 		}
 	}
 
-	void startBand(String comment, BandType bandType) {
+	void startBand(T context, String comment, BandType bandType) {
 		if (comment) {
-			addModelEntity(new BandStart(bandType, comment))
+			addModelEntity(context, new BandStart(bandType, comment))
 		}
 	}
 
-	void endBand(BandType bandType) {
+	void endBand(T context, BandType bandType) {
 		if (bandType) {
-			addModelEntity(new BandEnd(bandType))
+			addModelEntity(context, new BandEnd(bandType))
 		}
 	}
 
-	void addNote(comment) {
+	void addNote(T context, String comment) {
 		if (comment) {
-			addModelEntity(new Note(comment))
+			addModelEntity(context, new Note(comment))
 		}
 	}
 
-	void newIdeaFlow(File file) {
+	void newIdeaFlow(T context, File file) {
 		file = addExtension(file)
-		if (ideService.fileExists(file)) {
+		if (ideService.fileExists(context, file)) {
 			println("Resuming existing IdeaFlow: ${file.absolutePath}")
-			String xml = ideService.readFile(file)
+			String xml = ideService.readFile(context, file)
 			ideaFlowModel = new IdeaFlowReader().readModel(file, xml)
 			ideaFlowModel.file = file
 		} else {
 			println("Creating new IdeaFlow: ${file.absolutePath}")
-			ideService.createNewFile(file, "")
+			ideService.createNewFile(context, file, "")
 			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
 		}
 
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
-		addStateChange(StateChangeType.startIdeaFlowRecording)
-		startFileEventForCurrentFile()
+		addStateChange(context, StateChangeType.startIdeaFlowRecording)
+		startFileEventForCurrentFile(context)
 	}
 
-	void closeIdeaFlow() {
+	void closeIdeaFlow(T context) {
 		if (ideaFlowModel) {
 			endFileEvent(null)
-			addStateChange(StateChangeType.stopIdeaFlowRecording)
-			flush()
+			addStateChange(context, StateChangeType.stopIdeaFlowRecording)
+			flush(context)
 
 			ideaFlowModel = null
 			eventToIntervalHandler = null
 		}
 	}
 
-	void startFileEvent(String eventName) {
+	void startFileEvent(T context, String eventName) {
 		eventToIntervalHandler?.startEvent(eventName)
-		flush()
+		flush(context)
 	}
 
 	void fileModified(String eventName) {
 		eventToIntervalHandler?.activeEventModified(eventName)
 	}
 
-	void startFileEventForCurrentFile() {
-		String fileName = ideService.getActiveFileSelection()
-		startFileEvent(fileName)
+	void startFileEventForCurrentFile(T context) {
+		String fileName = ideService.getActiveFileSelection(context)
+		startFileEvent(context, fileName)
 	}
 
 	void endFileEvent(String eventName) {
 		eventToIntervalHandler?.endEvent(eventName)
 	}
 
-	void pause() {
+	void pause(T context) {
 		println("Paused")
 		endFileEvent(null)
-		flush()
+		flush(context)
 		ideaFlowModel?.isPaused = true
 	}
 
-	void resume() {
+	void resume(T context) {
 		println("Resumed")
 		ideaFlowModel?.isPaused = false
-		startFileEventForCurrentFile()
+		startFileEventForCurrentFile(context)
 	}
 
 	boolean isPaused() {
@@ -163,22 +163,22 @@ class IFMController implements GroovyInterceptable {
 		return fileWithExtension
 	}
 
-	private void flush() {
+	private void flush(T context) {
 		if (ideaFlowModel) {
 			String xml = new DSLTimelineSerializer().serialize(ideaFlowModel)
-			ideService.writeFile(ideaFlowModel.file, xml)
+			ideService.writeFile(context, ideaFlowModel.file, xml)
 		}
 	}
 
-	private void addStateChange(StateChangeType type) {
-		addModelEntity(new StateChange(type))
+	private void addStateChange(T context, StateChangeType type) {
+		addModelEntity(context, new StateChange(type))
 	}
 
-	private void addModelEntity(ModelEntity event) {
+	private void addModelEntity(T context, ModelEntity event) {
 		endFileEvent(null)
 		ideaFlowModel?.addModelEntity(event)
-		flush()
-		startFileEventForCurrentFile()
+		flush(context)
+		startFileEventForCurrentFile(context)
 	}
 
 }

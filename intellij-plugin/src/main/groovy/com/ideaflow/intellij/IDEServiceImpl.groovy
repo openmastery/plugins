@@ -11,15 +11,10 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.UIBundle
 
-class IDEServiceImpl implements IDEService {
+class IDEServiceImpl implements IDEService<Project> {
 
-    private Project project
-
-    IDEServiceImpl(Project project) {
-        this.project = project
-    }
-
-    String getActiveFileSelection() {
+    @Override
+    String getActiveFileSelection(Project project) {
         String file = null
 	    VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles()
         if (files.length > 0) {
@@ -28,37 +23,42 @@ class IDEServiceImpl implements IDEService {
         return file
     }
 
-    String promptForInput(String title, String message) {
+    @Override
+    String promptForInput(Project project, String title, String message) {
         String note = Messages.showInputDialog(message,
                 UIBundle.message(title), Messages.getQuestionIcon());
         return note
 
     }
 
-    void createNewFile(File file, String contents) {
+    @Override
+    void createNewFile(Project project, File file, String contents) {
 	    file.parentFile.mkdirs()
 	    file.createNewFile()
         FileHandler handler = createHandler(file)
 
-        runWriteAction {
+        runWriteAction(project) {
             handler.write(contents)
         }
     }
 
-    void writeFile(File file, String contents) {
+    @Override
+    void writeFile(Project project, File file, String contents) {
         FileHandler handler = createHandler(file)
         handler.validateFileExists()
 
-        runWriteAction {
+        runWriteAction(project) {
             handler.write(contents)
         }
     }
 
-    boolean fileExists(File file) {
+    @Override
+    boolean fileExists(Project project, File file) {
 	    findVirtualFile(file) != null
     }
 
-    String readFile(File file) {
+    @Override
+    String readFile(Project project, File file) {
         FileHandler handler = createHandler(file)
         handler.validateFileExists()
         handler.read()
@@ -78,7 +78,7 @@ class IDEServiceImpl implements IDEService {
 		LocalFileSystem.getInstance().findFileByIoFile(file)
 	}
 
-    private void runWriteAction(Closure closure) {
+    private void runWriteAction(Project project, Closure closure) {
         WriteAction action = new WriteAction(closure)
         CommandProcessor.getInstance().executeCommand(project, action, 'cmd', null);
         if (action.exception) {

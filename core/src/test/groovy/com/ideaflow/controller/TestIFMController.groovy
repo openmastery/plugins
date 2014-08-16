@@ -11,32 +11,32 @@ class TestIFMController extends GroovyTestCase {
 	void setUp() {
 		stubIdeService = createIdeServiceStub()
 		controller = new IFMController(stubIdeService)
-		controller.newIdeaFlow(File.createTempFile("tmp", ".ifm"))
+		controller.newIdeaFlow("string", File.createTempFile("tmp", ".ifm"))
 	}
 
 	void testAddEventWithoutComment_ShouldBeIgnored() {
-		controller.startConflict(null)
+		controller.startConflict("", null)
 		assert false == controller.isOpenConflict()
 	}
 
 	void testAddEventWithComment_ShouldChangeState() {
-		controller.startConflict('conflict')
+		controller.startConflict("", 'conflict')
 		assert true == controller.isOpenConflict()
 	}
 
 	void testIsIdeaFlowOpen() {
 		assert true == controller.isIdeaFlowOpen()
 
-		controller.closeIdeaFlow()
+		controller.closeIdeaFlow(null)
 		assert false == controller.isIdeaFlowOpen()
 	}
 
 	IDEService createIdeServiceStub() {
 		[
 				getActiveFileSelection: { 'testfile' },
-				fileExists: { false },
-				createNewFile: { file, contents -> },
-				writeFile: { file, contents -> }
+				fileExists: { context, file -> false },
+				createNewFile: { context, file, contents -> },
+				writeFile: { context, file, contents -> }
 		] as IDEService
 	}
 

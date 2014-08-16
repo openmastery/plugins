@@ -43,7 +43,7 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
         IFMController controller = IdeaFlowComponent.getIFMController(e.project)
 
         if (controller.isIdeaFlowOpen()) {
-            controller.closeIdeaFlow()
+            controller.closeIdeaFlow(e.project)
         } else {
             createNewIdeaFlow(e)
         }
@@ -54,7 +54,7 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 
         if (ideaFlowMapFile != null) {
             IFMController controller = IdeaFlowComponent.getIFMController(e.project)
-            controller.newIdeaFlow(ideaFlowMapFile)
+            controller.newIdeaFlow(e.project, ideaFlowMapFile)
         }
     }
 

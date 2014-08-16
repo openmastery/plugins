@@ -35,9 +35,9 @@ class TogglePause extends IdeaFlowToggleAction {
         IFMController controller = IdeaFlowComponent.getIFMController(e.project)
 
         if (controller.isPaused()) {
-            controller.resume()
+            controller.resume(e.project)
         } else {
-            controller.pause()
+            controller.pause(e.project)
         }
     }
 

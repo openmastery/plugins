@@ -75,13 +75,13 @@ class NewIfmFileAction extends CreateElementActionBase {
 		return (PsiFile) directory.add(file);
 	}
 
-	private void openIdeaFlowMap(Project project, final File file) {
-		final IFMController controller = IdeaFlowComponent.getIFMController(project);
+	private void openIdeaFlowMap(final Project project, final File file) {
+		final IFMController<Project> controller = IdeaFlowComponent.getIFMController(project);
 
 		ApplicationManager.getApplication().invokeLater(new Runnable() {
 			public void run() {
-				controller.closeIdeaFlow();
-				controller.newIdeaFlow(file);
+				controller.closeIdeaFlow(project);
+				controller.newIdeaFlow(project, file);
 			}
 		});
 	}

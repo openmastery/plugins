@@ -1,18 +1,18 @@
 package com.ideaflow.controller
 
 
-public interface IDEService {
+public interface IDEService<T> {
 
-	String getActiveFileSelection()
+	String getActiveFileSelection(T context)
 
-	void createNewFile(File file, String initialContent)
+	void createNewFile(T context, File file, String initialContent)
 
-	boolean fileExists(File file)
+	boolean fileExists(T context, File file)
 
-	String readFile(File file)
+	String readFile(T context, File file)
 
-	void writeFile(File file, String contents)
+	void writeFile(T context, File file, String contents)
 
-	String promptForInput(String title, String message)
+	String promptForInput(T context, String title, String message)
 
 }
