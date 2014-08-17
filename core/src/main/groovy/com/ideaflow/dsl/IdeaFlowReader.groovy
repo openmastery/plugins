@@ -5,6 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Idle
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
@@ -90,6 +91,10 @@ class IdeaFlowReader {
 
 		def bandEnd(Map bandEndMap) {
 			addModelEntity(BandEnd, bandEndMap)
+		}
+
+		def idle(Map idleMap) {
+			addModelEntity(Idle, idleMap)
 		}
 
 		private void addModelEntity(Class type, Map initialMap) {

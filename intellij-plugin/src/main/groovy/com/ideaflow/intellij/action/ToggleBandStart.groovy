@@ -4,6 +4,7 @@ import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
+import com.ideaflow.model.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 @Mixin(ActionSupport)
@@ -62,8 +63,14 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 		if ((activeBandStart != null) && (activeBandStart.type == bandType)) {
 			controller.endBand(e.project, bandType)
 		} else {
-			String comment = controller.promptForInput(e.project, startBandTitle, startBandMessage)
-			controller.startBand(e.project, comment, bandType)
+			Conflict activeConflict = controller.getActiveConflict()
+			if (activeConflict != null) {
+				String resolution = ToggleConflict.endConflict(e.project, controller, activeConflict)
+				controller.startBand(e.project, resolution, bandType)
+			} else {
+				String comment = controller.promptForInput(e.project, startBandTitle, startBandMessage)
+				controller.startBand(e.project, comment, bandType)
+			}
 		}
 	}
 

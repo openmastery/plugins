@@ -17,66 +17,66 @@ import org.jetbrains.annotations.NotNull
 
 class IdeaFlowProjectComponent implements ProjectComponent {
 
-    private Project project
-    private EventListener listener
+	private Project project
+	private EventListener listener
 
-    private MessageBusConnection projectConnection
+	private MessageBusConnection projectConnection
 	private VcsCommitToIdeaFlowNoteAdapter vcsCommitToIdeaFlowNoteAdapter
 
-    private static String NAME = "IdeaFlow.Component"
+	private static String NAME = "IdeaFlow.Component"
 
-    IdeaFlowProjectComponent(Project project) {
-        this.project = project
-    }
+	IdeaFlowProjectComponent(Project project) {
+		this.project = project
+	}
 
-    String getComponentName() {
-        return NAME
-    }
+	String getComponentName() {
+		return NAME
+	}
 
-    private IFMController<Project> getController() {
-        IdeaFlowApplicationComponent.getIFMController()
-    }
+	private IFMController<Project> getController() {
+		IdeaFlowApplicationComponent.getIFMController()
+	}
 
-    void initComponent() {
-	    listener = new EventListener()
-	    vcsCommitToIdeaFlowNoteAdapter = new VcsCommitToIdeaFlowNoteAdapter(project, getController())
-    }
+	void initComponent() {
+		listener = new EventListener()
+		vcsCommitToIdeaFlowNoteAdapter = new VcsCommitToIdeaFlowNoteAdapter(project, getController())
+	}
 
-    void disposeComponent() {}
+	void disposeComponent() {}
 
-    void projectOpened() {
-        projectConnection = project.getMessageBus().connect()
-        projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
+	void projectOpened() {
+		projectConnection = project.getMessageBus().connect()
+		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
 
-	    vcsCommitToIdeaFlowNoteAdapter.connect()
-    }
+		vcsCommitToIdeaFlowNoteAdapter.connect()
+	}
 
 	void projectClosed() {
-        projectConnection.disconnect()
+		projectConnection.disconnect()
 		vcsCommitToIdeaFlowNoteAdapter.disconnect()
-    }
+	}
 
-    private class EventListener implements FileEditorManagerListener {
+	private class EventListener implements FileEditorManagerListener {
 
-	    private FileModificationAdapter fileModificationAdapter = new FileModificationAdapter()
+		private FileModificationAdapter fileModificationAdapter = new FileModificationAdapter()
 
-        void fileOpened(FileEditorManager source, VirtualFile file) {
-            getController().startFileEvent(source.getProject(), file.name)
-        }
+		void fileOpened(FileEditorManager source, VirtualFile file) {
+			getController().startFileEvent(source.getProject(), file.name)
+		}
 
-        void fileClosed(FileEditorManager source, VirtualFile file) {
-            getController().endFileEvent(file.name)
-        }
+		void fileClosed(FileEditorManager source, VirtualFile file) {
+			getController().endFileEvent(file.name)
+		}
 
-        void selectionChanged(FileEditorManagerEvent event) {
-	        fileModificationAdapter.clearActiveFile()
-            getController().startFileEvent(event.manager.getProject(), event.newFile?.name)
-	        if (event.newFile) {
-		        fileModificationAdapter.setActiveFile(event.newFile)
-	        }
-        }
+		void selectionChanged(FileEditorManagerEvent event) {
+			fileModificationAdapter.clearActiveFile()
+			getController().startFileEvent(event.manager.getProject(), event.newFile?.name)
+			if (event.newFile) {
+				fileModificationAdapter.setActiveFile(event.newFile)
+			}
+		}
 
-    }
+	}
 
 	private class FileModificationAdapter extends DocumentAdapter {
 

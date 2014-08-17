@@ -13,15 +13,15 @@ import com.intellij.openapi.vfs.VirtualFile
 
 class ActionSupport {
 
-    private void disableWhenNoIdeaFlow(AnActionEvent e) {
-        Presentation presentation = e.getPresentation()
-        presentation.setEnabled(isIdeaFlowOpen(e));
-    }
+	private void disableWhenNoIdeaFlow(AnActionEvent e) {
+		Presentation presentation = e.getPresentation()
+		presentation.setEnabled(isIdeaFlowOpen(e));
+	}
 
-    private void disableWhenOpenIdeaFlow(AnActionEvent e) {
-        Presentation presentation = e.getPresentation ()
-        presentation.setEnabled(!isIdeaFlowOpen(e));
-    }
+	private void disableWhenOpenIdeaFlow(AnActionEvent e) {
+		Presentation presentation = e.getPresentation()
+		presentation.setEnabled(!isIdeaFlowOpen(e));
+	}
 
 	private IFMController getIFMController(AnActionEvent e) {
 		IFMController controller = null
@@ -35,13 +35,13 @@ class ActionSupport {
 		getIFMController(e)?.activeIdeaFlowName
 	}
 
-    private boolean isIdeaFlowOpen(AnActionEvent e) {
-	    getIFMController(e)?.isIdeaFlowOpen()
-    }
+	private boolean isIdeaFlowOpen(AnActionEvent e) {
+		getIFMController(e)?.isIdeaFlowOpen()
+	}
 
-    private boolean isIdeaFlowClosed(AnActionEvent e) {
-        return !isIdeaFlowOpen(e)
-    }
+	private boolean isIdeaFlowClosed(AnActionEvent e) {
+		return !isIdeaFlowOpen(e)
+	}
 
 	private BandStart getActiveBandStart(AnActionEvent e) {
 		getIFMController(e)?.getActiveBandStart()
@@ -60,9 +60,9 @@ class ActionSupport {
 		getIFMController(e)?.getActiveConflict()
 	}
 
-    private boolean isOpenConflict(AnActionEvent e) {
-	    getIFMController(e)?.isOpenConflict()
-    }
+	private boolean isOpenConflict(AnActionEvent e) {
+		getIFMController(e)?.isOpenConflict()
+	}
 
 	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {
 		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)

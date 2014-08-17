@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.search.GlobalSearchScope
-import javax.swing.*
+import javax.swing.Icon
 
 @Mixin(ActionSupport)
 class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
@@ -34,29 +34,29 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 	}
 
 	@Override
-    boolean isSelected(AnActionEvent e) {
-        return isIdeaFlowOpen(e)
-    }
+	boolean isSelected(AnActionEvent e) {
+		return isIdeaFlowOpen(e)
+	}
 
-    @Override
-    void setSelected(AnActionEvent e, boolean state) {
-        IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+	@Override
+	void setSelected(AnActionEvent e, boolean state) {
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-        if (controller.isIdeaFlowOpen()) {
-            controller.closeIdeaFlow(e.project)
-        } else {
-            createNewIdeaFlow(e)
-        }
-    }
+		if (controller.isIdeaFlowOpen()) {
+			controller.closeIdeaFlow(e.project)
+		} else {
+			createNewIdeaFlow(e)
+		}
+	}
 
-    private void createNewIdeaFlow(AnActionEvent e) {
-	    File ideaFlowMapFile = getSelectedOrCreateNewIdeaFlowMapFile(e)
+	private void createNewIdeaFlow(AnActionEvent e) {
+		File ideaFlowMapFile = getSelectedOrCreateNewIdeaFlowMapFile(e)
 
-        if (ideaFlowMapFile != null) {
-            IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-            controller.newIdeaFlow(e.project, ideaFlowMapFile)
-        }
-    }
+		if (ideaFlowMapFile != null) {
+			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+			controller.newIdeaFlow(e.project, ideaFlowMapFile)
+		}
+	}
 
 	private File getSelectedOrCreateNewIdeaFlowMapFile(AnActionEvent e) {
 		VirtualFile selectedIdeaFlowMapVirtualFile = getSelectedIdeaFlowMapFile(e)
@@ -72,10 +72,10 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 
 	private File createNewFile(AnActionEvent e) {
 		VirtualFile parentDir = getParentDirForNewFile(e)
-        MessageSpec messageToShow = MessageSpec.question("Create IdeaFlow map", "Name of IdeaFlow mapping file at location ${parentDir.name}:")
+		MessageSpec messageToShow = MessageSpec.question("Create IdeaFlow map", "Name of IdeaFlow mapping file at location ${parentDir.name}:")
 		String newFileName = promptWith(messageToShow)
 		newFileName ? new File(parentDir.path, newFileName) : null
-    }
+	}
 
 	private VirtualFile getParentDirForNewFile(AnActionEvent event) {
 		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)
@@ -105,21 +105,21 @@ class ToggleOpenIdeaFlow extends IdeaFlowToggleAction {
 	}
 
 	private String promptWith(MessageSpec spec) {
-        return Messages.showInputDialog(spec.message, spec.title, spec.icon)
-    }
+		return Messages.showInputDialog(spec.message, spec.title, spec.icon)
+	}
 
 	private static class MessageSpec {
-        String title
-        String message
-        Icon icon
+		String title
+		String message
+		Icon icon
 
-        static MessageSpec error(String message) {
-            return new MessageSpec(title: 'Error', message: message, icon: Messages.getErrorIcon())
-        }
+		static MessageSpec error(String message) {
+			return new MessageSpec(title: 'Error', message: message, icon: Messages.getErrorIcon())
+		}
 
-        static MessageSpec question(String title, String message) {
-            return new MessageSpec(title: title, message: message, icon: Messages.getQuestionIcon())
-        }
-    }
+		static MessageSpec question(String title, String message) {
+			return new MessageSpec(title: title, message: message, icon: Messages.getQuestionIcon())
+		}
+	}
 
 }

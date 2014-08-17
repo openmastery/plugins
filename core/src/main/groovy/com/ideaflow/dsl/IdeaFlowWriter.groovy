@@ -4,6 +4,7 @@ import com.ideaflow.model.BandEnd
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.Idle
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
@@ -66,6 +67,10 @@ class IdeaFlowWriter {
 
 	void write(BandEnd bandEnd) {
 		writeItem('bandEnd', bandEnd, ['created', 'type'])
+	}
+
+	void write(Idle idle) {
+		writeItem('idle', idle, ['created', 'duration', 'comment'])
 	}
 
 	private void writeItem(String name, ModelEntity entity, List orderedKeyList) {

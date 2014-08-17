@@ -3,6 +3,7 @@ package com.ideaflow.intellij.action
 import com.ideaflow.controller.IFMController
 import com.ideaflow.model.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.project.Project
 
 @Mixin(ActionSupport)
 class ToggleConflict extends IdeaFlowToggleAction {
@@ -43,12 +44,17 @@ Will <observation> affect my current strategy?
 		Conflict activeConflict = controller.getActiveConflict()
 
 		if (activeConflict != null) {
-			String note = controller.promptForInput(e.project, END_CONFLICT_TITLE, activeConflict.question)
-			controller.endConflict(e.project, note)
+			endConflict(e.project, controller, activeConflict)
 		} else {
 			String note = controller.promptForInput(e.project, START_CONFLICT_TITLE, START_CONFLICT_MSG)
 			controller.startConflict(e.project, note)
 		}
+	}
+
+	static String endConflict(Project project, IFMController controller, Conflict activeConflict) {
+		String note = controller.promptForInput(project, END_CONFLICT_TITLE, activeConflict.question)
+		controller.endConflict(project, note)
+		note
 	}
 
 }
