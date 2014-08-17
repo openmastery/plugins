@@ -1,7 +1,5 @@
 
-DEFECT - fix commit functionality, throwing exception after multi-project changes.
-
-When user has deactivated their IDE for longer than 50 minutes, when they log an active event, prompt to find out if they were working or idle.  "Were you working during the last XXX minutes?" If the user was idle, remove the time-period from the IFM, or alternatively create a new element type "idle" that records the idle duration. 
+When user has deactivated their IDE for longer than 50 minutes, when they log an active event, prompt to find out if they were working or idle.  "Were you working during the last XXX minutes?" If the user was idle, remove the time-period from the IFM, or alternatively create a new element type "idle" that records the idle duration.
 
 When in conflict, allow the rework button to pressed which ends the active conflict, prompts for resolution message which is also used as the rework message.  No dialog should be displayed to get a rework message.
 

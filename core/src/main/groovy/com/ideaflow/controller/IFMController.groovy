@@ -15,7 +15,7 @@ import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 
-class IFMController<T> implements GroovyInterceptable {
+class IFMController<T> {
 
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
@@ -25,12 +25,8 @@ class IFMController<T> implements GroovyInterceptable {
 		this.ideService = ideService
 	}
 
-	def invokeMethod(String name, args) {
-		if (ideaFlowModel && !ideaFlowModel.file.exists()) {
-			ideaFlowModel = null
-		}
-
-		metaClass.getMetaMethod(name, args).invoke(this, args)
+	IdeaFlowModel getActiveIdeaFlowModel() {
+		ideaFlowModel?.file?.exists() ? ideaFlowModel : null
 	}
 
 	String promptForInput(T context, String title, String message) {
@@ -38,19 +34,19 @@ class IFMController<T> implements GroovyInterceptable {
 	}
 
 	String getActiveIdeaFlowName() {
-		ideaFlowModel?.file?.name
+		activeIdeaFlowModel?.file?.name
 	}
 
 	boolean isIdeaFlowOpen() {
-		ideaFlowModel != null
+		activeIdeaFlowModel != null
 	}
 
 	Conflict getActiveConflict() {
-		return (isIdeaFlowOpen() ? ideaFlowModel.getActiveConflict() : null)
+		return (isIdeaFlowOpen() ? activeIdeaFlowModel.getActiveConflict() : null)
 	}
 
 	BandStart getActiveBandStart() {
-		return (isIdeaFlowOpen() ? ideaFlowModel.getActiveBandStart() : null)
+		return (isIdeaFlowOpen() ? activeIdeaFlowModel.getActiveBandStart() : null)
 	}
 
 	boolean isOpenConflict() {
@@ -110,7 +106,7 @@ class IFMController<T> implements GroovyInterceptable {
 	}
 
 	void closeIdeaFlow(T context) {
-		if (ideaFlowModel) {
+		if (activeIdeaFlowModel) {
 			endFileEvent(null)
 			addStateChange(context, StateChangeType.stopIdeaFlowRecording)
 			flush(context)
@@ -142,17 +138,17 @@ class IFMController<T> implements GroovyInterceptable {
 		println("Paused")
 		endFileEvent(null)
 		flush(context)
-		ideaFlowModel?.isPaused = true
+		activeIdeaFlowModel?.isPaused = true
 	}
 
 	void resume(T context) {
 		println("Resumed")
-		ideaFlowModel?.isPaused = false
+		activeIdeaFlowModel?.isPaused = false
 		startFileEventForCurrentFile(context)
 	}
 
 	boolean isPaused() {
-		ideaFlowModel != null && ideaFlowModel.isPaused
+		activeIdeaFlowModel?.isPaused
 	}
 
 	private File addExtension(File file) {
@@ -164,9 +160,9 @@ class IFMController<T> implements GroovyInterceptable {
 	}
 
 	private void flush(T context) {
-		if (ideaFlowModel) {
-			String xml = new DSLTimelineSerializer().serialize(ideaFlowModel)
-			ideService.writeFile(context, ideaFlowModel.file, xml)
+		if (activeIdeaFlowModel) {
+			String xml = new DSLTimelineSerializer().serialize(activeIdeaFlowModel)
+			ideService.writeFile(context, activeIdeaFlowModel.file, xml)
 		}
 	}
 
@@ -176,7 +172,7 @@ class IFMController<T> implements GroovyInterceptable {
 
 	private void addModelEntity(T context, ModelEntity event) {
 		endFileEvent(null)
-		ideaFlowModel?.addModelEntity(event)
+		activeIdeaFlowModel?.addModelEntity(event)
 		flush(context)
 		startFileEventForCurrentFile(context)
 	}
