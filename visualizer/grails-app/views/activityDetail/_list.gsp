@@ -1,4 +1,4 @@
-<%@ page import="com.ideaflow.timeline.Event; com.ideaflow.timeline.ActivityDetail" %>
+<%@ page import="com.ideaflow.timeline.TimeBand; com.ideaflow.timeline.Event; com.ideaflow.timeline.ActivityDetail" %>
 <common:nav controller="${params.controller}" action="${params.action}"/>
 
 <div id="timeline_scrollwindow" class="tabcontent">
@@ -30,6 +30,19 @@
             </g:if>
             <g:if test="${detail instanceof Event}">
                 <tr id="detail_${index}" class="${detail.activeBandType ? "${detail.activeBandType}type" : ""}">
+                    <td class="hiddenOffset">
+                        ${detail.time.relativeOffset}
+                    </td>
+                    <td colspan=2>
+                        <hr/>
+                    </td>
+                    <td class="right">
+                        ${detail.comment}
+                    </td>
+                </tr>
+            </g:if>
+            <g:if test="${detail instanceof TimeBand}">
+                <tr id="detail_${index}" class="${detail.bandType}type">
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
                     </td>

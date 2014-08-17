@@ -28,8 +28,8 @@ class TimelineChart {
 		return new TimePosition(endTime, endOffset)
 	}
 
-	List<TimePosition> getEventPositions() {
-		timeline.getEvents().collect { Event e -> e.time }
+	List<Event> getEvents() {
+		timeline.getEvents()
 	}
 
 	List<TimeBand> getTimeBands() {
@@ -40,9 +40,10 @@ class TimelineChart {
 		def timelineData = [
 			start: [offset: start.relativeOffset, shortTime: start.shortTime],
 			end: [offset: end.relativeOffset, shortTime: end.shortTime],
-			events: eventPositions.collect { TimePosition time ->
-				[offset: time.relativeOffset,
-				 shortTime: time.shortTime]
+			events: events.collect { Event event ->
+				[offset: event.time.relativeOffset,
+				 shortTime: event.time.shortTime,
+				id: event.id]
 			},
 			timeBands: timeBands.collect { TimeBand timeBand ->
 				[bandType: timeBand.bandType,

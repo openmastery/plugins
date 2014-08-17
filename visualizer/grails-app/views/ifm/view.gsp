@@ -39,7 +39,7 @@
     refreshTimeline();
 </script>
 <div id="contentPanel">
-    <g:include controller="event" action="list" params="[controller:'event']"/>
+    <g:include controller="highlight" action="list" params="[controller:'highlight']"/>
 </div>
 
 </body>

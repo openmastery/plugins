@@ -26,6 +26,10 @@ var rightStretcher;
 
 var timelineData;
 
+var indexedTimeEntries;
+var indexedEvents;
+var indexedBands;
+
 function refreshTimeline() {
     $.ajax({
         type: 'GET',
@@ -116,6 +120,7 @@ function getSecondsPerUnit() {
 }
 
 function drawTimeline(data) {
+
     timelineData = data;
     stage = new Kinetic.Stage({
         container: 'timelineHolder',
@@ -129,6 +134,18 @@ function drawTimeline(data) {
     drawEventsLayer(stage, data.events, secondsPerUnit);
     drawWindow(stage);
     drawStretchControls(stage);
+    initIdIndexedTimelineData(timelineData);
+}
+
+function initIdIndexedTimelineData(data) {
+    indexedTimeEntries = new Array();
+
+    for (var i = 0; i < data.timeBands.length; i++) {
+        indexedTimeEntries[data.timeBands[i].id] = data.timeBands[i];
+    }
+    for (i = 0; i < data.events.length; i++) {
+        indexedTimeEntries[data.events[i].id] = data.events[i];
+    }
 }
 
 function drawWindow(stage) {
@@ -288,10 +305,15 @@ function drawEventsLayer(stage, events, secondsPerUnit) {
     var layer = new Kinetic.Layer();
     eventLines = new Array();
     eventLabels = new Array();
+
+    indexedEvents = new Array();
+
     for (var i = 0; i < events.length; i++) {
         var eventParts = drawEvent(layer, events[i], secondsPerUnit);
         eventLines[i] = eventParts[0];
         eventLabels[i] = eventParts[1];
+
+        indexedEvents[events[i].id] = eventParts;
     }
     stage.add(layer);
 }
@@ -331,9 +353,11 @@ function drawTimebandsLayer(stage, bands, secondsPerUnit) {
     var layer = new Kinetic.Layer();
     colorBands = new Array();
     conflictBands = new Array();
+    indexedBands = new Array();
     for (var i = 0; i < bands.length; i++) {
         var colorBand = drawTimeband(layer, bands[i], secondsPerUnit);
         colorBands[i] = colorBand;
+        indexedBands[bands[i].id]  = colorBand;
         if (bands[i].bandType == 'conflict') {
             conflictBands[bands[i].id] = colorBand;
         }
@@ -425,6 +449,24 @@ function highlightColorBand(index) {
     //colorBands[index].setOpacity('.6');
     colorBands[index].setFill(lookupBandColors(timelineData.timeBands[index].bandType)[1]);
     stage.draw();
+}
+
+function highlightEventById(id) {
+    var eventData = indexedTimeEntries[id];
+    var event = indexedEvents[id];
+
+    event[0].setStroke('#d3e0ff');
+    event[1].setFill('#79a1ff');
+    stage.draw();
+}
+
+function highlightColorBandById(id) {
+    var colorBandData = indexedTimeEntries[id];
+    var colorBand = indexedBands[id];
+
+    colorBand.setFill(lookupBandColors(colorBandData.bandType)[1]);
+    stage.draw();
+
 }
 
 function highlightConflict(id) {

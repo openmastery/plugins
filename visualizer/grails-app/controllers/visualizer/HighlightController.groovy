@@ -9,9 +9,9 @@ class HighlightController {
     def list() {
 
 		Timeline timeline = ifmService.activeTimeline
-		List<TimeBand> timeBands = timeline.timeBands
+		List<TimeEntry> timeEntries = timeline.getSequencedTimeline()
 
-		render(template: "list", model: [timeBands: timeBands])
+		render(template: "list", model: [timeEntries: timeEntries])
     }
 
     def delete() {
