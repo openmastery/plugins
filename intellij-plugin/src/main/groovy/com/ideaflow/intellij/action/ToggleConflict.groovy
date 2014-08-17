@@ -8,7 +8,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 class ToggleConflict extends IdeaFlowToggleAction {
 
 	private static final String START_CONFLICT_TITLE = "Start Conflict"
-	private static final String START_CONFLICT_MSG = "What conflict question is in your head?"
+	private static final String START_CONFLICT_MSG = """What observation caused a conflict (in the form of a question)?
+...
+What is causing <observation>?
+Will <observation> affect my current strategy?
+"""
 	private static final String END_CONFLICT_TITLE = "End Conflict"
 
 	@Override

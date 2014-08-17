@@ -5,12 +5,7 @@ When in conflict, allow the rework button to pressed which ends the active confl
 
 Add multi-project support - if you have another intellij window active - receive events for all projects.  Recording enabled in one window to record all activity. Don't worry about general case for now.
 
-Change conflict question to prompt with observation examples:
-
-What is causing <observation>?
-Will <observation> affect my current strategy? 
-
----- REST API RELEASE 
+---- REST API RELEASE
 
 'context-switching' support - starting new IF recording will create an [active task context] drop down, and allow you to switch easily between multiple active tasks.  When the task is finished, it can be 'closed' and dropped from the active list.  The active list is essentially the WIP.
 
