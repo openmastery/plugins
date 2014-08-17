@@ -5,6 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Idle
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
@@ -32,6 +33,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		Resolution resolution = createResolution()
 		BandStart bandStart = createBandStart()
 		BandEnd bandEnd = createBandEnd()
+	    Idle idle = createIdle()
 
         when:
 		writer.writeInitialization(createDate)
@@ -43,6 +45,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		writer.write(event)
 		writer.write(bandStart)
 		writer.write(bandEnd)
+	    writer.write(idle)
 
         then:
 		IdeaFlowModel model = readModelAndClearIds()
@@ -55,6 +58,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		assert model.entityList.remove(0) == event
 		assert model.entityList.remove(0) == bandStart
 		assert model.entityList.remove(0) == bandEnd
+        assert model.entityList.remove(0) == idle
 		assert model.size() == 0
 	}
 

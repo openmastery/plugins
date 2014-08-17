@@ -134,6 +134,10 @@ class IFMController<T> {
 		eventToIntervalHandler?.endEvent(eventName)
 	}
 
+	void markActiveFileEventAsIdle(String comment) {
+		eventToIntervalHandler?.endActiveEventAsIdle(comment)
+	}
+
 	private File addExtension(File file) {
 		File fileWithExtension = file
 		if (file.name.endsWith(".ifm") == false) {

@@ -5,6 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.Idle
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
@@ -144,6 +145,14 @@ class FixtureSupport {
 		BandEnd end = new BandEnd(type)
 		end.created = new DateTime(time)
 		end
+	}
+
+	Idle createIdle() {
+		createIdle(NOW, 'comment', 5)
+	}
+
+	Idle createIdle(long time, String comment, int duration) {
+		new Idle(new DateTime(time), comment, duration)
 	}
 
 	ActivityDetail createActivityDetail(TimePosition time) {
