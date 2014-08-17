@@ -16,9 +16,12 @@ class IDEServiceImpl implements IDEService<Project> {
 	@Override
 	String getActiveFileSelection(Project project) {
 		String file = null
-		VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles()
-		if (files.length > 0) {
-			file = files[0].name
+		FileEditorManager fileEditorManager = FileEditorManager.getInstance(project)
+		if (fileEditorManager != null) {
+			VirtualFile[] files = fileEditorManager.getSelectedFiles()
+			if (files.length > 0) {
+				file = files[0].name
+			}
 		}
 		return file
 	}
