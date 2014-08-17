@@ -1,6 +1,7 @@
 package visualizer
 
 import com.newiron.ideaflow.data.IdeaFlowMap
+import groovy.io.FileType
 
 class IfmFileService {
 
@@ -13,16 +14,18 @@ class IfmFileService {
 			File ifmFile = findOrCreateIfmFile(project, user, taskId)
 			return new IdeaFlowMap(project, user, taskId, ifmFile)
 		} else {
-			println "here"
 			return findOrCreateIdeaFlowMap(taskId)
 		}
 	}
 
 	IdeaFlowMap findOrCreateIdeaFlowMap(String taskId) {
 		File matchingFile = null
-		baseDir.eachFileMatch("$taskId"+".ifm") { matchingFile = it }
+		baseDir.eachFileRecurse(FileType.FILES, { file ->
+			if (file.name.contains(taskId)) {
+				matchingFile = file
+			}
+		})
 
-		println "matchingFile? "+matchingFile
 		matchingFile ? new IdeaFlowMap(matchingFile) : null
 	}
 

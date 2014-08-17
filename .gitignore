@@ -12,3 +12,4 @@ intellij-plugin/ideaflow-plugin.zip
 visualizer/.sass-cache
 visualizer/target/
 vagrant/.vagrant
+plugins/intellij/ideaflow-plugin.iml
