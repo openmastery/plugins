@@ -7,6 +7,7 @@
 	</head>
 	<body>
 		<g:if env="development">
+            ${exception.printStackTrace()}
 			<g:renderException exception="${exception}" />
 		</g:if>
 		<g:else>
