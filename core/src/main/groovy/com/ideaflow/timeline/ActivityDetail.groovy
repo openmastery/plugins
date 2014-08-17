@@ -1,8 +1,6 @@
 package com.ideaflow.timeline
 
 import com.ideaflow.model.EditorActivity
-import org.joda.time.DateTime
-
 
 class ActivityDetail implements TimeEntry, Entity {
 

@@ -11,7 +11,7 @@ repositories {
 }
 
 configurations {
-    ftpAntTask
+	ftpAntTask
 }
 
 dependencies {
@@ -106,7 +106,6 @@ private String getPluginString(File file, String description, String regex) {
 	}
 	matcher.group(1)
 }
-
 
 
 task extractPluginJarFromPluginArtifact(type: Copy) {

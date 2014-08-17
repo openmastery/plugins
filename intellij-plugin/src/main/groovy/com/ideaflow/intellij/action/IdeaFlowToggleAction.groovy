@@ -8,7 +8,9 @@ import com.intellij.openapi.actionSystem.ToggleAction
 abstract class IdeaFlowToggleAction extends ToggleAction {
 
 	protected abstract boolean isPresentationEnabled(AnActionEvent e)
+
 	protected abstract String getPresentationText(AnActionEvent e)
+
 	protected abstract String getPresentationDescription(AnActionEvent e)
 
 	@Override
@@ -18,7 +20,7 @@ abstract class IdeaFlowToggleAction extends ToggleAction {
 		Presentation presentation = e.getPresentation()
 		presentation.enabled = isPresentationEnabled(e)
 		presentation.text = getPresentationText(e)
-		 presentation.description = isIdeaFlowOpen(e) ? getPresentationDescription(e) : presentation.text
+		presentation.description = isIdeaFlowOpen(e) ? getPresentationDescription(e) : presentation.text
 	}
 
 }

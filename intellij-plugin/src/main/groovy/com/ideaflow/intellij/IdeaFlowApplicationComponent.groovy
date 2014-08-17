@@ -8,7 +8,6 @@ import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.IdeFrame
-import com.intellij.ui.UIBundle
 import com.intellij.util.messages.MessageBusConnection
 import org.joda.time.DateTime
 import org.joda.time.Duration
@@ -18,58 +17,58 @@ import org.joda.time.format.PeriodFormatterBuilder
 
 class IdeaFlowApplicationComponent implements ApplicationComponent {
 
-    static String NAME = "IdeaFlow.Component"
+	static String NAME = "IdeaFlow.Component"
 
-    private IDEService<Project> ideService
-    private IFMController<Project> controller
-    private MessageBusConnection appConnection
+	private IDEService<Project> ideService
+	private IFMController<Project> controller
+	private MessageBusConnection appConnection
 
-    static IFMController<Project> getIFMController() {
-        ApplicationManager.getApplication().getComponent(NAME).controller
-    }
+	static IFMController<Project> getIFMController() {
+		ApplicationManager.getApplication().getComponent(NAME).controller
+	}
 
-    @Override
-    String getComponentName() {
-        NAME
-    }
+	@Override
+	String getComponentName() {
+		NAME
+	}
 
-    @Override
-    void initComponent() {
-        ideService = new IDEServiceImpl()
-        controller = new IFMController(ideService)
+	@Override
+	void initComponent() {
+		ideService = new IDEServiceImpl()
+		controller = new IFMController(ideService)
 
-        ApplicationListener applicationListener = new ApplicationListener()
-        appConnection = ApplicationManager.getApplication().getMessageBus().connect()
-        appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
-    }
+		ApplicationListener applicationListener = new ApplicationListener()
+		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
+		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
+	}
 
-    @Override
-    void disposeComponent() {
-        appConnection.disconnect()
-    }
+	@Override
+	void disposeComponent() {
+		appConnection.disconnect()
+	}
 
 
-    private static class ApplicationListener implements ApplicationActivationListener {
+	private static class ApplicationListener implements ApplicationActivationListener {
 
-	    private DeactivationHandler deactivationHandler = new DeactivationHandler()
+		private DeactivationHandler deactivationHandler = new DeactivationHandler()
 
-        void applicationActivated(IdeFrame ideFrame) {
-            if (ideFrame.project) {
-	            if (!deactivationHandler.isPromptingForIdleTime()) {
-		            deactivationHandler.markActiveFileEventAsIdleIfDeactivationThresholdExceeded(ideFrame.project)
-	                getIFMController().startFileEventForCurrentFile(ideFrame.project)
-	            }
-            }
-        }
+		void applicationActivated(IdeFrame ideFrame) {
+			if (ideFrame.project) {
+				if (!deactivationHandler.isPromptingForIdleTime()) {
+					deactivationHandler.markActiveFileEventAsIdleIfDeactivationThresholdExceeded(ideFrame.project)
+					getIFMController().startFileEventForCurrentFile(ideFrame.project)
+				}
+			}
+		}
 
-        void applicationDeactivated(IdeFrame ideFrame) {
-            if (ideFrame.project) {
-	            deactivationHandler.deactivated()
-                getIFMController().startFileEvent(ideFrame.project, "[[deactivated]]")
-            }
-        }
+		void applicationDeactivated(IdeFrame ideFrame) {
+			if (ideFrame.project) {
+				deactivationHandler.deactivated()
+				getIFMController().startFileEvent(ideFrame.project, "[[deactivated]]")
+			}
+		}
 
-    }
+	}
 
 	private static class DeactivationHandler {
 
