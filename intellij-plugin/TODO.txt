@@ -5,9 +5,6 @@ When in conflict, allow the rework button to pressed which ends the active confl
 
 Add multi-project support - if you have another intellij window active - receive events for all projects.  Recording enabled in one window to record all activity. Don't worry about general case for now.
 
-Change "Commit:" prefix to [Commit]
-
-----
 Change conflict question to prompt with observation examples:
 
 What is causing <observation>?

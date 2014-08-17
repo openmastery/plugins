@@ -86,7 +86,7 @@ class VcsCommitToIdeaFlowNoteAdapter extends ChangeListAdapter implements VcsLis
 			@Override
 			void run() {
 				commitMessages.each { String commitMessage ->
-					controller.addNote(project, "Commit: ${commitMessage}")
+					controller.addNote(project, "[Commit] ${commitMessage}")
 				}
 			}
 		})
