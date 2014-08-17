@@ -11,20 +11,17 @@ import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
+import spock.lang.Specification
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
-class IdeaFlowReaderWriterTest extends GroovyTestCase {
+class IdeaFlowReaderWriterTest extends Specification {
 
-	private StringWriter stringWriter
-	private IdeaFlowWriter writer
+	private StringWriter stringWriter = new StringWriter()
+	private IdeaFlowWriter writer = new IdeaFlowWriter(stringWriter)
 
-	void setUp() {
-		stringWriter = new StringWriter()
-		writer = new IdeaFlowWriter(stringWriter)
-	}
-
-	void testReadWriteSymmetryWithData() {
+    void testReadWriteSymmetryWithData() {
+        given:
 		DateTime createDate = new DateTime(NOW)
 		EditorActivity modifiedEditorActivity = createEditorActivity(FILE)
 		modifiedEditorActivity.modified = true
@@ -36,6 +33,7 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		BandStart bandStart = createBandStart()
 		BandEnd bandEnd = createBandEnd()
 
+        when:
 		writer.writeInitialization(createDate)
 		writer.write(modifiedEditorActivity)
 		writer.write(unmodifiedEditorActivity)
@@ -46,8 +44,8 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		writer.write(bandStart)
 		writer.write(bandEnd)
 
+        then:
 		IdeaFlowModel model = readModelAndClearIds()
-
 		assert model.created == createDate
 		assert model.entityList.remove(0) == modifiedEditorActivity
 		assert model.entityList.remove(0) == unmodifiedEditorActivity
@@ -70,9 +68,11 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		model
 	}
 
-	void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {
+    void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {
+        given:
 		List<ModelEntity> subTypeInstances = getInitializedModelEntitySubClassInstances()
 
+        when:
 		writer.writeInitialization(new DateTime(NOW))
 		subTypeInstances.each { ModelEntity entity ->
 			try {
@@ -90,6 +90,7 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 					"ensure ${IdeaFlowReader.simpleName} declares appropriate read(<subtype>) method", ex)
 		}
 
+        then:
 		model.entityList.each { ModelEntity entity ->
 			assert entity.id != null
 			entity.id = null
@@ -111,44 +112,50 @@ class IdeaFlowReaderWriterTest extends GroovyTestCase {
 		subTypeInstances
 	}
 
-	public void testBackslashInText_ShouldNotExplode() {
+    public void testBackslashInText_ShouldNotExplode() {
+        given:
 		Conflict conflict = createConflict()
 		conflict.question = /What's up with this regex: \s+\S+\s+/
 
+        when:
 		writer.writeInitialization(new DateTime(NOW))
 		writer.write(conflict)
 
+        then:
 		IdeaFlowModel model = readModelAndClearIds()
-
 		assert model.entityList.remove(0) == conflict
 		assert model.entityList.size() == 0
 	}
 
-	public void testQuoteAtStartOrEnd_ShouldNotExplode() {
+    public void testQuoteAtStartOrEnd_ShouldNotExplode() {
+        given:
 		Note singleQuoteNote = createNote("'here' is a single 'quote'")
 		Note doubleQuoteNote = createNote('"here" is a double "quote"')
 
+        when:
 		writer.writeInitialization(new DateTime(NOW))
 		writer.write(singleQuoteNote)
 		writer.write(doubleQuoteNote)
 
+        then:
 		IdeaFlowModel model = readModelAndClearIds()
-
 		assert model.entityList.remove(0) == singleQuoteNote
 		assert model.entityList.remove(0) == doubleQuoteNote
 		assert model.entityList.size() == 0
 	}
 
-	public void testTripleQuotesInString_ShouldNotExpode() {
+    public void testTripleQuotesInString_ShouldNotExpode() {
+        given:
 		Note tripleSingleQuoteNote = createNote("here is a '''triple''' quote")
 		Note tripleDoubleQuoteNote = createNote('here is a """double""" quote')
 
+        when:
 		writer.writeInitialization(new DateTime(NOW))
 		writer.write(tripleSingleQuoteNote)
 		writer.write(tripleDoubleQuoteNote)
 
+        then:
 		IdeaFlowModel model = readModelAndClearIds()
-
 		assert model.entityList.remove(0) == tripleSingleQuoteNote
 		assert model.entityList.remove(0) == tripleDoubleQuoteNote
 		assert model.entityList.size() == 0

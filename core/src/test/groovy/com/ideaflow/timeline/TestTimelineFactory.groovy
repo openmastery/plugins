@@ -7,23 +7,17 @@ import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
-import org.junit.Before
-import org.junit.Test
+import spock.lang.Specification
 import test.support.FixtureSupport
 import test.support.IdeaFlowModelBuilder
 
 @Mixin(FixtureSupport)
-class TestTimelineFactory {
+class TestTimelineFactory extends Specification {
 
-	TimelineFactory timelineFactory
+	TimelineFactory timelineFactory = new TimelineFactory()
 
-	@Before
-	void setUp() {
-		timelineFactory = new TimelineFactory()
-	}
-
-	@Test
 	void testCreate_ShouldCreateConflictBands() {
+        given:
 		Conflict conflict = createConflict(TIME1)
 		Resolution resolution = createResolution(TIME2)
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
@@ -33,8 +27,10 @@ class TestTimelineFactory {
 				.addResolution(resolution)
 				.build()
 
+        when:
 		Timeline timeline = timelineFactory.create(ifm)
 
+        then:
 		ConflictBand conflictBand = firstAndOnlyConflict(timeline)
 		assert conflictBand.conflict == conflict
 		assert conflictBand.resolution == resolution
@@ -48,8 +44,8 @@ class TestTimelineFactory {
 		return timeline.conflictBands[0]
 	}
 
-	@Test
 	void testCreate_ShouldCreateGenericBands() {
+        given:
 		BandStart bandStart = createBandStart()
 		BandEnd bandEnd = createBandEnd()
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
@@ -59,8 +55,10 @@ class TestTimelineFactory {
 				.addBandEnd(bandEnd)
 				.build()
 
+        when:
 		Timeline timeline = timelineFactory.create(ifm)
 
+        then:
 		GenericBand genericBand = firstAndOnlyGenericBand(timeline)
 		assert genericBand.bandStart == bandStart
 		assert genericBand.bandEnd == bandEnd
@@ -74,16 +72,18 @@ class TestTimelineFactory {
 		return timeline.genericBands[0]
 	}
 
-	@Test
 	void testCreate_ShouldCreateEvents() {
+        given:
 		Note note = createNote()
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
 				.addEditorActivity(10)
 				.addNote(note)
 				.build()
 
+        when:
 		Timeline timeline = timelineFactory.create(ifm)
 
+        then:
 		Event event = firstAndOnlyEvent(timeline)
 		assert event.note == note
 		assert event.time.relativeOffset == 10
@@ -94,8 +94,8 @@ class TestTimelineFactory {
 		return timeline.events[0]
 	}
 
-	@Test
 	void testCreate_ShouldCreateActivityDetail() {
+        given:
 		EditorActivity editorActivity1 = createEditorActivity(FILE1, 10, TIME1)
 		EditorActivity editorActivity2 = createEditorActivity(FILE2, 15, TIME2)
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
@@ -103,8 +103,10 @@ class TestTimelineFactory {
 				.addEditorActivity(editorActivity2)
 				.build()
 
+        when:
 		Timeline timeline = timelineFactory.create(ifm)
 
+        then:
 		ActivityDetail activityDetail1 = timeline.activityDetails[0]
 		assert activityDetail1.editorActivity == editorActivity1
 		assert activityDetail1.time.relativeOffset == 0
@@ -114,12 +116,13 @@ class TestTimelineFactory {
 		assert timeline.activityDetails.size() == 2
 	}
 
-	@Test
 	void testCreate_StateChangeShouldNotExplode() {
+        given:
 		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
 				.addStateChange(createStateChange())
 				.build()
 
+        expect:
 		timelineFactory.create(ifm)
 	}
 

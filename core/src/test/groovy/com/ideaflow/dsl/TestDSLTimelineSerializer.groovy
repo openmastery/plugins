@@ -2,36 +2,34 @@ package com.ideaflow.dsl
 
 import com.ideaflow.model.IdeaFlowModel
 import org.joda.time.DateTime
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import spock.lang.Specification
 
+class TestDSLTimelineSerializer extends Specification {
 
-class TestDSLTimelineSerializer {
-	private DSLTimelineSerializer serializer
-	File emptyFile
+	private DSLTimelineSerializer serializer = new DSLTimelineSerializer()
+	private File emptyFile = File.createTempFile('empty', '.txt')
 
-	@Before
-	void setUp() {
-		serializer = new DSLTimelineSerializer()
-		emptyFile = File.createTempFile('empty', '.txt')
+	void setup() {
 		emptyFile.createNewFile()
 	}
 
-	@After
-	void cleanUp() {
+	void cleanup() {
 		emptyFile.delete()
 	}
 
-	@Test
-	void seralize_ShouldNotExplode() {
+    void seralize_ShouldNotExplode() {
+        given:
 		IdeaFlowModel model = new IdeaFlowModel(new File('test'), DateTime.now())
+
+        when:
 		String serializedModel = serializer.serialize(model)
+
+        then:
 		assert serializedModel != null
 	}
 
-	@Test
-	void deseralize_ShouldNotExplode() {
+    void deseralize_ShouldNotExplode() {
+        expect:
 		serializer.deserialize(emptyFile)
 	}
 }

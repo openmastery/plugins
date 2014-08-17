@@ -1,43 +1,43 @@
 package com.ideaflow.controller
 
+import spock.lang.Specification
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
-class TestIFMController extends GroovyTestCase {
+class TestIFMController extends Specification {
 
-	IFMController controller
-	IDEService stubIdeService
+    IDEService ideService = Mock(IDEService)
+	IFMController controller = new IFMController(ideService)
 
-	void setUp() {
-		stubIdeService = createIdeServiceStub()
-		controller = new IFMController(stubIdeService)
+	def setup() {
 		controller.newIdeaFlow("string", File.createTempFile("tmp", ".ifm"))
 	}
 
-	void testAddEventWithoutComment_ShouldBeIgnored() {
+    void testAddEventWithoutComment_ShouldBeIgnored() {
+        when:
 		controller.startConflict("", null)
+
+        then:
 		assert false == controller.isOpenConflict()
 	}
 
-	void testAddEventWithComment_ShouldChangeState() {
+    void testAddEventWithComment_ShouldChangeState() {
+        when:
 		controller.startConflict("", 'conflict')
+
+        then:
 		assert true == controller.isOpenConflict()
 	}
 
-	void testIsIdeaFlowOpen() {
-		assert true == controller.isIdeaFlowOpen()
+    void testIsIdeaFlowOpen() {
+        given:
+        assert true == controller.isIdeaFlowOpen()
 
-		controller.closeIdeaFlow(null)
-		assert false == controller.isIdeaFlowOpen()
-	}
+        when:
+        controller.closeIdeaFlow(null)
 
-	IDEService createIdeServiceStub() {
-		[
-				getActiveFileSelection: { 'testfile' },
-				fileExists: { context, file -> false },
-				createNewFile: { context, file, contents -> },
-				writeFile: { context, file, contents -> }
-		] as IDEService
-	}
+        then:
+        assert false == controller.isIdeaFlowOpen()
+    }
 
 }

@@ -2,42 +2,41 @@ package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.ModelEntity
+import spock.lang.Specification
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
-class IdeaFlowWriterTest extends GroovyTestCase {
+class IdeaFlowWriterTest extends Specification {
 
 	static class DummyEvent extends ModelEntity {
 	}
 
 
-	private IdeaFlowWriter writer
+	private IdeaFlowWriter writer = new IdeaFlowWriter(new StringWriter())
 
-	void setUp() {
-		writer = new IdeaFlowWriter(new StringWriter())
-	}
-
-	void testWrite_ShouldErrorIfObjectContainsAdditionalProperty() {
+    void testWrite_ShouldErrorIfObjectContainsAdditionalProperty() {
+        given:
 		Conflict conflict = createConflict()
 		conflict.metaClass.newProperty = "value"
 
-		try {
-			writer.write(conflict)
-			fail()
-		} catch (RuntimeException ex) {
-			assert ex.message.contains("Object Conflict declares unknown properties=[newProperty]")
-		}
+        when:
+        writer.write(conflict)
+
+        then:
+        RuntimeException ex = thrown()
+        assert ex.message.contains("Object Conflict declares unknown properties=[newProperty]")
 	}
 
-	void testWrite_ShouldErrorIfObjectMissingDeclaredProperty() {
+    void testWrite_ShouldErrorIfObjectMissingDeclaredProperty() {
+        given:
 		DummyEvent dummy = new DummyEvent()
 
-		try {
-			writer.writeItem('dummy', dummy, ['created', 'missingProperty'])
-			fail()
-		} catch (RuntimeException ex) {
-			assert ex.message == "IdeaFlowWriter:write(DummyEvent) is configured to write out properties=[missingProperty] which are not declared in corresponding class."
-		}
+        when:
+        writer.writeItem('dummy', dummy, ['created', 'missingProperty'])
+
+        then:
+        RuntimeException ex = thrown()
+        assert ex.message == "IdeaFlowWriter:write(DummyEvent) is configured to write out properties=[missingProperty] which are not declared in corresponding class."
 	}
 
 }
