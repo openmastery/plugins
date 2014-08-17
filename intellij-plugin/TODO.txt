@@ -3,8 +3,6 @@ When user has deactivated their IDE for longer than 50 minutes, when they log an
 
 When in conflict, allow the rework button to pressed which ends the active conflict, prompts for resolution message which is also used as the rework message.  No dialog should be displayed to get a rework message.
 
-Remove pause button and resequence the buttons to do record, event, bands.
-
 Add multi-project support - if you have another intellij window active - receive events for all projects.  Recording enabled in one window to record all activity. Don't worry about general case for now.
 
 Change "Commit:" prefix to [Commit]

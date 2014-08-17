@@ -23,7 +23,7 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 
 	@Override
 	protected boolean isPresentationEnabled(AnActionEvent e) {
-		boolean enabled = isIdeaFlowOpenAndNotPaused(e)
+		boolean enabled = isIdeaFlowOpen(e)
 
 		if (enabled) {
 			BandType activeBandStartType = getActiveBandStartType(e)

@@ -5,7 +5,6 @@ import org.joda.time.DateTime
 class IdeaFlowModel {
 
 	List<ModelEntity> entityList = []
-	boolean isPaused = false
 	File file
 	DateTime created
 
@@ -48,7 +47,7 @@ class IdeaFlowModel {
 	}
 
 	private void addModelEntityInternal(ModelEntity modelEntity, Closure action) {
-		if (modelEntity && !isPaused) {
+		if (modelEntity) {
 			entityList.add(modelEntity)
 			action?.call()
 		}

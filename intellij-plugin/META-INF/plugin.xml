@@ -33,9 +33,6 @@
 		<action id="IdeaFlow.ToggleRework" class="com.ideaflow.intellij.action.ToggleRework"
 		        icon="/icons/rework.png">
 		</action>
-		<action id="IdeaFlow.TogglePause" class="com.ideaflow.intellij.action.TogglePause"
-		        icon="/icons/pause.png">
-		</action>
 
 		<action id="IdeaFlow.NewIFMFile" class="com.ideaflow.intellij.action.NewIfmFileAction"
 		        text="IFM File" description="Create new IFM file">
@@ -54,11 +51,10 @@
 		<group id="com.ideaflow" text="IdeaFlow Group" description="IdeaFlow action group">
 			<add-to-group group-id="MainToolBar" anchor="first"/>
 			<reference ref="IdeaFlow.ToggleOpenIdeaFlow"/>
-			<reference ref="IdeaFlow.TogglePause"/>
+			<reference ref="IdeaFlow.Note"/>
 			<reference ref="IdeaFlow.ToggleConflict"/>
 			<reference ref="IdeaFlow.ToggleLearning"/>
 			<reference ref="IdeaFlow.ToggleRework"/>
-			<reference ref="IdeaFlow.Note"/>
 			<separator/>
 		</group>
 	</actions>
