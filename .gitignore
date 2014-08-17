@@ -11,5 +11,6 @@ eclipse-plugin/plugins.jar
 intellij-plugin/ideaflow-plugin.zip
 visualizer/.sass-cache
 visualizer/target/
+visualizer/buildPlugins
 vagrant/.vagrant
 plugins/intellij/ideaflow-plugin.iml
