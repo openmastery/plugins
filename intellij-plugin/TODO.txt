@@ -1,14 +1,54 @@
-------- MVP
 
-add intellij plugin tests
+Remove pause button and resequence the buttons to do record, event, bands.
 
-------- BOOK RELEASE
+Add multi-project support - if you have another intellij window active - receive events for all projects.  Recording enabled in one window to record all activity. Don't worry about general case for now.
 
-Support 'by hand' process of generating an IFM file
+Change "Commit:" prefix to [Commit]
+
+Change conflict question to prompt with observation examples:
+
+What is causing <observation>?
+Will <observation> affect my current strategy? 
+
+----
+
+'context-switching' support - starting new IF recording will create an [active task context] drop down, and allow you to switch easily between multiple active tasks.  When the task is finished, it can be 'closed' and dropped from the active list.  The active list is essentially the WIP.
+
+Use cases:
+
+* Create new context - instead of the record on/off toggle button, have a non-toggle button that creates a new IF context.  Clicking the button should open a dialog that requests the project, user, taskId, and description.  Once the task is created, the taskId should display in a select box on the toolbar with the name of the task.
+
+* No context available - When no contexts are available, recording is disabled, all buttons are disabled except for the one to create a new context.
+
+* Close active context - Click the close button on the toolbar to close the active context.  If no other contexts are available, recording is disabled until one exists.  If another context is available, switch to the next context in the list. The button states (active lightbulbs) should change to that of the new active context.
+
+* Switch context - Select a different context from the drop down list.  Button state should switch to the new context.
+
+-----------
+
+Use case: How do you reopen something that was closed in the past?  If we type in the ids for the old ticket, it shouldn't "reinitialize" if the IFM already exists, or should it?  Maybe multiple initialization blocks is ok?  Maybe we just change to open/close?  But task switching otherwise doesn't register open/closes?
+
+Possible solution: Move the description and initialization stuff to the startRecording() element that occurs when the task is added (or re-added) to the active set.  Drop the "initialize" block.  These will show the "sessions" within the context.
+
+Save the description field to the IFM when the task is opened (or resumed?)
+
+
+Create a preference pane to be able to configure the base URL and basic metadata for default values: user, project.  These should be URL friendly since they will be used in the resource string
+
+Create a button to open active task context in IF visualizer.
+
+Visualizer (backend code change) - show last open conflict as running until the end of the IFM, even though it's still open.  The state of whether there is an active conflict or not should still report correctly.
+
+Multi-project support limitation - switching between active windows of the same project does not trigger file activity events and will not record correctly when switching back and forth.
+
+
+------- SUPPORT/MAINTENANCE STUFF
 
 Refactor tests to use builders
 
-Be able to configure the server that all the links goto
+Refactor tests to use spock
+
+add intellij plugin tests
 
 ------ FUTURE
 
