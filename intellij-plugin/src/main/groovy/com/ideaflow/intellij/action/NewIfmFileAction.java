@@ -8,7 +8,7 @@ import com.intellij.ide.actions.CreateElementActionBase;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.io.FileUtilRt;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -61,7 +61,7 @@ class NewIfmFileAction extends CreateElementActionBase {
 	}
 
 	PsiFile createFileFromTemplate(PsiDirectory directory, String fileName) {
-		String usedExtension = FileUtilRt.getExtension(fileName);
+		String usedExtension = FileUtil.getExtension(fileName);
 
 		if (IdeaFlowMapFileType.IFM_EXTENSION.equalsIgnoreCase(usedExtension) == false) {
 			fileName += "." + IdeaFlowMapFileType.IFM_EXTENSION;
