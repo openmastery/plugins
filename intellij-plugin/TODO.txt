@@ -1,6 +1,4 @@
 
-When in conflict, allow the rework button to pressed which ends the active conflict, prompts for resolution message which is also used as the rework message.  No dialog should be displayed to get a rework message.
-
 ---- REST API RELEASE
 
 'context-switching' support - starting new IF recording will create an [active task context] drop down, and allow you to switch easily between multiple active tasks.  When the task is finished, it can be 'closed' and dropped from the active list.  The active list is essentially the WIP.
