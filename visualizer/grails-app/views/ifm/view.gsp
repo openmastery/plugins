@@ -37,9 +37,16 @@
     registerStopWindowDragCallback(scrollToTimePosition);
     registerClickBandCallback(hello);
     refreshTimeline();
+
+    jQuery.ajax({
+        type:'POST',
+        url:'/visualizer/highlight/list',
+        success:function(data,textStatus){
+            jQuery('#contentPanel').html(data);},
+        error:function(XMLHttpRequest,textStatus,errorThrown){}
+    });
 </script>
 <div id="contentPanel">
-    <g:include controller="highlight" action="list" params="[controller:'highlight']"/>
 </div>
 
 </body>
