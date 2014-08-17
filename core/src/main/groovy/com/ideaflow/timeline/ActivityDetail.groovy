@@ -4,7 +4,7 @@ import com.ideaflow.model.EditorActivity
 import org.joda.time.DateTime
 
 
-class ActivityDetail implements TimeEntry {
+class ActivityDetail implements TimeEntry, Entity {
 
 	private EditorActivity editorActivity
 	final TimePosition time
@@ -25,4 +25,7 @@ class ActivityDetail implements TimeEntry {
 		editorActivity.modified
 	}
 
+	String getId() {
+		editorActivity.id
+	}
 }

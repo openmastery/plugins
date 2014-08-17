@@ -6,7 +6,7 @@ import com.ideaflow.model.Resolution
 import org.joda.time.DateTime
 
 
-class ConflictBand extends AbstractTimeBand {
+class ConflictBand extends AbstractTimeBand implements Entity {
 
 	private Conflict conflict
 	private Resolution resolution

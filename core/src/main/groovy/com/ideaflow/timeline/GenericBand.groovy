@@ -5,7 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
 import org.joda.time.DateTime
 
-class GenericBand extends AbstractTimeBand {
+class GenericBand extends AbstractTimeBand implements Entity {
 
 	BandStart bandStart
 	BandEnd bandEnd
