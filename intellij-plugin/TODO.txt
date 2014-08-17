@@ -46,8 +46,6 @@ Multi-project support limitation - switching between active windows of the same 
 
 Refactor tests to use builders
 
-Refactor tests to use spock
-
 add intellij plugin tests
 
 ------ FUTURE
