@@ -35,3 +35,54 @@ dependencies {
     runtime "org.grails.plugins:jquery-ui:1.8.24"
     runtime "org.grails.plugins:resources:1.2"
 }
+
+
+
+File uploadDir = new File(buildDir, 'upload')
+File standaloneJarFile = new File(projectDir, "target/standalone-${version}.jar")
+
+String ftpPassword = null
+task upload(dependsOn: ['prepareFilesForUpload']) {
+	doFirst {
+		def console = System.console()
+		if (console != null) {
+			ftpPassword = console.readPassword('> Please enter ideaflow.org FTP password: ') as String
+		} else {
+			throw new GradleException("System.console is null, make sure you're not running gradle in daemon mode")
+		}
+	}
+	doLast {
+		ant {
+			taskdef(name: 'ftp',
+					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+					classpath: configurations.ftpAntTask.asPath)
+			ftp(server: 'ideaflow.org', userid: 'ideaflow', password: ftpPassword, passive: 'yes') {
+				fileset(dir: 'build/upload')
+			}
+		}
+	}
+}
+
+task prepareFilesForUpload(dependsOn: ['executeBuildStandalone', 'copyStandaloneJarToUploadDir', 'copyStandaloneJarToUploadDirAsLatest'])
+
+task executeBuildStandalone << {
+    println "Building standalone jar..."
+    def process = "grails build-standalone".execute()
+    println process.text
+}
+
+task copyStandaloneJarToUploadDir(type: Copy) {
+	from standaloneJarFile
+	into uploadDir
+    rename { String fileName ->
+        fileName.replace("standalone", "visualizer")
+    }
+}
+
+task copyStandaloneJarToUploadDirAsLatest(type: Copy) {
+	from standaloneJarFile
+	into uploadDir
+    rename { String fileName ->
+        "visualizer-latest.jar"
+    }
+}
