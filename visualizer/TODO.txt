@@ -1,44 +1,55 @@
 ------ MVP
 
+Make icons for creating/ending context.
+
+Create a timeline view that shows Events, and all band comments all in chronological order.
+
+Put band comments in the detailed timeline
+
+Get IFM files to display using the server stashed files instead of the file path:
+
+* Make path parameter on the main page be a relative path to the directory, that should mostly fix it in the short term.
+
+* Make all subpages use a taskId so they don't open up different IFMs in the pane and do weird stuff.
+
+Make a page that displays a list of all IFM and their attributes.  Add some simple searching options to list all for a project or all for a user or all for a project and user.
+
+Default index page should list all Idea Flows.  Shouldn't load the files in order to make a list.  So make it lazy-init on demand.
+
+Add context information to the display - who, what, when
+
+Show dead-time on the timeline and session start/stop.
+
+Ability to easily collapse deadtime.
+
 ------ BOOK RELEASE
 
 Ability to open a conflict and record mistake type, cause, delay, notes.
 
+Edit events, conflicts, learning notes
+
+Edit bands, start/end band positions or creating new bands.  Seems like something you would correct on band detail.
+
+Add new bands
+
+Add new events
+
 Clean up overlapping timeline text so you can read it.
 
-Add the ability to sort by sequential or duration on highlights page.
-
-Ability to attach rework or learning to a conflict (which would effect sorting size)
+Attach rework to a conflict or group a set of conflicts together.  This would affect the sorting ranking size.
 
 Add a legend for the colors.
 
-Add context information to the IFM display like who, what, when
+----- FUTURE
 
-Edit event text
+Allow different users to share the same IF server
+* need editing to work
+* need to attach to git repository and automatically commit when edits are made or once a day?
+* Allow different users to have different IFMs opened
 
-Delete an event
+Attach a user login session to register a particular project URL
 
-Edit the comment on a highlight
-
-Create the ability to add a new highlight by picking the start/end activity
-
-Delete a highlight
-
-Create a process snippet timeband
-
------
-
-Create new page to list all available IFM files that can be opened
-
-Attach the list of IFM files available to a git repository
-
-Attach a user login session to use a particular git repository and allow different users to have different IFMs opened.
-
-Ability to update the server git repository
-
-Delete a file activity
-
-Show tooltips in timeline for event notes and timeband comments.
+Show task switching type of view
 
 Document: compile css with jruby (fix compasee error), fix the color display on highlights page
 
