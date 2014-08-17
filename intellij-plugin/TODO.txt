@@ -1,16 +1,23 @@
 
+DEFECT - fix commit functionality, throwing exception after multi-project changes.
+
+When user has deactivated their IDE for longer than 50 minutes, when they log an active event, prompt to find out if they were working or idle.  "Were you working during the last XXX minutes?" If the user was idle, remove the time-period from the IFM, or alternatively create a new element type "idle" that records the idle duration. 
+
+When in conflict, allow the rework button to pressed which ends the active conflict, prompts for resolution message which is also used as the rework message.  No dialog should be displayed to get a rework message.
+
 Remove pause button and resequence the buttons to do record, event, bands.
 
 Add multi-project support - if you have another intellij window active - receive events for all projects.  Recording enabled in one window to record all activity. Don't worry about general case for now.
 
 Change "Commit:" prefix to [Commit]
 
+----
 Change conflict question to prompt with observation examples:
 
 What is causing <observation>?
 Will <observation> affect my current strategy? 
 
-----
+---- REST API RELEASE 
 
 'context-switching' support - starting new IF recording will create an [active task context] drop down, and allow you to switch easily between multiple active tasks.  When the task is finished, it can be 'closed' and dropped from the active list.  The active list is essentially the WIP.
 
