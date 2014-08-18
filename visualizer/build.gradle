@@ -36,6 +36,9 @@
 //    runtime "org.grails.plugins:resources:1.2"
 //}
 
+repositories {
+	mavenCentral()
+}
 
 configurations {
 	ftpAntTask

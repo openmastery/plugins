@@ -6,6 +6,7 @@ import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Idle
 import com.ideaflow.model.ModelEntity
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
@@ -79,6 +80,16 @@ class TimelineFactory {
 		void addEntity(Note note) {
 			TimePosition timePosition = createTimePositionWithRelativeTimeAsOffset(note.created)
 			timeline.addEvent(new Event(timePosition, note))
+		}
+
+		void addEntity(Idle idle) {
+			if (idle.comment) {
+				Note note = new Note()
+				note.id = idle.id
+				note.comment = "[Idle] "+ idle.comment + "  ( " + Math.round(idle.duration / 60) + " minutes )"
+				note.created = idle.created
+				addEntity(note)
+			}
 		}
 
 		void addEntity(StateChange stateChange) {
