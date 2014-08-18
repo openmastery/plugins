@@ -37,6 +37,18 @@
 //}
 
 
+configurations {
+	ftpAntTask
+}
+
+dependencies {
+	ftpAntTask("org.apache.ant:ant-commons-net:1.9.3") {
+		module("commons-net:commons-net:1.4.1") {
+			dependencies "oro:oro:2.0.8:jar"
+		}
+	}
+}
+
 
 File uploadDir = new File(buildDir, 'upload')
 File standaloneJarFile = new File(projectDir, "target/standalone-${version}.jar")
