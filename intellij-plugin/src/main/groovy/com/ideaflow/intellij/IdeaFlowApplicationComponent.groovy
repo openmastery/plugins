@@ -76,7 +76,7 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 		private static final String IDLE_QUESTION_MESSAGE = "What were you doing?"
 
 		private static final Duration DEACTIVATION_THRESHOLD = Duration.standardMinutes(50)
-		private static final Duration IDLE_THRESHOLD = Duration.standardHours(12)
+		private static final Duration AUTO_IDLE_THRESHOLD = Duration.standardHours(12)
 
 		private DateTime deactivatedAt
 		private boolean promptingForIdleTime
@@ -90,12 +90,17 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 		}
 
 		void markActiveFileEventAsIdleIfDeactivationThresholdExceeded(Project project) {
+			Duration deactivationDuration = getDeactivationDuration()
+			if (!getIFMController().isIdeaFlowOpen() || !deactivationDuration) {
+				return
+			}
+
 			promptingForIdleTime = true
 			try {
-				if (isDeactivationThresholdExceeded(IDLE_THRESHOLD)) {
+				if (deactivationDuration.isLongerThan(AUTO_IDLE_THRESHOLD)) {
 					getIFMController().markActiveFileEventAsIdle("[Auto Idle]")
-				} else if (isDeactivationThresholdExceeded(DEACTIVATION_THRESHOLD)) {
-					if (wasDeactivationIdleTime(project)) {
+				} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
+					if (wasDeactivationIdleTime(project, deactivationDuration)) {
 						String comment = getIFMController().promptForInput(project, IDLE_TITLE, IDLE_QUESTION_MESSAGE)
 						getIFMController().markActiveFileEventAsIdle(comment)
 					}
@@ -106,26 +111,30 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 			}
 		}
 
-		private boolean wasDeactivationIdleTime(Project project) {
+		private Duration getDeactivationDuration() {
+			Duration deactivationDuration = null
+
+			if (deactivatedAt) {
+				long deactivationLength = DateTime.now().millis - deactivatedAt.millis
+				deactivationDuration = Duration.millis(deactivationLength)
+			}
+			deactivationDuration
+		}
+
+		private boolean wasDeactivationIdleTime(Project project, Duration deactivationDuration) {
 			PeriodFormatter formatter = new PeriodFormatterBuilder()
+					.appendDays()
+					.appendSuffix("d")
 					.appendHours()
 					.appendSuffix("h")
 					.appendMinutes()
 					.appendSuffix("m")
 					.toFormatter()
-			String formattedPeriod = formatter.print(DEACTIVATION_THRESHOLD.toPeriod())
+
+			String formattedPeriod = formatter.print(deactivationDuration.toPeriod())
 			String message = "Were you working during the last ${formattedPeriod}?"
 			int result = Messages.showYesNoDialog(project, message, IDLE_TITLE, null)
 			return result != 0
-		}
-
-		private boolean isDeactivationThresholdExceeded(Duration threshold) {
-			if (!deactivatedAt) {
-				return false
-			}
-
-			long deactivationTime = (DateTime.now().millis - deactivatedAt.millis)
-			deactivationTime >= threshold.millis
 		}
 	}
 
