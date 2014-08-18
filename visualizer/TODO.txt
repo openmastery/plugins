@@ -1,6 +1,10 @@
 ------ MVP
 
+DEFECT: upload fails silently when another version already exists - need to delete first.
+
 ---- REST STUFF left to do
+
+DEFECT - fix merge on rest branch: was having an issue where the highlight page seemed to be pulled from another IFM, 2 events on the page and highlights showed a list of highlights for another IFM.  How did I get in this state with the new REST model?  Is this repeatable?
 
 Make icons for creating/ending context.
 
@@ -10,9 +14,7 @@ Default index page should list all Idea Flows.  Shouldn't load the files in orde
 
 Add context information to the display - who, what, when
 
-Show dead-time on the timeline
-
-Show session start/stop.
+Reorganize our repo by project/user/task
 
 ------ BOOK RELEASE
 
@@ -32,7 +34,15 @@ Attach rework to a conflict or group a set of conflicts together.  This would af
 
 Add a legend for the colors.
 
+
 ----- FUTURE
+
+show idle time on the timeline
+
+show actual time on the timeline
+
+show start/stop session on a timeline
+
 
 Allow different users to share the same IF server
 * need editing to work
@@ -40,6 +50,8 @@ Allow different users to share the same IF server
 * Allow different users to have different IFMs opened
 
 Attach a user login session to register a particular project URL
+
+Allow activity to be reassigned to another task.
 
 Show task switching type of view
 
