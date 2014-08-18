@@ -1,10 +1,9 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
-File intellijDir = file('intellij')
 File uploadDir = new File(buildDir, 'upload')
-File pluginFile = new File(intellijDir, 'ideaflow-plugin.zip')
-File pluginXmlFile = new File(intellijDir, 'META-INF/plugin.xml')
+File pluginFile = new File(projectDir, 'ideaflow-plugin.zip')
+File pluginXmlFile = new File(projectDir, 'META-INF/plugin.xml')
 
 repositories {
 	mavenCentral()
