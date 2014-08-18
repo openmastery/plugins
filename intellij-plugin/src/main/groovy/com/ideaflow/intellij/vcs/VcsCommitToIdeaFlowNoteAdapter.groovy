@@ -117,8 +117,21 @@ class VcsCommitToIdeaFlowNoteAdapter extends ChangeListAdapter implements VcsLis
 
 	private VcsRoot getVcsRootForFile(VirtualFile file) {
 		allVcsRoots.find { VcsRoot root ->
-			file.path.startsWith(root.path.path)
+			isAncestorOf(root, file)
 		}
+	}
+
+	private boolean isAncestorOf(VcsRoot root, VirtualFile file) {
+		VirtualFile rootFile = root.path
+		VirtualFile pathToTest = file
+
+		while (pathToTest != null) {
+			if (rootFile == pathToTest) {
+				return true
+			}
+			pathToTest = pathToTest.parent
+		}
+		return false
 	}
 
 	private Map<VcsRoot, CommittedChangeList> getLastCommittedChangeListForAllVcsRoots() {
