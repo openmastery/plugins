@@ -41,6 +41,14 @@
 File uploadDir = new File(buildDir, 'upload')
 File standaloneJarFile = new File(projectDir, "target/standalone-${version}.jar")
 
+private String getVersion() {
+	project.file("application.properties").withReader { Reader reader ->
+		Properties applicationProps = new Properties()
+		applicationProps.load(reader)
+		applicationProps["app.version"]
+	}
+}
+
 String ftpPassword = null
 task upload(dependsOn: ['prepareFilesForUpload']) {
 	doFirst {
