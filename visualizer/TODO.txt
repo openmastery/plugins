@@ -1,16 +1,8 @@
 ------ MVP
 
+---- REST STUFF left to do
+
 Make icons for creating/ending context.
-
-Create a timeline view that shows Events, and all band comments all in chronological order.
-
-Put band comments in the detailed timeline
-
-Get IFM files to display using the server stashed files instead of the file path:
-
-* Make path parameter on the main page be a relative path to the directory, that should mostly fix it in the short term.
-
-* Make all subpages use a taskId so they don't open up different IFMs in the pane and do weird stuff.
 
 Make a page that displays a list of all IFM and their attributes.  Add some simple searching options to list all for a project or all for a user or all for a project and user.
 
@@ -18,15 +10,15 @@ Default index page should list all Idea Flows.  Shouldn't load the files in orde
 
 Add context information to the display - who, what, when
 
-Show dead-time on the timeline and session start/stop.
+Show dead-time on the timeline
 
-Ability to easily collapse deadtime.
+Show session start/stop.
 
 ------ BOOK RELEASE
 
 Ability to open a conflict and record mistake type, cause, delay, notes.
 
-Edit events, conflicts, learning notes
+Edit events, conflicts, learning band notes
 
 Edit bands, start/end band positions or creating new bands.  Seems like something you would correct on band detail.
 
