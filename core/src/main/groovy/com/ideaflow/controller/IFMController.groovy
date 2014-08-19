@@ -20,10 +20,17 @@ class IFMController<T> {
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
 	private IDEService<T> ideService
+	// TODO: create IFMWorkingSet and move this stuff there
 	private List<File> openIdeaFlowFiles = []
+	private IFMWorkingSetListener workingSetListener
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
+	}
+
+	// TODO: should be addWorkingSetListener
+	void setWorkingSetListener(IFMWorkingSetListener workingSetListener) {
+		this.workingSetListener = workingSetListener
 	}
 
 	List<File> getOpenIdeaFlowFiles() {
@@ -107,9 +114,13 @@ class IFMController<T> {
 			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
 		}
 
+		// TODO: working set needs concept of 'active' ifm which should trigger a change
+		// event, even if the openIdeaFlowFiles list did not actually change
+		workingSetListener.onWorkingSetChanged()
 		if (!openIdeaFlowFiles.contains(ideaFlowModel.file)) {
 			openIdeaFlowFiles.add(ideaFlowModel.file)
 		}
+
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -119,7 +130,11 @@ class IFMController<T> {
 		if (activeIdeaFlowModel) {
 			suspendActiveIdeaFlow(context)
 
-			openIdeaFlowFiles.remove(ideaFlowModel.file)
+			// TODO: working set cleanup
+			if (openIdeaFlowFiles.remove(ideaFlowModel.file)) {
+				workingSetListener.onWorkingSetChanged()
+			}
+
 			if (openIdeaFlowFiles.isEmpty()) {
 				ideaFlowModel = null
 				eventToIntervalHandler = null

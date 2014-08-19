@@ -23,9 +23,14 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 	private IDEService<Project> ideService
 	private IFMController<Project> controller
 	private MessageBusConnection appConnection
+	private IdeaFlowState applicationState
 
 	static IFMController<Project> getIFMController() {
 		ApplicationManager.getApplication().getComponent(NAME).controller
+	}
+
+	static IdeaFlowState getIFMState() {
+		ApplicationManager.getApplication().getComponent(NAME).applicationState
 	}
 
 	static Icon getIcon(String path) {
@@ -41,6 +46,7 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 	void initComponent() {
 		ideService = new IDEServiceImpl()
 		controller = new IFMController(ideService)
+ 		applicationState = new IdeaFlowState(controller)
 
 		ApplicationListener applicationListener = new ApplicationListener()
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()

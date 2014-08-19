@@ -1,3 +1,6 @@
+
+Clean up working set stuff
+
 ---- BUILD STUFF
 
 Release process for plugin, current problems:

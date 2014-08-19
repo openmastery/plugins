@@ -49,6 +49,10 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
 
 		vcsCommitToIdeaFlowNoteAdapter.connect()
+
+		if (getController().openIdeaFlowFiles.isEmpty()) {
+			IdeaFlowApplicationComponent.getIFMState().restoreActiveState(project)
+		}
 	}
 
 	void projectClosed() {
