@@ -81,13 +81,14 @@ class TestIFMController extends Specification {
 	def "newIdeaFlow should suspend existing idea flow but retain old file in open file list"() {
 		when:
 		File oldModelFile = controller.activeIdeaFlowModel.file
+		File newModelFile = File.createTempFile("tmp2", ".ifm")
 		IdeaFlowModel oldActiveModel = controller.activeIdeaFlowModel
-		controller.newIdeaFlow("context", File.createTempFile("tmp2", ".ifm"))
+		controller.newIdeaFlow("context", newModelFile)
 
 		then:
 		controller.activeIdeaFlowModel != oldActiveModel
+		controller.activeIdeaFlowModel.file == newModelFile
 		controller.openIdeaFlowFiles == [oldModelFile, controller.activeIdeaFlowModel.file]
-		oldActiveModel.entityList[-1] == new StateChange(StateChangeType.stopIdeaFlowRecording)
 	}
 
 	def "closeIdeaFlow should remove file from open file list"() {

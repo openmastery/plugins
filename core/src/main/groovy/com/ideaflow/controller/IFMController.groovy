@@ -116,7 +116,9 @@ class IFMController<T> {
 
 		// TODO: working set needs concept of 'active' ifm which should trigger a change
 		// event, even if the openIdeaFlowFiles list did not actually change
-		workingSetListener.onWorkingSetChanged()
+		if (workingSetListener) {
+			workingSetListener.onWorkingSetChanged()
+		}
 		if (!openIdeaFlowFiles.contains(ideaFlowModel.file)) {
 			openIdeaFlowFiles.add(ideaFlowModel.file)
 		}
@@ -132,7 +134,9 @@ class IFMController<T> {
 
 			// TODO: working set cleanup
 			if (openIdeaFlowFiles.remove(ideaFlowModel.file)) {
-				workingSetListener.onWorkingSetChanged()
+				if (workingSetListener) {
+					workingSetListener.onWorkingSetChanged()
+				}
 			}
 
 			if (openIdeaFlowFiles.isEmpty()) {
