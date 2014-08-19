@@ -29,7 +29,7 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 	}
 
 	static Icon getIcon(String path) {
-		IconLoader.getIcon(path, IdeaFlowApplicationComponent.class)
+		IconLoader.getIcon("/icons/${path}", IdeaFlowApplicationComponent.class)
 	}
 
 	@Override

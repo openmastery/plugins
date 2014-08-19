@@ -25,6 +25,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	private static class ActivateIdeaFlowAction extends AnAction {
 
+		private static final Icon ACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow.png")
+		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("inactive.png")
+
 		private Project project
 		private File ifmFile
 
@@ -39,14 +42,23 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		public void actionPerformed(final AnActionEvent e) {
 			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, ifmFile)
 		}
+
+		@Override
+		void update(AnActionEvent e) {
+			super.update(e)
+
+			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+			File activeIfmFile = controller.activeIdeaFlowModel?.file
+			e.presentation.icon = (activeIfmFile == ifmFile) ? ACTIVE_ICON : INACTIVE_ICON
+		}
 	}
 
 	private static class OpenActiveInBrowserAction extends AnAction {
 
-		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("/icons/browse.png")
+		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
 
 		OpenActiveInBrowserAction() {
-			getTemplatePresentation().setText("Open Active in Browser")
+			getTemplatePresentation().setText("Open Visualizer")
 			getTemplatePresentation().setDescription("Open the currently selected IdeaFlow map in preferred browser")
 			getTemplatePresentation().setIcon(BROWSE_ICON)
 		}
@@ -62,17 +74,17 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		}
 	}
 
-	private static class CloseActivateIdeaFlowAction extends AnAction {
+	private static class RemoveIdeaFlowAction extends AnAction {
 
-		private static final Icon DEACTIVATE_ICON = IdeaFlowApplicationComponent.getIcon("/icons/deactivate.png")
+		private static final Icon REMOVE_IDEAFLOW_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_remove.png")
 
 		private Project project
 
-		public CloseActivateIdeaFlowAction(Project project) {
+		public RemoveIdeaFlowAction(Project project) {
 			this.project = project
-			getTemplatePresentation().setText("Close Active")
-			getTemplatePresentation().setDescription("Close Active IdeaFlow")
-			getTemplatePresentation().setIcon(DEACTIVATE_ICON)
+			getTemplatePresentation().setText("Remove")
+			getTemplatePresentation().setDescription("Remove Active IdeaFlow")
+			getTemplatePresentation().setIcon(REMOVE_IDEAFLOW_ICON)
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
@@ -95,7 +107,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 			actionGroup.addSeparator();
 			actionGroup.add(new OpenActiveInBrowserAction())
-			actionGroup.add(new CloseActivateIdeaFlowAction(project))
+			actionGroup.add(new RemoveIdeaFlowAction(project))
 		}
 		return actionGroup
 	}

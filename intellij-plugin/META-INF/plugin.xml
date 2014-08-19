@@ -42,11 +42,11 @@
 			<add-to-group group-id="NewGroup" anchor="last"/>
 		</action>
 
-		<action id="IdeaFlow.ActivateIdeaFlow" class="com.ideaflow.intellij.action.ActivateIdeaFlowAction" text="Activate IdeaFlow"
-		        icon="/icons/ideaflow.png">
+		<action id="IdeaFlow.ActivateIdeaFlow" class="com.ideaflow.intellij.action.ActivateIdeaFlowAction" text="Add IdeaFlow"
+		        icon="/icons/ideaflow_add.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
-		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open IFM in Browser"
+		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open Visualizer"
 		        description="Open the currently selected IdeaFlow map in preferred browser" icon="/icons/browse.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 		</action>
