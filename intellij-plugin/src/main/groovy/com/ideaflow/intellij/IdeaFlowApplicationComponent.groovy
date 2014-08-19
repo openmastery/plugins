@@ -105,9 +105,12 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 				if (deactivationDuration.isLongerThan(AUTO_IDLE_THRESHOLD)) {
 					getIFMController().markActiveFileEventAsIdle("[Auto Idle]")
 				} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
-					if (wasDeactivationIdleTime(project, deactivationDuration)) {
-						String comment = getIFMController().promptForInput(project, IDLE_TITLE, IDLE_QUESTION_MESSAGE)
+					boolean wasIdleTime = wasDeactivationIdleTime(project, deactivationDuration)
+					String comment = getIFMController().promptForInput(project, IDLE_TITLE, IDLE_QUESTION_MESSAGE)
+					if (wasIdleTime) {
 						getIFMController().markActiveFileEventAsIdle(comment)
+					} else {
+						getIFMController().addNote(project, comment)
 					}
 				}
 			} finally {
