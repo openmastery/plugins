@@ -1,2 +1,3 @@
 include 'core'
 include 'intellij-plugin'
+include 'visualizer'

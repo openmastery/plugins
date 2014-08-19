@@ -86,12 +86,26 @@ task upload(dependsOn: ['prepareFilesForUpload']) {
 	}
 }
 
-task prepareFilesForUpload(dependsOn: ['executeBuildStandalone', 'copyStandaloneJarToUploadDir', 'copyStandaloneJarToUploadDirAsLatest'])
+task prepareFilesForUpload(dependsOn: ['executeBuildStandalone', 'copyJarsToUploadDir'])
 
-task executeBuildStandalone << {
+task cleanGrailsIvyCache(type: Delete) {
+	delete new File(System.getProperty("user.home"), ".grails/ivy-cache/${project(":core").group}".toString())
+}
+
+task cleanMavenTarget(type: Delete) {
+	delete file('target')
+}
+
+task prepareCoreLib(dependsOn: [':core:check', ':core:publishLocal'])
+
+task executeBuildStandalone(dependsOn: ['cleanGrailsIvyCache', 'cleanMavenTarget', 'prepareCoreLib']) << {
     println "Building standalone jar..."
     def process = "grails build-standalone".execute()
     println process.text
+}
+
+task copyJarsToUploadDir(dependsOn: ['copyStandaloneJarToUploadDir', 'copyStandaloneJarToUploadDirAsLatest']) {
+	mustRunAfter executeBuildStandalone
 }
 
 task copyStandaloneJarToUploadDir(type: Copy) {
