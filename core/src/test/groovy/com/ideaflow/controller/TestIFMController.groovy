@@ -1,6 +1,9 @@
 package com.ideaflow.controller
 
+import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Idle
+import com.ideaflow.model.StateChange
+import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification
@@ -13,6 +16,7 @@ class TestIFMController extends Specification {
 	IFMController controller = new IFMController(ideService)
 
 	def setup() {
+		DateTimeUtils.setCurrentMillisFixed(NOW)
 		controller.newIdeaFlow("string", File.createTempFile("tmp", ".ifm"))
 	}
 
@@ -50,7 +54,6 @@ class TestIFMController extends Specification {
 	def "markActiveFileEventAsIdle should record the active event as an idle event"() {
 		given:
 		controller.activeIdeaFlowModel.entityList = []
-		DateTimeUtils.setCurrentMillisFixed(NOW)
 		controller.startFileEvent(null, "some-event")
 
 		when:
@@ -73,6 +76,37 @@ class TestIFMController extends Specification {
 
 		then:
 		assert controller.getActiveIdeaFlowModel().getEntityList() == []
+	}
+
+	def "newIdeaFlow should suspend existing idea flow but retain old file in open file list"() {
+		when:
+		File oldModelFile = controller.activeIdeaFlowModel.file
+		IdeaFlowModel oldActiveModel = controller.activeIdeaFlowModel
+		controller.newIdeaFlow("context", File.createTempFile("tmp2", ".ifm"))
+
+		then:
+		controller.activeIdeaFlowModel != oldActiveModel
+		controller.openIdeaFlowFiles == [oldModelFile, controller.activeIdeaFlowModel.file]
+		oldActiveModel.entityList[-1] == new StateChange(StateChangeType.stopIdeaFlowRecording)
+	}
+
+	def "closeIdeaFlow should remove file from open file list"() {
+		when:
+		controller.closeIdeaFlow("context")
+
+		then:
+		controller.openIdeaFlowFiles == []
+	}
+
+	def "should not add multiple files to open file list if newIdeaFlow called with same file twice"() {
+		given:
+		File oldModelFile = controller.activeIdeaFlowModel.file
+
+		when:
+		controller.newIdeaFlow("string", oldModelFile)
+
+		then:
+		controller.openIdeaFlowFiles == [oldModelFile]
 	}
 
 }

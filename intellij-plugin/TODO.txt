@@ -10,6 +10,16 @@ When core is updated visualizer doesn't automatically pull in the latest depende
 
 Uploading visualizer jar requires wiping out old version first or replacement doesn't work
 
+Context-Switching - Phase 1 is to be able to have multiple IFMs open simultaneously, then easily switch between them via a combo box.
+
+* Have to be able to close an IFM to take it off of select box.  A close button would be available to the right of the combo box with a big X.
+
+* A flower icon to the left of the combo box would cause a new
+
+
+
+Save/restore state on IDE shutdown
+
 ---- REST API RELEASE
 
 'context-switching' support - starting new IF recording will create an [active task context] drop down, and allow you to switch easily between multiple active tasks.  When the task is finished, it can be 'closed' and dropped from the active list.  The active list is essentially the WIP.

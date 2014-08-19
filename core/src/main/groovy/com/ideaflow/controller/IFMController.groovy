@@ -20,9 +20,14 @@ class IFMController<T> {
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
 	private IDEService<T> ideService
+	private List<File> openIdeaFlowFiles = []
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
+	}
+
+	List<File> getOpenIdeaFlowFiles() {
+		openIdeaFlowFiles.clone() as List
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
@@ -88,6 +93,8 @@ class IFMController<T> {
 	}
 
 	void newIdeaFlow(T context, File file) {
+		suspendActiveIdeaFlow(context)
+
 		file = addExtension(file)
 		if (ideService.fileExists(context, file)) {
 			println("Resuming existing IdeaFlow: ${file.absolutePath}")
@@ -100,6 +107,9 @@ class IFMController<T> {
 			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
 		}
 
+		if (!openIdeaFlowFiles.contains(ideaFlowModel.file)) {
+			openIdeaFlowFiles.add(ideaFlowModel.file)
+		}
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -107,12 +117,23 @@ class IFMController<T> {
 
 	void closeIdeaFlow(T context) {
 		if (activeIdeaFlowModel) {
+			suspendActiveIdeaFlow(context)
+
+			openIdeaFlowFiles.remove(ideaFlowModel.file)
+			if (openIdeaFlowFiles.isEmpty()) {
+				ideaFlowModel = null
+				eventToIntervalHandler = null
+			} else {
+				newIdeaFlow(context, openIdeaFlowFiles.first())
+			}
+		}
+	}
+
+	private void suspendActiveIdeaFlow(T context) {
+		if (activeIdeaFlowModel) {
 			endFileEvent(null)
 			addStateChange(context, StateChangeType.stopIdeaFlowRecording)
 			flush(context)
-
-			ideaFlowModel = null
-			eventToIntervalHandler = null
 		}
 	}
 
