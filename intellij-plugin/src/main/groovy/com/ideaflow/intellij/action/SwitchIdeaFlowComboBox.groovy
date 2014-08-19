@@ -26,7 +26,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 	private static class ActivateIdeaFlowAction extends AnAction {
 
 		private static final Icon ACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow.png")
-		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("inactive.png")
+		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_inactive.png")
 
 		private Project project
 		private File ifmFile
@@ -36,7 +36,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			this.ifmFile = ifmFile
 
 			getTemplatePresentation().setText(ifmFile.name, false)
-			getTemplatePresentation().setDescription("Activate ${ifmFile.name}")
+			getTemplatePresentation().setDescription("Set ${ifmFile.name} as Active IdeaFlow")
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
@@ -58,8 +58,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
 
 		OpenActiveInBrowserAction() {
-			getTemplatePresentation().setText("Open Visualizer")
-			getTemplatePresentation().setDescription("Open the currently selected IdeaFlow map in preferred browser")
+			getTemplatePresentation().setText("Open in Visualizer")
+			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
 			getTemplatePresentation().setIcon(BROWSE_ICON)
 		}
 
@@ -82,8 +82,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		public RemoveIdeaFlowAction(Project project) {
 			this.project = project
-			getTemplatePresentation().setText("Remove")
-			getTemplatePresentation().setDescription("Remove Active IdeaFlow")
+			getTemplatePresentation().setText("Remove from WorkingSet")
+			getTemplatePresentation().setDescription("Remove Active IdeaFlow from WorkingSet")
 			getTemplatePresentation().setIcon(REMOVE_IDEAFLOW_ICON)
 		}
 
