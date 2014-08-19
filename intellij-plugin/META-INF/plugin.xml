@@ -21,9 +21,6 @@
 	</project-components>
 
 	<actions>
-		<action id="IdeaFlow.ToggleOpenIdeaFlow" class="com.ideaflow.intellij.action.ToggleOpenIdeaFlow"
-		        icon="/icons/record.png">
-		</action>
 		<action id="IdeaFlow.Note" class="com.ideaflow.intellij.action.CreateEventNoteAction" text="Create Event Note"
 		        description="Create an event note on the active IdeaFlow map" icon="/icons/note.png">
 		</action>
@@ -46,11 +43,11 @@
 		</action>
 
 		<action id="IdeaFlow.ActivateIdeaFlow" class="com.ideaflow.intellij.action.ActivateIdeaFlowAction" text="Activate IdeaFlow"
-		        icon="/icons/record.png">
+		        icon="/icons/ideaflow.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
 		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open IFM in Browser"
-		        description="Open the currently selected IdeaFlow map in preferred browser" icon="/icons/ideaflow.png">
+		        description="Open the currently selected IdeaFlow map in preferred browser" icon="/icons/browse.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 		</action>
 

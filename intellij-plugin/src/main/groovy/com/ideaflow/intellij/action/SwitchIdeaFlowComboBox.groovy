@@ -10,12 +10,14 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
+import javax.swing.Icon
 import javax.swing.JComponent
 
 @Mixin(ActionSupport)
 class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	private static class ActivateIdeaFlowAction extends AnAction {
+
 		private Project project
 		private File ifmFile
 
@@ -34,9 +36,12 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	private static class OpenActiveInBrowserAction extends AnAction {
 
+		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("/icons/browse.png")
+
 		OpenActiveInBrowserAction() {
 			getTemplatePresentation().setText("Open Active in Browser")
 			getTemplatePresentation().setDescription("Open the currently selected IdeaFlow map in preferred browser")
+			getTemplatePresentation().setIcon(BROWSE_ICON)
 		}
 
 		@Override
@@ -61,12 +66,16 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 	}
 
 	private static class CloseActivateIdeaFlowAction extends AnAction {
+
+		private static final Icon DEACTIVATE_ICON = IdeaFlowApplicationComponent.getIcon("/icons/deactivate.png")
+
 		private Project project
 
 		public CloseActivateIdeaFlowAction(Project project) {
 			this.project = project
 			getTemplatePresentation().setText("Close Active")
 			getTemplatePresentation().setDescription("Close Active IdeaFlow")
+			getTemplatePresentation().setIcon(DEACTIVATE_ICON)
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
@@ -82,12 +91,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		if (project != null) {
 			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
-			File activeFile = controller.activeIdeaFlowModel.file
 
 			for (File ifmFile : controller.getOpenIdeaFlowFiles()) {
-				if (ifmFile != activeFile) {
-					actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
-				}
+				actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
 			}
 
 			actionGroup.addSeparator();
@@ -103,7 +109,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		IFMController controller = getIFMController(e)
 		if (controller) {
-			e.presentation.text = controller.getActiveIdeaFlowName()
+			boolean enabled = isIdeaFlowOpenAndNotPaused(e)
+			e.presentation.enabled = enabled
+			e.presentation.text = enabled ? controller.getActiveIdeaFlowName() : ""
 		}
 	}
 

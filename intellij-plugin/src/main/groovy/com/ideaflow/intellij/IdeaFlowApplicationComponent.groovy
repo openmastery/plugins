@@ -7,11 +7,12 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.util.messages.MessageBusConnection
+import javax.swing.Icon
 import org.joda.time.DateTime
 import org.joda.time.Duration
-import org.joda.time.Period
 import org.joda.time.format.PeriodFormatter
 import org.joda.time.format.PeriodFormatterBuilder
 
@@ -25,6 +26,10 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 
 	static IFMController<Project> getIFMController() {
 		ApplicationManager.getApplication().getComponent(NAME).controller
+	}
+
+	static Icon getIcon(String path) {
+		IconLoader.getIcon(path, IdeaFlowApplicationComponent.class)
 	}
 
 	@Override
