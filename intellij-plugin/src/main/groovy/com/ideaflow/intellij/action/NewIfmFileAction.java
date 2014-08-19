@@ -80,7 +80,6 @@ class NewIfmFileAction extends CreateElementActionBase {
 
 		ApplicationManager.getApplication().invokeLater(new Runnable() {
 			public void run() {
-				controller.closeIdeaFlow(project);
 				controller.newIdeaFlow(project, file);
 			}
 		});
