@@ -24,24 +24,6 @@ dependencies {
 }
 
 
-idea {
-	module {
-		name = 'ideaflow-plugin'
-
-		iml {
-			withXml {
-				Node module = it.asNode()
-				module['@type'] = 'PLUGIN_MODULE'
-				module.appendNode('component', [name: 'DevKit.ModuleBuildProperties', url: 'file://$MODULE_DIR$/META-INF/plugin.xml'])
-
-				Node moduleRootManager = module.component.find { it['@name'] == 'ModuleRootManager' }
-				if (moduleRootManager) {
-					module.remove(moduleRootManager)
-				}
-			}
-		}
-	}
-}
 
 
 String ftpPassword = null
@@ -133,5 +115,56 @@ task assertPackagedPluginVersionMatchesVersionInSource(dependsOn: extractPluginX
 	if (sourcePluginVersion != packagedPluginVersion) {
 		throw new GradleException("Plugin source version=${sourcePluginVersion} does not match packaged version=${packagedPluginVersion} - "
 				+ "make sure you prepared the plugin via IDEA before uploading (see Readme.md)")
+	}
+}
+
+
+
+
+/**
+ * IDEA project file generation, with a convoluated attempt to preserve the IDEA JDK setting
+ */
+
+String getModuleJdkName() {
+	File moduleFile = file('ideaflow-plugin.iml')
+	String moduleJdkName = null
+	if (moduleFile.exists()) {
+		def module = new XmlParser().parseText(moduleFile.text)
+		def jdkNode = module.component.orderEntry.find { it['@type'] == 'jdk' }
+		if (jdkNode) {
+			moduleJdkName = jdkNode['@jdkName']
+		}
+	}
+	moduleJdkName
+}
+String moduleJdkName = getModuleJdkName()
+
+idea {
+	module {
+		name = 'ideaflow-plugin'
+
+		iml {
+			whenMerged { module ->
+				if (moduleJdkName) {
+					module.jdkName = moduleJdkName
+				}
+			}
+
+			withXml {
+				Node module = it.asNode()
+				module['@type'] = 'PLUGIN_MODULE'
+				module.appendNode('component', [name: 'DevKit.ModuleBuildProperties', url: 'file://$MODULE_DIR$/META-INF/plugin.xml'])
+
+				Node moduleRootManager = module.component.find { it['@name'] == 'ModuleRootManager' }
+				if (moduleRootManager) {
+					module.remove(moduleRootManager)
+				}
+
+				def jdkNode = module.component.orderEntry.find { it['@type'] == 'jdk' }
+				if (jdkNode) {
+					jdkNode['@jdkType'] = "IDEA JDK"
+				}
+			}
+		}
 	}
 }
