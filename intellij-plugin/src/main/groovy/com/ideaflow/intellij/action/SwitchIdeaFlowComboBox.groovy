@@ -2,7 +2,6 @@ package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
-import com.intellij.ide.BrowserUtil
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -13,6 +12,14 @@ import com.intellij.openapi.project.Project
 import javax.swing.Icon
 import javax.swing.JComponent
 
+/**
+ * NOTE: all events generated from dynamically created actions seem to have the most recently opened project attached.
+ * So, if multiple projects are opened, the activate/open/close actions invoked in one project could refer to the
+ * other project when the event is processed.  Sucks but understandable since actions are generallly meant to be
+ * instantiated via plugin.xml, not dynamically.  As a workaround, pass the project to the actions instead of
+ * relying on the project associated with the event.
+ * This applies to all the static inner classes but not to the ComboBoxAction itself since it's created in plugin.xml
+ */
 @Mixin(ActionSupport)
 class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
@@ -50,18 +57,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			File activeIfmFile = controller.activeIdeaFlowModel?.file
 
 			if (activeIfmFile) {
-				openInBrowser(activeIfmFile)
+				OpenInBrowserAction.openInBrowser(activeIfmFile)
 			}
-		}
-
-		public void openInBrowser(File file) {
-			String ifmUrl = buildIfmUrl(file)
-			BrowserUtil.open(ifmUrl)
-		}
-
-		// TODO: centralize this
-		private String buildIfmUrl(File file) {
-			return "http://localhost:8989/visualizer/ifm/open?filePath=${file.path}"
 		}
 	}
 

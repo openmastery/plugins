@@ -26,13 +26,17 @@ class OpenInBrowserAction extends AnAction {
 		}
 	}
 
-	public void openInBrowser(VirtualFile file) {
-		String ifmUrl = buildIfmUrl(file)
-		BrowserUtil.open(ifmUrl)
+	public static void openInBrowser(VirtualFile file) {
+		openPathInBrowser(file.path)
 	}
 
-	private String buildIfmUrl(VirtualFile file) {
-		return "http://localhost:8989/visualizer/ifm/open?filePath=${file.path}"
+	public static void openInBrowser(File file) {
+		openPathInBrowser(file.absolutePath)
+	}
+
+	private static void openPathInBrowser(String path) {
+		String ifmUrl = "http://localhost:8989/visualizer/ifm/open?filePath=${path}"
+		BrowserUtil.open(ifmUrl)
 	}
 
 }
