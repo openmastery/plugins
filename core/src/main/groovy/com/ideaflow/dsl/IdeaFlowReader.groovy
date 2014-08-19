@@ -16,9 +16,36 @@ import org.joda.time.format.DateTimeFormatter
 
 class IdeaFlowReader {
 
+	/**
+	 * If the dsl content is too large, groovy will fail to compile the script due to jvm method
+	 * length restrictions (java.lang.ClassFormatError: Invalid method Code length xxx) so chunk
+	 * the content by lines and load it one block at a time.
+	 */
+	private static final int DEFAULT_CHUNK_SIZE = 250
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator")
+
+	private int chunkSize
+
+	IdeaFlowReader() {
+		this(DEFAULT_CHUNK_SIZE)
+	}
+
+	IdeaFlowReader(int chunkSize) {
+		this.chunkSize = chunkSize
+	}
+
 	IdeaFlowModel readModel(File modelFile, String dslContent) {
 		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(modelFile)
-		String wrappedDslContent = "ideaFlowModel {${dslContent}}"
+
+		for (List<String> dslContentChunk : dslContent.readLines().collate(chunkSize)) {
+			String partialDslContent = dslContentChunk.join(LINE_SEPARATOR)
+			readPartialModel(loader, partialDslContent)
+		}
+		loader.model
+	}
+
+	private void readPartialModel(IdeaFlowModelLoader loader, String partialDslContent) {
+		String wrappedDslContent = "ideaFlowModel {${partialDslContent}}"
 		Script dslScript = new GroovyShell().parse(wrappedDslContent)
 
 		dslScript.metaClass = createEMC(dslScript.class, { ExpandoMetaClass emc ->
@@ -30,7 +57,6 @@ class IdeaFlowReader {
 			}
 		})
 		dslScript.run()
-		loader.model
 	}
 
 	private ExpandoMetaClass createEMC(Class clazz, Closure cl) {
