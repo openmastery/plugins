@@ -147,7 +147,6 @@ class IFMController<T> {
 	private void suspendActiveIdeaFlow(T context) {
 		if (activeIdeaFlowModel) {
 			endFileEvent(null)
-			addStateChange(context, StateChangeType.stopIdeaFlowRecording)
 			flush(context)
 		}
 	}
