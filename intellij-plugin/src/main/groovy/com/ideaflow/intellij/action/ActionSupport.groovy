@@ -15,12 +15,16 @@ class ActionSupport {
 
 	private void disableWhenNoIdeaFlow(AnActionEvent e) {
 		Presentation presentation = e.getPresentation()
-		presentation.setEnabled(isIdeaFlowOpen(e));
+		presentation.setEnabled(isIdeaFlowOpenAndNotPaused(e));
 	}
 
 	private void disableWhenOpenIdeaFlow(AnActionEvent e) {
 		Presentation presentation = e.getPresentation()
 		presentation.setEnabled(!isIdeaFlowOpen(e));
+	}
+
+	private boolean isIdeaFlowOpenAndNotPaused(AnActionEvent e) {
+		isIdeaFlowOpen(e) && !isPaused(e)
 	}
 
 	private IFMController getIFMController(AnActionEvent e) {
@@ -62,6 +66,14 @@ class ActionSupport {
 
 	private boolean isOpenConflict(AnActionEvent e) {
 		getIFMController(e)?.isOpenConflict()
+	}
+
+	private boolean isNotPaused(AnActionEvent e) {
+		!isPaused(e)
+	}
+
+	private boolean isPaused(AnActionEvent e) {
+		getIFMController(e)?.isPaused()
 	}
 
 	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {

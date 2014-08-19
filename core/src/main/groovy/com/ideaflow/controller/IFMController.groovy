@@ -159,6 +159,23 @@ class IFMController<T> {
 		eventToIntervalHandler?.endActiveEventAsIdle(comment)
 	}
 
+	void pause(T context) {
+		println("Paused")
+		endFileEvent(null)
+		flush(context)
+		activeIdeaFlowModel?.isPaused = true
+	}
+
+	void resume(T context) {
+		println("Resumed")
+		activeIdeaFlowModel?.isPaused = false
+		startFileEventForCurrentFile(context)
+	}
+
+	boolean isPaused() {
+		activeIdeaFlowModel?.isPaused
+	}
+
 	private File addExtension(File file) {
 		File fileWithExtension = file
 		if (file.name.endsWith(".ifm") == false) {

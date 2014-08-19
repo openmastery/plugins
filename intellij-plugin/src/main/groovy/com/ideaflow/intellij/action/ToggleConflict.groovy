@@ -14,7 +14,7 @@ class ToggleConflict extends IdeaFlowToggleAction {
 
 	@Override
 	protected boolean isPresentationEnabled(AnActionEvent e) {
-		return isIdeaFlowOpen(e)
+		return isIdeaFlowOpenAndNotPaused(e)
 	}
 
 	@Override
