@@ -7,13 +7,7 @@ Release process for plugin, current problems:
 
 Since building in Intellij, need to rebuild the idea project if any dependencies change (this time we added spock) of both core and intellij plugin.  Wasn't in the process, needs to be a process step.
 
-When plugin project is regenerated, messes up the SDK for the project and have to map back to Idea IC.
-
-When core is updated visualizer doesn't automatically pull in the latest dependencies.  Have to wipe out the grails cached version and run a task to pull in the newly published jar.   
-
 Uploading visualizer jar requires wiping out old version first or replacement doesn't work
-
-Save/restore state on IDE shutdown
 
 ---- REST API RELEASE
 
