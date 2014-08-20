@@ -147,7 +147,8 @@ class VcsCommitToIdeaFlowNoteAdapter extends ChangeListAdapter implements VcsLis
 
 	private CommittedChangeList getLastCommittedChangeListForVcsRoot(VcsRoot vcsRoot) {
 		CommittedChangesProvider committedChangesProvider = vcsRoot.vcs.committedChangesProvider
-		RepositoryLocation vcsRootLocation = committedChangesProvider.getLocationFor(FilePathImpl.create(vcsRoot.path))
+		FilePathImpl path = FilePathImpl.create(new File(vcsRoot.path.path))
+		RepositoryLocation vcsRootLocation = committedChangesProvider.getLocationFor(path)
 		CommittedChangeList changeList = null
 
 		if (vcsRootLocation) {
