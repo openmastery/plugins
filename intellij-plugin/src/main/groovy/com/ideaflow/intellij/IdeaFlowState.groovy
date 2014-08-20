@@ -61,7 +61,7 @@ class IdeaFlowState {
 
 	private void saveOpenFiles() {
 		List<File> activeFiles = controller.getOpenIdeaFlowFiles()
-		properties.setValue(OPEN_FILE_PATHS, toAbsolutePaths(activeFiles).join('\n'))
+		properties.setValue(OPEN_FILE_PATHS, toAbsolutePaths(activeFiles)?.join('\n'))
 	}
 
 	private void saveActiveFile() {
@@ -69,7 +69,7 @@ class IdeaFlowState {
 	}
 
 	public List<File> getSavedOpenFiles() {
-		String[] filePaths = properties.getValue(OPEN_FILE_PATHS).split('\n')
+		String[] filePaths = properties.getValue(OPEN_FILE_PATHS)?.split('\n')
 		filePaths ? toFileList(filePaths) : []
 	}
 
