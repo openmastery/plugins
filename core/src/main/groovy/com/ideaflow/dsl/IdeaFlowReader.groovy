@@ -21,7 +21,7 @@ class IdeaFlowReader {
 	 * length restrictions (java.lang.ClassFormatError: Invalid method Code length xxx) so chunk
 	 * the content by lines and load it one block at a time.
 	 */
-	private static final int DEFAULT_CHUNK_SIZE = 250
+	private static final int DEFAULT_CHUNK_SIZE = 500
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator")
 
 	private int chunkSize
