@@ -1,7 +1,5 @@
 ------ MVP
 
-DEFECT: upload fails silently when another version already exists - need to delete first.
-
 ---- REST STUFF left to do
 
 DEFECT - fix merge on rest branch: was having an issue where the highlight page seemed to be pulled from another IFM, 2 events on the page and highlights showed a list of highlights for another IFM.  How did I get in this state with the new REST model?  Is this repeatable?

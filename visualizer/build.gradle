@@ -79,6 +79,11 @@ task upload(dependsOn: ['prepareFilesForUpload']) {
 			taskdef(name: 'ftp',
 					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
 					classpath: configurations.ftpAntTask.asPath)
+			ftp(action: 'del', server: 'ideaflow.org', userid: 'ideaflow', password: ftpPassword, passive: 'yes') {
+				fileset {
+					include name: 'visualizer-*.jar'
+				}
+			}
 			ftp(server: 'ideaflow.org', userid: 'ideaflow', password: ftpPassword, passive: 'yes') {
 				fileset(dir: 'build/upload')
 			}
