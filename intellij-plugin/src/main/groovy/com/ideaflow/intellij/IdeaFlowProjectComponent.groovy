@@ -50,7 +50,7 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 
 		vcsCommitToIdeaFlowNoteAdapter.connect()
 
-		if (getController().openIdeaFlowFiles.isEmpty()) {
+		if (getController().workingSetFiles.isEmpty()) {
 			IdeaFlowApplicationComponent.getIFMState().restoreActiveState(project)
 		}
 	}

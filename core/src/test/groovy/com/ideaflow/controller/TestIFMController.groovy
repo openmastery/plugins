@@ -2,8 +2,6 @@ package com.ideaflow.controller
 
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Idle
-import com.ideaflow.model.StateChange
-import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification
@@ -88,7 +86,7 @@ class TestIFMController extends Specification {
 		then:
 		controller.activeIdeaFlowModel != oldActiveModel
 		controller.activeIdeaFlowModel.file == newModelFile
-		controller.openIdeaFlowFiles == [oldModelFile, controller.activeIdeaFlowModel.file]
+		controller.workingSetFiles == [oldModelFile, controller.activeIdeaFlowModel.file]
 	}
 
 	def "closeIdeaFlow should remove file from open file list"() {
@@ -96,7 +94,7 @@ class TestIFMController extends Specification {
 		controller.closeIdeaFlow("context")
 
 		then:
-		controller.openIdeaFlowFiles == []
+		controller.workingSetFiles == []
 	}
 
 	def "should not add multiple files to open file list if newIdeaFlow called with same file twice"() {
@@ -107,7 +105,7 @@ class TestIFMController extends Specification {
 		controller.newIdeaFlow("string", oldModelFile)
 
 		then:
-		controller.openIdeaFlowFiles == [oldModelFile]
+		controller.workingSetFiles == [oldModelFile]
 	}
 
 }

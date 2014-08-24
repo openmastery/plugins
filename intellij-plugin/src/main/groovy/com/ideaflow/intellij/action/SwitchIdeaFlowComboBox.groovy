@@ -101,7 +101,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		if (project != null) {
 			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
 
-			for (File ifmFile : controller.getOpenIdeaFlowFiles()) {
+			for (File ifmFile : controller.getWorkingSetFiles()) {
 				actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
 			}
 

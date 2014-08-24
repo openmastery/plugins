@@ -21,7 +21,7 @@ class IdeaFlowState {
 		this.controller = controller
 		properties = PropertiesComponent.getInstance()
 
-		controller.setWorkingSetListener(new IFMWorkingSetListener() {
+		controller.addWorkingSetListener(new IFMWorkingSetListener() {
 			@Override
 			void onWorkingSetChanged() {
 				if (restoringActiveState) {
@@ -46,11 +46,14 @@ class IdeaFlowState {
 	public void restoreActiveState(Project project) {
 		restoringActiveState = true
 		try {
-			for (File file : getSavedOpenFiles()) {
-				controller.newIdeaFlow(project, file)
+			List<File> savedOpenFiles = getSavedOpenFiles()
+			File savedActiveFile = getSavedActiveFile()
+
+			if (!savedActiveFile && savedOpenFiles) {
+				savedActiveFile = savedOpenFiles.first()
 			}
 
-			File savedActiveFile = getSavedActiveFile()
+			controller.setWorkingSetFiles(savedOpenFiles)
 			if (savedActiveFile) {
 				controller.newIdeaFlow(project, savedActiveFile)
 			}
@@ -60,7 +63,7 @@ class IdeaFlowState {
 	}
 
 	private void saveOpenFiles() {
-		List<File> activeFiles = controller.getOpenIdeaFlowFiles()
+		List<File> activeFiles = controller.getWorkingSetFiles()
 		properties.setValue(OPEN_FILE_PATHS, toAbsolutePaths(activeFiles)?.join('\n'))
 	}
 
