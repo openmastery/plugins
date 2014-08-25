@@ -6,6 +6,7 @@ import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand
 import com.ideaflow.timeline.Event
 import com.ideaflow.timeline.GenericBand
+import com.ideaflow.timeline.IdleDetail
 import com.ideaflow.timeline.TimeBand
 import com.ideaflow.timeline.TimeDuration
 import com.ideaflow.timeline.TimeEntry
@@ -77,6 +78,11 @@ class TimelineDecorator {
 
 	private void handleTimeEntry(Event event) {
 		decorateWithActiveBand(event)
+	}
+
+	private void handleTimeEntry(IdleDetail idleDetail) {
+		print(idleDetail.id + idleDetail.comment)
+		//no idle decorations
 	}
 
 	private decorateWithActiveBand(TimeEntry entry) {

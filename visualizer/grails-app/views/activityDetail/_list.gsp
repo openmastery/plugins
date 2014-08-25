@@ -1,4 +1,4 @@
-<%@ page import="com.ideaflow.timeline.TimeBand; com.ideaflow.timeline.Event; com.ideaflow.timeline.ActivityDetail" %>
+<%@ page import="com.ideaflow.timeline.IdleDetail; com.ideaflow.timeline.TimeBand; com.ideaflow.timeline.Event; com.ideaflow.timeline.ActivityDetail" %>
 <common:nav controller="${params.controller}" action="${params.action}"/>
 
 <div id="timeline_scrollwindow" class="tabcontent">
@@ -22,6 +22,22 @@
                     </td>
                     <td class="${detail.isModified() ? "modified" : ""}">
                         ${detail.activityName}
+                    </td>
+                    <td class="right">
+                        ${detail.duration.hourMinSec}
+                    </td>
+                </tr>
+            </g:if>
+            <g:if test="${detail instanceof IdleDetail}">
+                <tr id="detail_${index}" class="idletype">}">
+                    <td class="hiddenOffset">
+                        ${detail.time.relativeOffset}
+                    </td>
+                    <td>
+                        ${detail.time.longTime}
+                    </td>
+                    <td>
+                        [Idle] ${detail.comment}
                     </td>
                     <td class="right">
                         ${detail.duration.hourMinSec}

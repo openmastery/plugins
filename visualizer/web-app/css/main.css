@@ -403,15 +403,21 @@ tr.reworktype { background-color: #ffea7c; }
 tr.conflicttype { background-color: #ff90d1; }
 
 /* line 26, ../../src/stylesheets/components/_table.scss */
-td.learningtype { background-color: #520ce8; }
+tr.idletype { background-color: #777777; }
 
 /* line 30, ../../src/stylesheets/components/_table.scss */
+tr.idletype td { color: white; font-style: italic; }
+
+/* line 36, ../../src/stylesheets/components/_table.scss */
+td.learningtype { background-color: #520ce8; }
+
+/* line 40, ../../src/stylesheets/components/_table.scss */
 td.reworktype { background-color: #ffcb01; }
 
-/* line 34, ../../src/stylesheets/components/_table.scss */
+/* line 44, ../../src/stylesheets/components/_table.scss */
 td.conflicttype { background-color: #ff0078; }
 
-/* line 38, ../../src/stylesheets/components/_table.scss */
+/* line 50, ../../src/stylesheets/components/_table.scss */
 .right { text-align: right; }
 
 /* line 4, ../../src/stylesheets/components/_conflicts.scss */

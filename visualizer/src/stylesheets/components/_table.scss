@@ -23,6 +23,16 @@ tr.conflicttype {
   background-color: $light-conflict-color;
 }
 
+tr.idletype {
+  background-color: $idle-color;
+}
+
+tr.idletype td {
+  color: $white;
+  font-style: italic;
+}
+
+
 td.learningtype {
   background-color: $learning-color;
 }
@@ -34,6 +44,8 @@ td.reworktype {
 td.conflicttype {
   background-color: $conflict-color;
 }
+
+
 
 .right {
   text-align: right;

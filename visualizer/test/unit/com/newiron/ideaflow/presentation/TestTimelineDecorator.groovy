@@ -36,6 +36,8 @@ class TestTimelineDecorator {
 		timeline = new Timeline()
 	}
 
+	//TODO write a test that can make sure all timeEntry types work with decorator
+
 	@Test
 	void decorate_ShouldConfigurePercentOfMax() {
 		timeline.addConflictBand createConflictWithDuration(500)
