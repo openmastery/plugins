@@ -83,13 +83,8 @@ class TimelineFactory {
 		}
 
 		void addEntity(Idle idle) {
-			if (idle.comment) {
-				Note note = new Note()
-				note.id = idle.id
-				note.comment = "[Idle] "+ idle.comment + "  ( " + Math.round(idle.duration / 60) + " minutes )"
-				note.created = idle.created
-				addEntity(note)
-			}
+			TimePosition timePosition = createTimePositionWithRelativeTimeAsOffset(idle.created)
+			timeline.addIdleDetail(new IdleDetail(timePosition, idle) )
 		}
 
 		void addEntity(StateChange stateChange) {

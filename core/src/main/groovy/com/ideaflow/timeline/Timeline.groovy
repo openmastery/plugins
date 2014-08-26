@@ -5,6 +5,7 @@ class Timeline {
 	List<GenericBand> genericBands = []
 	List<Event> events = []
 	List<ActivityDetail> activityDetails = []
+	List<IdleDetail> idleDetails = []
 
 	void addGenericBand(GenericBand timeBand) {
 		genericBands.add(timeBand)
@@ -12,6 +13,10 @@ class Timeline {
 
 	void addActivityDetail(ActivityDetail activityDetail) {
 		activityDetails.add(activityDetail)
+	}
+
+	void addIdleDetail(IdleDetail idleDetail) {
+		idleDetails.add(idleDetail)
 	}
 
 	void addConflictBand(ConflictBand conflictBand) {
@@ -30,7 +35,7 @@ class Timeline {
 	}
 
 	List<TimeEntry> getSequencedTimelineDetail() {
-		(conflictBands + genericBands + events + activityDetails).sort {
+		(conflictBands + genericBands + events + activityDetails + idleDetails).sort {
 			TimeEntry timeEntry ->
 				timeEntry.time.relativeOffset
 		}

@@ -81,7 +81,6 @@ class TimelineDecorator {
 	}
 
 	private void handleTimeEntry(IdleDetail idleDetail) {
-		print(idleDetail.id + idleDetail.comment)
 		//no idle decorations
 	}
 

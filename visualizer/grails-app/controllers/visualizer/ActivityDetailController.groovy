@@ -9,11 +9,6 @@ class ActivityDetailController {
     def list() {
 
 		Timeline timeline = ifmService.activeTimeline
-
-		timeline.sequencedTimelineDetail.each {
-			println it.class
-		}
-
         render(template: "list", model: [detailEntries: timeline.sequencedTimelineDetail])
     }
 

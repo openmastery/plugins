@@ -438,3 +438,9 @@ td.conflicttype { background-color: #ff0078; }
 
 /* line 43, ../../src/stylesheets/components/_conflicts.scss */
 .description { display: inline-block; margin-left: 20px; }
+
+/* line 48, ../../src/stylesheets/components/_conflicts.scss */
+.question { font-weight: bold; }
+
+/* line 52, ../../src/stylesheets/components/_conflicts.scss */
+.answer { font-style: italic; }

@@ -5,10 +5,13 @@
         <div class="conflict" onmouseover="highlightConflict(${conflict.id})" onmouseout="resetColorBands()">
             <div class="header">
                 <span class="pie">${conflict.percent}/100</span>
-                <span class="label">Conflict:</span>
-                <span class="description">${conflict.question}</span>
+                <span class="description">${conflict.duration.hourMinSec}</span>
             </div>
             <div class="content">
+                <div>
+                    <span class="label">Conflict:</span>
+                    <span class="description">${conflict.question}</span>
+                </div>
                 <div>
                     <span class="label">Resolution:</span>
                     <span class="description">${conflict.answer}</span>
@@ -25,10 +28,6 @@
                         <span class="description">${conflict.cause}</span>
                     </div>
                 </g:if>
-                <div>
-                    <span class="label">Duration:</span>
-                    <span class="description">${conflict.duration.hourMinSec}</span>
-                </div>
             </div>
         </div>
 

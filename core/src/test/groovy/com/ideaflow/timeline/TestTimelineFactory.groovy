@@ -5,6 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Idle
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import spock.lang.Specification
@@ -114,6 +115,21 @@ class TestTimelineFactory extends Specification {
 		assert activityDetail2.editorActivity == editorActivity2
 		assert activityDetail2.time.relativeOffset == 10
 		assert timeline.activityDetails.size() == 2
+	}
+
+	void testCreate_ShouldCreateIdleActivity() {
+		given:
+		Idle idle = createIdle()
+		IdeaFlowModel ifm = IdeaFlowModelBuilder.create().defaults()
+			.addIdle(idle)
+			.build()
+
+		when:
+		Timeline timeline = timelineFactory.create(ifm)
+
+		then:
+		IdleDetail idleDetail = timeline.idleDetails[0]
+		assert idleDetail.idle == idle
 	}
 
 	void testCreate_StateChangeShouldNotExplode() {

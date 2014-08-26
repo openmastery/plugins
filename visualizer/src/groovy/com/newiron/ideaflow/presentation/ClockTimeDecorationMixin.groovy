@@ -1,5 +1,6 @@
 package com.newiron.ideaflow.presentation
 
+import org.joda.time.format.DateTimeFormat
 
 class ClockTimeDecorationMixin {
 
@@ -9,6 +10,14 @@ class ClockTimeDecorationMixin {
 
 	String getLongTime() {
 		toHours() + ":" + toMinutes() + ":" + toSeconds()
+	}
+
+	String getCalendarTime() {
+		actualTime.toString(DateTimeFormat.forPattern("hh:mm:ss aa"))
+	}
+
+	String getCalendarDate() {
+		actualTime.toString(DateTimeFormat.forPattern("MM/dd"))
 	}
 
 	String toHours() {

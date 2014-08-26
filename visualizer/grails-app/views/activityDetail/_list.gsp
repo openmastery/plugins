@@ -5,7 +5,9 @@
     <table class="tabular">
         <thead>
         <tr>
-            <td>Time (h:m:s)</td>
+            <td></td>
+            <td>Actual Time</td>
+            <td>Relative (h:m:s)</td>
             <td>File</td>
             <td class="right">Duration (s)</td>
         </tr>
@@ -16,6 +18,10 @@
                 <tr id="detail_${index}" class="${detail.activeBandType ? "${detail.activeBandType}type" : ""}">
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
+                    </td>
+                    <td></td>
+                    <td>
+                        ${detail.time.calendarTime}
                     </td>
                     <td>
                         ${detail.time.longTime}
@@ -29,9 +35,15 @@
                 </tr>
             </g:if>
             <g:if test="${detail instanceof IdleDetail}">
-                <tr id="detail_${index}" class="idletype">}">
+                <tr id="detail_${index}" class="idletype">
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
+                    </td>
+                    <td>
+                        ${detail.time.calendarDate}
+                    </td>
+                    <td>
+                        ${detail.time.calendarTime}
                     </td>
                     <td>
                         ${detail.time.longTime}
@@ -49,7 +61,7 @@
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
                     </td>
-                    <td colspan=2>
+                    <td colspan=4>
                         <hr/>
                     </td>
                     <td class="right">
@@ -62,7 +74,7 @@
                     <td class="hiddenOffset">
                         ${detail.time.relativeOffset}
                     </td>
-                    <td colspan=2>
+                    <td colspan=4>
                         <hr/>
                     </td>
                     <td class="right">

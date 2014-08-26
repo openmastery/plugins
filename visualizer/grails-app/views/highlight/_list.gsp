@@ -1,4 +1,4 @@
-<%@ page import="com.ideaflow.timeline.TimeBand; com.ideaflow.timeline.Event" %>
+<%@ page import="com.ideaflow.timeline.GenericBand; com.ideaflow.timeline.ConflictBand; com.ideaflow.timeline.TimeBand; com.ideaflow.timeline.Event" %>
 <common:nav controller="${params.controller}" action="${params.action}"/>
 <style>
 .eventrow:hover {
@@ -17,28 +17,34 @@
                     <td>
                         <hr/>
                     </td>
-                    <td>
+                    <td title="${timeEntry.time.calendarTime}">
                         ${timeEntry.time.shortTime}
                     </td>
                     <td>
-                        Event - ${timeEntry.comment}
+                        Event
+                    </td>
+                    <td>
+                        ${timeEntry.comment}
                     </td>
                     <td>
                         &nbsp;&nbsp;&nbsp;
                     </td>
                 </tr>
             </g:if>
-            <g:if test="${timeEntry instanceof TimeBand}">
+            <g:if test="${timeEntry instanceof GenericBand}">
                 <tr id="event_${index}" class="eventrow" onmouseover="highlightColorBandById(${timeEntry.id})"
                     onmouseout="resetColorBands()">
                     <td class="${timeEntry.bandType}type">
                         &nbsp;&nbsp;&nbsp;
                     </td>
-                    <td>
+                    <td title="${timeEntry.startPosition.calendarTime} - ${timeEntry.endPosition.calendarTime}">
                         ${timeEntry.startPosition.shortTime} - ${timeEntry.endPosition.shortTime}
                     </td>
                     <td>
-                        ${timeEntry.bandType.toString().capitalize()} - ${timeEntry.comment}
+                        ${timeEntry.bandType.toString().capitalize()}
+                    </td>
+                    <td>
+                        ${timeEntry.comment}
                     </td>
                     <td>
                         <span class="${timeEntry.bandType}pie">${timeEntry.percent}/100</span>&nbsp;
@@ -46,6 +52,29 @@
                     </td>
                 </tr>
             </g:if>
+            <g:if test="${timeEntry instanceof ConflictBand}">
+                <tr id="event_${index}" class="eventrow" onmouseover="highlightColorBandById(${timeEntry.id})"
+                    onmouseout="resetColorBands()">
+                    <td class="${timeEntry.bandType}type">
+                        &nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td title="${timeEntry.startPosition.calendarTime} - ${timeEntry.endPosition.calendarTime}">
+                        ${timeEntry.startPosition.shortTime} - ${timeEntry.endPosition.shortTime}
+                    </td>
+                    <td>
+                        Conflict
+                    </td>
+                    <td>
+                        <span class="question">${timeEntry.question}<br/></span>
+                        <span class="answer">${timeEntry.answer}</span>
+                    </td>
+                    <td>
+                        <span class="${timeEntry.bandType}pie">${timeEntry.percent}/100</span>&nbsp;
+                    ${timeEntry.duration.hourMinSec}
+                    </td>
+                </tr>
+            </g:if>
+
         </g:each>
         </tbody>
     </table>

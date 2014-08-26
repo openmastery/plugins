@@ -5,6 +5,7 @@ import com.ideaflow.model.BandStart
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Idle
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -27,6 +28,11 @@ class IdeaFlowModelBuilder {
 
 	IdeaFlowModelBuilder addBandEnd(BandEnd bandEnd) {
 		ifm.addModelEntity(bandEnd)
+		return this
+	}
+
+	IdeaFlowModelBuilder addIdle(Idle idle) {
+		ifm.addModelEntity(idle)
 		return this
 	}
 
