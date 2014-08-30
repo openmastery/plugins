@@ -142,4 +142,106 @@ class TestTimelineFactory extends Specification {
 		timelineFactory.create(ifm)
 	}
 
+	def "should create time band container if generic band is container"() {
+		given:
+		Timeline timeline = new Timeline()
+		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME4_POSITION)
+		containerBand.bandStart.isContainer = true
+		ConflictBand internalConflict = createConflictBand(TIME2_POSITION, TIME3_POSITION)
+		timeline.addGenericBand(containerBand)
+		timeline.addConflictBand(internalConflict)
+
+		when:
+		new TimelineFactory.TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(timeline)
+
+		then:
+		TimeBandContainer timeBandContainer = timeline.timeBandContainers[0]
+		assert timeBandContainer
+		assert timeBandContainer.primaryConflict == null
+		assert timeBandContainer.primaryGenericBand == containerBand
+		assert timeBandContainer.timeBands.contains(timeBandContainer.primaryGenericBand)
+		assert timeBandContainer.timeBands.contains(internalConflict)
+		assert timeBandContainer.timeBands.size() == 2
+		assert timeline.timeBandContainers.size() == 1
+	}
+
+	def "should create time band container with linked conflict"() {
+		given:
+		Timeline timeline = new Timeline()
+		ConflictBand initialConflict = createConflictBand(TIME1_POSITION)
+		GenericBand containerBand = createGenericBand(TIME2_POSITION, TIME4_POSITION)
+		ConflictBand internalConflict = createConflictBand(TIME3_POSITION)
+		containerBand.bandStart.isContainer = true
+		containerBand.bandStart.isLinkedToPreviousConflict = true
+		timeline.addConflictBand(initialConflict)
+		timeline.addGenericBand(containerBand)
+		timeline.addConflictBand(internalConflict)
+
+		when:
+		new TimelineFactory.TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(timeline)
+
+		then:
+		TimeBandContainer timeBandContainer = timeline.timeBandContainers[0]
+		assert timeBandContainer
+		assert timeBandContainer.primaryConflict == initialConflict
+		assert timeBandContainer.primaryGenericBand == containerBand
+		assert timeBandContainer.timeBands.contains(timeBandContainer.primaryGenericBand)
+		assert timeBandContainer.timeBands.contains(timeBandContainer.primaryConflict)
+		assert timeBandContainer.timeBands.contains(internalConflict)
+		assert timeBandContainer.timeBands.size() == 3
+		assert timeline.timeBandContainers.size() == 1
+	}
+
+	def "should not create time band container if generic band is container but contains no children"() {
+		given:
+		Timeline timeline = new Timeline()
+		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME2_POSITION)
+		containerBand.bandStart.isContainer = true
+		timeline.addGenericBand(containerBand)
+
+		when:
+		new TimelineFactory.TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(timeline)
+
+		then:
+		assert timeline.timeBandContainers.isEmpty()
+	}
+
+	def "should create time band container with internal band"() {
+		given:
+		Timeline timeline = new Timeline()
+		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME4_POSITION)
+		GenericBand internalBand = createGenericBand(TIME2_POSITION)
+		containerBand.bandStart.isContainer = true
+		timeline.addGenericBand(containerBand)
+		timeline.addGenericBand(internalBand)
+
+		when:
+		new TimelineFactory.TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(timeline)
+
+		then:
+		TimeBandContainer timeBandContainer = timeline.timeBandContainers[0]
+		assert timeBandContainer
+		assert timeBandContainer.timeBands.contains(internalBand)
+		assert timeBandContainer.timeBands.size() == 2
+		assert timeline.timeBandContainers.size() == 1
+	}
+
+	def "should not include band or conflict in container if started within container band but ended outside"() {
+		given:
+		Timeline timeline = new Timeline()
+		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME3_POSITION)
+		ConflictBand internalConflict = createConflictBand(TIME2_POSITION, TIME4_POSITION)
+		GenericBand internalBand = createGenericBand(TIME2_POSITION, TIME4_POSITION)
+		containerBand.bandStart.isContainer = true
+		timeline.addGenericBand(containerBand)
+		timeline.addGenericBand(internalBand)
+		timeline.addConflictBand(internalConflict)
+
+		when:
+		new TimelineFactory.TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(timeline)
+
+		then:
+		timeline.timeBandContainers.isEmpty()
+	}
+
 }

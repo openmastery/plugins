@@ -19,4 +19,5 @@ interface TimeBand {
 	String getId()
 
 	String getComment()
+
 }

@@ -96,7 +96,11 @@ class FixtureSupport {
 	}
 
 	Conflict createConflict(long time) {
-		Conflict conflict = new Conflict('question')
+		createConflict(time, 'question')
+	}
+
+	Conflict createConflict(long time, String question) {
+		Conflict conflict = new Conflict(question)
 		setCreated(conflict, time)
 		conflict
 	}
@@ -106,7 +110,11 @@ class FixtureSupport {
 	}
 
 	Resolution createResolution(long time) {
-		Resolution resolution = new Resolution('answer')
+		createResolution(time, 'answer')
+	}
+
+	Resolution createResolution(long time, String answer) {
+		Resolution resolution = new Resolution(answer)
 		setCreated(resolution, time)
 		resolution
 	}
@@ -132,7 +140,7 @@ class FixtureSupport {
 	}
 
 	BandStart createBandStart(BandType type, long time) {
-		BandStart start = new BandStart(type, 'comment')
+		BandStart start = new BandStart(type, 'comment', false, false)
 		start.created = new DateTime(time)
 		start
 	}
@@ -164,23 +172,32 @@ class FixtureSupport {
 	}
 
 	GenericBand createGenericBand(TimePosition timePosition) {
+		createGenericBand(timePosition, timePosition)
+	}
+
+	GenericBand createGenericBand(TimePosition startPosition, TimePosition endPosition) {
 		GenericBand band = new GenericBand()
-		band.bandStart = new BandStart(BandType.learning, "want to learn!")
+		band.bandStart = new BandStart(BandType.learning, "want to learn!", false, false)
 		band.bandEnd = new BandEnd(BandType.learning)
-		band.setStartPosition(timePosition)
-		band.setEndPosition(timePosition)
+		band.setStartPosition(startPosition)
+		band.setEndPosition(endPosition)
 		return band
 	}
 
 	ConflictBand createConflictBand() {
 		createConflictBand(NOW_POSITION)
 	}
+
 	ConflictBand createConflictBand(TimePosition timePosition) {
+		createConflictBand(timePosition, timePosition)
+	}
+
+	ConflictBand createConflictBand(TimePosition startPosition, TimePosition endPosition) {
 		ConflictBand band = new ConflictBand()
 		band.conflict = new Conflict("Conflict Question")
 		band.resolution = new Resolution("Resolution Answer")
-		band.setStartPosition(timePosition)
-		band.setEndPosition(timePosition)
+		band.setStartPosition(startPosition)
+		band.setEndPosition(endPosition)
 		return band
 	}
 

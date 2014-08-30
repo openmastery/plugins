@@ -87,11 +87,15 @@ class IdeaFlowReader {
 			model.created = dateFormat.parseDateTime(createdDateString)
 		}
 
-		def editorActivity(Map editorActivityMap) {
-			if (editorActivityMap.containsKey("modified")) {
-				String modifiedString = editorActivityMap["modified"]
-				editorActivityMap["modified"] = Boolean.valueOf(modifiedString)
+		private void replaceValueWithBooleanIfExists(Map map, String key) {
+			if (map.containsKey(key)) {
+				String value = map[key]
+				map[key] = Boolean.valueOf(value)
 			}
+		}
+
+		def editorActivity(Map editorActivityMap) {
+			replaceValueWithBooleanIfExists(editorActivityMap, "modified")
 			addModelEntity(EditorActivity, editorActivityMap)
 		}
 
@@ -112,6 +116,8 @@ class IdeaFlowReader {
 		}
 
 		def bandStart(Map bandStartMap) {
+			replaceValueWithBooleanIfExists(bandStartMap, "isContainer")
+			replaceValueWithBooleanIfExists(bandStartMap, "isLinkedToPreviousConflict")
 			addModelEntity(BandStart, bandStartMap)
 		}
 

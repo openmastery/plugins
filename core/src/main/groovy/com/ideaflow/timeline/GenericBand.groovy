@@ -18,6 +18,14 @@ class GenericBand extends AbstractTimeBand implements Entity {
 		bandEnd.created = created
 	}
 
+	boolean isContainer() {
+		bandStart.isContainer
+	}
+
+	boolean isLinkedToPreviousConflict() {
+		bandStart.isLinkedToPreviousConflict
+	}
+
 	BandType getBandType() {
 		bandStart.type
 	}
