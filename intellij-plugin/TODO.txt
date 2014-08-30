@@ -1,3 +1,34 @@
+Adding information to IdeaFlowMaps...
+
+taskId, description, author, project
+
+We need additional information for IFMs, but want to minimize annoyance with sensible defaults.  Data tracked at the story/IFM level.  Use cases:
+Find IFMs by user or project.
+Associate IFMs with Rally story (using taskId)
+Look through a list of IFMs and know what's what (table that includes: task, author, description, project).
+Future: project/user/task for URLs
+
+Create default preferences for project and author that will auto-populate when creating a new IFM.
+
+---------
+
+Allow conflicts that switch to learning/rework to be "rolled up" as a grouped aggregate conflict.
+
+Biggest problems would be sorted by their aggregates, with children ignored. (biggest problems up top)
+Timeline would include the rolledup entries, rolling over the group would highlight the group on the timeline.
+Aggregate data analysis would avoid double-counting problems for these cases... also have the initial learning case, that doesn't start w/conflict.
+
+---------
+
+Add configurable reminders that can be toggled on and off.  
+
+When IFM is created, reminder for initial prediction: "What do you expect this IFM to look like?"
+Future: Project-wide configured reminders to enforce whatever the rules are for the team.
+
+
+
+
+
 
 Clean up working set stuff
 
