@@ -1,0 +1,30 @@
+
+[red] flip to yellow causes [yellow] to be a container.
+[red] flip to blue causes [blue] to be a container.
+
+
+When [in-a-container] state:
+
+* toggling the container button to off, ends the [in-a-container] state.
+* new conflicts will be part of the container when in the [in-a-container] state.
+* when in a nested conflict, if the container is closed, the conflict is not considered part of the container. 
+
+When in conflict, [red-nested yellow], [red-nested blue] icons appear (can go into container state, in a non-nested conflict)
+Toggled on [red-nested yellow] - now I can do conflicts on top [red] on top [blue] - (in a yellow container state)
+When I end the [red-nested yellow], my icon goes back to plain [yellow]. - (not in a container state)
+
+Tooltips:
+
+* Rework the problem (start rework container)
+* Learn a new strategy (start learning container)
+
+* End container - End rework/learning for "why is conflict question?"
+
+
+* when in a nested conflict, the container can't be closed, or closing the container ends the conflict, or the conflict is tossed out of the container.
+
+
+
+
+
+

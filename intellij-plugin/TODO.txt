@@ -25,6 +25,27 @@ Add configurable reminders that can be toggled on and off.
 When IFM is created, reminder for initial prediction: "What do you expect this IFM to look like?"
 Future: Project-wide configured reminders to enforce whatever the rules are for the team.
 
+----------
+
+When a conflict is clicked/selected - highlight the details from that conflict.
+- would this go for a group too?
+
+---------
+
+Allow blue bands to be ontop of yellow.
+
+Put content message in tooltip when a band is active (the thing currently in the description)
+
+When in the rework for a conflict, the message should essentially be "end rework for this conflict"
+
+Make icons for nesting - when in conflict then flip to yellow, change the yellow icon to be rework for the conflict (put a red bulb in the corner).
+When rework of conflict is ended, goes back to normal bulb.  
+
+When in conflict, and press blue/yellow, the icons ought to be the yellow/red ones.
+
+You are in learning and seem to be typing away... are you sure you didn't forget to turn off the band?
+
+
 
 
 
