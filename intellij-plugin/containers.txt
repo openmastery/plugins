@@ -13,6 +13,10 @@ When in conflict, [red-nested yellow], [red-nested blue] icons appear (can go in
 Toggled on [red-nested yellow] - now I can do conflicts on top [red] on top [blue] - (in a yellow container state)
 When I end the [red-nested yellow], my icon goes back to plain [yellow]. - (not in a container state)
 
+When blue is toggled on, the blue icon turns to a [blue container] to show that rework and conflict bands will go inside the container.
+When yellow is toggled on, the yello icon turns to a [yellow container] to show that learning and conflict bands will go inside the container.
+
+
 Tooltips:
 
 * Rework the problem (start rework container)
@@ -20,8 +24,41 @@ Tooltips:
 
 * End container - End rework/learning for "why is conflict question?"
 
+VISUALIZER API
 
-* when in a nested conflict, the container can't be closed, or closing the container ends the conflict, or the conflict is tossed out of the container.
+---
+
+Timeline:
+
+getSequencedTimeline() 
+Mixed list of TimeEntry objects sorted by time, excluding activity detail.  Should include all events, timebands, and containers in start-time-order.  Each container should include a time-sequenced list of the same objects that appear within the container period.  
+
+getSequencedTimelineDetail()
+Mixed list of TimeEntry objects from above that also includes activity detail and idle time.  Activity detail that corresponds to a container period should be within the container.
+
+getConflictGroups()
+Get list of all conflict containers and unnested conflicts (to be sorted in duration desc order). All objects should have the "conflict" api - question, answer, duration.  
+
+TimePosition getEnd()
+Get the end of the timeline (last activity detail + duration)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
