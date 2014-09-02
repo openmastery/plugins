@@ -142,11 +142,10 @@ class TestTimelineFactory extends Specification {
 		timelineFactory.create(ifm)
 	}
 
-	def "should create time band container if generic band is container"() {
+	def "should create time band container if generic band contains conflict"() {
 		given:
 		Timeline timeline = new Timeline()
 		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME4_POSITION)
-		containerBand.bandStart.isContainer = true
 		ConflictBand internalConflict = createConflictBand(TIME2_POSITION, TIME3_POSITION)
 		timeline.addGenericBand(containerBand)
 		timeline.addConflictBand(internalConflict)
@@ -171,7 +170,6 @@ class TestTimelineFactory extends Specification {
 		ConflictBand initialConflict = createConflictBand(TIME1_POSITION)
 		GenericBand containerBand = createGenericBand(TIME2_POSITION, TIME4_POSITION)
 		ConflictBand internalConflict = createConflictBand(TIME3_POSITION)
-		containerBand.bandStart.isContainer = true
 		containerBand.bandStart.isLinkedToPreviousConflict = true
 		timeline.addConflictBand(initialConflict)
 		timeline.addGenericBand(containerBand)
@@ -192,11 +190,10 @@ class TestTimelineFactory extends Specification {
 		assert timeline.timeBandContainers.size() == 1
 	}
 
-	def "should not create time band container if generic band is container but contains no children"() {
+	def "should not create time band container if generic band contains no conflicts"() {
 		given:
 		Timeline timeline = new Timeline()
 		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME2_POSITION)
-		containerBand.bandStart.isContainer = true
 		timeline.addGenericBand(containerBand)
 
 		when:
@@ -206,12 +203,11 @@ class TestTimelineFactory extends Specification {
 		assert timeline.timeBandContainers.isEmpty()
 	}
 
-	def "should create time band container with internal band"() {
+	def "should fail if generic band contains another generic band"() {
 		given:
 		Timeline timeline = new Timeline()
 		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME4_POSITION)
 		GenericBand internalBand = createGenericBand(TIME2_POSITION)
-		containerBand.bandStart.isContainer = true
 		timeline.addGenericBand(containerBand)
 		timeline.addGenericBand(internalBand)
 
@@ -219,22 +215,15 @@ class TestTimelineFactory extends Specification {
 		new TimelineFactory.TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(timeline)
 
 		then:
-		TimeBandContainer timeBandContainer = timeline.timeBandContainers[0]
-		assert timeBandContainer
-		assert timeBandContainer.timeBands.contains(internalBand)
-		assert timeBandContainer.timeBands.size() == 2
-		assert timeline.timeBandContainers.size() == 1
+		thrown(RuntimeException)
 	}
 
-	def "should not include band or conflict in container if started within container band but ended outside"() {
+	def "should not include conflict in container if started within container band but ended outside"() {
 		given:
 		Timeline timeline = new Timeline()
 		GenericBand containerBand = createGenericBand(TIME1_POSITION, TIME3_POSITION)
 		ConflictBand internalConflict = createConflictBand(TIME2_POSITION, TIME4_POSITION)
-		GenericBand internalBand = createGenericBand(TIME2_POSITION, TIME4_POSITION)
-		containerBand.bandStart.isContainer = true
 		timeline.addGenericBand(containerBand)
-		timeline.addGenericBand(internalBand)
 		timeline.addConflictBand(internalConflict)
 
 		when:

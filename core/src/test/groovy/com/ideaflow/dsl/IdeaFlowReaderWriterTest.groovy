@@ -32,7 +32,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		Conflict conflict = createConflict()
 		Resolution resolution = createResolution()
 		BandStart bandStart = createBandStart()
-        bandStart.isContainer = true
+        bandStart.isLinkedToPreviousConflict = true
 		BandEnd bandEnd = createBandEnd()
 	    Idle idle = createIdle()
 

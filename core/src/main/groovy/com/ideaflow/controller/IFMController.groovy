@@ -63,10 +63,6 @@ class IFMController<T> {
 		return (isIdeaFlowOpen() ? activeIdeaFlowModel.getActiveBandStart() : null)
 	}
 
-	BandStart isContainerActive(){
-		activeBandStart?.isContainer
-	}
-
 	boolean isOpenConflict() {
 		getActiveConflict() != null
 	}
@@ -89,8 +85,7 @@ class IFMController<T> {
 
 	void startBand(T context, String comment, BandType bandType, boolean isLinkedToPreviousCommit) {
 		if (comment) {
-			boolean isContainer = !isContainerActive()
-			addModelEntity(context, new BandStart(bandType, comment, isContainer, isLinkedToPreviousCommit))
+			addModelEntity(context, new BandStart(bandType, comment, isLinkedToPreviousCommit))
 		}
 	}
 

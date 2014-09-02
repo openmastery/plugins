@@ -116,7 +116,6 @@ class IdeaFlowReader {
 		}
 
 		def bandStart(Map bandStartMap) {
-			replaceValueWithBooleanIfExists(bandStartMap, "isContainer")
 			replaceValueWithBooleanIfExists(bandStartMap, "isLinkedToPreviousConflict")
 			addModelEntity(BandStart, bandStartMap)
 		}

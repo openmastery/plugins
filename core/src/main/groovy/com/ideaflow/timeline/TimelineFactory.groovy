@@ -106,10 +106,13 @@ class TimelineFactory {
 			sortedTimeBands.each { AbstractTimeBand timeBand ->
 				if (activeContainer == null) {
 					if (timeBand instanceof GenericBand) {
-						activeContainer = createTimeBandContainerIfGenericBandIsContainer(timeBand, lastConflictBand)
+						activeContainer = createTimeBandContainer(timeBand, lastConflictBand)
 					}
 				} else {
-					if (timeBand.endsBefore(activeContainer.primaryGenericBand)) {
+					if (timeBand instanceof GenericBand) {
+						throw new RuntimeException("GenericBand nesting not supported, band=${timeBand} " +
+								"started before end of ${activeContainer.primaryGenericBand}")
+					} else if (timeBand.endsBefore(activeContainer.primaryGenericBand)) {
 						activeContainer.addTimeBand(timeBand)
 					} else {
 						if (!activeContainer.isEmpty()) {
@@ -129,14 +132,9 @@ class TimelineFactory {
 			}
 		}
 
-		private TimeBandContainer createTimeBandContainerIfGenericBandIsContainer(GenericBand genericBand,
-		                                                                          ConflictBand lastConflictBand) {
-			TimeBandContainer container = null
-			if (genericBand.isContainer()) {
-				ConflictBand linkedConflictBand = genericBand.isLinkedToPreviousConflict() ? lastConflictBand : null
-				container = new TimeBandContainer(genericBand, linkedConflictBand)
-			}
-			container
+		private TimeBandContainer createTimeBandContainer(GenericBand genericBand, ConflictBand lastConflictBand) {
+			ConflictBand linkedConflictBand = genericBand.isLinkedToPreviousConflict() ? lastConflictBand : null
+			new TimeBandContainer(genericBand, linkedConflictBand)
 		}
 
 		private List<TimeBand> getTimeBandsSortedByStartTime(Timeline timeline) {

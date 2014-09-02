@@ -140,7 +140,7 @@ class FixtureSupport {
 	}
 
 	BandStart createBandStart(BandType type, long time) {
-		BandStart start = new BandStart(type, 'comment', false, false)
+		BandStart start = new BandStart(type, 'comment', false)
 		start.created = new DateTime(time)
 		start
 	}
@@ -177,7 +177,7 @@ class FixtureSupport {
 
 	GenericBand createGenericBand(TimePosition startPosition, TimePosition endPosition) {
 		GenericBand band = new GenericBand()
-		band.bandStart = new BandStart(BandType.learning, "want to learn!", false, false)
+		band.bandStart = new BandStart(BandType.learning, "want to learn!", false)
 		band.bandEnd = new BandEnd(BandType.learning)
 		band.setStartPosition(startPosition)
 		band.setEndPosition(endPosition)
