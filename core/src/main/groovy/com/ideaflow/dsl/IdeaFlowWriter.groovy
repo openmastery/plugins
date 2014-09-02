@@ -62,7 +62,7 @@ class IdeaFlowWriter {
 	}
 
 	void write(BandStart bandStart) {
-		writeItem('bandStart', bandStart, ['created', 'type', 'comment', 'isLinkedToPreviousConflict'])
+		writeItem('bandStart', bandStart, ['created', 'type', 'comment', 'isLinkedToParentConflict'])
 	}
 
 	void write(BandEnd bandEnd) {
