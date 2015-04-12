@@ -8,7 +8,6 @@ class BandStart extends ModelEntity {
     boolean isLinkedToPreviousBand
 	BandType type
 	String comment
-    boolean isLinkedToPreviousBand
 
 	BandStart() {}
 
