@@ -1,8 +1,11 @@
 package com.ideaflow.timeline
 
+import com.ideaflow.model.Conflict
+
 class Timeline {
 	List<ConflictBand> conflictBands = []
 	List<GenericBand> genericBands = []
+	List<TimeBandContainer> timeBandContainers = []
 	List<Event> events = []
 	List<ActivityDetail> activityDetails = []
 	List<IdleDetail> idleDetails = []
@@ -27,22 +30,31 @@ class Timeline {
 		events.add(event)
 	}
 
+	void addTimeBandContainer(TimeBandContainer timeBandContainer) {
+		timeBandContainers.add(timeBandContainer)
+	}
+
 	List<TimeBand> getTimeBands() {
-		(conflictBands + genericBands).sort {
+		sortTimeBands(conflictBands + genericBands + timeBandContainers)
+	}
+
+	List<TimeEntry> getSequencedTimelineDetail() {
+		sortTimeEntries(conflictBands + genericBands + events + activityDetails + idleDetails)
+	}
+
+	List<TimeEntry> getSequencedTimeline() {
+		sortTimeEntries(conflictBands + genericBands + timeBandContainers + events)
+	}
+
+	private List<TimeBand> sortTimeBands(List<TimeBand> timeBands) {
+		timeBands.sort {
 			TimeBand timeBand ->
 				timeBand.startPosition.relativeOffset
 		}
 	}
 
-	List<TimeEntry> getSequencedTimelineDetail() {
-		(conflictBands + genericBands + events + activityDetails + idleDetails).sort {
-			TimeEntry timeEntry ->
-				timeEntry.time.relativeOffset
-		}
-	}
-
-	List<TimeEntry> getSequencedTimeline() {
-		(conflictBands + genericBands + events).sort {
+	private List<TimeEntry> sortTimeEntries(List<TimeEntry> timeEntries) {
+		timeEntries.sort {
 			TimeEntry timeEntry ->
 				timeEntry.time.relativeOffset
 		}

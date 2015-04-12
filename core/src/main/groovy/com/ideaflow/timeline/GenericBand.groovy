@@ -18,6 +18,10 @@ class GenericBand extends AbstractTimeBand implements Entity {
 		bandEnd.created = created
 	}
 
+	boolean isLinkedToParentConflict() {
+		bandStart.isLinkedToParentConflict
+	}
+
 	BandType getBandType() {
 		bandStart.type
 	}
@@ -31,6 +35,6 @@ class GenericBand extends AbstractTimeBand implements Entity {
 	}
 
 	String toString() {
-		"GenericBand: $bandType"
+		"GenericBand: $id, $bandType, $comment"
 	}
 }

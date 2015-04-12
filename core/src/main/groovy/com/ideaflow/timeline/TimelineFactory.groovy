@@ -22,7 +22,8 @@ class TimelineFactory {
 		ifm.entityList.each { ModelEntity entity ->
 			builder.addEntity(entity)
 		}
-		return builder.timeline
+		new TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(builder.timeline)
+		builder.timeline
 	}
 
 	private static class TimelineBuilder {
@@ -45,9 +46,10 @@ class TimelineFactory {
 			if (genericBand != null) {
 				genericBand.bandEnd = bandEnd
 				genericBand.endPosition = createTimePositionWithRelativeTimeAsOffset(bandEnd.created)
+
 				timeline.addGenericBand(genericBand)
 			} else {
-				// expode???
+				// TODO: expode???
 			}
 		}
 
@@ -59,7 +61,7 @@ class TimelineFactory {
 		}
 
 		void addEntity(Conflict conflict) {
-			//if already set, exploded!!
+			// TODO: if already set, exploded!!
 			activeConflictBand = new ConflictBand()
 			activeConflictBand.conflict = conflict
 			activeConflictBand.startPosition = createTimePositionWithRelativeTimeAsOffset(conflict.created)
@@ -70,11 +72,10 @@ class TimelineFactory {
 		}
 
 		void addEntity(Resolution resolution) {
-			//if no active conflict, explode!!
+			// TODO: if no active conflict, explode!!
 			activeConflictBand.resolution = resolution
 			activeConflictBand.endPosition = createTimePositionWithRelativeTimeAsOffset(resolution.created)
 			timeline.addConflictBand(activeConflictBand)
-			activeConflictBand = null
 		}
 
 		void addEntity(Note note) {
@@ -96,5 +97,53 @@ class TimelineFactory {
 
 	}
 
+	private static class TimelineTimeBandContainerBuilder {
+		void addTimeBandContainersToTimeline(Timeline timeline) {
+			TimeBandContainer activeContainer
+			ConflictBand lastConflictBand
+
+			List<TimeBand> sortedTimeBands = getTimeBandsSortedByStartTime(timeline)
+			sortedTimeBands.each { AbstractTimeBand timeBand ->
+				if (activeContainer == null) {
+					if (timeBand instanceof GenericBand) {
+						activeContainer = createTimeBandContainer(timeBand, lastConflictBand)
+					}
+				} else {
+					if (timeBand instanceof GenericBand) {
+						throw new RuntimeException("GenericBand nesting not supported, band=${timeBand} " +
+								"started before end of ${activeContainer.primaryGenericBand}")
+					} else if (timeBand.endsBefore(activeContainer.primaryGenericBand)) {
+						activeContainer.addTimeBand(timeBand)
+					} else {
+						if (!activeContainer.isEmpty()) {
+							timeline.addTimeBandContainer(activeContainer)
+						}
+						activeContainer = null
+					}
+				}
+
+				if (timeBand instanceof ConflictBand) {
+					lastConflictBand = (ConflictBand) timeBand
+				}
+			}
+
+			if (activeContainer && !activeContainer.isEmpty()) {
+				timeline.addTimeBandContainer(activeContainer)
+			}
+		}
+
+		private TimeBandContainer createTimeBandContainer(GenericBand genericBand, ConflictBand lastConflictBand) {
+			ConflictBand linkedConflictBand = genericBand.isLinkedToParentConflict() ? lastConflictBand : null
+			new TimeBandContainer(genericBand, linkedConflictBand)
+		}
+
+		private List<TimeBand> getTimeBandsSortedByStartTime(Timeline timeline) {
+			(timeline.conflictBands + timeline.genericBands).sort {
+				TimeBand timeBand ->
+					timeBand.startPosition.relativeOffset
+			}
+		}
+
+	}
 
 }

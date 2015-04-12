@@ -8,12 +8,14 @@ class BandStart extends ModelEntity {
     boolean isLinkedToPreviousBand
 	BandType type
 	String comment
+	boolean isLinkedToParentConflict
 
 	BandStart() {}
 
-	BandStart(BandType type, String comment) {
+	BandStart(BandType type, String comment, boolean isLinkedToParentConflict) {
 		this.type = type
 		this.comment = comment
+		this.isLinkedToParentConflict = isLinkedToParentConflict
 	}
 
 	String toString() {

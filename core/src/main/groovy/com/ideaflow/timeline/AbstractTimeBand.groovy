@@ -32,6 +32,10 @@ abstract class AbstractTimeBand implements TimeBand, TimeEntry {
 		return startPosition
 	}
 
+	boolean endsBefore(TimeBand timeBand) {
+		endPosition.isBefore(timeBand.endPosition)
+	}
+
 
 	private void initDuration() {
 		if (startPosition && endPosition) {

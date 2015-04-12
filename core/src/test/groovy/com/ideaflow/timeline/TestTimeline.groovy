@@ -63,4 +63,5 @@ class TestTimeline extends Specification {
 		assert timeline.sequencedTimelineDetail[2] == conflictBand2
 		assert timeline.sequencedTimelineDetail[3] == activityDetail2
 	}
+
 }

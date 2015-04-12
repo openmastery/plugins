@@ -24,11 +24,14 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 
 	@Override
 	protected boolean isPresentationEnabled(AnActionEvent e) {
-		boolean enabled = isIdeaFlowOpenAndNotPaused(e)
+		boolean enabled = isIdeaFlowOpen(e)
 
 		if (enabled) {
-			BandType activeBandStartType = getActiveBandStartType(e)
-			enabled = (activeBandStartType == null) || (activeBandStartType == bandType)
+			IFMController controller = getIFMController(e)
+
+			if (controller.isOpenConflict() && getActiveBandStart(e) && (getActiveBandStart(e).type != bandType)) {
+				enabled = false
+			}
 		}
 		return enabled
 	}
@@ -64,12 +67,12 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 			controller.endBand(e.project, bandType)
 		} else {
 			Conflict activeConflict = controller.getActiveConflict()
-			if (activeConflict != null) {
+			if ((activeConflict != null) && (controller.getActiveBandStart() == null)) {
 				String resolution = ToggleConflict.endConflict(e.project, controller, activeConflict)
-				controller.startBand(e.project, resolution, bandType)
+				controller.startBand(e.project, resolution, bandType, true)
 			} else {
 				String comment = controller.promptForInput(e.project, startBandTitle, startBandMessage)
-				controller.startBand(e.project, comment, bandType)
+				controller.startBand(e.project, comment, bandType, false)
 			}
 		}
 	}

@@ -34,6 +34,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		Conflict conflict = createConflict()
 		Resolution resolution = createResolution()
 		BandStart bandStart = createBandStart()
+        bandStart.isLinkedToParentConflict = true
 		BandEnd bandEnd = createBandEnd()
 	    Idle idle = createIdle()
 
@@ -48,7 +49,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		writer.write(bandStart)
 		writer.write(bandEnd)
 	    writer.write(idle)
-
+	    println stringWriter.toString()
         then:
 		IdeaFlowModel model = readModelAndClearIds()
 		assert model.created == createDate
