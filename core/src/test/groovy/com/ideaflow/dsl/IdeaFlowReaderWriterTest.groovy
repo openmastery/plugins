@@ -21,6 +21,8 @@ class IdeaFlowReaderWriterTest extends Specification {
 	private StringWriter stringWriter = new StringWriter()
 	private IdeaFlowWriter writer = new IdeaFlowWriter(stringWriter)
 
+
+
     void testReadWriteSymmetryWithData() {
         given:
 		DateTime createDate = new DateTime(NOW)

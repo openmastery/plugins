@@ -12,6 +12,8 @@ class IdeaFlowModel {
 	private Conflict activeConflict = null
 	private BandStart activeBandStart = null
 
+
+
 	IdeaFlowModel(File file, DateTime created) {
 		this.file = file
 		this.created = created

@@ -5,6 +5,7 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(callSuper = true)
 class BandStart extends ModelEntity {
 
+    boolean isLinkedToPreviousBand
 	BandType type
 	String comment
 

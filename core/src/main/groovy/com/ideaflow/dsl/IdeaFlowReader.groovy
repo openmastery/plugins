@@ -88,10 +88,6 @@ class IdeaFlowReader {
 		}
 
 		def editorActivity(Map editorActivityMap) {
-			if (editorActivityMap.containsKey("modified")) {
-				String modifiedString = editorActivityMap["modified"]
-				editorActivityMap["modified"] = Boolean.valueOf(modifiedString)
-			}
 			addModelEntity(EditorActivity, editorActivityMap)
 		}
 
@@ -131,6 +127,12 @@ class IdeaFlowReader {
 
 		private Map createConstructorMap(Map initialMap) {
 			Map constructorMap = initialMap.clone() as Map
+            constructorMap.each { key, value ->
+                String strValue = (value as String).toLowerCase()
+                if (strValue == 'true' || strValue == 'false') {
+                    constructorMap[key] = Boolean.valueOf(strValue)
+                }
+            }
 			constructorMap['created'] = toDate(constructorMap['created'] as String)
 			constructorMap['id'] = entityIdCounter++
 			constructorMap

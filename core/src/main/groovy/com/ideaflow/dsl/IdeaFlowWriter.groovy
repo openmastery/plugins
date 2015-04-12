@@ -50,7 +50,7 @@ class IdeaFlowWriter {
 	}
 
 	void write(Conflict conflict) {
-		writeItem('conflict', conflict, ['created', 'mistakeType', 'question', 'cause', 'notes'])
+		writeItem('conflict', conflict, ['created', 'mistakeType', 'question', 'cause', 'notes', 'isNested'])
 	}
 
 	void write(Resolution resolution) {
@@ -62,7 +62,7 @@ class IdeaFlowWriter {
 	}
 
 	void write(BandStart bandStart) {
-		writeItem('bandStart', bandStart, ['created', 'type', 'comment'])
+		writeItem('bandStart', bandStart, ['created', 'type', 'comment', 'isLinkedToPreviousBand'])
 	}
 
 	void write(BandEnd bandEnd) {

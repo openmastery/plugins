@@ -9,6 +9,7 @@ class Conflict extends ModelEntity {
 	String mistakeType
 	String cause
 	String notes
+    boolean isNested
 
 	Conflict() {}
 
