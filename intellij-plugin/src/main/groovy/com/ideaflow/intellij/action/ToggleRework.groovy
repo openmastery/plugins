@@ -25,7 +25,7 @@ class ToggleRework extends ToggleBandStart {
 		if (controller) {
 			BandStart activeBandStart = controller.getActiveBandStart()
 			if (activeBandStart) {
-				if (activeBandStart.isLinkedToParentConflict) {
+				if (activeBandStart.isLinkedToPreviousBand) {
 					return REWORK_CONFLICT_ICON
 				} else {
 					return REWORK_CONTAINER_ICON

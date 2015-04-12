@@ -170,7 +170,7 @@ class TestTimelineFactory extends Specification {
 		ConflictBand initialConflict = createConflictBand(TIME1_POSITION)
 		GenericBand containerBand = createGenericBand(TIME2_POSITION, TIME4_POSITION)
 		ConflictBand internalConflict = createConflictBand(TIME3_POSITION)
-		containerBand.bandStart.isLinkedToParentConflict = true
+		containerBand.bandStart.isLinkedToPreviousBand = true
 		timeline.addConflictBand(initialConflict)
 		timeline.addGenericBand(containerBand)
 		timeline.addConflictBand(internalConflict)

@@ -25,7 +25,7 @@ class ToggleLearning extends ToggleBandStart {
 		if (controller) {
 			BandStart activeBandStart = controller.getActiveBandStart()
 			if (activeBandStart) {
-				if (activeBandStart.isLinkedToParentConflict) {
+				if (activeBandStart.isLinkedToPreviousBand) {
 					return LEARNING_CONFLICT_ICON
 				} else {
 					return LEARNING_CONTAINER_ICON

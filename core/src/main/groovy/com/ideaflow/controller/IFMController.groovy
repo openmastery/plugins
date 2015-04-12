@@ -83,15 +83,15 @@ class IFMController<T> {
 		}
 	}
 
-	void startBand(T context, String comment, BandType bandType, boolean isLinkedToPreviousCommit) {
+	void startBand(T context, String comment, BandType bandType, boolean isLinkedToPreviousBand) {
 		if (comment) {
 			BandStart activeBandStart = getActiveBandStart()
 			if (activeBandStart) {
 				endBand(context, activeBandStart.type)
-				isLinkedToPreviousCommit = activeBandStart.isLinkedToParentConflict
+				isLinkedToPreviousBand = true
 			}
 
-			addModelEntity(context, new BandStart(bandType, comment, isLinkedToPreviousCommit))
+			addModelEntity(context, new BandStart(bandType, comment, isLinkedToPreviousBand))
 		}
 	}
 

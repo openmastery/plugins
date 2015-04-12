@@ -133,7 +133,7 @@ class TimelineFactory {
 		}
 
 		private TimeBandContainer createTimeBandContainer(GenericBand genericBand, ConflictBand lastConflictBand) {
-			ConflictBand linkedConflictBand = genericBand.isLinkedToParentConflict() ? lastConflictBand : null
+			ConflictBand linkedConflictBand = genericBand.isLinkedToPreviousBand() ? lastConflictBand : null
 			new TimeBandContainer(genericBand, linkedConflictBand)
 		}
 
