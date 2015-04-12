@@ -24,7 +24,7 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
 
 	@Override
 	protected boolean isPresentationEnabled(AnActionEvent e) {
-		boolean enabled = isIdeaFlowOpen(e)
+		boolean enabled = isIdeaFlowOpenAndNotPaused(e)
 
 		if (enabled) {
 			IFMController controller = getIFMController(e)
