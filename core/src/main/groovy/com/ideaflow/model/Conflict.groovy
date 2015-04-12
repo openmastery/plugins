@@ -9,13 +9,18 @@ class Conflict extends ModelEntity {
 	String mistakeType
 	String cause
 	String notes
-//    boolean isNested
+    boolean isNested
 
 	Conflict() {}
 
 	Conflict(String question) {
-		this.question = question
+        this(question, false)
 	}
+
+    Conflict(String question, boolean isNested) {
+   		this.question = question
+        this.isNested = isNested
+   	}
 
 	String toString() {
 		"Conflict: $id, $created, $question"

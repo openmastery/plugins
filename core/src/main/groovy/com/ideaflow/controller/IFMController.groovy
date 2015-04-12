@@ -73,7 +73,8 @@ class IFMController<T> {
 
 	void startConflict(T context, String question) {
 		if (question) {
-			addModelEntity(context, new Conflict(question))
+            boolean nested = isOpenBand()
+			addModelEntity(context, new Conflict(question, nested))
 		}
 	}
 
