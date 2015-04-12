@@ -1,9 +1,13 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
+import com.ideaflow.intellij.IdeaFlowApplicationComponent
+import com.ideaflow.model.BandStart
+import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
+import javax.swing.Icon
 
 @Mixin(ActionSupport)
 class ToggleConflict extends IdeaFlowToggleAction {
@@ -11,6 +15,9 @@ class ToggleConflict extends IdeaFlowToggleAction {
 	private static final String START_CONFLICT_TITLE = "Start Conflict"
 	private static final String START_CONFLICT_MSG = "What conflict question is in your head?"
 	private static final String END_CONFLICT_TITLE = "End Conflict"
+    private static final Icon CONFLICT_ICON = IdeaFlowApplicationComponent.getIcon("conflict.png")
+    private static final Icon CONFLICT_REWORK_ICON = IdeaFlowApplicationComponent.getIcon("conflict_rework.png")
+   	private static final Icon CONFLICT_LEARNING_ICON = IdeaFlowApplicationComponent.getIcon("conflict_learning.png")
 
 	@Override
 	protected boolean isPresentationEnabled(AnActionEvent e) {
@@ -29,7 +36,22 @@ class ToggleConflict extends IdeaFlowToggleAction {
 		return activeConflict ? "${END_CONFLICT_TITLE}: ${activeConflict.question}" : START_CONFLICT_TITLE
 	}
 
-	@Override
+    @Override
+    protected Icon getPresentationIcon(AnActionEvent e) {
+        IFMController controller = getIFMController(e)
+
+        if (controller) {
+            BandStart activeBandStart = controller.getActiveBandStart()
+            if (activeBandStart?.type == BandType.learning) {
+                return CONFLICT_LEARNING_ICON
+            } else if (activeBandStart?.type == BandType.rework) {
+                return CONFLICT_REWORK_ICON
+            }
+        }
+        return CONFLICT_ICON
+    }
+
+    @Override
 	boolean isSelected(AnActionEvent e) {
 		return isOpenConflict(e)
 	}
