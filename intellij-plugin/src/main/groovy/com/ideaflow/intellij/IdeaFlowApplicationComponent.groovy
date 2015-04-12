@@ -101,6 +101,10 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 		}
 
 		void markActiveFileEventAsIdleIfDeactivationThresholdExceeded(Project project) {
+			if (getIFMController().isPaused()) {
+				deactivatedAt = null
+			}
+
 			Duration deactivationDuration = getDeactivationDuration()
 			if (!getIFMController().isIdeaFlowOpen() || !deactivationDuration) {
 				return
