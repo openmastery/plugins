@@ -151,7 +151,12 @@ class IFMController<T> {
 		}
 	}
 
-	void startFileEvent(T context, String eventName) {
+    void flushActiveEvent() {
+        eventToIntervalHandler?.flushActiveEvent()
+    }
+
+
+    void startFileEvent(T context, String eventName) {
 		eventToIntervalHandler?.startEvent(eventName)
 		flush(context)
 	}
@@ -210,7 +215,7 @@ class IFMController<T> {
 	}
 
 	private void addModelEntity(T context, ModelEntity event) {
-		endFileEvent(null)
+		flushActiveEvent()
 		activeIdeaFlowModel?.addModelEntity(event)
 		flush(context)
 		startFileEventForCurrentFile(context)

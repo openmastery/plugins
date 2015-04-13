@@ -50,6 +50,16 @@ class EventToEditorActivityHandler {
 		activeEvent = null
 	}
 
+    void flushActiveEvent() {
+        String activeEventName = activeEvent?.eventName
+
+        if (activeEventName) {
+            endEvent()
+            lastEditorActivity = null
+            startEvent(activeEventName)
+        }
+    }
+
 	void endActiveEventAsIdle(String comment) {
 		if (activeEvent) {
 			int duration = (DateTime.now().millis - activeEvent.time.millis) / 1000
