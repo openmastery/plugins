@@ -22,7 +22,6 @@ class TimelineFactory {
 		ifm.entityList.each { ModelEntity entity ->
 			builder.addEntity(entity)
 		}
-		new TimelineTimeBandContainerBuilder().addTimeBandContainersToTimeline(builder.timeline)
 		builder.timeline
 	}
 
@@ -93,55 +92,6 @@ class TimelineFactory {
 
 		void addEntity(ModelEntity unknown) {
 			throw new RuntimeException("Unknown ModelEntity type ${unknown?.class}")
-		}
-
-	}
-
-	private static class TimelineTimeBandContainerBuilder {
-		void addTimeBandContainersToTimeline(Timeline timeline) {
-			TimeBandContainer activeContainer
-			ConflictBand lastConflictBand
-
-			List<TimeBand> sortedTimeBands = getTimeBandsSortedByStartTime(timeline)
-			sortedTimeBands.each { AbstractTimeBand timeBand ->
-				if (activeContainer == null) {
-					if (timeBand instanceof GenericBand) {
-						activeContainer = createTimeBandContainer(timeBand, lastConflictBand)
-					}
-				} else {
-					if (timeBand instanceof GenericBand) {
-						throw new RuntimeException("GenericBand nesting not supported, band=${timeBand} " +
-								"started before end of ${activeContainer.primaryGenericBand}")
-					} else if (timeBand.endsBefore(activeContainer.primaryGenericBand)) {
-						activeContainer.addTimeBand(timeBand)
-					} else {
-						if (!activeContainer.isEmpty()) {
-							timeline.addTimeBandContainer(activeContainer)
-						}
-						activeContainer = null
-					}
-				}
-
-				if (timeBand instanceof ConflictBand) {
-					lastConflictBand = (ConflictBand) timeBand
-				}
-			}
-
-			if (activeContainer && !activeContainer.isEmpty()) {
-				timeline.addTimeBandContainer(activeContainer)
-			}
-		}
-
-		private TimeBandContainer createTimeBandContainer(GenericBand genericBand, ConflictBand lastConflictBand) {
-			ConflictBand linkedConflictBand = genericBand.isLinkedToPreviousBand() ? lastConflictBand : null
-			new TimeBandContainer(genericBand, linkedConflictBand)
-		}
-
-		private List<TimeBand> getTimeBandsSortedByStartTime(Timeline timeline) {
-			(timeline.conflictBands + timeline.genericBands).sort {
-				TimeBand timeBand ->
-					timeBand.startPosition.relativeOffset
-			}
 		}
 
 	}
