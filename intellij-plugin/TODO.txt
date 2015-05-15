@@ -1,3 +1,15 @@
+Quickstart
+- merge tasks (save one file instead of multiple)...
+- REST layer (PUT IFM events/GET initial state)
+- add meta data (in preference panel)
+
+
+
+
+------------
+
+
+
 Adding information to IdeaFlowMaps...
 
 taskId, description, author, project
