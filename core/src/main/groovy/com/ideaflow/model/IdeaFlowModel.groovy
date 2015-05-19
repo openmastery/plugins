@@ -1,63 +1,64 @@
 package com.ideaflow.model
 
+import com.ideaflow.model.entry.*
 import org.joda.time.DateTime
 
 class IdeaFlowModel {
 
-	List<ModelEntity> entityList = []
+	Task task
+
+	List<ModelEntry> entryList = []
 	boolean isPaused = false
-	File file
 	DateTime created
 
 	private Conflict activeConflict = null
 	private BandStart activeBandStart = null
 
 
-
-	IdeaFlowModel(File file, DateTime created) {
-		this.file = file
+	IdeaFlowModel(Task task, DateTime created) {
+		this.task = task
 		this.created = created
 	}
 
 	IdeaFlowModel() {}
 
-	void addModelEntity(Conflict conflict) {
+	void addModelEntry(Conflict conflict) {
 		addModelEntityInternal(conflict) {
 			activeConflict = conflict
 		}
 	}
 
-	void addModelEntity(Resolution resolution) {
+	void addModelEntry(Resolution resolution) {
 		addModelEntityInternal(resolution) {
 			activeConflict = null
 		}
 	}
 
-	void addModelEntity(BandStart bandStart) {
+	void addModelEntry(BandStart bandStart) {
 		addModelEntityInternal(bandStart) {
 			activeBandStart = bandStart
 		}
 	}
 
-	void addModelEntity(BandEnd bandEnd) {
+	void addModelEntry(BandEnd bandEnd) {
 		addModelEntityInternal(bandEnd) {
 			activeBandStart = null
 		}
 	}
 
-	void addModelEntity(ModelEntity modelEntity) {
+	void addModelEntry(ModelEntry modelEntity) {
 		addModelEntityInternal(modelEntity, null)
 	}
 
-	private void addModelEntityInternal(ModelEntity modelEntity, Closure action) {
+	private void addModelEntityInternal(ModelEntry modelEntity, Closure action) {
 		if (modelEntity && !isPaused) {
-			entityList.add(modelEntity)
+			entryList.add(modelEntity)
 			action?.call()
 		}
 	}
 
 	int size() {
-		entityList.size()
+		entryList.size()
 	}
 
 	Conflict getActiveConflict() {

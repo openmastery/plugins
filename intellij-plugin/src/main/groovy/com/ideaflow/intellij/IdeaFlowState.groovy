@@ -2,24 +2,22 @@ package com.ideaflow.intellij
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.controller.IFMWorkingSetListener
-import com.intellij.ide.util.PropertiesComponent
+import com.ideaflow.intellij.settings.IdeaSettingsService
+import com.ideaflow.model.Task
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 
 class IdeaFlowState {
 
-	private static final String OPEN_FILE_PATHS = "IFM.OpenFilePaths"
-	private static final String ACTIVE_FILE_PATH = "IFM.ActiveFilePath"
-
 	private IFMController controller
-	private PropertiesComponent properties
+	private IdeaSettingsService storage
 	private boolean restoringActiveState = false
 
 	// TODO: clean this up
 
 	IdeaFlowState(IFMController controller) {
 		this.controller = controller
-		properties = PropertiesComponent.getInstance()
+		this.storage = new IdeaSettingsService()
 
 		controller.addWorkingSetListener(new IFMWorkingSetListener() {
 			@Override
@@ -46,16 +44,17 @@ class IdeaFlowState {
 	public void restoreActiveState(Project project) {
 		restoringActiveState = true
 		try {
-			List<File> savedOpenFiles = getSavedOpenFiles()
-			File savedActiveFile = getSavedActiveFile()
+			List<Task> savedOpenTasks = storage.loadOpenTasks()
+			Task savedActiveTask = storage.loadActiveTask()
 
-			if (!savedActiveFile && savedOpenFiles) {
-				savedActiveFile = savedOpenFiles.first()
+			if (!savedActiveTask.hasTaskId() && savedOpenTasks) {
+				savedActiveTask = savedOpenTasks.first()
 			}
 
-			controller.setWorkingSetFiles(savedOpenFiles)
-			if (savedActiveFile) {
-				controller.newIdeaFlow(project, savedActiveFile)
+			controller.setWorkingSetTasks(savedOpenTasks)
+
+			if (savedActiveTask.hasTaskId()) {
+				controller.newIdeaFlow(project, savedActiveTask)
 			}
 		} finally {
 			restoringActiveState = false
@@ -63,40 +62,11 @@ class IdeaFlowState {
 	}
 
 	private void saveOpenFiles() {
-		List<File> activeFiles = controller.getWorkingSetFiles()
-		properties.setValue(OPEN_FILE_PATHS, toAbsolutePaths(activeFiles)?.join('\n'))
+		List<Task> openTasks = controller.getWorkingSetTasks()
+		storage.saveOpenTasks(openTasks)
 	}
 
 	private void saveActiveFile() {
-		properties.setValue(ACTIVE_FILE_PATH, controller.activeIdeaFlowModel?.file?.absolutePath)
+		storage.saveActiveTask(controller.activeIdeaFlowModel?.task)
 	}
-
-	public List<File> getSavedOpenFiles() {
-		String[] filePaths = properties.getValue(OPEN_FILE_PATHS)?.split('\n')
-		filePaths ? toFileList(filePaths) : []
-	}
-
-	public File getSavedActiveFile() {
-		String activeFilePath = properties.getValue(ACTIVE_FILE_PATH)
-		File activeFile = null
-		if (activeFilePath) {
-			activeFile = new File(activeFilePath)
-		}
-		activeFile?.exists() ? activeFile : null
-	}
-
-	private String[] toAbsolutePaths(List<File> files) {
-		files.collect { File file ->
-			file.absolutePath
-		} as String[]
-	}
-
-	private List<File> toFileList(String[] filePaths) {
-		filePaths.collect { String filePath ->
-			new File(filePath)
-		}.findAll { File file ->
-			file.exists()
-		}
-	}
-
 }

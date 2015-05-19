@@ -1,9 +1,10 @@
-package com.ideaflow.model
+package com.ideaflow.model.entry
 
+import com.ideaflow.model.entry.ModelEntry
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)
-class Resolution extends ModelEntity {
+class Resolution extends ModelEntry {
 
 	String answer
 

@@ -1,7 +1,7 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
 import org.joda.time.DateTime
 

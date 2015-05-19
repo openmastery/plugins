@@ -1,6 +1,6 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.entry.EditorActivity
 
 class ActivityDetail implements TimeEntry, Entity {
 

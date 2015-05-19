@@ -1,7 +1,7 @@
 package com.ideaflow.controller
 
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Idle
+import com.ideaflow.model.entry.Idle
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification
@@ -51,7 +51,7 @@ class TestIFMController extends Specification {
 
 	def "markActiveFileEventAsIdle should record the active event as an idle event"() {
 		given:
-		controller.activeIdeaFlowModel.entityList = []
+		controller.activeIdeaFlowModel.entryList = []
 		controller.startFileEvent(null, "some-event")
 
 		when:
@@ -59,7 +59,7 @@ class TestIFMController extends Specification {
 		controller.markActiveFileEventAsIdle("idle comment")
 
 		then:
-		List entities = controller.getActiveIdeaFlowModel().getEntityList()
+		List entities = controller.getActiveIdeaFlowModel().getEntryList()
 		assert entities[0] == new Idle(new DateTime(NOW), "idle comment", 1)
 		assert entities.size() == 1
 	}
@@ -67,13 +67,13 @@ class TestIFMController extends Specification {
 	def "markActiveFileEventAsIdle should do nothing if there is no active file event"() {
 		given:
 		controller.endFileEvent(null)
-		controller.activeIdeaFlowModel.entityList = []
+		controller.activeIdeaFlowModel.entryList = []
 
 		when:
 		controller.markActiveFileEventAsIdle("idle comment")
 
 		then:
-		assert controller.getActiveIdeaFlowModel().getEntityList() == []
+		assert controller.getActiveIdeaFlowModel().getEntryList() == []
 	}
 
 	def "newIdeaFlow should suspend existing idea flow but retain old file in open file list"() {
@@ -86,7 +86,7 @@ class TestIFMController extends Specification {
 		then:
 		controller.activeIdeaFlowModel != oldActiveModel
 		controller.activeIdeaFlowModel.file == newModelFile
-		controller.workingSetFiles == [oldModelFile, controller.activeIdeaFlowModel.file]
+		controller.workingSetTasks == [oldModelFile, controller.activeIdeaFlowModel.file]
 	}
 
 	def "closeIdeaFlow should remove file from open file list"() {
@@ -94,7 +94,7 @@ class TestIFMController extends Specification {
 		controller.closeIdeaFlow("context")
 
 		then:
-		controller.workingSetFiles == []
+		controller.workingSetTasks == []
 	}
 
 	def "should not add multiple files to open file list if newIdeaFlow called with same file twice"() {
@@ -105,7 +105,7 @@ class TestIFMController extends Specification {
 		controller.newIdeaFlow("string", oldModelFile)
 
 		then:
-		controller.workingSetFiles == [oldModelFile]
+		controller.workingSetTasks == [oldModelFile]
 	}
 
 }

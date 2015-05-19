@@ -1,14 +1,14 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.EditorActivity
-import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.EditorActivity
+import com.ideaflow.model.entry.Idle
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Note
+import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.StateChange
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -73,7 +73,7 @@ class IdeaFlowWriter {
 		writeItem('idle', idle, ['created', 'duration', 'comment'])
 	}
 
-	private void writeItem(String name, ModelEntity entity, List orderedKeyList) {
+	private void writeItem(String name, ModelEntry entity, List orderedKeyList) {
 		Map properties = getPropertiesToWrite(entity)
 		assertActualPropertyKeysMatchDeclaredKeyList(entity, properties, orderedKeyList)
 
@@ -106,7 +106,7 @@ class IdeaFlowWriter {
 		}
 	}
 
-	private void assertActualPropertyKeysMatchDeclaredKeyList(ModelEntity entity, Map map, List declaredKeylist) {
+	private void assertActualPropertyKeysMatchDeclaredKeyList(ModelEntry entity, Map map, List declaredKeylist) {
 		String simpleName = entity.class.simpleName
 		List actualKeyList = map.keySet().asList()
 
@@ -121,7 +121,7 @@ class IdeaFlowWriter {
 		}
 	}
 
-	private Map getPropertiesToWrite(ModelEntity entity) {
+	private Map getPropertiesToWrite(ModelEntry entity) {
 		Map properties = entity.getProperties()
 		properties.remove('id')
 		properties.remove('class')

@@ -1,19 +1,13 @@
 package com.ideaflow.controller
 
-import com.ideaflow.dsl.DSLTimelineSerializer
-import com.ideaflow.dsl.IdeaFlowReader
+import com.ideaflow.dsl.client.IIdeaFlowClient
+import com.ideaflow.dsl.client.local.IdeaFlowFileClient
 import com.ideaflow.event.EventToEditorActivityHandler
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.ModelEntity
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
-import org.joda.time.DateTime
+import com.ideaflow.model.Task
+import com.ideaflow.model.entry.*
 
 class IFMController<T> {
 
@@ -22,8 +16,12 @@ class IFMController<T> {
 	private IDEService<T> ideService
 	private IFMWorkingSet workingSet
 
+	private IIdeaFlowClient client
+
+
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
+		this.client = new IdeaFlowFileClient(ideService: ideService)
 		this.workingSet = new IFMWorkingSet()
 	}
 
@@ -31,16 +29,16 @@ class IFMController<T> {
 		workingSet.addWorkingSetListener(workingSetListener)
 	}
 
-	List<File> getWorkingSetFiles() {
-		workingSet.getIfmFiles()
+	List<Task> getWorkingSetTasks() {
+		workingSet.getTasks()
 	}
 
-	void setWorkingSetFiles(List<File> files) {
-		workingSet.setIfmFiles(files)
+	void setWorkingSetTasks(List<Task> tasks) {
+		workingSet.setTasks(tasks)
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
-		ideaFlowModel?.file?.exists() ? ideaFlowModel : null
+		ideaFlowModel?.task ? ideaFlowModel : null
 	}
 
 	String promptForInput(T context, String title, String message) {
@@ -48,7 +46,7 @@ class IFMController<T> {
 	}
 
 	String getActiveIdeaFlowName() {
-		activeIdeaFlowModel?.file?.name
+		activeIdeaFlowModel?.task?.taskId
 	}
 
 	boolean isIdeaFlowOpen() {
@@ -74,13 +72,13 @@ class IFMController<T> {
 	void startConflict(T context, String question) {
 		if (question) {
             boolean nested = isOpenBand()
-			addModelEntity(context, new Conflict(question, nested))
+			addModelEntry(context, new Conflict(question, nested))
 		}
 	}
 
 	void endConflict(T context, String answer) {
 		if (answer) {
-			addModelEntity(context, new Resolution(answer))
+			addModelEntry(context, new Resolution(answer))
 		}
 	}
 
@@ -92,38 +90,30 @@ class IFMController<T> {
 				isLinkedToPreviousBand = true
 			}
 
-			addModelEntity(context, new BandStart(bandType, comment, isLinkedToPreviousBand))
+			addModelEntry(context, new BandStart(bandType, comment, isLinkedToPreviousBand))
 		}
 	}
 
 	void endBand(T context, BandType bandType) {
 		if (bandType) {
-			addModelEntity(context, new BandEnd(bandType))
+			addModelEntry(context, new BandEnd(bandType))
 		}
 	}
 
 	void addNote(T context, String comment) {
 		if (comment) {
-			addModelEntity(context, new Note(comment))
+			addModelEntry(context, new Note(comment))
 		}
 	}
 
-	void newIdeaFlow(T context, File file) {
+	void newIdeaFlow(T context, Task task) {
+
 		suspendActiveIdeaFlow(context)
 
-		file = addExtension(file)
-		if (ideService.fileExists(context, file)) {
-			println("Resuming existing IdeaFlow: ${file.absolutePath}")
-			String xml = ideService.readFile(context, file)
-			ideaFlowModel = new IdeaFlowReader().readModel(file, xml)
-			ideaFlowModel.file = file
-		} else {
-			println("Creating new IdeaFlow: ${file.absolutePath}")
-			ideService.createNewFile(context, file, "")
-			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
-		}
+		ideaFlowModel = client.readModel(context, task)
 
-		workingSet.setActiveIfmFile(ideaFlowModel.file)
+		workingSet.setActiveTask(task)
+
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -133,13 +123,13 @@ class IFMController<T> {
 		if (activeIdeaFlowModel) {
 			suspendActiveIdeaFlow(context)
 
-			workingSet.removeIfmFile(ideaFlowModel.file)
+			workingSet.removeTask(ideaFlowModel.task)
 
 			if (workingSet.isEmpty()) {
 				ideaFlowModel = null
 				eventToIntervalHandler = null
 			} else {
-				newIdeaFlow(context, workingSet.getIfmFiles().first())
+				newIdeaFlow(context, workingSet.getTasks().first())
 			}
 		}
 	}
@@ -195,28 +185,19 @@ class IFMController<T> {
 		activeIdeaFlowModel?.isPaused
 	}
 
-	private File addExtension(File file) {
-		File fileWithExtension = file
-		if (file.name.endsWith(".ifm") == false) {
-			fileWithExtension = new File(file.absolutePath + ".ifm")
-		}
-		return fileWithExtension
-	}
-
 	private void flush(T context) {
 		if (activeIdeaFlowModel) {
-			String xml = new DSLTimelineSerializer().serialize(activeIdeaFlowModel)
-			ideService.writeFile(context, activeIdeaFlowModel.file, xml)
+			client.saveModel(context, activeIdeaFlowModel)
 		}
 	}
 
 	private void addStateChange(T context, StateChangeType type) {
-		addModelEntity(context, new StateChange(type))
+		addModelEntry(context, new StateChange(type))
 	}
 
-	private void addModelEntity(T context, ModelEntity event) {
+	private void addModelEntry(T context, ModelEntry event) {
 		flushActiveEvent()
-		activeIdeaFlowModel?.addModelEntity(event)
+		activeIdeaFlowModel?.addModelEntry(event)
 		flush(context)
 		startFileEventForCurrentFile(context)
 	}
