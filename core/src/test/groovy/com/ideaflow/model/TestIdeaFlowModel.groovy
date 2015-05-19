@@ -13,7 +13,7 @@ class TestIdeaFlowModel extends Specification {
 		model.isPaused = true
 
         when:
-		model.addModelEntity(createConflict(NOW))
+		model.addModelEntry(createConflict(NOW))
 
         then:
 		assert model.size() == 0
@@ -25,7 +25,7 @@ class TestIdeaFlowModel extends Specification {
 		model.isPaused = true
 
         when:
-		model.addModelEntity(createEditorActivity('test', NOW))
+		model.addModelEntry(createEditorActivity('test', NOW))
 
         then:
 		assert model.size() == 0
@@ -36,13 +36,13 @@ class TestIdeaFlowModel extends Specification {
 		assert model.isOpenConflict() == false
 
         when:
-		model.addModelEntity(createConflict(TIME1))
+		model.addModelEntry(createConflict(TIME1))
 
         then:
 		assert model.isOpenConflict() == true
 
         when:
-		model.addModelEntity(createResolution(TIME2))
+		model.addModelEntry(createResolution(TIME2))
         then:
 		assert model.isOpenConflict() == false
 	}

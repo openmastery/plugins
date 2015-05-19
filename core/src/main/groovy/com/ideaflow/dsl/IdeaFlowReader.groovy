@@ -1,15 +1,8 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.Task
+import com.ideaflow.model.entry.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -34,8 +27,8 @@ class IdeaFlowReader {
 		this.chunkSize = chunkSize
 	}
 
-	IdeaFlowModel readModel(File modelFile, String dslContent) {
-		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(modelFile)
+	IdeaFlowModel readModel(Task task, String dslContent) {
+		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(task)
 
 		for (List<String> dslContentChunk : dslContent.readLines().collate(chunkSize)) {
 			String partialDslContent = dslContentChunk.join(LINE_SEPARATOR)
@@ -74,8 +67,8 @@ class IdeaFlowReader {
 		private int entityIdCounter
 		private DateTimeFormatter dateFormat
 
-		IdeaFlowModelLoader(File modelFile) {
-			model = new IdeaFlowModel(modelFile, new DateTime())
+		IdeaFlowModelLoader(Task task) {
+			model = new IdeaFlowModel(task, new DateTime())
 			entityIdCounter = 1
 		}
 
@@ -130,8 +123,8 @@ class IdeaFlowReader {
 
 		private void addModelEntity(Class type, Map initialMap) {
 			Map constructorMap = createConstructorMap(initialMap)
-			ModelEntity entity = type.newInstance(constructorMap)
-			model.addModelEntity(entity)
+			ModelEntry entity = type.newInstance(constructorMap)
+			model.addModelEntry(entity)
 		}
 
 		private Map createConstructorMap(Map initialMap) {

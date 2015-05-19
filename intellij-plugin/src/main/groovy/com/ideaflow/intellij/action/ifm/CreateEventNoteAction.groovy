@@ -1,7 +1,8 @@
-package com.ideaflow.intellij.action
+package com.ideaflow.intellij.action.ifm
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
+import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 

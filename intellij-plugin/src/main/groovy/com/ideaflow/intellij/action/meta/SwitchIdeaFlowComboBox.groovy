@@ -1,7 +1,10 @@
-package com.ideaflow.intellij.action
+package com.ideaflow.intellij.action.meta
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
+import com.ideaflow.intellij.action.ActionSupport
+import com.ideaflow.intellij.settings.AddNewTaskWizard
+import com.ideaflow.model.Task
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -9,8 +12,8 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
-import javax.swing.Icon
-import javax.swing.JComponent
+
+import javax.swing.*
 
 /**
  * NOTE: all events generated from dynamically created actions seem to have the most recently opened project attached.
@@ -29,18 +32,18 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_inactive.png")
 
 		private Project project
-		private File ifmFile
+		private Task task
 
-		public ActivateIdeaFlowAction(Project project, File ifmFile) {
+		public ActivateIdeaFlowAction(Project project, Task task) {
 			this.project = project
-			this.ifmFile = ifmFile
+			this.task = task
 
-			getTemplatePresentation().setText(ifmFile.name, false)
-			getTemplatePresentation().setDescription("Set ${ifmFile.name} as Active IdeaFlow")
+			getTemplatePresentation().setText(task.taskId, false)
+			getTemplatePresentation().setDescription("Set ${task.taskId} as Active IdeaFlow")
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
-			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, ifmFile)
+			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, task)
 		}
 
 		@Override
@@ -48,16 +51,16 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			super.update(e)
 
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			File activeIfmFile = controller.activeIdeaFlowModel?.file
-			e.presentation.icon = (activeIfmFile == ifmFile) ? ACTIVE_ICON : INACTIVE_ICON
+			Task activeTask = controller.activeIdeaFlowModel?.task
+			e.presentation.icon = (activeTask == task) ? ACTIVE_ICON : INACTIVE_ICON
 		}
 	}
 
-	private static class OpenActiveInBrowserAction extends AnAction {
+	private static class OpenActiveInVisualizerAction extends AnAction {
 
 		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
 
-		OpenActiveInBrowserAction() {
+		OpenActiveInVisualizerAction() {
 			getTemplatePresentation().setText("Open in Visualizer")
 			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
 			getTemplatePresentation().setIcon(BROWSE_ICON)
@@ -69,7 +72,32 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			File activeIfmFile = controller.activeIdeaFlowModel?.file
 
 			if (activeIfmFile) {
-				OpenInBrowserAction.openInBrowser(activeIfmFile)
+				OpenInVisualizerAction.openInBrowser(activeIfmFile)
+			}
+		}
+	}
+
+	private static class AddNewTaskAction extends AnAction {
+
+		private Project project
+
+		AddNewTaskAction(Project project) {
+
+			this.project = project
+
+			getTemplatePresentation().setText("Add new task...")
+			getTemplatePresentation().setDescription("Add a new task")
+		}
+
+		@Override
+		void actionPerformed(final AnActionEvent e) {
+
+			def wizard = new AddNewTaskWizard(project)
+
+			def result = wizard.showAndSaveSettings()
+
+			if (result) {
+				IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, wizard.task)
 			}
 		}
 	}
@@ -101,13 +129,15 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		if (project != null) {
 			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
 
-			for (File ifmFile : controller.getWorkingSetFiles()) {
-				actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
+			for (Task task : controller.getWorkingSetTasks()) {
+				actionGroup.add(new ActivateIdeaFlowAction(project, task))
 			}
 
 			actionGroup.addSeparator();
-			actionGroup.add(new OpenActiveInBrowserAction())
+			actionGroup.add(new OpenActiveInVisualizerAction())
 			actionGroup.add(new RemoveIdeaFlowAction(project))
+			actionGroup.addSeparator();
+			actionGroup.add(new AddNewTaskAction(project))
 		}
 		return actionGroup
 	}
@@ -118,10 +148,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		IFMController controller = getIFMController(e)
 		if (controller) {
-			boolean enabled = isIdeaFlowOpenAndNotPaused(e)
-			e.presentation.enabled = enabled
-			e.presentation.text = enabled ? controller.getActiveIdeaFlowName() : ""
+			e.presentation.enabled = true
+			e.presentation.text = controller.getActiveIdeaFlowName() ?: "Add new task"
 		}
 	}
-
 }

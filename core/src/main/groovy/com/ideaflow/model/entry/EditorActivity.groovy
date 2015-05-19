@@ -1,10 +1,11 @@
-package com.ideaflow.model
+package com.ideaflow.model.entry
 
+import com.ideaflow.model.entry.ModelEntry
 import groovy.transform.EqualsAndHashCode
 import org.joda.time.DateTime
 
 @EqualsAndHashCode(callSuper = true)
-class EditorActivity extends ModelEntity {
+class EditorActivity extends ModelEntry {
 
 	String name
 	int duration

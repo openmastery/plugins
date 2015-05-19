@@ -1,8 +1,8 @@
 package com.ideaflow.event
 
-import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Idle
+import com.ideaflow.model.entry.Idle
 import org.joda.time.DateTime
 
 class EventToEditorActivityHandler {
@@ -64,7 +64,7 @@ class EventToEditorActivityHandler {
 		if (activeEvent) {
 			int duration = (DateTime.now().millis - activeEvent.time.millis) / 1000
 			Idle idle = new Idle(activeEvent.time, comment, duration)
-			model.addModelEntity(idle)
+			model.addModelEntry(idle)
 
 			activeEvent = null
 			lastEditorActivity = null
@@ -84,7 +84,7 @@ class EventToEditorActivityHandler {
 			if (isEquivalentActivity(editorActivity, lastEditorActivity)) {
 				lastEditorActivity.duration += editorActivity.duration
 			} else {
-				model.addModelEntity(editorActivity)
+				model.addModelEntry(editorActivity)
 				lastEditorActivity = editorActivity
 			}
 		}

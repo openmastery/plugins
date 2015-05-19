@@ -1,11 +1,8 @@
-package com.ideaflow.intellij.action;
+package com.ideaflow.intellij.action.meta;
 
-import com.ideaflow.controller.IFMController;
-import com.ideaflow.intellij.IdeaFlowApplicationComponent;
 import com.ideaflow.intellij.file.IdeaFlowMapFileType;
 import com.intellij.CommonBundle;
 import com.intellij.ide.actions.CreateElementActionBase;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
@@ -13,8 +10,12 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+
 import java.io.File;
 
+/**
+ * @deprecated
+ */
 class NewIfmFileAction extends CreateElementActionBase {
 
 	private static final String TITLE = "Create IFM File";
@@ -48,7 +49,8 @@ class NewIfmFileAction extends CreateElementActionBase {
 		if (createdElements.length > 0) {
 			String ifmFilePath = createdElements[0].getContainingFile().getVirtualFile().getPath();
 			File ifmFile = new File(ifmFilePath);
-			openIdeaFlowMap(project, ifmFile);
+
+			//openIdeaFlowMap(project, ifmFile);
 		}
 		return createdElements;
 	}
@@ -75,7 +77,7 @@ class NewIfmFileAction extends CreateElementActionBase {
 		return (PsiFile) directory.add(file);
 	}
 
-	private void openIdeaFlowMap(final Project project, final File file) {
+	/*private void openIdeaFlowMap(final Project project, final File file) {
 		final IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController();
 
 		ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -83,6 +85,6 @@ class NewIfmFileAction extends CreateElementActionBase {
 				controller.newIdeaFlow(project, file);
 			}
 		});
-	}
+	}*/
 
 }

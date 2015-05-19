@@ -1,15 +1,15 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.entry.Idle
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Note
+import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.StateChange
 import com.ideaflow.model.StateChangeType
 import org.joda.time.DateTime
 import spock.lang.Specification
@@ -53,22 +53,22 @@ class IdeaFlowReaderWriterTest extends Specification {
         then:
 		IdeaFlowModel model = readModelAndClearIds()
 		assert model.created == createDate
-		assert model.entityList.remove(0) == modifiedEditorActivity
-		assert model.entityList.remove(0) == unmodifiedEditorActivity
-		assert model.entityList.remove(0) == note
-		assert model.entityList.remove(0) == conflict
-		assert model.entityList.remove(0) == resolution
-		assert model.entityList.remove(0) == event
-		assert model.entityList.remove(0) == bandStart
-		assert model.entityList.remove(0) == bandEnd
-        assert model.entityList.remove(0) == idle
+		assert model.entryList.remove(0) == modifiedEditorActivity
+		assert model.entryList.remove(0) == unmodifiedEditorActivity
+		assert model.entryList.remove(0) == note
+		assert model.entryList.remove(0) == conflict
+		assert model.entryList.remove(0) == resolution
+		assert model.entryList.remove(0) == event
+		assert model.entryList.remove(0) == bandStart
+		assert model.entryList.remove(0) == bandEnd
+        assert model.entryList.remove(0) == idle
 		assert model.size() == 0
 	}
 
 	private IdeaFlowModel readModelAndClearIds() {
 		IdeaFlowModel model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
 
-		model.entityList.each { ModelEntity entity ->
+		model.entryList.each { ModelEntry entity ->
 			assert entity.id != null
 			entity.id = null
 		}
@@ -77,15 +77,15 @@ class IdeaFlowReaderWriterTest extends Specification {
 
     void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {
         given:
-		List<ModelEntity> subTypeInstances = getInitializedModelEntitySubClassInstances()
+		List<ModelEntry> subTypeInstances = getInitializedModelEntitySubClassInstances()
 
         when:
 		writer.writeInitialization(new DateTime(NOW))
-		subTypeInstances.each { ModelEntity entity ->
+		subTypeInstances.each { ModelEntry entity ->
 			try {
 				writer.write(entity)
 			} catch (MissingMethodException ex) {
-				throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
+				throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntry.simpleName} has just been added, " +
 						"ensure ${IdeaFlowWriter.simpleName} declares method write(${entity.class.simpleName})", ex)
 			}
 		}
@@ -93,26 +93,26 @@ class IdeaFlowReaderWriterTest extends Specification {
 		try {
 			model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
 		} catch (MissingMethodException ex) {
-			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
+			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntry.simpleName} has just been added, " +
 					"ensure ${IdeaFlowReader.simpleName} declares appropriate read(<subtype>) method", ex)
 		}
 
         then:
-		model.entityList.each { ModelEntity entity ->
+		model.entryList.each { ModelEntry entity ->
 			assert entity.id != null
 			entity.id = null
 		}
 		for (int i = 0; i < subTypeInstances.size(); i++) {
-			assert subTypeInstances[i] == model.entityList[i]
+			assert subTypeInstances[i] == model.entryList[i]
 		}
 		assert subTypeInstances.size() == model.size()
 	}
 
-	private List<ModelEntity> getInitializedModelEntitySubClassInstances() {
-		List<ModelEntity> subTypeInstances = getModelEntitySubClassInstances()
+	private List<ModelEntry> getInitializedModelEntitySubClassInstances() {
+		List<ModelEntry> subTypeInstances = getModelEntitySubClassInstances()
 		DateTime createDate = new DateTime(NOW)
 
-		subTypeInstances.each { ModelEntity entity ->
+		subTypeInstances.each { ModelEntry entity ->
 			createDate = createDate.plusSeconds(1)
 			entity.created = createDate
 		}
@@ -130,8 +130,8 @@ class IdeaFlowReaderWriterTest extends Specification {
 
         then:
 		IdeaFlowModel model = readModelAndClearIds()
-		assert model.entityList.remove(0) == conflict
-		assert model.entityList.size() == 0
+		assert model.entryList.remove(0) == conflict
+		assert model.entryList.size() == 0
 	}
 
     public void testQuoteAtStartOrEnd_ShouldNotExplode() {
@@ -146,9 +146,9 @@ class IdeaFlowReaderWriterTest extends Specification {
 
         then:
 		IdeaFlowModel model = readModelAndClearIds()
-		assert model.entityList.remove(0) == singleQuoteNote
-		assert model.entityList.remove(0) == doubleQuoteNote
-		assert model.entityList.size() == 0
+		assert model.entryList.remove(0) == singleQuoteNote
+		assert model.entryList.remove(0) == doubleQuoteNote
+		assert model.entryList.size() == 0
 	}
 
     public void testTripleQuotesInString_ShouldNotExpode() {
@@ -163,9 +163,9 @@ class IdeaFlowReaderWriterTest extends Specification {
 
         then:
 		IdeaFlowModel model = readModelAndClearIds()
-		assert model.entityList.remove(0) == tripleSingleQuoteNote
-		assert model.entityList.remove(0) == tripleDoubleQuoteNote
-		assert model.entityList.size() == 0
+		assert model.entryList.remove(0) == tripleSingleQuoteNote
+		assert model.entryList.remove(0) == tripleDoubleQuoteNote
+		assert model.entryList.size() == 0
 	}
 
 }

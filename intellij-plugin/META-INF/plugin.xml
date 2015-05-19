@@ -24,37 +24,33 @@
 	</project-components>
 
 	<actions>
-		<action id="IdeaFlow.Note" class="com.ideaflow.intellij.action.CreateEventNoteAction" text="Create Event Note"
+		<action id="IdeaFlow.Note" class="com.ideaflow.intellij.action.ifm.CreateEventNoteAction" text="Create Event Note"
 		        description="Create an event note in the active IdeaFlow" icon="/icons/note.png">
 		</action>
-		<action id="IdeaFlow.ToggleConflict" class="com.ideaflow.intellij.action.ToggleConflict"
+		<action id="IdeaFlow.ToggleConflict" class="com.ideaflow.intellij.action.ifm.ToggleConflict"
 		        icon="/icons/conflict.png">
 		</action>
-		<action id="IdeaFlow.ToggleLearning" class="com.ideaflow.intellij.action.ToggleLearning"
+		<action id="IdeaFlow.ToggleLearning" class="com.ideaflow.intellij.action.ifm.ToggleLearning"
 		        icon="/icons/learning.png">
 		</action>
-		<action id="IdeaFlow.ToggleRework" class="com.ideaflow.intellij.action.ToggleRework"
+		<action id="IdeaFlow.ToggleRework" class="com.ideaflow.intellij.action.ifm.ToggleRework"
 		        icon="/icons/rework.png">
 		</action>
-		<action id="IdeaFlow.TogglePause" class="com.ideaflow.intellij.action.TogglePause"
+		<action id="IdeaFlow.TogglePause" class="com.ideaflow.intellij.action.ifm.TogglePause"
 		        icon="/icons/pause.png">
 		</action>
 
-		<action id="IdeaFlow.NewIFMFile" class="com.ideaflow.intellij.action.NewIfmFileAction"
+		<action id="IdeaFlow.NewIFMFile" class="com.ideaflow.intellij.action.meta.NewIfmFileAction"
 		        text="IFM File" description="Create a new IFM file">
 			<add-to-group group-id="NewGroup" anchor="last"/>
 		</action>
 
-		<action id="IdeaFlow.ActivateIdeaFlow" class="com.ideaflow.intellij.action.ActivateIdeaFlowAction" text="Add IdeaFlow to WorkingSet"
-		        icon="/icons/ideaflow_add.png">
-			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-        </action>
-		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.OpenInBrowserAction" text="Open Visualizer"
+		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.meta.OpenInVisualizerAction" text="Open Visualizer"
 		        description="Open the active IdeaFlow in the Visualizer" icon="/icons/browse.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 		</action>
 
-		<action id="IdeaFlow.SwitchActive" class="com.ideaflow.intellij.action.SwitchIdeaFlowComboBox"/>
+		<action id="IdeaFlow.SwitchActive" class="com.ideaflow.intellij.action.meta.SwitchIdeaFlowComboBox"/>
 
 
 		<group id="com.ideaflow" text="IdeaFlow Group" description="IdeaFlow action group">
@@ -71,5 +67,6 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="com.ideaflow.intellij.file.IdeaFlowMapFileTypeLoader"/>
+        <applicationConfigurable instance="com.ideaflow.intellij.settings.IdeaSettings"/>
 	</extensions>
 </idea-plugin>

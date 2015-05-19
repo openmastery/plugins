@@ -1,9 +1,11 @@
-package com.ideaflow.model
+package com.ideaflow.model.entry
 
+import com.ideaflow.model.StateChangeType
+import com.ideaflow.model.entry.ModelEntry
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)
-class StateChange extends ModelEntity {
+class StateChange extends ModelEntry {
 
 	StateChangeType type
 

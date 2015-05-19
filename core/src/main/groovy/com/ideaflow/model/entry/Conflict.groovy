@@ -1,9 +1,10 @@
-package com.ideaflow.model
+package com.ideaflow.model.entry
 
+import com.ideaflow.model.entry.ModelEntry
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)
-class Conflict extends ModelEntity {
+class Conflict extends ModelEntry {
 
 	String question
 	String mistakeType

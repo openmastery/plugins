@@ -1,16 +1,16 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.entry.Idle
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Note
+import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.StateChange
 import org.joda.time.DateTime
 
 class TimelineFactory {
@@ -19,7 +19,7 @@ class TimelineFactory {
 
 	Timeline create(IdeaFlowModel ifm) {
 		TimelineBuilder builder = new TimelineBuilder()
-		ifm.entityList.each { ModelEntity entity ->
+		ifm.entryList.each { ModelEntry entity ->
 			builder.addEntity(entity)
 		}
 		builder.timeline
@@ -90,8 +90,8 @@ class TimelineFactory {
 		void addEntity(StateChange stateChange) {
 		}
 
-		void addEntity(ModelEntity unknown) {
-			throw new RuntimeException("Unknown ModelEntity type ${unknown?.class}")
+		void addEntity(ModelEntry unknown) {
+			throw new RuntimeException("Unknown ModelEntry type ${unknown?.class}")
 		}
 
 	}

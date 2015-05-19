@@ -1,5 +1,6 @@
-package com.ideaflow.intellij.action
+package com.ideaflow.intellij.action.meta
 
+import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -7,7 +8,7 @@ import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.vfs.VirtualFile
 
 @Mixin(ActionSupport)
-class OpenInBrowserAction extends AnAction {
+class OpenInVisualizerAction extends AnAction {
 
 	@Override
 	public void update(AnActionEvent event) {
