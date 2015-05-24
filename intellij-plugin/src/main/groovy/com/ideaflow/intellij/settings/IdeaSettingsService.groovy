@@ -17,12 +17,18 @@ class IdeaSettingsService implements PersistentStateComponent<IdeaSettingsServic
 
     String project
 
+    String urlValue
 
-    public IdeaSettingsService getState() {
+    String urlOverrideValue
+
+
+    @Override
+    IdeaSettingsService getState() {
         return this;
     }
 
-    public void loadState(IdeaSettingsService state) {
+    @Override
+    void loadState(IdeaSettingsService state) {
         XmlSerializerUtil.copyBean(state, this);
     }
 }

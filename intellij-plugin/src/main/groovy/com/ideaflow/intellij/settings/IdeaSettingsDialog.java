@@ -18,17 +18,15 @@ public class IdeaSettingsDialog {
 
     public IdeaSettingsDialog() {
 
-        //OnChangeListener listener = new OnChangeListener(this);
+        final OnChangeListener listener = new OnChangeListener(this);
 
-        project.addKeyListener(new OnChangeListener(this));
-        user.addKeyListener(new OnChangeListener(this));
-        taskId.addKeyListener(new OnChangeListener(this));
-        urlOverrideValue.addKeyListener(new OnChangeListener(this));
-        urlOverrideValue.addKeyListener(new OnChangeListener(this));
+        project.addKeyListener(listener);
+        user.addKeyListener(listener);
+        taskId.addKeyListener(listener);
+        urlOverrideValue.addKeyListener(listener);
+        urlOverrideValue.addKeyListener(listener);
 
         urlLabel.addAncestorListener(new AncestorListenerAdapter() {
-
-            OnChangeListener listener = new OnChangeListener(IdeaSettingsDialog.this);
 
             @Override
             public void ancestorAdded(AncestorEvent event) {
