@@ -1,6 +1,6 @@
 package com.ideaflow.controller
 
-class IFMWorkingSet {
+class IFMTasks {
 
 	private File activeIfmFile
 	private List<File> ifmFiles = []
