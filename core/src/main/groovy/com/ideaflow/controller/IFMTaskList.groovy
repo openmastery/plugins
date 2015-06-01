@@ -1,9 +1,11 @@
 package com.ideaflow.controller
 
+import com.ideaflow.dsl.TaskId
+
 class IFMTaskList {
 
-	private File activeIfmFile
-	private List<File> ifmFiles = []
+	private TaskId activeTask
+	private List<TaskId> tasks = []
 	private List<IFMTaskListListener> listeners = []
 
 	void addTasksListener(IFMTaskListListener listener) {
@@ -12,6 +14,10 @@ class IFMTaskList {
 		}
 	}
 
+	/**
+	 * @deprecated do we need to use this? TODO
+	 * @param listener
+	 */
 	void removeWorkingSetListener(IFMTaskListListener listener) {
 		listeners.remove(listener)
 	}
@@ -22,35 +28,34 @@ class IFMTaskList {
 		}
 	}
 
-	List<File> getIfmFiles() {
-		ifmFiles.clone() as List
+	List<TaskId> getTaskList() {
+		tasks.collect(Closure.IDENTITY)
 	}
 
-	void setIfmFiles(List<File> files) {
-		ifmFiles.clear()
-		ifmFiles.addAll(files)
+	void setTaskList(List<TaskId> tasks) {
+		this.tasks = tasks.collect(Closure.IDENTITY)
 	}
 
-	void setActiveIfmFile(File ifmFile) {
-		if (activeIfmFile != ifmFile) {
-			if (!ifmFiles.contains(ifmFile)) {
-				ifmFiles.add(ifmFile)
+	void setActiveTask(TaskId taskId) {
+		if (activeTask != taskId) {
+			if (!tasks.contains(taskId)) {
+				tasks.add(taskId)
 			}
 			notifyListeners()
 		}
 	}
 
-	void removeIfmFile(File ifmFile) {
-		if (ifmFiles.remove(ifmFile)) {
-			if (ifmFile == activeIfmFile) {
-				activeIfmFile = null
+	void removeTask(TaskId taskId) {
+		if (tasks.remove(taskId)) {
+			if (taskId == activeTask) {
+				activeTask = null
 			}
 			notifyListeners()
 		}
 	}
 
 	boolean isEmpty() {
-		ifmFiles.isEmpty()
+		tasks.isEmpty()
 	}
 
 }
