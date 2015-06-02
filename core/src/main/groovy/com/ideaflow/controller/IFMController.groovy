@@ -20,27 +20,23 @@ class IFMController<T> {
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
 	private IDEService<T> ideService
-	private IFMTaskList taskList
+	private IFMTasks tasks
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
-		this.taskList = new IFMTaskList()
+		this.tasks = new IFMTasks()
 	}
 
-	void addTaskListListener(IFMTaskListListener taskListListener) {
-		taskList.addTasksListener(taskListListener)
+	void addWorkingSetListener(IFMWorkingSetListener workingSetListener) {
+		tasks.addWorkingSetListener(workingSetListener)
 	}
 
-	/**
-	 * @deprecated now using a single stream
-	 * @return
-	 */
 	List<File> getWorkingSetFiles() {
-		taskList.getIfmFiles()
+		tasks.getIfmFiles()
 	}
 
 	void setWorkingSetFiles(List<File> files) {
-		taskList.setIfmFiles(files)
+		tasks.setIfmFiles(files)
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
@@ -127,7 +123,7 @@ class IFMController<T> {
 			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
 		}
 
-		taskList.setActiveIfmFile(ideaFlowModel.file)
+		tasks.setActiveIfmFile(ideaFlowModel.file)
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -137,13 +133,13 @@ class IFMController<T> {
 		if (activeIdeaFlowModel) {
 			suspendActiveIdeaFlow(context)
 
-			taskList.removeIfmFile(ideaFlowModel.file)
+			tasks.removeIfmFile(ideaFlowModel.file)
 
-			if (taskList.isEmpty()) {
+			if (tasks.isEmpty()) {
 				ideaFlowModel = null
 				eventToIntervalHandler = null
 			} else {
-				newIdeaFlow(context, taskList.getIfmFiles().first())
+				newIdeaFlow(context, tasks.getIfmFiles().first())
 			}
 		}
 	}

@@ -1,24 +1,24 @@
 package com.ideaflow.controller
 
-class IFMTaskList {
+class IFMTasks {
 
 	private File activeIfmFile
 	private List<File> ifmFiles = []
-	private List<IFMTaskListListener> listeners = []
+	private List<IFMWorkingSetListener> listeners = []
 
-	void addTasksListener(IFMTaskListListener listener) {
+	void addWorkingSetListener(IFMWorkingSetListener listener) {
 		if (!listeners.contains(listener)) {
 			listeners.add(listener)
 		}
 	}
 
-	void removeWorkingSetListener(IFMTaskListListener listener) {
+	void removeWorkingSetListener(IFMWorkingSetListener listener) {
 		listeners.remove(listener)
 	}
 
 	private void notifyListeners() {
-		listeners.each { IFMTaskListListener listener ->
-			listener.onTaskListChanged()
+		listeners.each { IFMWorkingSetListener listener ->
+			listener.onWorkingSetChanged()
 		}
 	}
 
