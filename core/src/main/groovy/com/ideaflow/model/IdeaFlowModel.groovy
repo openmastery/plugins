@@ -1,18 +1,13 @@
 package com.ideaflow.model
 
-import com.ideaflow.dsl.TaskId
 import org.joda.time.DateTime
 
 class IdeaFlowModel {
 
 	List<ModelEntity> entityList = []
 	boolean isPaused = false
-	/**
-	 * @deprecated
-	 */
 	File file
 	DateTime created
-	TaskId taskId
 
 	private Conflict activeConflict = null
 	private BandStart activeBandStart = null

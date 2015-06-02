@@ -1,7 +1,7 @@
 package com.ideaflow.controller
 
-import com.ideaflow.dsl.IIdeaFlowClient
-import com.ideaflow.dsl.TaskId
+import com.ideaflow.dsl.DSLTimelineSerializer
+import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.event.EventToEditorActivityHandler
 import com.ideaflow.model.BandEnd
 import com.ideaflow.model.BandStart
@@ -13,6 +13,7 @@ import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
+import org.joda.time.DateTime
 
 class IFMController<T> {
 
@@ -20,7 +21,6 @@ class IFMController<T> {
 	private EventToEditorActivityHandler eventToIntervalHandler
 	private IDEService<T> ideService
 	private IFMTaskList taskList
-	private IIdeaFlowClient ideaFlowClient
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
@@ -31,16 +31,20 @@ class IFMController<T> {
 		taskList.addTasksListener(taskListListener)
 	}
 
-	List<TaskId> getWorkingSet() {
-		taskList.getTaskList()
+	/**
+	 * @deprecated now using a single stream
+	 * @return
+	 */
+	List<File> getWorkingSetFiles() {
+		taskList.getIfmFiles()
 	}
 
-	void setWorkingSet(List<TaskId> tasks) {
-		taskList.setTaskList(tasks)
+	void setWorkingSetFiles(List<File> files) {
+		taskList.setIfmFiles(files)
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
-		ideaFlowModel?.taskId?.value ? ideaFlowModel : null
+		ideaFlowModel?.file?.exists() ? ideaFlowModel : null
 	}
 
 	String promptForInput(T context, String title, String message) {
@@ -48,7 +52,7 @@ class IFMController<T> {
 	}
 
 	String getActiveIdeaFlowName() {
-		activeIdeaFlowModel?.taskId?.value
+		activeIdeaFlowModel?.file?.name
 	}
 
 	boolean isIdeaFlowOpen() {
@@ -108,13 +112,22 @@ class IFMController<T> {
 		}
 	}
 
-	void newIdeaFlow(T context, TaskId taskId) {
+	void newIdeaFlow(T context, File file) {
 		suspendActiveIdeaFlow(context)
 
-		ideaFlowModel = ideaFlowClient.readModel(taskId)
+		file = addExtension(file)
+		if (ideService.fileExists(context, file)) {
+			println("Resuming existing IdeaFlow: ${file.absolutePath}")
+			String xml = ideService.readFile(context, file)
+			ideaFlowModel = new IdeaFlowReader().readModel(file, xml)
+			ideaFlowModel.file = file
+		} else {
+			println("Creating new IdeaFlow: ${file.absolutePath}")
+			ideService.createNewFile(context, file, "")
+			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
+		}
 
-		taskList.setActiveTask(taskId)
-
+		taskList.setActiveIfmFile(ideaFlowModel.file)
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -124,13 +137,13 @@ class IFMController<T> {
 		if (activeIdeaFlowModel) {
 			suspendActiveIdeaFlow(context)
 
-			taskList.removeTask(ideaFlowModel.taskId)
+			taskList.removeIfmFile(ideaFlowModel.file)
 
 			if (taskList.isEmpty()) {
 				ideaFlowModel = null
 				eventToIntervalHandler = null
 			} else {
-				newIdeaFlow(context, taskList.getTaskList().first())
+				newIdeaFlow(context, taskList.getIfmFiles().first())
 			}
 		}
 	}
@@ -138,7 +151,7 @@ class IFMController<T> {
 	private void suspendActiveIdeaFlow(T context) {
 		if (activeIdeaFlowModel) {
 			endFileEvent(null)
-			flush()
+			flush(context)
 		}
 	}
 
@@ -149,7 +162,7 @@ class IFMController<T> {
 
     void startFileEvent(T context, String eventName) {
 		eventToIntervalHandler?.startEvent(eventName)
-		flush()
+		flush(context)
 	}
 
 	void fileModified(String eventName) {
@@ -172,7 +185,7 @@ class IFMController<T> {
 	void pause(T context) {
 		println("Paused")
 		endFileEvent(null)
-		flush()
+		flush(context)
 		activeIdeaFlowModel?.isPaused = true
 	}
 
@@ -186,9 +199,18 @@ class IFMController<T> {
 		activeIdeaFlowModel?.isPaused
 	}
 
-	private void flush() {
+	private File addExtension(File file) {
+		File fileWithExtension = file
+		if (file.name.endsWith(".ifm") == false) {
+			fileWithExtension = new File(file.absolutePath + ".ifm")
+		}
+		return fileWithExtension
+	}
+
+	private void flush(T context) {
 		if (activeIdeaFlowModel) {
-			ideaFlowClient.writeModel(activeIdeaFlowModel)
+			String xml = new DSLTimelineSerializer().serialize(activeIdeaFlowModel)
+			ideService.writeFile(context, activeIdeaFlowModel.file, xml)
 		}
 	}
 
@@ -199,7 +221,7 @@ class IFMController<T> {
 	private void addModelEntity(T context, ModelEntity event) {
 		flushActiveEvent()
 		activeIdeaFlowModel?.addModelEntity(event)
-		flush()
+		flush(context)
 		startFileEventForCurrentFile(context)
 	}
 

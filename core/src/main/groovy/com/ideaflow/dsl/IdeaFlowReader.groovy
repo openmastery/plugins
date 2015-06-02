@@ -34,13 +34,6 @@ class IdeaFlowReader {
 		this.chunkSize = chunkSize
 	}
 
-	/**
-	 * @deprecated actually, is the whole file deprecated?
-	 *
-	 * @param modelFile
-	 * @param dslContent
-	 * @return
-	 */
 	IdeaFlowModel readModel(File modelFile, String dslContent) {
 		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(modelFile)
 

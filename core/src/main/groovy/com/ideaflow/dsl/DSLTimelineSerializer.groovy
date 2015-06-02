@@ -2,9 +2,6 @@ package com.ideaflow.dsl
 
 import com.ideaflow.model.IdeaFlowModel
 
-/**
- * @deprecated
- */
 class DSLTimelineSerializer {
 
 	String serialize(IdeaFlowModel model) {

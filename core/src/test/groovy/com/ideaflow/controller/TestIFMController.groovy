@@ -86,7 +86,7 @@ class TestIFMController extends Specification {
 		then:
 		controller.activeIdeaFlowModel != oldActiveModel
 		controller.activeIdeaFlowModel.file == newModelFile
-		controller.workingSet == [oldModelFile, controller.activeIdeaFlowModel.file]
+		controller.workingSetFiles == [oldModelFile, controller.activeIdeaFlowModel.file]
 	}
 
 	def "closeIdeaFlow should remove file from open file list"() {
@@ -94,7 +94,7 @@ class TestIFMController extends Specification {
 		controller.closeIdeaFlow("context")
 
 		then:
-		controller.workingSet == []
+		controller.workingSetFiles == []
 	}
 
 	def "should not add multiple files to open file list if newIdeaFlow called with same file twice"() {
@@ -105,7 +105,7 @@ class TestIFMController extends Specification {
 		controller.newIdeaFlow("string", oldModelFile)
 
 		then:
-		controller.workingSet == [oldModelFile]
+		controller.workingSetFiles == [oldModelFile]
 	}
 
 }

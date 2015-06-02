@@ -1,7 +1,6 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.dsl.TaskId
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -9,7 +8,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
-import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
 import javax.swing.JComponent
@@ -31,18 +29,18 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_inactive.png")
 
 		private Project project
-		private TaskId task
+		private File ifmFile
 
-		public ActivateIdeaFlowAction(Project project, TaskId task) {
+		public ActivateIdeaFlowAction(Project project, File ifmFile) {
 			this.project = project
-			this.task = task
+			this.ifmFile = ifmFile
 
-			getTemplatePresentation().setText(task.value, false)
-			getTemplatePresentation().setDescription("Set ${task.value} as Active IdeaFlow")
+			getTemplatePresentation().setText(ifmFile.name, false)
+			getTemplatePresentation().setDescription("Set ${ifmFile.name} as Active IdeaFlow")
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
-			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, task)
+			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, ifmFile)
 		}
 
 		@Override
@@ -50,14 +48,11 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			super.update(e)
 
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			TaskId activeTask = controller.activeIdeaFlowModel?.taskId
-			e.presentation.icon = (activeTask == task) ? ACTIVE_ICON : INACTIVE_ICON
+			File activeIfmFile = controller.activeIdeaFlowModel?.file
+			e.presentation.icon = (activeIfmFile == ifmFile) ? ACTIVE_ICON : INACTIVE_ICON
 		}
 	}
 
-	/**
-	 * @deprecated doesn't have meaning anymore
-	 */
 	private static class OpenActiveInBrowserAction extends AnAction {
 
 		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
@@ -71,10 +66,10 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		@Override
 		void actionPerformed(AnActionEvent event) {
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			TaskId activeTask = controller.activeIdeaFlowModel?.taskId
+			File activeIfmFile = controller.activeIdeaFlowModel?.file
 
-			if (activeTask) {
-				//OpenInBrowserAction.openInBrowser(activeTask)
+			if (activeIfmFile) {
+				OpenInBrowserAction.openInBrowser(activeIfmFile)
 			}
 		}
 	}
@@ -106,8 +101,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		if (project != null) {
 			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
 
-			for (TaskId task : controller.getWorkingSet()) {
-				actionGroup.add(new ActivateIdeaFlowAction(project, task))
+			for (File ifmFile : controller.getWorkingSetFiles()) {
+				actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
 			}
 
 			actionGroup.addSeparator();
