@@ -1,5 +1,5 @@
 # GUI changes
-## TODO add meta data (in pref panel)
+## DONE add meta data (in pref panel)
 
 Properties would be:
 
@@ -20,6 +20,15 @@ Once we have a sharable team server functionality, the developer could change th
 This GET request would show a list of recent tasks for the project and user:
 
 http://localhost:8989/<project>/<user>
+
+## TODO add wizard
+I've got an idea I like better than both options actually...
+
+What if when you created a new task, it prompted you for all the fields, but some fields it defaults to whatever you entered in last time?
+
+No preference pane, constant validation of settings, no errors the first time you use it because you didn't validate the settings, and you can change them easily if you like.  I think it's much more mistake-proof.
+
+There's a plugin property storage functionality that's really to use that handles all the life-cycle junk for you.  Just save/retrieve properties is all you gotta worry about, and you were already building the dialog anyway. :)
 
 ### Notes
 
