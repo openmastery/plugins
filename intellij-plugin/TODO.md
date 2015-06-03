@@ -1,27 +1,17 @@
 # GUI changes
-## DONE add meta data (in pref panel)
+## TODO in the dropdown select box, create a new option that says "New Task..."
+## TODO starting a new tasks shows a wizard with all fields except task id defaulted to previous settings
+  - taskId
+  - user
+  - project
+  - baseUrl
 
-Properties would be:
+  The URL would be an automatically generated REST call that defaulted to:
 
-- taskId
-- <strike>description</strike>
-- user
-- project
-- URL
+  http://localhost:8989/<project>/<user>/<taskId>
 
-The URL would be an automatically generated REST call that defaulted to:
+  a GET request on that URL should show the IFM for the task
 
-http://localhost:8989/<project>/<user>/<taskId>
-
-a GET request on that URL should show the IFM for the task
-
-Once we have a sharable team server functionality, the developer could change the URL to the team's Idea Flow server
-
-This GET request would show a list of recent tasks for the project and user:
-
-http://localhost:8989/<project>/<user>
-
-## TODO add wizard
 I've got an idea I like better than both options actually...
 
 What if when you created a new task, it prompted you for all the fields, but some fields it defaults to whatever you entered in last time?
@@ -29,6 +19,29 @@ What if when you created a new task, it prompted you for all the fields, but som
 No preference pane, constant validation of settings, no errors the first time you use it because you didn't validate the settings, and you can change them easily if you like.  I think it's much more mistake-proof.
 
 There's a plugin property storage functionality that's really to use that handles all the life-cycle junk for you.  Just save/retrieve properties is all you gotta worry about, and you were already building the dialog anyway. :)
+
+# Core changes
+## TODO abstract the existing DSL package to a new IIdeaFlowClient interface. Entry = ModelEntity.
+Each Entry will be associated to a Task via taskId
+
+As far as I can tell, the plugin just needs these:
+ - getLastState(taskId) - to figure out the button state
+ - updateEntry(Entry) - updates entry with new timestamp.
+
+As far as I can tell, the visualizer needs these endpoints (as functions):
+  - getAllEntries(taskId) - essentially, build the IFM map
+  - getEntries(taskId, afterTime)
+
+## TODO there will be two classes that implement IIdeaFlowClient: local file version and rest-based version
+## TODO File management is an issue so we can just save them to ~/.ifm or some sensible default folder
+
+# Server
+# TODO add GET endpoints
+Once we have a sharable team server functionality, the developer could change the URL to the team's Idea Flow server
+
+This GET request would show a list of recent tasks for the project and user:
+
+http://localhost:8989/<project>/<user>
 
 ### Notes
 
