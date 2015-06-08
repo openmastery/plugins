@@ -21,6 +21,7 @@ No preference pane, constant validation of settings, no errors the first time yo
 There's a plugin property storage functionality that's really to use that handles all the life-cycle junk for you.  Just save/retrieve properties is all you gotta worry about, and you were already building the dialog anyway. :)
 
 # Core changes
+## TODO use Resource for Strings (locale support)
 ## TODO abstract the existing DSL package to a new IIdeaFlowClient interface. Entry = ModelEntity.
 Each Entry will be associated to a Task via taskId
 

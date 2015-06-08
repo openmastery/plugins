@@ -69,7 +69,5 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="com.ideaflow.intellij.file.IdeaFlowMapFileTypeLoader"/>
         <applicationConfigurable instance="com.ideaflow.intellij.settings.IdeaSettings"/>
-		<applicationService serviceInterface="com.ideaflow.intellij.settings.IdeaSettingsService"
-							serviceImplementation="com.ideaflow.intellij.settings.IdeaSettingsService"/>
 	</extensions>
 </idea-plugin>

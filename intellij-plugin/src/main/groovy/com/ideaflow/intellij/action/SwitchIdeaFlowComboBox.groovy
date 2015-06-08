@@ -2,6 +2,7 @@ package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
+import com.ideaflow.intellij.settings.AddNewTaskWizard
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -9,8 +10,8 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
-import javax.swing.Icon
-import javax.swing.JComponent
+
+import javax.swing.*
 
 /**
  * NOTE: all events generated from dynamically created actions seem to have the most recently opened project attached.
@@ -74,6 +75,26 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		}
 	}
 
+	private static class AddNewTaskAction extends AnAction {
+
+		private Project project
+
+		AddNewTaskAction(Project project) {
+
+			this.project = project
+
+			getTemplatePresentation().setText("Add new task...")
+			getTemplatePresentation().setDescription("Add a new task")
+		}
+
+		@Override
+		void actionPerformed(final AnActionEvent e) {
+
+			def wizard = new AddNewTaskWizard(project)
+			wizard.showAndSaveSettings()
+		}
+	}
+
 	private static class RemoveIdeaFlowAction extends AnAction {
 
 		private static final Icon REMOVE_IDEAFLOW_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_remove.png")
@@ -108,6 +129,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			actionGroup.addSeparator();
 			actionGroup.add(new OpenActiveInBrowserAction())
 			actionGroup.add(new RemoveIdeaFlowAction(project))
+			actionGroup.addSeparator();
+			actionGroup.add(new AddNewTaskAction(project))
 		}
 		return actionGroup
 	}
@@ -123,5 +146,4 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			e.presentation.text = enabled ? controller.getActiveIdeaFlowName() : ""
 		}
 	}
-
 }

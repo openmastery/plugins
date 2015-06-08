@@ -1,5 +1,6 @@
 package com.ideaflow.intellij.settings;
 
+import com.ideaflow.intellij.settings.IdeaSettingsService.IdeaSettingsData;
 import com.intellij.ui.AncestorListenerAdapter;
 
 import javax.swing.*;
@@ -11,22 +12,21 @@ public class IdeaSettingsDialog {
     public JTextField taskId;
     public JTextField user;
     public JTextField project;
-    public JLabel urlLabel;
-    public JLabel urlValue;
-    public JTextField urlOverrideValue;
+    public JLabel baseUrlLabel;
+    public JTextField baseUrl;
+    public JLabel calculatedUrl;
+
+    private final OnChangeListener listener = new OnChangeListener(this);
 
 
     public IdeaSettingsDialog() {
 
-        final OnChangeListener listener = new OnChangeListener(this);
-
-        project.addKeyListener(listener);
-        user.addKeyListener(listener);
         taskId.addKeyListener(listener);
-        urlOverrideValue.addKeyListener(listener);
-        urlOverrideValue.addKeyListener(listener);
+        user.addKeyListener(listener);
+        project.addKeyListener(listener);
+        baseUrl.addKeyListener(listener);
 
-        urlLabel.addAncestorListener(new AncestorListenerAdapter() {
+        calculatedUrl.addAncestorListener(new AncestorListenerAdapter() {
 
             @Override
             public void ancestorAdded(AncestorEvent event) {
@@ -34,6 +34,60 @@ public class IdeaSettingsDialog {
             }
         });
     }
+
+    public IdeaSettingsDialog(IdeaSettingsData data) {
+
+        this();
+
+        load(data);
+    }
+
+    void load(IdeaSettingsData data) {
+
+        taskId.setText(data.getTaskId());
+        user.setText(data.getUser());
+        project.setText(data.getProject());
+        baseUrl.setText(data.getBaseUrl());
+        calculatedUrl.setText(data.getCalculatedUrl());
+    }
+
+    IdeaSettingsData toData() {
+
+        IdeaSettingsData data = new IdeaSettingsData();
+
+        data.setTaskId(taskId.getText());
+        data.setUser(user.getText());
+        data.setProject(project.getText());
+        data.setBaseUrl(baseUrl.getText());
+        data.setCalculatedUrl(calculatedUrl.getText());
+
+        return data;
+    }
+
+
+    public boolean isValid() {
+
+        return !isEmpty(taskId.getText()) && !isEmpty(user.getText()) && !isEmpty(project.getText());
+    }
+
+    private boolean isEmpty(String foo) {
+        return foo == null || foo.isEmpty();
+    }
+
+    private boolean isEqual(String a, String b) {
+        return a == null && a == b ? true : //both null
+                a == null || b == null ? false : //only one null
+                a.trim().equals(b.trim()); //neither null - use string comparison
+    }
+
+    boolean isDifferent(IdeaSettingsData data) {
+
+        return taskId == null || ! isEqual(data.getTaskId(), taskId.getText()) ||
+                user == null || ! isEqual(data.getUser(), user.getText()) ||
+                project == null || ! isEqual(data.getProject(), project.getText()) ||
+                baseUrl == null || ! isEqual(data.getBaseUrl(), baseUrl.getText());
+    }
+
 
     static class OnChangeListener extends KeyAdapter {
 
@@ -44,7 +98,7 @@ public class IdeaSettingsDialog {
         }
 
         private String label(JTextField field, String defaultValue) {
-            return field.getText() == null || field.getText().trim().isEmpty() ?
+            return field == null || field.getText() == null || field.getText().trim().isEmpty() ?
                     defaultValue : field.getText();
         }
 
@@ -52,19 +106,12 @@ public class IdeaSettingsDialog {
             IdeaSettingsDialog that = dialog;
 
             //http://localhost:8989/<project>/<user>/<taskId>
-            String base = "http://localhost:8989/";
+            String base = label(that.baseUrl, "http://localhost:8989/");
             String project = label(that.project, "<project>");
             String user = label(that.user, "<user>");
             String taskId = label(that.taskId, "<taskId>");
 
-            if (that.urlOverrideValue.getText() == null || that.urlOverrideValue.getText().trim().isEmpty()) {
-
-                that.urlValue.setText(base + project + "/" + user + "/" + taskId);
-            }
-            else {
-
-                that.urlValue.setText(that.urlOverrideValue.getText());
-            }
+            that.calculatedUrl.setText(base + "/" + project + "/" + user + "/" + taskId);
         }
 
         @Override
