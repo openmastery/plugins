@@ -21,31 +21,31 @@ class IdeaFlowModel {
 
 	IdeaFlowModel() {}
 
-	void addModelEntity(Conflict conflict) {
+	void addModelEntry(Conflict conflict) {
 		addModelEntityInternal(conflict) {
 			activeConflict = conflict
 		}
 	}
 
-	void addModelEntity(Resolution resolution) {
+	void addModelEntry(Resolution resolution) {
 		addModelEntityInternal(resolution) {
 			activeConflict = null
 		}
 	}
 
-	void addModelEntity(BandStart bandStart) {
+	void addModelEntry(BandStart bandStart) {
 		addModelEntityInternal(bandStart) {
 			activeBandStart = bandStart
 		}
 	}
 
-	void addModelEntity(BandEnd bandEnd) {
+	void addModelEntry(BandEnd bandEnd) {
 		addModelEntityInternal(bandEnd) {
 			activeBandStart = null
 		}
 	}
 
-	void addModelEntity(ModelEntry modelEntity) {
+	void addModelEntry(ModelEntry modelEntity) {
 		addModelEntityInternal(modelEntity, null)
 	}
 

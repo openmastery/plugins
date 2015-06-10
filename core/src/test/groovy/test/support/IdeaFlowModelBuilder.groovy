@@ -27,27 +27,27 @@ class IdeaFlowModelBuilder {
 	}
 
 	IdeaFlowModelBuilder addBandEnd(BandEnd bandEnd) {
-		ifm.addModelEntity(bandEnd)
+		ifm.addModelEntry(bandEnd)
 		return this
 	}
 
 	IdeaFlowModelBuilder addIdle(Idle idle) {
-		ifm.addModelEntity(idle)
+		ifm.addModelEntry(idle)
 		return this
 	}
 
 	IdeaFlowModelBuilder addBandStart(BandStart bandStart) {
-		ifm.addModelEntity(bandStart)
+		ifm.addModelEntry(bandStart)
 		return this
 	}
 
 	IdeaFlowModelBuilder addConflict(Conflict conflict) {
-		ifm.addModelEntity(conflict)
+		ifm.addModelEntry(conflict)
 		return this
 	}
 
 	IdeaFlowModelBuilder addResolution(Resolution resolution) {
-		ifm.addModelEntity(resolution)
+		ifm.addModelEntry(resolution)
 		return this
 	}
 
@@ -57,17 +57,17 @@ class IdeaFlowModelBuilder {
 	}
 
 	IdeaFlowModelBuilder addEditorActivity(EditorActivity activity) {
-		ifm.addModelEntity(activity)
+		ifm.addModelEntry(activity)
 		return this
 	}
 
 	IdeaFlowModelBuilder addNote(Note note) {
-		ifm.addModelEntity(note)
+		ifm.addModelEntry(note)
 		return this
 	}
 
 	IdeaFlowModelBuilder addStateChange(StateChange stateChange) {
-		ifm.addModelEntity(stateChange)
+		ifm.addModelEntry(stateChange)
 		return this
 	}
 

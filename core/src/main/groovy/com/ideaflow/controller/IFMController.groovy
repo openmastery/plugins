@@ -237,7 +237,7 @@ class IFMController<T> {
 
 	private void addModelEntry(T context, ModelEntry event) {
 		flushActiveEvent()
-		activeIdeaFlowModel?.addModelEntity(event)
+		activeIdeaFlowModel?.addModelEntry(event)
 		flush(context)
 		startFileEventForCurrentFile(context)
 	}

@@ -131,7 +131,7 @@ class IdeaFlowReader {
 		private void addModelEntity(Class type, Map initialMap) {
 			Map constructorMap = createConstructorMap(initialMap)
 			ModelEntry entity = type.newInstance(constructorMap)
-			model.addModelEntity(entity)
+			model.addModelEntry(entity)
 		}
 
 		private Map createConstructorMap(Map initialMap) {
