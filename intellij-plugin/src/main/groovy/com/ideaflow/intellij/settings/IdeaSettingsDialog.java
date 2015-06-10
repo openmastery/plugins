@@ -1,11 +1,12 @@
 package com.ideaflow.intellij.settings;
 
-import com.ideaflow.intellij.settings.IdeaSettingsService.IdeaSettingsData;
+import com.ideaflow.model.Task;
 import com.intellij.ui.AncestorListenerAdapter;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class IdeaSettingsDialog {
     public JPanel panel;
@@ -35,14 +36,14 @@ public class IdeaSettingsDialog {
         });
     }
 
-    public IdeaSettingsDialog(IdeaSettingsData data) {
+    public IdeaSettingsDialog(Task data) {
 
         this();
 
         load(data);
     }
 
-    void load(IdeaSettingsData data) {
+    void load(Task data) {
 
         taskId.setText(data.getTaskId());
         user.setText(data.getUser());
@@ -51,9 +52,9 @@ public class IdeaSettingsDialog {
         calculatedUrl.setText(data.getCalculatedUrl());
     }
 
-    IdeaSettingsData toData() {
+    Task toData() {
 
-        IdeaSettingsData data = new IdeaSettingsData();
+        Task data = new Task();
 
         data.setTaskId(taskId.getText());
         data.setUser(user.getText());
@@ -80,7 +81,7 @@ public class IdeaSettingsDialog {
                 a.trim().equals(b.trim()); //neither null - use string comparison
     }
 
-    boolean isDifferent(IdeaSettingsData data) {
+    boolean isDifferent(Task data) {
 
         return taskId == null || ! isEqual(data.getTaskId(), taskId.getText()) ||
                 user == null || ! isEqual(data.getUser(), user.getText()) ||

@@ -1,6 +1,6 @@
 package com.ideaflow.intellij.settings;
 
-import com.ideaflow.intellij.settings.IdeaSettingsService.IdeaSettingsData;
+import com.ideaflow.model.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
@@ -22,7 +22,7 @@ public class AddNewTaskWizard extends DialogWrapper {
     protected JComponent createCenterPanel() {
 
         if (wizard == null) {
-            IdeaSettingsData data = storage.load();
+            Task data = storage.load();
 
             //Clear out task id
             data.setTaskId("");
@@ -32,12 +32,20 @@ public class AddNewTaskWizard extends DialogWrapper {
         return wizard.panel;
     }
 
-    public void showAndSaveSettings() {
+    public boolean showAndSaveSettings() {
+
         show();
 
         if (getExitCode() == DialogWrapper.OK_EXIT_CODE) {
             storage.save(wizard.toData());
         }
+
+        return getExitCode() == DialogWrapper.OK_EXIT_CODE;
+    }
+
+    public Task getSettings() {
+
+        return storage.load();
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
+import com.ideaflow.model.Task
 import org.joda.time.DateTime
 
 class IFMController<T> {
@@ -108,6 +109,11 @@ class IFMController<T> {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 * @param context
+	 * @param file
+	 */
 	void newIdeaFlow(T context, File file) {
 		suspendActiveIdeaFlow(context)
 
@@ -127,6 +133,11 @@ class IFMController<T> {
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
+	}
+
+	void newIdeaFlow(T context, Task task) {
+
+
 	}
 
 	void closeIdeaFlow(T context) {

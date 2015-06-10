@@ -1,5 +1,6 @@
 package com.ideaflow.intellij.settings
 
+import com.ideaflow.model.Task
 import com.intellij.ide.util.PropertiesComponent
 
 class IdeaSettingsService {
@@ -12,17 +13,8 @@ class IdeaSettingsService {
             "CalculatedUrl": "IFM.Active.CalculatedUrl"
     ]
 
-    static class IdeaSettingsData {
 
-        String taskId
-        String user
-        String project
-        String baseUrl
-        String calculatedUrl
-    }
-
-
-    void save(IdeaSettingsData data) {
+    void save(Task data) {
 
         def props = PropertiesComponent.getInstance()
 
@@ -33,13 +25,13 @@ class IdeaSettingsService {
         props.setValue(cActive.CalculatedUrl, data.calculatedUrl.trim())
     }
 
-    IdeaSettingsData load() {
+    Task load() {
 
         def props = PropertiesComponent.getInstance()
 
         def values = cActive.collectEntries{ name, path -> [path, props.getValue(path)] }
 
-        def data = new IdeaSettingsData()
+        def data = new Task()
 
         data.taskId = values[cActive.Task]
         data.user = values[cActive.User]

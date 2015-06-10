@@ -91,7 +91,12 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		void actionPerformed(final AnActionEvent e) {
 
 			def wizard = new AddNewTaskWizard(project)
-			wizard.showAndSaveSettings()
+
+			int result = wizard.showAndSaveSettings()
+
+			if (result) {
+				IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, wizard.settings)
+			}
 		}
 	}
 
