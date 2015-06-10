@@ -1,6 +1,6 @@
 # GUI changes
-## TODO in the dropdown select box, create a new option that says "New Task..."
-## TODO starting a new tasks shows a wizard with all fields except task id defaulted to previous settings
+## DONE in the dropdown select box, create a new option that says "New Task..."
+## DONE starting a new tasks shows a wizard with all fields except task id defaulted to previous settings
   - taskId
   - user
   - project
@@ -58,16 +58,6 @@ Look through a list of IFMs and know what's what (table that includes: task, aut
 Future: project/user/task for URLs
 
 Create default preferences for project and author that will auto-populate when creating a new IFM.
-
-# TODO Create settings wizard
-I've got an idea I like better than both options actually...
-
-What if when you created a new task, it prompted you for all the fields,
-but some fields it defaults to whatever you entered in last time?
-
-No preference pane, constant validation of settings, no errors the first time you use
-it because you didn't validate the settings, and you can change them easily if you like.
-I think it's much more mistake-proof.
 
 # TODO Merge Tasks
 # TODO REst layer (PUT IFM events/GET initial state)
