@@ -2,13 +2,14 @@ package com.ideaflow.controller
 
 import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
+import com.ideaflow.dsl.client.IIdeaFlowClient
 import com.ideaflow.event.EventToEditorActivityHandler
 import com.ideaflow.model.BandEnd
 import com.ideaflow.model.BandStart
 import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.ModelEntry
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -22,6 +23,9 @@ class IFMController<T> {
 	private EventToEditorActivityHandler eventToIntervalHandler
 	private IDEService<T> ideService
 	private IFMWorkingSet workingSet
+
+	private IIdeaFlowClient client
+
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
@@ -75,13 +79,13 @@ class IFMController<T> {
 	void startConflict(T context, String question) {
 		if (question) {
             boolean nested = isOpenBand()
-			addModelEntity(context, new Conflict(question, nested))
+			addModelEntry(context, new Conflict(question, nested))
 		}
 	}
 
 	void endConflict(T context, String answer) {
 		if (answer) {
-			addModelEntity(context, new Resolution(answer))
+			addModelEntry(context, new Resolution(answer))
 		}
 	}
 
@@ -93,19 +97,19 @@ class IFMController<T> {
 				isLinkedToPreviousBand = true
 			}
 
-			addModelEntity(context, new BandStart(bandType, comment, isLinkedToPreviousBand))
+			addModelEntry(context, new BandStart(bandType, comment, isLinkedToPreviousBand))
 		}
 	}
 
 	void endBand(T context, BandType bandType) {
 		if (bandType) {
-			addModelEntity(context, new BandEnd(bandType))
+			addModelEntry(context, new BandEnd(bandType))
 		}
 	}
 
 	void addNote(T context, String comment) {
 		if (comment) {
-			addModelEntity(context, new Note(comment))
+			addModelEntry(context, new Note(comment))
 		}
 	}
 
@@ -137,7 +141,13 @@ class IFMController<T> {
 
 	void newIdeaFlow(T context, Task task) {
 
+		suspendActiveIdeaFlow(context)
 
+		workingSet.setActiveIfmFile(task)
+		ideaFlowModel = new IdeaFlowModel(task, new DateTime())
+		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
+		addStateChange(context, StateChangeType.startIdeaFlowRecording)
+		startFileEventForCurrentFile(context)
 	}
 
 	void closeIdeaFlow(T context) {
@@ -222,10 +232,10 @@ class IFMController<T> {
 	}
 
 	private void addStateChange(T context, StateChangeType type) {
-		addModelEntity(context, new StateChange(type))
+		addModelEntry(context, new StateChange(type))
 	}
 
-	private void addModelEntity(T context, ModelEntity event) {
+	private void addModelEntry(T context, ModelEntry event) {
 		flushActiveEvent()
 		activeIdeaFlowModel?.addModelEntity(event)
 		flush(context)

@@ -6,16 +6,16 @@ import spock.lang.Specification
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
-class ModelEntityTest extends Specification {
+class ModelEntryTest extends Specification {
 
 	void testAllSubclasses_ShouldBeAnnotedWithEqualsAndHashcodeWithCallSuperSetToTrue() {
         given:
-		List<ModelEntity> subTypeInstances = getModelEntitySubClassInstances()
+		List<ModelEntry> subTypeInstances = getModelEntitySubClassInstances()
 
         expect:
 		DateTime createdDate = new DateTime(500)
-		subTypeInstances.each { ModelEntity subTypeInstance ->
-			ModelEntity otherInstance = subTypeInstance.class.newInstance()
+		subTypeInstances.each { ModelEntry subTypeInstance ->
+			ModelEntry otherInstance = subTypeInstance.class.newInstance()
 
 			subTypeInstance.created = createdDate
 			otherInstance.created = createdDate

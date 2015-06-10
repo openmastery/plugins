@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 import org.joda.time.DateTime
 
 @EqualsAndHashCode(callSuper = true)
-class Idle extends ModelEntity {
+class Idle extends ModelEntry {
 
 	String comment
 	int duration

@@ -3,7 +3,7 @@ package com.ideaflow.model
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)
-class BandEnd extends ModelEntity {
+class BandEnd extends ModelEntry {
 
 	BandType type
 

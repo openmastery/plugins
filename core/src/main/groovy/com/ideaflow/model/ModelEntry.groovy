@@ -4,16 +4,16 @@ import groovy.transform.EqualsAndHashCode
 import org.joda.time.DateTime
 
 @EqualsAndHashCode
-abstract class ModelEntity {
+abstract class ModelEntry {
 
 	String id
 	DateTime created
 
-	ModelEntity() {
+	ModelEntry() {
 		this(new DateTime())
 	}
 
-	ModelEntity(DateTime created) {
+	ModelEntry(DateTime created) {
 		this.created = created
 	}
 

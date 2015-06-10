@@ -6,7 +6,7 @@ import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.ModelEntry
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -68,7 +68,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 	private IdeaFlowModel readModelAndClearIds() {
 		IdeaFlowModel model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
 
-		model.entityList.each { ModelEntity entity ->
+		model.entityList.each { ModelEntry entity ->
 			assert entity.id != null
 			entity.id = null
 		}
@@ -77,15 +77,15 @@ class IdeaFlowReaderWriterTest extends Specification {
 
     void testReadWriteSymmetry_EnsureNewlyAddedModelEntitySubTypesAreSerializable() {
         given:
-		List<ModelEntity> subTypeInstances = getInitializedModelEntitySubClassInstances()
+		List<ModelEntry> subTypeInstances = getInitializedModelEntitySubClassInstances()
 
         when:
 		writer.writeInitialization(new DateTime(NOW))
-		subTypeInstances.each { ModelEntity entity ->
+		subTypeInstances.each { ModelEntry entity ->
 			try {
 				writer.write(entity)
 			} catch (MissingMethodException ex) {
-				throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
+				throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntry.simpleName} has just been added, " +
 						"ensure ${IdeaFlowWriter.simpleName} declares method write(${entity.class.simpleName})", ex)
 			}
 		}
@@ -93,12 +93,12 @@ class IdeaFlowReaderWriterTest extends Specification {
 		try {
 			model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
 		} catch (MissingMethodException ex) {
-			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntity.simpleName} has just been added, " +
+			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntry.simpleName} has just been added, " +
 					"ensure ${IdeaFlowReader.simpleName} declares appropriate read(<subtype>) method", ex)
 		}
 
         then:
-		model.entityList.each { ModelEntity entity ->
+		model.entityList.each { ModelEntry entity ->
 			assert entity.id != null
 			entity.id = null
 		}
@@ -108,11 +108,11 @@ class IdeaFlowReaderWriterTest extends Specification {
 		assert subTypeInstances.size() == model.size()
 	}
 
-	private List<ModelEntity> getInitializedModelEntitySubClassInstances() {
-		List<ModelEntity> subTypeInstances = getModelEntitySubClassInstances()
+	private List<ModelEntry> getInitializedModelEntitySubClassInstances() {
+		List<ModelEntry> subTypeInstances = getModelEntitySubClassInstances()
 		DateTime createDate = new DateTime(NOW)
 
-		subTypeInstances.each { ModelEntity entity ->
+		subTypeInstances.each { ModelEntry entity ->
 			createDate = createDate.plusSeconds(1)
 			entity.created = createDate
 		}

@@ -6,7 +6,7 @@ import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.ModelEntry
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -130,7 +130,7 @@ class IdeaFlowReader {
 
 		private void addModelEntity(Class type, Map initialMap) {
 			Map constructorMap = createConstructorMap(initialMap)
-			ModelEntity entity = type.newInstance(constructorMap)
+			ModelEntry entity = type.newInstance(constructorMap)
 			model.addModelEntity(entity)
 		}
 

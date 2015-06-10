@@ -6,7 +6,7 @@ import com.ideaflow.model.BandType
 import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.ModelEntry
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -202,10 +202,10 @@ class FixtureSupport {
 	}
 
 
-	List<ModelEntity> getModelEntitySubClassInstances() {
-		Reflections reflections = new Reflections(ModelEntity.package.name)
-		reflections.getSubTypesOf(ModelEntity).collect { Class subType ->
-			subType.newInstance() as ModelEntity
+	List<ModelEntry> getModelEntitySubClassInstances() {
+		Reflections reflections = new Reflections(ModelEntry.package.name)
+		reflections.getSubTypesOf(ModelEntry).collect { Class subType ->
+			subType.newInstance() as ModelEntry
 		}
 	}
 

@@ -7,7 +7,7 @@ import com.ideaflow.model.Conflict
 import com.ideaflow.model.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.ModelEntry
 import com.ideaflow.model.Note
 import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
@@ -19,7 +19,7 @@ class TimelineFactory {
 
 	Timeline create(IdeaFlowModel ifm) {
 		TimelineBuilder builder = new TimelineBuilder()
-		ifm.entityList.each { ModelEntity entity ->
+		ifm.entityList.each { ModelEntry entity ->
 			builder.addEntity(entity)
 		}
 		builder.timeline
@@ -90,8 +90,8 @@ class TimelineFactory {
 		void addEntity(StateChange stateChange) {
 		}
 
-		void addEntity(ModelEntity unknown) {
-			throw new RuntimeException("Unknown ModelEntity type ${unknown?.class}")
+		void addEntity(ModelEntry unknown) {
+			throw new RuntimeException("Unknown ModelEntry type ${unknown?.class}")
 		}
 
 	}

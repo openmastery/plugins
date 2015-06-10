@@ -3,7 +3,7 @@ package com.ideaflow.model
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)
-class StateChange extends ModelEntity {
+class StateChange extends ModelEntry {
 
 	StateChangeType type
 

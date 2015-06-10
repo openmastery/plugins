@@ -1,14 +1,14 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.Conflict
-import com.ideaflow.model.ModelEntity
+import com.ideaflow.model.ModelEntry
 import spock.lang.Specification
 import test.support.FixtureSupport
 
 @Mixin(FixtureSupport)
 class IdeaFlowWriterTest extends Specification {
 
-	static class DummyEvent extends ModelEntity {
+	static class DummyEvent extends ModelEntry {
 	}
 
 

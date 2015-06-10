@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 
 
 @EqualsAndHashCode(callSuper = true)
-class Note extends ModelEntity {
+class Note extends ModelEntry {
 
 	String comment
 

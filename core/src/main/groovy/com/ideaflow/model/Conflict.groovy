@@ -3,7 +3,7 @@ package com.ideaflow.model
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)
-class Conflict extends ModelEntity {
+class Conflict extends ModelEntry {
 
 	String question
 	String mistakeType
