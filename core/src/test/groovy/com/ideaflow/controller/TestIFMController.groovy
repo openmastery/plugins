@@ -51,7 +51,7 @@ class TestIFMController extends Specification {
 
 	def "markActiveFileEventAsIdle should record the active event as an idle event"() {
 		given:
-		controller.activeIdeaFlowModel.entityList = []
+		controller.activeIdeaFlowModel.entryList = []
 		controller.startFileEvent(null, "some-event")
 
 		when:
@@ -59,7 +59,7 @@ class TestIFMController extends Specification {
 		controller.markActiveFileEventAsIdle("idle comment")
 
 		then:
-		List entities = controller.getActiveIdeaFlowModel().getEntityList()
+		List entities = controller.getActiveIdeaFlowModel().getEntryList()
 		assert entities[0] == new Idle(new DateTime(NOW), "idle comment", 1)
 		assert entities.size() == 1
 	}
@@ -67,13 +67,13 @@ class TestIFMController extends Specification {
 	def "markActiveFileEventAsIdle should do nothing if there is no active file event"() {
 		given:
 		controller.endFileEvent(null)
-		controller.activeIdeaFlowModel.entityList = []
+		controller.activeIdeaFlowModel.entryList = []
 
 		when:
 		controller.markActiveFileEventAsIdle("idle comment")
 
 		then:
-		assert controller.getActiveIdeaFlowModel().getEntityList() == []
+		assert controller.getActiveIdeaFlowModel().getEntryList() == []
 	}
 
 	def "newIdeaFlow should suspend existing idea flow but retain old file in open file list"() {

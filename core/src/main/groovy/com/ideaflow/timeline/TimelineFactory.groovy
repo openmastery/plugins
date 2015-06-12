@@ -19,7 +19,7 @@ class TimelineFactory {
 
 	Timeline create(IdeaFlowModel ifm) {
 		TimelineBuilder builder = new TimelineBuilder()
-		ifm.entityList.each { ModelEntry entity ->
+		ifm.entryList.each { ModelEntry entity ->
 			builder.addEntity(entity)
 		}
 		builder.timeline

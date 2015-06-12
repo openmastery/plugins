@@ -1,6 +1,5 @@
 package com.ideaflow.controller
 
-import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.dsl.client.IIdeaFlowClient
 import com.ideaflow.event.EventToEditorActivityHandler
@@ -37,11 +36,11 @@ class IFMController<T> {
 	}
 
 	List<File> getWorkingSetFiles() {
-		workingSet.getIfmFiles()
+		workingSet.getTasks()
 	}
 
 	void setWorkingSetFiles(List<File> files) {
-		workingSet.setIfmFiles(files)
+		workingSet.setTasks(files)
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
@@ -133,7 +132,7 @@ class IFMController<T> {
 			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
 		}
 
-		workingSet.setActiveIfmFile(ideaFlowModel.file)
+		//workingSet.setActiveIfmFile(ideaFlowModel.file)
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -143,7 +142,7 @@ class IFMController<T> {
 
 		suspendActiveIdeaFlow(context)
 
-		workingSet.setActiveIfmFile(task)
+		workingSet.setActiveTask(task)
 		ideaFlowModel = new IdeaFlowModel(task, new DateTime())
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
@@ -154,13 +153,13 @@ class IFMController<T> {
 		if (activeIdeaFlowModel) {
 			suspendActiveIdeaFlow(context)
 
-			workingSet.removeIfmFile(ideaFlowModel.file)
+			workingSet.removeTask(ideaFlowModel.file)
 
 			if (workingSet.isEmpty()) {
 				ideaFlowModel = null
 				eventToIntervalHandler = null
 			} else {
-				newIdeaFlow(context, workingSet.getIfmFiles().first())
+				newIdeaFlow(context, workingSet.getTasks().first())
 			}
 		}
 	}
@@ -226,8 +225,9 @@ class IFMController<T> {
 
 	private void flush(T context) {
 		if (activeIdeaFlowModel) {
-			String xml = new DSLTimelineSerializer().serialize(activeIdeaFlowModel)
-			ideService.writeFile(context, activeIdeaFlowModel.file, xml)
+			client.updateEntries(activeIdeaFlowModel.entryList)
+			//String xml = new DSLTimelineSerializer().serialize(activeIdeaFlowModel)
+			//ideService.writeFile(context, activeIdeaFlowModel.file, xml)
 		}
 	}
 

@@ -186,7 +186,7 @@ class TestEventToEditorActivityHandler extends Specification {
 	}
 
 	private EditorActivity getEditorActivity(int index) {
-		model.entityList.get(index)
+		model.entryList.get(index)
 	}
 
 }

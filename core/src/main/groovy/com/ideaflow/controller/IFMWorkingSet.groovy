@@ -1,9 +1,11 @@
 package com.ideaflow.controller
 
+import com.ideaflow.model.Task
+
 class IFMWorkingSet {
 
-	private File activeIfmFile
-	private List<File> ifmFiles = []
+	private Task activeTask
+	private List<Task> tasks = []
 	private List<IFMWorkingSetListener> listeners = []
 
 	void addWorkingSetListener(IFMWorkingSetListener listener) {
@@ -22,35 +24,34 @@ class IFMWorkingSet {
 		}
 	}
 
-	List<File> getIfmFiles() {
-		ifmFiles.clone() as List
+	List<File> getTasks() {
+		tasks.clone() as List
 	}
 
-	void setIfmFiles(List<File> files) {
-		ifmFiles.clear()
-		ifmFiles.addAll(files)
+	void setTasks(List<Task> tasks) {
+		this.tasks.clear()
+		this.tasks.addAll(tasks)
 	}
 
-	void setActiveIfmFile(File ifmFile) {
-		if (activeIfmFile != ifmFile) {
-			if (!ifmFiles.contains(ifmFile)) {
-				ifmFiles.add(ifmFile)
+	void setActiveTask(Task task) {
+		if (activeTask != task) {
+			if (!tasks.contains(task)) {
+				tasks.add(task)
 			}
 			notifyListeners()
 		}
 	}
 
-	void removeIfmFile(File ifmFile) {
-		if (ifmFiles.remove(ifmFile)) {
-			if (ifmFile == activeIfmFile) {
-				activeIfmFile = null
+	void removeTask(Task task) {
+		if (tasks.remove(task)) {
+			if (task == activeTask) {
+				activeTask = null
 			}
 			notifyListeners()
 		}
 	}
 
 	boolean isEmpty() {
-		ifmFiles.isEmpty()
+		tasks.isEmpty()
 	}
-
 }

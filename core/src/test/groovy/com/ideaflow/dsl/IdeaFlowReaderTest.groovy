@@ -20,8 +20,8 @@ editorActivity(created: '2014-08-19T00:00:00', name: 'somefile.txt', modified: '
 
         then:
 
-        model.entityList[0] instanceof EditorActivity
-        model.entityList[0].modified == false
+        model.entryList[0] instanceof EditorActivity
+        model.entryList[0].modified == false
 
     }
 
@@ -39,8 +39,8 @@ stateChange (created: '2014-08-19T00:00:00', type: 'startIdeaFlowRecording', )
 		IdeaFlowModel model = reader.readModel(null, content)
 
 		then:
-		model.entityList[0] instanceof StateChange
-		model.entityList[0].type == StateChangeType.startIdeaFlowRecording
-		model.entityList.size() == 1
+		model.entryList[0] instanceof StateChange
+		model.entryList[0].type == StateChangeType.startIdeaFlowRecording
+		model.entryList.size() == 1
 	}
 }
