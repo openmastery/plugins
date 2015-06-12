@@ -8,6 +8,7 @@ repositories {
 }
 
 dependencies {
+    compile 'io.reactivex:rxjava:1.0.10'
     compile 'org.codehaus.groovy:groovy-all:2.3.9'
     compile 'joda-time:joda-time:2.3'
 
