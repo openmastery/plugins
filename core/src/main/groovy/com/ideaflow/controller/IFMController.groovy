@@ -45,7 +45,7 @@ class IFMController<T> {
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
-		ideaFlowModel?.file?.exists() ? ideaFlowModel : null
+		ideaFlowModel?.task ? ideaFlowModel : null
 	}
 
 	String promptForInput(T context, String title, String message) {
@@ -53,7 +53,7 @@ class IFMController<T> {
 	}
 
 	String getActiveIdeaFlowName() {
-		activeIdeaFlowModel?.file?.name
+		activeIdeaFlowModel?.task?.taskId
 	}
 
 	boolean isIdeaFlowOpen() {
@@ -154,7 +154,7 @@ class IFMController<T> {
 		if (activeIdeaFlowModel) {
 			suspendActiveIdeaFlow(context)
 
-			workingSet.removeTask(ideaFlowModel.file)
+			workingSet.removeTask(ideaFlowModel.task)
 
 			if (workingSet.isEmpty()) {
 				ideaFlowModel = null
