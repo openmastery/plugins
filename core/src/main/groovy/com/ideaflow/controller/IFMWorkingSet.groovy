@@ -24,7 +24,7 @@ class IFMWorkingSet {
 		}
 	}
 
-	List<File> getTasks() {
+	List<Task> getTasks() {
 		tasks.clone() as List
 	}
 
