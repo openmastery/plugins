@@ -14,6 +14,7 @@ import com.ideaflow.model.Resolution
 import com.ideaflow.model.StateChange
 import com.ideaflow.model.StateChangeType
 import com.ideaflow.model.Task
+
 import org.joda.time.DateTime
 
 class IFMController<T> {
@@ -35,12 +36,12 @@ class IFMController<T> {
 		workingSet.addWorkingSetListener(workingSetListener)
 	}
 
-	List<File> getWorkingSetFiles() {
+	List<Task> getWorkingSetTasks() {
 		workingSet.getTasks()
 	}
 
-	void setWorkingSetFiles(List<File> files) {
-		workingSet.setTasks(files)
+	void setWorkingSetTasks(List<Task> tasks) {
+		workingSet.setTasks(tasks)
 	}
 
 	IdeaFlowModel getActiveIdeaFlowModel() {
