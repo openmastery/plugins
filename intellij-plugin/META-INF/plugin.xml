@@ -46,7 +46,7 @@
 		        icon="/icons/ideaflow_add.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
-		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.meta.OpenInBrowserAction" text="Open Visualizer"
+		<action id="IdeaFlow.OpenInBrowser" class="com.ideaflow.intellij.action.meta.OpenInVisualizerAction" text="Open Visualizer"
 		        description="Open the active IdeaFlow in the Visualizer" icon="/icons/browse.png">
 			<add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 		</action>

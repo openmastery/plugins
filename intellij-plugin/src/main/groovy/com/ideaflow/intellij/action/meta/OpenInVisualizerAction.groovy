@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.vfs.VirtualFile
 
 @Mixin(ActionSupport)
-class OpenInBrowserAction extends AnAction {
+class OpenInVisualizerAction extends AnAction {
 
 	@Override
 	public void update(AnActionEvent event) {

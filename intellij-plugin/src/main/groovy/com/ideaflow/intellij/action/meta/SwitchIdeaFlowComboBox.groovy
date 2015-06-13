@@ -4,6 +4,7 @@ import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.settings.AddNewTaskWizard
+import com.ideaflow.model.Task
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -55,11 +56,11 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		}
 	}
 
-	private static class OpenActiveInBrowserAction extends AnAction {
+	private static class OpenActiveInVisualizerAction extends AnAction {
 
 		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
 
-		OpenActiveInBrowserAction() {
+		OpenActiveInVisualizerAction() {
 			getTemplatePresentation().setText("Open in Visualizer")
 			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
 			getTemplatePresentation().setIcon(BROWSE_ICON)
@@ -71,7 +72,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			File activeIfmFile = controller.activeIdeaFlowModel?.file
 
 			if (activeIfmFile) {
-				OpenInBrowserAction.openInBrowser(activeIfmFile)
+				OpenInVisualizerAction.openInBrowser(activeIfmFile)
 			}
 		}
 	}
@@ -128,12 +129,12 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		if (project != null) {
 			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
 
-			for (File ifmFile : controller.getWorkingSetTasks()) {
-				actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
+			for (Task task : controller.getWorkingSetTasks()) {
+				actionGroup.add(new ActivateIdeaFlowAction(project, task))
 			}
 
 			actionGroup.addSeparator();
-			actionGroup.add(new OpenActiveInBrowserAction())
+			actionGroup.add(new OpenActiveInVisualizerAction())
 			actionGroup.add(new RemoveIdeaFlowAction(project))
 			actionGroup.addSeparator();
 			actionGroup.add(new AddNewTaskAction(project))
