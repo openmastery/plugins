@@ -1,4 +1,4 @@
-package com.ideaflow.intellij.action.meta
+package com.ideaflow.intellij.action
 
 import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnActionEvent

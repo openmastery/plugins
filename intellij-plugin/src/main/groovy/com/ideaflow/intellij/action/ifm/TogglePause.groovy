@@ -3,7 +3,7 @@ package com.ideaflow.intellij.action.ifm
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.intellij.action.ActionSupport
-import com.ideaflow.intellij.action.meta.IdeaFlowToggleAction
+import com.ideaflow.intellij.action.IdeaFlowToggleAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 @Mixin(ActionSupport)
