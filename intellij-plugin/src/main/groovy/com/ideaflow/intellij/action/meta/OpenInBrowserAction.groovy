@@ -1,5 +1,6 @@
-package com.ideaflow.intellij.action
+package com.ideaflow.intellij.action.meta
 
+import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

@@ -53,7 +53,7 @@ class IdeaFlowState {
 				savedActiveFile = savedOpenFiles.first()
 			}
 
-			controller.setWorkingSetFiles(savedOpenFiles)
+			controller.setWorkingSetTasks(savedOpenFiles)
 			if (savedActiveFile) {
 				controller.newIdeaFlow(project, savedActiveFile)
 			}
@@ -63,7 +63,7 @@ class IdeaFlowState {
 	}
 
 	private void saveOpenFiles() {
-		List<File> activeFiles = controller.getWorkingSetFiles()
+		List<File> activeFiles = controller.getWorkingSetTasks()
 		properties.setValue(OPEN_FILE_PATHS, toAbsolutePaths(activeFiles)?.join('\n'))
 	}
 

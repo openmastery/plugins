@@ -1,4 +1,4 @@
-package com.ideaflow.intellij.action;
+package com.ideaflow.intellij.action.meta;
 
 import com.ideaflow.controller.IFMController;
 import com.ideaflow.intellij.IdeaFlowApplicationComponent;
@@ -15,6 +15,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import java.io.File;
 
+/**
+ * @deprecated
+ */
 class NewIfmFileAction extends CreateElementActionBase {
 
 	private static final String TITLE = "Create IFM File";

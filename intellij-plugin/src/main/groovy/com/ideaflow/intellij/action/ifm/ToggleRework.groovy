@@ -1,5 +1,6 @@
-package com.ideaflow.intellij.action
+package com.ideaflow.intellij.action.ifm
 
+import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.model.BandType
 
 @Mixin(ActionSupport)

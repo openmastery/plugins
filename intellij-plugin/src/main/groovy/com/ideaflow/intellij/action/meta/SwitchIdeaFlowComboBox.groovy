@@ -1,7 +1,8 @@
-package com.ideaflow.intellij.action
+package com.ideaflow.intellij.action.meta
 
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
+import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.settings.AddNewTaskWizard
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
@@ -127,7 +128,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		if (project != null) {
 			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
 
-			for (File ifmFile : controller.getWorkingSetFiles()) {
+			for (File ifmFile : controller.getWorkingSetTasks()) {
 				actionGroup.add(new ActivateIdeaFlowAction(project, ifmFile))
 			}
 
