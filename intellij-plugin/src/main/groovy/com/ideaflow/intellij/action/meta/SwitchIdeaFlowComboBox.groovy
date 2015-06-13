@@ -32,18 +32,18 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_inactive.png")
 
 		private Project project
-		private File ifmFile
+		private Task task
 
-		public ActivateIdeaFlowAction(Project project, File ifmFile) {
+		public ActivateIdeaFlowAction(Project project, Task task) {
 			this.project = project
-			this.ifmFile = ifmFile
+			this.task = task
 
-			getTemplatePresentation().setText(ifmFile.name, false)
-			getTemplatePresentation().setDescription("Set ${ifmFile.name} as Active IdeaFlow")
+			getTemplatePresentation().setText(task.taskId, false)
+			getTemplatePresentation().setDescription("Set ${task.taskId} as Active IdeaFlow")
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
-			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, ifmFile)
+			IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, task)
 		}
 
 		@Override
@@ -51,8 +51,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			super.update(e)
 
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			File activeIfmFile = controller.activeIdeaFlowModel?.file
-			e.presentation.icon = (activeIfmFile == ifmFile) ? ACTIVE_ICON : INACTIVE_ICON
+			Task activeTask = controller.activeIdeaFlowModel?.task
+			e.presentation.icon = (activeTask == task) ? ACTIVE_ICON : INACTIVE_ICON
 		}
 	}
 
@@ -97,7 +97,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			int result = wizard.showAndSaveSettings()
 
 			if (result) {
-				IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, wizard.settings)
+				IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, wizard.task)
 			}
 		}
 	}

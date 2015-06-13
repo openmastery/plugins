@@ -43,7 +43,7 @@ public class AddNewTaskWizard extends DialogWrapper {
         return getExitCode() == DialogWrapper.OK_EXIT_CODE;
     }
 
-    public Task getSettings() {
+    public Task getTask() {
 
         return storage.load();
     }
