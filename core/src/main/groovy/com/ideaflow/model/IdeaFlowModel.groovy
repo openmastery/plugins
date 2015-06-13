@@ -4,8 +4,13 @@ import org.joda.time.DateTime
 
 class IdeaFlowModel {
 
+	Task task
+
 	List<ModelEntry> entryList = []
 	boolean isPaused = false
+	/**
+	 * @deprecated
+	 */
 	File file
 	DateTime created
 
@@ -13,7 +18,16 @@ class IdeaFlowModel {
 	private BandStart activeBandStart = null
 
 
+	IdeaFlowModel(Task task, DateTime created) {
+		this.task = task
+		this.created = created
+	}
 
+	/**
+	 * @deprecated
+	 * @param file
+	 * @param created
+	 */
 	IdeaFlowModel(File file, DateTime created) {
 		this.file = file
 		this.created = created
