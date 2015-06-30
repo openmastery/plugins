@@ -2,43 +2,57 @@ package com.ideaflow.intellij.settings
 
 import com.ideaflow.model.Task
 import com.intellij.ide.util.PropertiesComponent
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 class IdeaSettingsService {
 
-    static final Map<String,String> cActive = [
-            "Task": "IFM.Active.Task",
-            "User": "IFM.Active.User",
-            "Project": "IFM.Active.Project",
-            "BaseUrl": "IFM.Active.BaseUrl",
-            "CalculatedUrl": "IFM.Active.CalculatedUrl"
-    ]
+    static final String ACTIVE_TASK = "IFM.Active.Task"
+    static final String OPEN_TASKS = "IFM.Open.Tasks"
 
 
-    void save(Task data) {
+    void saveActiveTask(Task task) {
 
         def props = PropertiesComponent.getInstance()
 
-        props.setValue(cActive.Task, data.taskId.trim())
-        props.setValue(cActive.User, data.user.trim())
-        props.setValue(cActive.Project, data.project.trim())
-        props.setValue(cActive.BaseUrl, data.baseUrl.trim())
-        props.setValue(cActive.CalculatedUrl, data.calculatedUrl.trim())
+        props.setValue(ACTIVE_TASK, JsonOutput.toJson(task))
     }
 
-    Task load() {
-
-        def props = PropertiesComponent.getInstance()
-
-        def values = cActive.collectEntries{ name, path -> [path, props.getValue(path)] }
+    private Task _loadTask(Map values) {
 
         def data = new Task()
 
-        data.taskId = values[cActive.Task]
-        data.user = values[cActive.User]
-        data.project = values[cActive.Project]
-        data.baseUrl = values[cActive.BaseUrl]
-        data.calculatedUrl = values[cActive.CalculatedUrl]
+        data.taskId = values["taskId"]
+        data.user = values["user"]
+        data.project = values["project"]
+        data.baseUrl = values["baseUrl"]
+        data.calculatedUrl = values["calculatedUrl"]
 
         return data
+    }
+
+    Task loadActiveTask() {
+
+        def props = PropertiesComponent.getInstance()
+
+        def values = new JsonSlurper().parseText(props.getValue(ACTIVE_TASK))
+
+        return _loadTask(values)
+    }
+
+    void saveOpenTasks(Collection<Task> tasks) {
+
+        def props = PropertiesComponent.getInstance()
+
+        props.setValue(OPEN_TASKS, JsonOutput.toJson(tasks))
+    }
+
+    Collection<Task> loadOpenTasks() {
+
+        def props = PropertiesComponent.getInstance()
+
+        def values = new JsonSlurper().parseText(props.getValue(OPEN_TASKS))
+
+        return values.collect{ data -> _loadTask(values) }
     }
 }
