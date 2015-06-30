@@ -22,7 +22,7 @@ public class AddNewTaskWizard extends DialogWrapper {
     protected JComponent createCenterPanel() {
 
         if (wizard == null) {
-            Task data = storage.load();
+            Task data = storage.loadActiveTask();
 
             //Clear out task id
             data.setTaskId("");
@@ -37,7 +37,7 @@ public class AddNewTaskWizard extends DialogWrapper {
         show();
 
         if (getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-            storage.save(wizard.toData());
+            storage.saveActiveTask(wizard.toTask());
         }
 
         return getExitCode() == DialogWrapper.OK_EXIT_CODE;
@@ -45,7 +45,7 @@ public class AddNewTaskWizard extends DialogWrapper {
 
     public Task getTask() {
 
-        return storage.load();
+        return storage.loadActiveTask();
     }
 
     @Override

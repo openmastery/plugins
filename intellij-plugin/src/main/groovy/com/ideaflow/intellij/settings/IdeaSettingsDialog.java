@@ -52,7 +52,7 @@ public class IdeaSettingsDialog {
         calculatedUrl.setText(data.getCalculatedUrl());
     }
 
-    Task toData() {
+    Task toTask() {
 
         Task data = new Task();
 

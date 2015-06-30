@@ -34,20 +34,20 @@ class IdeaSettings implements Configurable {
 
     @Override
     boolean isModified() {
-        return dialog == null || dialog.isDifferent(storage.load())
+        return dialog == null || dialog.isDifferent(storage.loadActiveTask())
     }
 
     @Override
     void apply() throws ConfigurationException {
         if (dialog != null) {
-            storage.save(dialog.toData())
+            storage.saveActiveTask(dialog.toTask())
         }
     }
 
     @Override
     void reset() {
         if (dialog != null) {
-            dialog.load(storage.load())
+            dialog.load(storage.loadActiveTask())
         }
     }
 
