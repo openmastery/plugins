@@ -1,6 +1,6 @@
 package com.ideaflow.event
 
-import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification

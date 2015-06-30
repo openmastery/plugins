@@ -1,5 +1,10 @@
 package com.ideaflow.model
 
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Resolution
 import org.joda.time.DateTime
 
 class IdeaFlowModel {

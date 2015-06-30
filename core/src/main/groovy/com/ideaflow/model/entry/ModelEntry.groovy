@@ -1,4 +1,4 @@
-package com.ideaflow.model
+package com.ideaflow.model.entry
 
 import groovy.transform.EqualsAndHashCode
 import org.joda.time.DateTime

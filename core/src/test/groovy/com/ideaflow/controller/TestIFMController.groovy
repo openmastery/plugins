@@ -1,7 +1,7 @@
 package com.ideaflow.controller
 
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.Idle
+import com.ideaflow.model.entry.Idle
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import spock.lang.Specification

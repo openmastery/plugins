@@ -1,7 +1,7 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.ModelEntry
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.ModelEntry
 import spock.lang.Specification
 import test.support.FixtureSupport
 

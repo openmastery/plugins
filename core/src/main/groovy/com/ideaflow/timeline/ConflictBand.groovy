@@ -1,8 +1,8 @@
 package com.ideaflow.timeline
 
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.Resolution
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.Resolution
 import org.joda.time.DateTime
 
 

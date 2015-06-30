@@ -1,8 +1,8 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.EditorActivity
+import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.entry.StateChange
 import com.ideaflow.model.StateChangeType
 import spock.lang.Specification
 

@@ -1,5 +1,7 @@
-package com.ideaflow.model
+package com.ideaflow.model.entry
 
+import com.ideaflow.model.BandType
+import com.ideaflow.model.entry.ModelEntry
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true)

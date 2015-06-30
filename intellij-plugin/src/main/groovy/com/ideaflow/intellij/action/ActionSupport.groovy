@@ -3,9 +3,9 @@ package com.ideaflow.intellij.action
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.intellij.file.IdeaFlowMapFileType
-import com.ideaflow.model.BandStart
+import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
+import com.ideaflow.model.entry.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.Presentation

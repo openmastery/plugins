@@ -1,15 +1,15 @@
 package test.support
 
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
-import com.ideaflow.model.EditorActivity
-import com.ideaflow.model.Idle
-import com.ideaflow.model.ModelEntry
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.EditorActivity
+import com.ideaflow.model.entry.Idle
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Note
+import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.StateChange
 import com.ideaflow.model.StateChangeType
 import com.ideaflow.timeline.ActivityDetail
 import com.ideaflow.timeline.ConflictBand

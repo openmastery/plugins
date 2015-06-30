@@ -1,6 +1,6 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.Note
+import com.ideaflow.model.entry.Note
 
 
 class Event implements TimeEntry, Entity {

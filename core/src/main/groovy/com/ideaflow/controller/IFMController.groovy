@@ -3,15 +3,15 @@ package com.ideaflow.controller
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.dsl.client.IIdeaFlowClient
 import com.ideaflow.event.EventToEditorActivityHandler
-import com.ideaflow.model.BandEnd
-import com.ideaflow.model.BandStart
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
+import com.ideaflow.model.entry.Conflict
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.ModelEntry
-import com.ideaflow.model.Note
-import com.ideaflow.model.Resolution
-import com.ideaflow.model.StateChange
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Note
+import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.StateChange
 import com.ideaflow.model.StateChangeType
 import com.ideaflow.model.Task
 
@@ -142,6 +142,11 @@ class IFMController<T> {
 	void newIdeaFlow(T context, Task task) {
 
 		suspendActiveIdeaFlow(context)
+
+		if (client.taskExists(task)) {
+
+			//ideaFlowModel = client.
+		}
 
 		workingSet.setActiveTask(task)
 		ideaFlowModel = new IdeaFlowModel(task, new DateTime())

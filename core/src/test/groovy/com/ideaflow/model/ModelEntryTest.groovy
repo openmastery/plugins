@@ -1,5 +1,6 @@
 package com.ideaflow.model
 
+import com.ideaflow.model.entry.ModelEntry
 import groovy.transform.EqualsAndHashCode
 import org.joda.time.DateTime
 import spock.lang.Specification

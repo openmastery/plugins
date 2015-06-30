@@ -4,9 +4,9 @@ import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.action.IdeaFlowToggleAction
-import com.ideaflow.model.BandStart
+import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.Conflict
+import com.ideaflow.model.entry.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
 
 @Mixin(ActionSupport)

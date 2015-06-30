@@ -1,6 +1,6 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.Idle
+import com.ideaflow.model.entry.Idle
 
 class IdleDetail implements TimeEntry, Entity {
 

@@ -1,7 +1,5 @@
 package com.ideaflow.timeline
 
-import com.ideaflow.model.Conflict
-
 class Timeline {
 	List<ConflictBand> conflictBands = []
 	List<GenericBand> genericBands = []

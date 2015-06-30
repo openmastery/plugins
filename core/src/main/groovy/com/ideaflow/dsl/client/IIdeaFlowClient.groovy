@@ -1,6 +1,6 @@
 package com.ideaflow.dsl.client
 
-import com.ideaflow.model.ModelEntry
+import com.ideaflow.model.entry.ModelEntry
 
 interface IIdeaFlowClient {
 
