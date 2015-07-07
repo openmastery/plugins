@@ -1,8 +1,9 @@
 package com.ideaflow.dsl.client
 
-import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Task
 
-interface IIdeaFlowClient {
+interface IIdeaFlowClient<T> {
 
-    void updateEntries(ArrayList<ModelEntry> modelEntries)
+    IdeaFlowModel readModel(T context, Task task)
 }

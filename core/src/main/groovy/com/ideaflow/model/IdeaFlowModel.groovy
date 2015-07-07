@@ -1,10 +1,6 @@
 package com.ideaflow.model
 
-import com.ideaflow.model.entry.BandEnd
-import com.ideaflow.model.entry.BandStart
-import com.ideaflow.model.entry.Conflict
-import com.ideaflow.model.entry.ModelEntry
-import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.*
 import org.joda.time.DateTime
 
 class IdeaFlowModel {
@@ -13,10 +9,6 @@ class IdeaFlowModel {
 
 	List<ModelEntry> entryList = []
 	boolean isPaused = false
-	/**
-	 * @deprecated
-	 */
-	File file
 	DateTime created
 
 	private Conflict activeConflict = null
@@ -25,16 +17,6 @@ class IdeaFlowModel {
 
 	IdeaFlowModel(Task task, DateTime created) {
 		this.task = task
-		this.created = created
-	}
-
-	/**
-	 * @deprecated
-	 * @param file
-	 * @param created
-	 */
-	IdeaFlowModel(File file, DateTime created) {
-		this.file = file
 		this.created = created
 	}
 

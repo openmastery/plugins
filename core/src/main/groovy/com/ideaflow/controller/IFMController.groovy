@@ -1,21 +1,13 @@
 package com.ideaflow.controller
 
-import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.dsl.client.IIdeaFlowClient
+import com.ideaflow.dsl.client.local.IdeaFlowFileClient
 import com.ideaflow.event.EventToEditorActivityHandler
-import com.ideaflow.model.entry.BandEnd
-import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.BandType
-import com.ideaflow.model.entry.Conflict
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.entry.ModelEntry
-import com.ideaflow.model.entry.Note
-import com.ideaflow.model.entry.Resolution
-import com.ideaflow.model.entry.StateChange
 import com.ideaflow.model.StateChangeType
 import com.ideaflow.model.Task
-
-import org.joda.time.DateTime
+import com.ideaflow.model.entry.*
 
 class IFMController<T> {
 
@@ -29,6 +21,7 @@ class IFMController<T> {
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
+		this.client = new IdeaFlowFileClient(ideService: ideService)
 		this.workingSet = new IFMWorkingSet()
 	}
 
@@ -113,43 +106,14 @@ class IFMController<T> {
 		}
 	}
 
-	/**
-	 * @deprecated
-	 * @param context
-	 * @param file
-	 */
-	void newIdeaFlow(T context, File file) {
-		suspendActiveIdeaFlow(context)
-
-		file = addExtension(file)
-		if (ideService.fileExists(context, file)) {
-			println("Resuming existing IdeaFlow: ${file.absolutePath}")
-			String xml = ideService.readFile(context, file)
-			ideaFlowModel = new IdeaFlowReader().readModel(file, xml)
-			ideaFlowModel.file = file
-		} else {
-			println("Creating new IdeaFlow: ${file.absolutePath}")
-			ideService.createNewFile(context, file, "")
-			ideaFlowModel = new IdeaFlowModel(file, new DateTime())
-		}
-
-		//workingSet.setActiveIfmFile(ideaFlowModel.file)
-		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
-		addStateChange(context, StateChangeType.startIdeaFlowRecording)
-		startFileEventForCurrentFile(context)
-	}
-
 	void newIdeaFlow(T context, Task task) {
 
 		suspendActiveIdeaFlow(context)
 
-		if (client.taskExists(task)) {
-
-			//ideaFlowModel = client.
-		}
+		ideaFlowModel = client.readModel(context, task)
 
 		workingSet.setActiveTask(task)
-		ideaFlowModel = new IdeaFlowModel(task, new DateTime())
+
 		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
 		addStateChange(context, StateChangeType.startIdeaFlowRecording)
 		startFileEventForCurrentFile(context)
@@ -219,14 +183,6 @@ class IFMController<T> {
 
 	boolean isPaused() {
 		activeIdeaFlowModel?.isPaused
-	}
-
-	private File addExtension(File file) {
-		File fileWithExtension = file
-		if (file.name.endsWith(".ifm") == false) {
-			fileWithExtension = new File(file.absolutePath + ".ifm")
-		}
-		return fileWithExtension
 	}
 
 	private void flush(T context) {

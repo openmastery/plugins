@@ -20,24 +20,34 @@ class IdeaSettingsService {
 
     private Task _loadTask(Map values) {
 
-        def data = new Task()
+        if (values) {
+            def data = new Task()
 
-        data.taskId = values["taskId"]
-        data.user = values["user"]
-        data.project = values["project"]
-        data.baseUrl = values["baseUrl"]
-        data.calculatedUrl = values["calculatedUrl"]
+            data.taskId = values["taskId"]
+            data.user = values["user"]
+            data.project = values["project"]
+            data.baseUrl = values["baseUrl"]
+            data.calculatedUrl = values["calculatedUrl"]
 
-        return data
+            return data
+        }
+
+        return null
     }
 
     Task loadActiveTask() {
 
         def props = PropertiesComponent.getInstance()
 
-        def values = new JsonSlurper().parseText(props.getValue(ACTIVE_TASK))
+        try {
+            def values = new JsonSlurper().parseText(props.getValue(ACTIVE_TASK) ?: '{}')
 
-        return _loadTask(values)
+            return _loadTask(values)
+        }
+        catch(JsonException) {
+
+            return null
+        }
     }
 
     void saveOpenTasks(Collection<Task> tasks) {
@@ -51,8 +61,14 @@ class IdeaSettingsService {
 
         def props = PropertiesComponent.getInstance()
 
-        def values = new JsonSlurper().parseText(props.getValue(OPEN_TASKS))
+        def values = []
 
-        return values.collect{ data -> _loadTask(values) }
+        try {
+            values = new JsonSlurper().parseText(props.getValue(OPEN_TASKS) ?: '[]')
+        }
+        catch(JsonException) {}
+
+        //Skip Tasks that are null
+        return values.collect{ data -> _loadTask(values) }.findAll{ it }
     }
 }
