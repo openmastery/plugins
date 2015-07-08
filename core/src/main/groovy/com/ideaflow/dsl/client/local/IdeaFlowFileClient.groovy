@@ -1,6 +1,7 @@
 package com.ideaflow.dsl.client.local
 
 import com.ideaflow.controller.IDEService
+import com.ideaflow.dsl.DSLTimelineSerializer
 import com.ideaflow.dsl.IdeaFlowReader
 import com.ideaflow.dsl.client.IIdeaFlowClient
 import com.ideaflow.model.IdeaFlowModel
@@ -16,7 +17,7 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
 
         IdeaFlowModel ideaFlowModel
 
-        def file = addExtension(new File(System.getProperty("user.home") + "/" + task.taskId))
+        def file = _getFile(task)
 
         if (ideService.fileExists(context, file)) {
 
@@ -24,7 +25,7 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
 
             String xml = ideService.readFile(context, file)
 
-            ideaFlowModel = new IdeaFlowReader().readModel(file, xml)
+            ideaFlowModel = new IdeaFlowReader().readModel(task, xml)
 
         } else {
             println("Creating new IdeaFlow: ${file.absolutePath}")
@@ -39,14 +40,19 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
         return ideaFlowModel
     }
 
-    private File addExtension(File file) {
+    private File _getFile(Task task) {
 
-        File fileWithExtension = file
-        if (file.name.endsWith(".ifm") == false) {
-            fileWithExtension = new File(file.absolutePath + ".ifm")
-        }
+        def file = new File(System.getProperty("user.home") + "/" + task.taskId)
 
-        return fileWithExtension
+        return file.name.endsWith(".ifm") == false ?
+                new File(file.absolutePath + ".ifm") :
+                file
     }
 
+    @Override
+    void saveModel(T context, IdeaFlowModel ideaFlowModel) {
+
+        String xml = new DSLTimelineSerializer().serialize(ideaFlowModel)
+        ideService.writeFile(context, _getFile(ideaFlowModel.task), xml)
+    }
 }

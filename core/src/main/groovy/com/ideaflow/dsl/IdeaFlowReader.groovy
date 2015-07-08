@@ -1,15 +1,8 @@
 package com.ideaflow.dsl
 
-import com.ideaflow.model.entry.BandEnd
-import com.ideaflow.model.entry.BandStart
-import com.ideaflow.model.entry.Conflict
-import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
-import com.ideaflow.model.entry.Idle
-import com.ideaflow.model.entry.ModelEntry
-import com.ideaflow.model.entry.Note
-import com.ideaflow.model.entry.Resolution
-import com.ideaflow.model.entry.StateChange
+import com.ideaflow.model.Task
+import com.ideaflow.model.entry.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -34,8 +27,8 @@ class IdeaFlowReader {
 		this.chunkSize = chunkSize
 	}
 
-	IdeaFlowModel readModel(File modelFile, String dslContent) {
-		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(modelFile)
+	IdeaFlowModel readModel(Task task, String dslContent) {
+		IdeaFlowModelLoader loader = new IdeaFlowModelLoader(task)
 
 		for (List<String> dslContentChunk : dslContent.readLines().collate(chunkSize)) {
 			String partialDslContent = dslContentChunk.join(LINE_SEPARATOR)
@@ -74,8 +67,8 @@ class IdeaFlowReader {
 		private int entityIdCounter
 		private DateTimeFormatter dateFormat
 
-		IdeaFlowModelLoader(File modelFile) {
-			model = new IdeaFlowModel(modelFile, new DateTime())
+		IdeaFlowModelLoader(Task task) {
+			model = new IdeaFlowModel(task, new DateTime())
 			entityIdCounter = 1
 		}
 

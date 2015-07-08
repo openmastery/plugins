@@ -187,9 +187,7 @@ class IFMController<T> {
 
 	private void flush(T context) {
 		if (activeIdeaFlowModel) {
-			client.updateEntries(activeIdeaFlowModel.entryList)
-			//String xml = new DSLTimelineSerializer().serialize(activeIdeaFlowModel)
-			//ideService.writeFile(context, activeIdeaFlowModel.file, xml)
+			client.saveModel(context, activeIdeaFlowModel)
 		}
 	}
 
