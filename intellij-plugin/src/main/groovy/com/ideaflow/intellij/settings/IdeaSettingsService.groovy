@@ -69,6 +69,6 @@ class IdeaSettingsService {
         catch(JsonException) {}
 
         //Skip Tasks that don't have a taskId
-        return values.collect{ data -> _loadTask(values) }.findAll{ it.hasTaskId() }
+        return values.collect{ data -> _loadTask(data) }.findAll{ task -> task.hasTaskId() }
     }
 }
