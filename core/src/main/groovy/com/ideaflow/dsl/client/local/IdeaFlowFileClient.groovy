@@ -42,7 +42,7 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
 
     private File _getFile(Task task) {
 
-        def file = new File(System.getProperty("user.home") + "/" + task.taskId)
+        def file = new File(System.getProperty("user.home") + "/.ifm/" + task.taskId)
 
         return file.name.endsWith(".ifm") == false ?
                 new File(file.absolutePath + ".ifm") :
