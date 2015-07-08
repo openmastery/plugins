@@ -20,21 +20,21 @@ class IdeaSettingsService {
 
     private Task _loadTask(Map values) {
 
-        if (values) {
-            def data = new Task()
+        def data = new Task()
 
-            data.taskId = values["taskId"]
-            data.user = values["user"]
-            data.project = values["project"]
-            data.baseUrl = values["baseUrl"]
-            data.calculatedUrl = values["calculatedUrl"]
+        data.taskId = values["taskId"]
+        data.user = values["user"]
+        data.project = values["project"]
+        data.baseUrl = values["baseUrl"]
+        data.calculatedUrl = values["calculatedUrl"]
 
-            return data
-        }
-
-        return null
+        return data
     }
 
+    /**
+     * Always returns non-null
+     * @return
+     */
     Task loadActiveTask() {
 
         def props = PropertiesComponent.getInstance()
@@ -46,7 +46,7 @@ class IdeaSettingsService {
         }
         catch(JsonException) {
 
-            return null
+            return new Task()
         }
     }
 
@@ -68,7 +68,7 @@ class IdeaSettingsService {
         }
         catch(JsonException) {}
 
-        //Skip Tasks that are null
-        return values.collect{ data -> _loadTask(values) }.findAll{ it }
+        //Skip Tasks that don't have a taskId
+        return values.collect{ data -> _loadTask(values) }.findAll{ it.hasTaskId() }
     }
 }

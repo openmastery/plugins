@@ -8,4 +8,8 @@ class Task {
     String project
     String baseUrl
     String calculatedUrl
+
+    boolean hasTaskId() {
+        return taskId != null && !taskId.isAllWhitespace()
+    }
 }

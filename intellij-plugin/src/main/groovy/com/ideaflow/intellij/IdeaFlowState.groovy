@@ -47,13 +47,13 @@ class IdeaFlowState {
 			List<Task> savedOpenTasks = storage.loadOpenTasks()
 			Task savedActiveTask = storage.loadActiveTask()
 
-			if (!savedActiveTask && savedOpenTasks) {
+			if (!savedActiveTask.hasTaskId() && savedOpenTasks) {
 				savedActiveTask = savedOpenTasks.first()
 			}
 
 			controller.setWorkingSetTasks(savedOpenTasks)
 
-			if (savedActiveTask) {
+			if (savedActiveTask.hasTaskId()) {
 				controller.newIdeaFlow(project, savedActiveTask)
 			}
 		} finally {

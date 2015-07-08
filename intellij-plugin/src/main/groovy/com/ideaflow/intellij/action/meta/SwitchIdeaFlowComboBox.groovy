@@ -94,7 +94,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 			def wizard = new AddNewTaskWizard(project)
 
-			int result = wizard.showAndSaveSettings()
+			def result = wizard.showAndSaveSettings()
 
 			if (result) {
 				IdeaFlowApplicationComponent.getIFMController().newIdeaFlow(project, wizard.task)
@@ -148,9 +148,8 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		IFMController controller = getIFMController(e)
 		if (controller) {
-			boolean enabled = isIdeaFlowOpenAndNotPaused(e)
-			e.presentation.enabled = enabled
-			e.presentation.text = enabled ? controller.getActiveIdeaFlowName() : ""
+			e.presentation.enabled = true
+			e.presentation.text = controller.getActiveIdeaFlowName() ?: "Add new task"
 		}
 	}
 }
