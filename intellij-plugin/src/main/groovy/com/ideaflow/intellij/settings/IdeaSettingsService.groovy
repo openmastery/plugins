@@ -18,7 +18,7 @@ class IdeaSettingsService {
         props.setValue(ACTIVE_TASK, JsonOutput.toJson(task))
     }
 
-    private Task _loadTask(Map values) {
+    private Task loadTask(Map values) {
 
         def data = new Task()
 
@@ -42,7 +42,7 @@ class IdeaSettingsService {
         try {
             def values = new JsonSlurper().parseText(props.getValue(ACTIVE_TASK) ?: '{}')
 
-            return _loadTask(values)
+            return loadTask(values)
         }
         catch(JsonException) {
 
@@ -69,6 +69,6 @@ class IdeaSettingsService {
         catch(JsonException) {}
 
         //Skip Tasks that don't have a taskId
-        return values.collect{ data -> _loadTask(data) }.findAll{ task -> task.hasTaskId() }
+        return values.collect{ data -> loadTask(data) }.findAll{ task -> task.hasTaskId() }
     }
 }
