@@ -15,7 +15,7 @@ class TestIFMController extends Specification {
 
 	def setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
-		controller.newIdeaFlow("string", File.createTempFile("tmp", ".ifm"))
+		controller.newIdeaFlow("context", File.createTempFile("tmp", ".ifm"))
 	}
 
 	def cleanup() {

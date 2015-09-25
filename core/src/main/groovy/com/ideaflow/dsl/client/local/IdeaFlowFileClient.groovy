@@ -17,7 +17,7 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
 
         IdeaFlowModel ideaFlowModel
 
-        def file = _getFile(task)
+        File file = getFile(task)
 
         if (ideService.fileExists(context, file)) {
 
@@ -40,7 +40,7 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
         return ideaFlowModel
     }
 
-    private File _getFile(Task task) {
+    private File getFile(Task task) {
 
         def file = new File(System.getProperty("user.home") + "/.ifm/" + task.taskId)
 
@@ -53,6 +53,6 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
     void saveModel(T context, IdeaFlowModel ideaFlowModel) {
 
         String xml = new DSLTimelineSerializer().serialize(ideaFlowModel)
-        ideService.writeFile(context, _getFile(ideaFlowModel.task), xml)
+        ideService.writeFile(context, getFile(ideaFlowModel.task), xml)
     }
 }
