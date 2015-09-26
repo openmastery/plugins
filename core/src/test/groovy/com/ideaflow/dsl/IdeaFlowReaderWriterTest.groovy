@@ -1,5 +1,6 @@
 package com.ideaflow.dsl
 
+import com.ideaflow.model.Task
 import com.ideaflow.model.entry.BandEnd
 import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.entry.Conflict
@@ -66,7 +67,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 	}
 
 	private IdeaFlowModel readModelAndClearIds() {
-		IdeaFlowModel model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
+		IdeaFlowModel model = new IdeaFlowReader().readModel(new Task(taskId: 'test'), stringWriter.toString())
 
 		model.entryList.each { ModelEntry entity ->
 			assert entity.id != null
@@ -91,7 +92,7 @@ class IdeaFlowReaderWriterTest extends Specification {
 		}
 		IdeaFlowModel model
 		try {
-			model = new IdeaFlowReader().readModel(new File('test'), stringWriter.toString())
+			model = new IdeaFlowReader().readModel(new Task(taskId: 'test'), stringWriter.toString())
 		} catch (MissingMethodException ex) {
 			throw new RuntimeException("Possible reason for failure: if a subtype of ${ModelEntry.simpleName} has just been added, " +
 					"ensure ${IdeaFlowReader.simpleName} declares appropriate read(<subtype>) method", ex)
