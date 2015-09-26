@@ -1,6 +1,7 @@
 package com.ideaflow.controller
 
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Task
 import com.ideaflow.model.entry.Idle
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
@@ -15,7 +16,7 @@ class TestIFMController extends Specification {
 
 	def setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
-		controller.newIdeaFlow("context", File.createTempFile("tmp", ".ifm"))
+		controller.newIdeaFlow("context", new Task(taskId: "test"))
 	}
 
 	def cleanup() {
@@ -76,20 +77,20 @@ class TestIFMController extends Specification {
 		assert controller.getActiveIdeaFlowModel().getEntryList() == []
 	}
 
-	def "newIdeaFlow should suspend existing idea flow but retain old file in open file list"() {
+	def "newIdeaFlow should suspend existing idea flow but retain old task in open task list"() {
 		when:
-		File oldModelFile = controller.activeIdeaFlowModel.file
-		File newModelFile = File.createTempFile("tmp2", ".ifm")
+		Task oldModelTask = controller.activeIdeaFlowModel.task
+		Task newModelTask = new Task(taskId: "new_task")
 		IdeaFlowModel oldActiveModel = controller.activeIdeaFlowModel
-		controller.newIdeaFlow("context", newModelFile)
+		controller.newIdeaFlow("context", newModelTask)
 
 		then:
 		controller.activeIdeaFlowModel != oldActiveModel
-		controller.activeIdeaFlowModel.file == newModelFile
-		controller.workingSetTasks == [oldModelFile, controller.activeIdeaFlowModel.file]
+		controller.activeIdeaFlowModel.task == newModelTask
+		controller.workingSetTasks == [oldModelTask, controller.activeIdeaFlowModel.task]
 	}
 
-	def "closeIdeaFlow should remove file from open file list"() {
+	def "closeIdeaFlow should remove task from open task list"() {
 		when:
 		controller.closeIdeaFlow("context")
 
@@ -97,15 +98,15 @@ class TestIFMController extends Specification {
 		controller.workingSetTasks == []
 	}
 
-	def "should not add multiple files to open file list if newIdeaFlow called with same file twice"() {
+	def "should not add multiple tasks to open task list if newIdeaFlow called with same task twice"() {
 		given:
-		File oldModelFile = controller.activeIdeaFlowModel.file
+		Task oldModelTask = controller.activeIdeaFlowModel.task
 
 		when:
-		controller.newIdeaFlow("string", oldModelFile)
+		controller.newIdeaFlow("string", oldModelTask)
 
 		then:
-		controller.workingSetTasks == [oldModelFile]
+		controller.workingSetTasks == [oldModelTask]
 	}
 
 }
