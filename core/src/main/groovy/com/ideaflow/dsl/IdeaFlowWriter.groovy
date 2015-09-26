@@ -1,5 +1,6 @@
 package com.ideaflow.dsl
 
+import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.entry.BandEnd
 import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.entry.Conflict

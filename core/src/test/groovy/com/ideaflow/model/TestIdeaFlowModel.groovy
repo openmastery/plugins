@@ -6,7 +6,7 @@ import test.support.FixtureSupport
 @Mixin(FixtureSupport)
 class TestIdeaFlowModel extends Specification {
 
-	IdeaFlowModel model = new IdeaFlowModel(new File('test'), null)
+	IdeaFlowModel model = new IdeaFlowModel(new Task(taskId: 'test'), null)
 
 	void testAddEvent_ShouldNotAdd_IfPaused() {
         given:
