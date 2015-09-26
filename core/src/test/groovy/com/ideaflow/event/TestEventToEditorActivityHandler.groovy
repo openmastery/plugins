@@ -1,5 +1,6 @@
 package com.ideaflow.event
 
+import com.ideaflow.model.Task
 import com.ideaflow.model.entry.EditorActivity
 import com.ideaflow.model.IdeaFlowModel
 import org.joda.time.DateTimeUtils
@@ -20,7 +21,7 @@ class TestEventToEditorActivityHandler extends Specification {
 	void setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
 
-		model = new IdeaFlowModel(new File('test'), null)
+		model = new IdeaFlowModel(new Task(taskId: 'test'), null)
 		eventHandler = new EventToEditorActivityHandler(model)
 	}
 

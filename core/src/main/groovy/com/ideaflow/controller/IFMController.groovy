@@ -21,7 +21,7 @@ class IFMController<T> {
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
-		this.client = new IdeaFlowFileClient(ideService: ideService)
+		this.client = new IdeaFlowFileClient(ideService)
 		this.workingSet = new IFMWorkingSet()
 	}
 
