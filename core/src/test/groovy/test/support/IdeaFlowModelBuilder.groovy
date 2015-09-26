@@ -1,5 +1,6 @@
 package test.support
 
+import com.ideaflow.model.Task
 import com.ideaflow.model.entry.BandEnd
 import com.ideaflow.model.entry.BandStart
 import com.ideaflow.model.entry.Conflict
@@ -22,7 +23,7 @@ class IdeaFlowModelBuilder {
 
 	IdeaFlowModelBuilder defaults() {
 		ifm.created = new DateTime(fs.NOW)
-		ifm.file = new File(fs.FILE)
+		ifm.task = new Task(taskId: 'test')
 		return this
 	}
 

@@ -1,6 +1,7 @@
 package com.ideaflow.dsl
 
 import com.ideaflow.model.IdeaFlowModel
+import com.ideaflow.model.Task
 
 class DSLTimelineSerializer {
 
@@ -17,9 +18,8 @@ class DSLTimelineSerializer {
 		stringWriter.toString()
 	}
 
-	IdeaFlowModel deserialize(File dslFile) {
-		new IdeaFlowReader().readModel(dslFile, dslFile.text)
+	IdeaFlowModel deserialize(Task task, String content) {
+		new IdeaFlowReader().readModel(task, content)
 	}
-
 
 }
