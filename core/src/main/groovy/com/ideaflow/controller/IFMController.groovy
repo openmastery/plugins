@@ -1,13 +1,18 @@
 package com.ideaflow.controller
 
-import com.ideaflow.dsl.client.IIdeaFlowClient
-import com.ideaflow.dsl.client.local.IdeaFlowFileClient
+import com.ideaflow.dsl.client.IdeaFlowFileClient
 import com.ideaflow.event.EventToEditorActivityHandler
 import com.ideaflow.model.BandType
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.StateChangeType
 import com.ideaflow.model.Task
-import com.ideaflow.model.entry.*
+import com.ideaflow.model.entry.BandEnd
+import com.ideaflow.model.entry.BandStart
+import com.ideaflow.model.entry.Conflict
+import com.ideaflow.model.entry.ModelEntry
+import com.ideaflow.model.entry.Note
+import com.ideaflow.model.entry.Resolution
+import com.ideaflow.model.entry.StateChange
 
 class IFMController<T> {
 
@@ -15,13 +20,11 @@ class IFMController<T> {
 	private EventToEditorActivityHandler eventToIntervalHandler
 	private IDEService<T> ideService
 	private IFMWorkingSet workingSet
-
-	private IIdeaFlowClient client
-
+	private IdeaFlowFileClient client
 
 	IFMController(IDEService<T> ideService) {
 		this.ideService = ideService
-		this.client = new IdeaFlowFileClient(ideService)
+		this.client = new IdeaFlowFileClient()
 		this.workingSet = new IFMWorkingSet()
 	}
 
@@ -110,7 +113,7 @@ class IFMController<T> {
 
 		suspendActiveIdeaFlow(context)
 
-		ideaFlowModel = client.readModel(context, task)
+		ideaFlowModel = client.readModel(task)
 
 		workingSet.setActiveTask(task)
 
@@ -137,7 +140,7 @@ class IFMController<T> {
 	private void suspendActiveIdeaFlow(T context) {
 		if (activeIdeaFlowModel) {
 			endFileEvent(null)
-			flush(context)
+			flush()
 		}
 	}
 
@@ -148,7 +151,7 @@ class IFMController<T> {
 
     void startFileEvent(T context, String eventName) {
 		eventToIntervalHandler?.startEvent(eventName)
-		flush(context)
+		flush()
 	}
 
 	void fileModified(String eventName) {
@@ -171,7 +174,7 @@ class IFMController<T> {
 	void pause(T context) {
 		println("Paused")
 		endFileEvent(null)
-		flush(context)
+		flush()
 		activeIdeaFlowModel?.isPaused = true
 	}
 
@@ -185,9 +188,9 @@ class IFMController<T> {
 		activeIdeaFlowModel?.isPaused
 	}
 
-	private void flush(T context) {
+	private void flush() {
 		if (activeIdeaFlowModel) {
-			client.saveModel(context, activeIdeaFlowModel)
+			client.saveModel(activeIdeaFlowModel)
 		}
 	}
 
@@ -198,7 +201,7 @@ class IFMController<T> {
 	private void addModelEntry(T context, ModelEntry event) {
 		flushActiveEvent()
 		activeIdeaFlowModel?.addModelEntry(event)
-		flush(context)
+		flush()
 		startFileEventForCurrentFile(context)
 	}
 

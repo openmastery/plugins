@@ -9,13 +9,13 @@ repositories {
 
 dependencies {
     compile 'io.reactivex:rxjava:1.0.10'
-    compile 'org.codehaus.groovy:groovy-all:2.3.9'
+	compile 'org.codehaus.groovy:groovy-all:1.8.6'
     compile 'joda-time:joda-time:2.3'
 
     testCompile 'org.slf4j:slf4j-api:1.7.12'
     testCompile 'com.google.guava:guava:18.0'
     testCompile 'org.reflections:reflections:0.9.9-RC1'
-    testCompile('org.spockframework:spock-core:1.0-groovy-2.3') {
+	testCompile('org.spockframework:spock-core:0.7-groovy-1.8') {
         exclude group: 'org.codehaus.groovy'
     }
 }

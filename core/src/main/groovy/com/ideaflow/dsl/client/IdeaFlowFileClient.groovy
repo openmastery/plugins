@@ -1,37 +1,35 @@
-package com.ideaflow.dsl.client.local
+package com.ideaflow.dsl.client
 
-import com.ideaflow.controller.IDEService
+import com.ideaflow.controller.FileService
 import com.ideaflow.dsl.DSLTimelineSerializer
-import com.ideaflow.dsl.client.IIdeaFlowClient
 import com.ideaflow.model.IdeaFlowModel
 import com.ideaflow.model.Task
 import org.joda.time.DateTime
 
-class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
+class IdeaFlowFileClient {
 
-    private IDEService<T> ideService
+    private FileService fileService
 	private DSLTimelineSerializer serializer = new DSLTimelineSerializer()
 
-	IdeaFlowFileClient(IDEService<T> ideService) {
-		this.ideService = ideService
+	IdeaFlowFileClient() {
+		this.fileService = new FileService()
 	}
 
-	@Override
-    IdeaFlowModel readModel(T context, Task task) {
+    IdeaFlowModel readModel(Task task) {
         IdeaFlowModel ideaFlowModel
 
         File file = getFile(task)
 
-        if (ideService.fileExists(context, file)) {
+        if (fileService.fileExists(file)) {
             println("Resuming existing IdeaFlow: ${file.absolutePath}")
 
-            String xml = ideService.readFile(context, file)
+            String xml = fileService.readFile(file)
 
             ideaFlowModel = serializer.deserialize(task, xml)
         } else {
             println("Creating new IdeaFlow: ${file.absolutePath}")
 
-            ideService.createNewFile(context, file, "")
+            fileService.createNewFile(file, "")
 
             ideaFlowModel = new IdeaFlowModel(task, new DateTime())
         }
@@ -49,9 +47,8 @@ class IdeaFlowFileClient<T> implements IIdeaFlowClient<T> {
                 file
     }
 
-    @Override
-    void saveModel(T context, IdeaFlowModel ideaFlowModel) {
+    void saveModel(IdeaFlowModel ideaFlowModel) {
         String xml = serializer.serialize(ideaFlowModel)
-        ideService.writeFile(context, getFile(ideaFlowModel.task), xml)
+        fileService.writeFile(getFile(ideaFlowModel.task), xml)
     }
 }
