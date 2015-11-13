@@ -87,7 +87,7 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 		private static final String IDLE_QUESTION_MESSAGE = "What were you doing?"
 
 		private static final Duration DEACTIVATION_THRESHOLD = Duration.standardMinutes(50)
-		private static final Duration AUTO_IDLE_THRESHOLD = Duration.standardHours(12)
+		private static final Duration AUTO_IDLE_THRESHOLD = Duration.standardHours(8)
 
 		private DateTime deactivatedAt
 		private boolean promptingForIdleTime
