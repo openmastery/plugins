@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.IdeFrame
+import com.intellij.ui.UIBundle
 import com.intellij.util.messages.MessageBusConnection
 import javax.swing.Icon
 import org.joda.time.DateTime
@@ -36,6 +37,13 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	static Icon getIcon(String path) {
 		IconLoader.getIcon("/icons/${path}", IdeaFlowApplicationComponent.class)
 	}
+
+	static String promptForInput(String title, String message) {
+		String note = Messages.showInputDialog(message,
+				UIBundle.message(title), Messages.getQuestionIcon());
+		return note
+	}
+
 
 	@Override
 	String getComponentName() {
@@ -116,7 +124,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 					getIFMController().markActiveFileEventAsIdle("[Auto Idle]")
 				} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
 					boolean wasIdleTime = wasDeactivationIdleTime(project, deactivationDuration)
-					String comment = getIFMController().promptForInput(project, IDLE_TITLE, IDLE_QUESTION_MESSAGE)
+					String comment = promptForInput(IDLE_TITLE, IDLE_QUESTION_MESSAGE)
 					if (wasIdleTime) {
 						getIFMController().markActiveFileEventAsIdle(comment)
 					} else {

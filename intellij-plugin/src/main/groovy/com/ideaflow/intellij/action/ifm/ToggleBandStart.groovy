@@ -73,7 +73,7 @@ abstract class ToggleBandStart extends IdeaFlowToggleAction {
                 String resolution = ToggleConflict.endConflict(e.project, controller, activeConflict)
                 controller.startBand(e.project, resolution, bandType, true)
             } else {
-				String comment = controller.promptForInput(e.project, startBandTitle, startBandMessage)
+				String comment = IdeaFlowApplicationComponent.promptForInput(startBandTitle, startBandMessage)
 				controller.startBand(e.project, comment, bandType, false)
 			}
 		}
