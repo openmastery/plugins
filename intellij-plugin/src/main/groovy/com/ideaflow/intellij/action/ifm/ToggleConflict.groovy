@@ -66,13 +66,13 @@ class ToggleConflict extends IdeaFlowToggleAction {
 		if (activeConflict != null) {
 			endConflict(e.project, controller, activeConflict)
 		} else {
-			String note = controller.promptForInput(e.project, START_CONFLICT_TITLE, START_CONFLICT_MSG)
+			String note = IdeaFlowApplicationComponent.promptForInput(START_CONFLICT_TITLE, START_CONFLICT_MSG)
 			controller.startConflict(e.project, note)
 		}
 	}
 
 	static String endConflict(Project project, IFMController controller, Conflict activeConflict) {
-		String note = controller.promptForInput(project, END_CONFLICT_TITLE, activeConflict.question)
+		String note = IdeaFlowApplicationComponent.promptForInput(END_CONFLICT_TITLE, activeConflict.question)
 		controller.endConflict(project, note)
 		note
 	}

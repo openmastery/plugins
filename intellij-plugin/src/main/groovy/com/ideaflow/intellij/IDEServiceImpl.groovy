@@ -26,12 +26,4 @@ class IDEServiceImpl implements IDEService<Project> {
 		return file
 	}
 
-	@Override
-	String promptForInput(Project project, String title, String message) {
-		String note = Messages.showInputDialog(message,
-				UIBundle.message(title), Messages.getQuestionIcon());
-		return note
-
-	}
-
 }

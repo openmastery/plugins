@@ -44,10 +44,6 @@ class IFMController<T> {
 		ideaFlowModel?.task ? ideaFlowModel : null
 	}
 
-	String promptForInput(T context, String title, String message) {
-		ideService.promptForInput(context, title, message)
-	}
-
 	String getActiveIdeaFlowName() {
 		activeIdeaFlowModel?.task?.taskId
 	}
