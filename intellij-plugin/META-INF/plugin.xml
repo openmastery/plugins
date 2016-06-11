@@ -1,12 +1,17 @@
 <idea-plugin version="2">
-	<id>org.ideaflow</id>
+	<id>org.openmastery.ideaflow</id>
 	<name>Idea Flow</name>
 	<description>Idea Flow Mapping Tool</description>
-	<version>0.24</version>
+	<version>0.1</version>
 	<vendor>New Iron Group, Inc.</vendor>
 
 	<!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
 	<idea-version since-build="107.105"/>
+
+	<!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+		 on how to target different products -->
+	<!-- TODO: verify this is accurate; compile against a rubymine platform sdk and make sure everything works -->
+	<depends>com.intellij.modules.lang</depends>
 
 	<application-components>
 		<component>
@@ -19,7 +24,7 @@
 			<implementation-class>com.ideaflow.intellij.IdeaFlowProjectComponent</implementation-class>
 		</component>
 	</project-components>
-
+<!--
 	<actions>
 		<action id="IdeaFlow.Note" class="com.ideaflow.intellij.action.ifm.CreateEventNoteAction" text="Create Event Note"
 		        description="Create an event note in the active IdeaFlow" icon="/icons/note.png">
@@ -62,8 +67,9 @@
 		</group>
 	</actions>
 
-	<extensions defaultExtensionNs="com.intellij">
+	<extensions defaultExtensionNs="org.openmastery.ideaflow">
 		<fileTypeFactory implementation="com.ideaflow.intellij.file.IdeaFlowMapFileTypeLoader"/>
         <applicationConfigurable instance="com.ideaflow.intellij.settings.IdeaSettings"/>
 	</extensions>
+	-->
 </idea-plugin>
