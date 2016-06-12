@@ -1,13 +1,13 @@
 package com.ideaflow.intellij.action.ifm
 
 import com.ideaflow.intellij.action.ActionSupport
-import com.ideaflow.model.BandType
+import org.openmastery.publisher.api.ideaflow.IdeaFlowStateType
 
 @Mixin(ActionSupport)
-class ToggleLearning extends ToggleBandStart {
+class ToggleLearning extends ToggleLearningOrRework {
 
 	ToggleLearning() {
-		super(BandType.learning, "Start Learning", "What question is in your head?", "End Learning")
+		super(IdeaFlowStateType.LEARNING, "Start Learning", "What question is in your head?", "End Learning")
 	}
 
 }

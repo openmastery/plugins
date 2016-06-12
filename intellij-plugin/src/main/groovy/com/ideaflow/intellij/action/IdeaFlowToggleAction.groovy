@@ -1,6 +1,5 @@
 package com.ideaflow.intellij.action
 
-import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ToggleAction
@@ -26,7 +25,7 @@ abstract class IdeaFlowToggleAction extends ToggleAction {
 		Presentation presentation = e.getPresentation()
 		presentation.enabled = isPresentationEnabled(e)
 		presentation.text = getPresentationText(e)
-		presentation.description = isIdeaFlowOpen(e) ? getPresentationDescription(e) : presentation.text
+		presentation.description = isTaskActiveAndRecording(e) ? getPresentationDescription(e) : presentation.text
 
 		Icon icon = getPresentationIcon(e)
 		if (icon != null) {

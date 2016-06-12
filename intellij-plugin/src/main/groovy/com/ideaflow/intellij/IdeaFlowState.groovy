@@ -1,14 +1,12 @@
 package com.ideaflow.intellij
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.controller.IFMWorkingSetListener
 import com.ideaflow.intellij.settings.IdeaSettingsService
-import com.ideaflow.model.Task
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 
 class IdeaFlowState {
-
+	/*
 	private IFMController controller
 	private IdeaSettingsService storage
 	private boolean restoringActiveState = false
@@ -69,4 +67,5 @@ class IdeaFlowState {
 	private void saveActiveFile() {
 		storage.saveActiveTask(controller.activeIdeaFlowModel?.task)
 	}
+	*/
 }

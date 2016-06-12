@@ -1,7 +1,9 @@
-package com.ideaflow.intellij
+package org.openmastery.ideaflow.intellij
 
 import com.ideaflow.controller.IDEService
 import com.ideaflow.controller.IFMController
+import com.ideaflow.intellij.IDEServiceImpl
+import com.ideaflow.intellij.IdeaFlowState
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
@@ -11,6 +13,8 @@ import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.ui.UIBundle
 import com.intellij.util.messages.MessageBusConnection
+import org.openmastery.publisher.api.task.Task
+
 import javax.swing.Icon
 import org.joda.time.DateTime
 import org.joda.time.Duration
@@ -20,6 +24,7 @@ import org.joda.time.format.PeriodFormatterBuilder
 class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	static String NAME = "IdeaFlow.Component"
+	static boolean recording = false
 
 	private IDEService<Project> ideService
 	private IFMController<Project> controller
@@ -52,21 +57,27 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	@Override
 	void initComponent() {
-		ideService = new IDEServiceImpl()
-		controller = new IFMController(ideService)
- 		applicationState = new IdeaFlowState(controller)
+		controller = new IFMController()
 
-		ApplicationListener applicationListener = new ApplicationListener()
-		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
-		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
+		List<Task> recentTasks = controller.getRecentTasks()
+		if (recentTasks.isEmpty() == false) {
+			controller.setActiveTask(recentTasks.first())
+		}
+//		ideService = new IDEServiceImpl()
+//		controller = new IFMController(ideService)
+//		applicationState = new IdeaFlowState(controller)
+//
+//		ApplicationListener applicationListener = new ApplicationListener()
+//		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
+//		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
 	}
 
 	@Override
 	void disposeComponent() {
-		appConnection.disconnect()
+//		appConnection.disconnect()
 	}
 
-
+	/*
 	private static class ApplicationListener extends ApplicationActivationListener.Adapter {
 
 		private DeactivationHandler deactivationHandler = new DeactivationHandler()
@@ -163,5 +174,5 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 			return result != 0
 		}
 	}
-
+*/
 }
