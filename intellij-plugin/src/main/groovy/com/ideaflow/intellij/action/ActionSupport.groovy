@@ -1,30 +1,30 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowApplicationComponent
-import com.ideaflow.intellij.file.IdeaFlowMapFileType
-import com.ideaflow.model.entry.BandStart
-import com.ideaflow.model.BandType
-import com.ideaflow.model.entry.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.vfs.VirtualFile
+import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.publisher.api.ideaflow.IdeaFlowPartialCompositeState
+import org.openmastery.publisher.api.ideaflow.IdeaFlowState
 
 class ActionSupport {
 
-	private void disableWhenNoIdeaFlow(AnActionEvent e) {
+	private void disableWhenNotRecording(AnActionEvent e) {
 		Presentation presentation = e.getPresentation()
-		presentation.setEnabled(isIdeaFlowOpenAndNotPaused(e));
+		presentation.setEnabled(isTaskActiveAndRecording(e));
 	}
 
-	private void disableWhenOpenIdeaFlow(AnActionEvent e) {
-		Presentation presentation = e.getPresentation()
-		presentation.setEnabled(!isIdeaFlowOpen(e));
+//	private void disableWhenOpenIdeaFlow(AnActionEvent e) {
+//		Presentation presentation = e.getPresentation()
+//		presentation.setEnabled(!isIdeaFlowOpen(e));
+//	}
+//
+	private IdeaFlowPartialCompositeState getActiveTaskState(AnActionEvent e) {
+		isRecording() ? getIFMController(e).getActiveTaskState() : null
 	}
 
-	private boolean isIdeaFlowOpenAndNotPaused(AnActionEvent e) {
-		isIdeaFlowOpen(e) && !isPaused(e)
+	private boolean isTaskActiveAndRecording(AnActionEvent e) {
+		isRecording() && isTaskActive(e)
 	}
 
 	private IFMController getIFMController(AnActionEvent e) {
@@ -36,56 +36,62 @@ class ActionSupport {
 	}
 
 	private String getActiveIdeaFlowName(AnActionEvent e) {
-		getIFMController(e)?.activeIdeaFlowName
+		getIFMController(e)?.activeTaskName
 	}
 
-	private boolean isIdeaFlowOpen(AnActionEvent e) {
-		getIFMController(e)?.isIdeaFlowOpen()
+	private boolean isTaskActive(AnActionEvent e) {
+		getIFMController(e)?.isTaskActive()
 	}
 
-	private boolean isIdeaFlowClosed(AnActionEvent e) {
-		return !isIdeaFlowOpen(e)
+	private IdeaFlowState getActiveConflict(AnActionEvent e) {
+		IdeaFlowPartialCompositeState compositeState = getActiveTaskState(e)
+		compositeState?.getActiveConflict()
 	}
 
-	private BandStart getActiveBandStart(AnActionEvent e) {
-		getIFMController(e)?.getActiveBandStart()
+
+//	private boolean isIdeaFlowClosed(AnActionEvent e) {
+//		return !isIdeaFlowOpen(e)
+//	}
+//
+//	private BandStart getActiveBandStart(AnActionEvent e) {
+//		getIFMController(e)?.getActiveBandStart()
+//	}
+//
+//	private boolean isOpenBand(AnActionEvent e) {
+//		getIFMController(e)?.isOpenBand()
+//	}
+//
+//	private BandType getActiveBandStartType(AnActionEvent e) {
+//		BandStart activeBandStart = getIFMController(e)?.activeBandStart
+//		activeBandStart?.type
+//	}
+//
+//	private Conflict getActiveConflict(AnActionEvent e) {
+//		getIFMController(e)?.getActiveConflict()
+//	}
+//
+//	private boolean isOpenConflict(AnActionEvent e) {
+//		getIFMController(e)?.isOpenConflict()
+//	}
+//
+//	private boolean isNotPaused(AnActionEvent e) {
+//		!isPaused(e)
+//	}
+
+	private boolean isRecording() {
+		IdeaFlowApplicationComponent.isRecording()
 	}
 
-	private boolean isOpenBand(AnActionEvent e) {
-		getIFMController(e)?.isOpenBand()
-	}
-
-	private BandType getActiveBandStartType(AnActionEvent e) {
-		BandStart activeBandStart = getIFMController(e)?.activeBandStart
-		activeBandStart?.type
-	}
-
-	private Conflict getActiveConflict(AnActionEvent e) {
-		getIFMController(e)?.getActiveConflict()
-	}
-
-	private boolean isOpenConflict(AnActionEvent e) {
-		getIFMController(e)?.isOpenConflict()
-	}
-
-	private boolean isNotPaused(AnActionEvent e) {
-		!isPaused(e)
-	}
-
-	private boolean isPaused(AnActionEvent e) {
-		getIFMController(e)?.isPaused()
-	}
-
-	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {
-		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)
-
-		selectedFiles.find { VirtualFile file ->
-			isIdeaFlowMap(file)
-		}
-	}
-
-	private boolean isIdeaFlowMap(VirtualFile file) {
-		return IdeaFlowMapFileType.IFM_EXTENSION.equalsIgnoreCase(file.extension)
-	}
+//	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {
+//		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)
+//
+//		selectedFiles.find { VirtualFile file ->
+//			isIdeaFlowMap(file)
+//		}
+//	}
+//
+//	private boolean isIdeaFlowMap(VirtualFile file) {
+//		return IdeaFlowMapFileType.IFM_EXTENSION.equalsIgnoreCase(file.extension)
+//	}
 
 }

@@ -1,15 +1,16 @@
 package com.ideaflow.intellij.action.ifm
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IdeaFlowApplicationComponent
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.action.IdeaFlowToggleAction
-import com.ideaflow.model.entry.BandStart
-import com.ideaflow.model.BandType
-import com.ideaflow.model.entry.Conflict
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
+import org.openmastery.publisher.api.ideaflow.IdeaFlowPartialCompositeState
+import org.openmastery.publisher.api.ideaflow.IdeaFlowState
+import org.openmastery.publisher.api.ideaflow.IdeaFlowStateType
+
 import javax.swing.Icon
+import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 
 @Mixin(ActionSupport)
 class ToggleConflict extends IdeaFlowToggleAction {
@@ -17,64 +18,63 @@ class ToggleConflict extends IdeaFlowToggleAction {
 	private static final String START_CONFLICT_TITLE = "Start Conflict"
 	private static final String START_CONFLICT_MSG = "What conflict question is in your head?"
 	private static final String END_CONFLICT_TITLE = "End Conflict"
-    private static final Icon CONFLICT_ICON = IdeaFlowApplicationComponent.getIcon("conflict.png")
-    private static final Icon CONFLICT_REWORK_ICON = IdeaFlowApplicationComponent.getIcon("conflict_rework.png")
-   	private static final Icon CONFLICT_LEARNING_ICON = IdeaFlowApplicationComponent.getIcon("conflict_learning.png")
+	private static final Icon CONFLICT_ICON = IdeaFlowApplicationComponent.getIcon("conflict.png")
+	private static final Icon CONFLICT_REWORK_ICON = IdeaFlowApplicationComponent.getIcon("conflict_rework.png")
+	private static final Icon CONFLICT_LEARNING_ICON = IdeaFlowApplicationComponent.getIcon("conflict_learning.png")
 
 	@Override
 	protected boolean isPresentationEnabled(AnActionEvent e) {
-		return isIdeaFlowOpenAndNotPaused(e)
+		isTaskActiveAndRecording(e)
 	}
 
 	@Override
 	protected String getPresentationText(AnActionEvent e) {
-		Conflict activeConflict = getActiveConflict(e)
+		IdeaFlowState activeConflict = getActiveConflict(e)
 		return activeConflict ? END_CONFLICT_TITLE : START_CONFLICT_TITLE
 	}
 
 	@Override
 	protected String getPresentationDescription(AnActionEvent e) {
-		Conflict activeConflict = getActiveConflict(e)
-		return activeConflict ? "${END_CONFLICT_TITLE}: ${activeConflict.question}" : START_CONFLICT_TITLE
+		IdeaFlowState activeConflict = getActiveConflict(e)
+		return activeConflict ? "${END_CONFLICT_TITLE}: ${activeConflict.startingComment}" : START_CONFLICT_TITLE
 	}
 
-    @Override
-    protected Icon getPresentationIcon(AnActionEvent e) {
-        IFMController controller = getIFMController(e)
+	@Override
+	protected Icon getPresentationIcon(AnActionEvent e) {
+		IdeaFlowPartialCompositeState compositeState = getActiveTaskState(e)
 
-        if (controller) {
-            BandStart activeBandStart = controller.getActiveBandStart()
-            if (activeBandStart?.type == BandType.learning) {
-                return CONFLICT_LEARNING_ICON
-            } else if (activeBandStart?.type == BandType.rework) {
-                return CONFLICT_REWORK_ICON
-            }
-        }
-        return CONFLICT_ICON
-    }
+		if (compositeState) {
+			if (compositeState.isInState(IdeaFlowStateType.LEARNING)) {
+				return CONFLICT_LEARNING_ICON
+			} else if (compositeState.isInState(IdeaFlowStateType.REWORK)) {
+				return CONFLICT_REWORK_ICON
+			}
+		}
+		return CONFLICT_ICON
+	}
 
-    @Override
+	@Override
 	boolean isSelected(AnActionEvent e) {
-		return isOpenConflict(e)
+		return getActiveConflict(e) != null
 	}
 
 	@Override
 	void setSelected(AnActionEvent e, boolean state) {
 		IFMController controller = getIFMController(e)
-		Conflict activeConflict = controller.getActiveConflict()
+		IdeaFlowState activeConflict = getActiveConflict(e)
 
 		if (activeConflict != null) {
-			endConflict(e.project, controller, activeConflict)
+			endConflict(controller, activeConflict)
 		} else {
 			String note = IdeaFlowApplicationComponent.promptForInput(START_CONFLICT_TITLE, START_CONFLICT_MSG)
-			controller.startConflict(e.project, note)
+			controller.startConflict(note)
 		}
 	}
 
-	static String endConflict(Project project, IFMController controller, Conflict activeConflict) {
-		String note = IdeaFlowApplicationComponent.promptForInput(END_CONFLICT_TITLE, activeConflict.question)
-		controller.endConflict(project, note)
-		note
+	static String endConflict(IFMController controller, IdeaFlowState activeConflict) {
+		String answer = IdeaFlowApplicationComponent.promptForInput(END_CONFLICT_TITLE, activeConflict.startingComment)
+		controller.endConflict(answer)
+		answer
 	}
 
 }
