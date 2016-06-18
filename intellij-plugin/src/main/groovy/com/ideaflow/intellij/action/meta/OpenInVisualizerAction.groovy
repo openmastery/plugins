@@ -28,7 +28,7 @@ class OpenInVisualizerAction extends AnAction {
 
 	static void openTaskInBrowser(Task task) {
 		if (task != null) {
-			String ifmUrl = "http://localhost:8980/visualizer#taskId=${task.id}"
+			String ifmUrl = "http://localhost:8980/visualizer/#taskId=${task.id}"
 			BrowserUtil.open(ifmUrl)
 		}
 	}
