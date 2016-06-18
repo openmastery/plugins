@@ -28,9 +28,6 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	private static class ActivateIdeaFlowAction extends AnAction {
 
-		private static final Icon ACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow.png")
-		private static final Icon INACTIVE_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow_inactive.png")
-
 		private Project project
 		private Task task
 
@@ -46,35 +43,28 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			IdeaFlowApplicationComponent.getIFMController().setActiveTask(task)
 		}
 
-//		@Override
-//		void update(AnActionEvent e) {
-//			super.update(e)
-//
-//			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-//			e.presentation.icon = (controller.activeTask == task) ? ACTIVE_ICON : INACTIVE_ICON
-//		}
 	}
 
-//	private static class OpenActiveInVisualizerAction extends AnAction {
-//
-//		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
-//
-//		OpenActiveInVisualizerAction() {
-//			getTemplatePresentation().setText("Open in Visualizer")
-//			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
-//			getTemplatePresentation().setIcon(BROWSE_ICON)
-//		}
-//
-//		@Override
-//		void actionPerformed(AnActionEvent event) {
-//			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-//			File activeIfmFile = controller.activeIdeaFlowModel?.file
-//
-//			if (activeIfmFile) {
-//				OpenInVisualizerAction.openInBrowser(activeIfmFile)
-//			}
-//		}
-//	}
+	private static class OpenActiveInVisualizerAction extends AnAction {
+
+		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
+
+		OpenActiveInVisualizerAction() {
+			getTemplatePresentation().setText("Open in Visualizer")
+			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
+			getTemplatePresentation().setIcon(BROWSE_ICON)
+		}
+
+		@Override
+		void actionPerformed(AnActionEvent event) {
+			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+			Task task = controller.getActiveTask()
+
+			if (task) {
+				OpenInVisualizerAction.openTaskInBrowser(task)
+			}
+		}
+	}
 
 	private static class AddNewTaskAction extends AnAction {
 
@@ -108,10 +98,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 					actionGroup.add(new ActivateIdeaFlowAction(project, task))
 				}
 			}
-//
-//			actionGroup.addSeparator();
-//			actionGroup.add(new OpenActiveInVisualizerAction())
+
 			actionGroup.addSeparator();
+			actionGroup.add(new OpenActiveInVisualizerAction())
 			actionGroup.add(new AddNewTaskAction(project))
 		}
 		return actionGroup

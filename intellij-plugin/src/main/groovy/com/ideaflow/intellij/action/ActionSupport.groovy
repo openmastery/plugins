@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.Presentation
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.publisher.api.ideaflow.IdeaFlowPartialCompositeState
 import org.openmastery.publisher.api.ideaflow.IdeaFlowState
+import org.openmastery.publisher.api.task.Task
 
 class ActionSupport {
 
@@ -37,6 +38,10 @@ class ActionSupport {
 
 	private String getActiveIdeaFlowName(AnActionEvent e) {
 		getIFMController(e)?.activeTaskName
+	}
+
+	private Task getActiveTask(AnActionEvent e) {
+		getIFMController(e).getActiveTask()
 	}
 
 	private boolean isTaskActive(AnActionEvent e) {
