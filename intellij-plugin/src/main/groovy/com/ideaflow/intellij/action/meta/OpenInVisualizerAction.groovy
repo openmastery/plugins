@@ -6,38 +6,31 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.vfs.VirtualFile
+import org.openmastery.publisher.api.task.Task
 
 @Mixin(ActionSupport)
 class OpenInVisualizerAction extends AnAction {
 
 	@Override
 	public void update(AnActionEvent event) {
-		boolean enabled = getSelectedIdeaFlowMapFile(event) != null
-
+		boolean enabled = getActiveTask(event) != null
 		Presentation presentation = event.getPresentation()
 		presentation.setEnabled(enabled)
 	}
 
 	@Override
 	void actionPerformed(AnActionEvent event) {
-		VirtualFile file = getSelectedIdeaFlowMapFile(event);
-
-		if (file) {
-			openInBrowser(file)
+		Task task = getActiveTask(event)
+		if (task) {
+			openTaskInBrowser(task)
 		}
 	}
 
-	public static void openInBrowser(VirtualFile file) {
-		openPathInBrowser(file.path)
-	}
-
-	public static void openInBrowser(File file) {
-		openPathInBrowser(file.absolutePath)
-	}
-
-	private static void openPathInBrowser(String path) {
-		String ifmUrl = "http://localhost:8989/visualizer/ifm/open?filePath=${path}"
-		BrowserUtil.open(ifmUrl)
+	static void openTaskInBrowser(Task task) {
+		if (task != null) {
+			String ifmUrl = "http://localhost:8980/visualizer#taskId=${task.id}"
+			BrowserUtil.open(ifmUrl)
+		}
 	}
 
 }
