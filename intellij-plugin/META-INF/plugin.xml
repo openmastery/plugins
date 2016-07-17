@@ -19,11 +19,11 @@
 		</component>
 	</application-components>
 
-	<!--<project-components>-->
-		<!--<component>-->
-			<!--<implementation-class>org.openmastery.ideaflow.intellij.IdeaFlowProjectComponent</implementation-class>-->
-		<!--</component>-->
-	<!--</project-components>-->
+	<project-components>
+		<component>
+			<implementation-class>org.openmastery.ideaflow.intellij.IdeaFlowProjectComponent</implementation-class>
+		</component>
+	</project-components>
 
 	<actions>
 		<action id="IdeaFlow.Note" class="com.ideaflow.intellij.action.ifm.CreateEventNote" text="Create Event Note"

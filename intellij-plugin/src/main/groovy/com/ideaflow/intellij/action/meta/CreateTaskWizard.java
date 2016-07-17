@@ -49,7 +49,7 @@ public class CreateTaskWizard extends DialogWrapper {
 
 	public void createTask() {
 		if (showAndGet()) {
-			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController();
+			IFMController controller = IdeaFlowApplicationComponent.getIFMController();
 			controller.newIdeaFlow(getTaskName(), getTaskDescription());
 		}
 	}
