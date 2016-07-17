@@ -13,6 +13,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.messages.MessageBusConnection
 import org.jetbrains.annotations.NotNull
+import org.openmastery.ideaflow.intellij.file.FileActivityHandler
 
 class IdeaFlowProjectComponent implements ProjectComponent {
 
@@ -31,81 +32,88 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 		return NAME
 	}
 
-	private IFMController<Project> getController() {
-		IdeaFlowApplicationComponent.getIFMController()
-	}
-
 	void initComponent() {
-//		listener = new EventListener()
+		FileActivityHandler fileActivityHandler = IdeaFlowApplicationComponent.getFileActivityHandler()
+		listener = new EventListener(fileActivityHandler)
 	}
 
 	void disposeComponent() {}
 
 	void projectOpened() {
-//		projectConnection = project.getMessageBus().connect()
-//		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
-//
+		projectConnection = project.getMessageBus().connect()
+		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
+
 //		if (getController().workingSetTasks.isEmpty()) {
 //			IdeaFlowApplicationComponent.getIFMState().restoreActiveState(project)
 //		}
 	}
 
 	void projectClosed() {
-//		projectConnection.disconnect()
+		projectConnection.disconnect()
 	}
 
-//	private class EventListener implements FileEditorManagerListener {
-//
-//		private FileModificationAdapter fileModificationAdapter = new FileModificationAdapter()
-//
-//		void fileOpened(FileEditorManager source, VirtualFile file) {
-//			getController().startFileEvent(source.getProject(), file.name)
-//		}
-//
-//		void fileClosed(FileEditorManager source, VirtualFile file) {
-//			getController().endFileEvent(file.name)
-//		}
-//
-//		void selectionChanged(FileEditorManagerEvent event) {
-//			fileModificationAdapter.clearActiveFile()
-//			getController().startFileEvent(event.manager.getProject(), event.newFile?.name)
-//			if (event.newFile) {
-//				fileModificationAdapter.setActiveFile(event.newFile)
-//			}
-//		}
-//
-//	}
-//
-//	private class FileModificationAdapter extends DocumentAdapter {
-//
-//		private VirtualFile activeFile;
-//		private Document activeDocument;
-//
-//		void setActiveFile(@NotNull VirtualFile file) {
-//			if (activeFile) {
-//				clearActiveFile()
-//			}
-//
-//			Document document = FileDocumentManager.instance.getCachedDocument(file)
-//			if (document) {
-//				activeFile = file
-//				activeDocument = document
-//				activeDocument.addDocumentListener(this)
-//			}
-//		}
-//
-//		void clearActiveFile() {
-//			activeDocument?.removeDocumentListener(this)
-//			activeDocument = null
-//			activeFile = null
-//		}
-//
-//		@Override
-//		void documentChanged(DocumentEvent event) {
-//			if (activeFile) {
-//				getController().fileModified(activeFile.name)
-//			}
-//		}
-//	}
+	private class EventListener implements FileEditorManagerListener {
+
+		private FileActivityHandler fileActivityHandler
+		private FileModificationAdapter fileModificationAdapter
+
+		EventListener(FileActivityHandler fileActivityHandler) {
+			this.fileActivityHandler = fileActivityHandler
+			this.fileModificationAdapter = new FileModificationAdapter(fileActivityHandler)
+		}
+
+		void fileOpened(FileEditorManager source, VirtualFile file) {
+		}
+
+		void fileClosed(FileEditorManager source, VirtualFile file) {
+			fileActivityHandler.endFileEvent(source.project, file)
+		}
+
+		void selectionChanged(FileEditorManagerEvent event) {
+			fileActivityHandler.startFileEvent(event.manager.project, event.newFile)
+			if (event.newFile) {
+				fileModificationAdapter.setActiveFile(event.manager.project, event.newFile)
+			}
+		}
+
+	}
+
+	private class FileModificationAdapter extends DocumentAdapter {
+
+		private Project activeProject
+		private VirtualFile activeFile
+		private Document activeDocument
+		private FileActivityHandler fileActivityHandler
+
+		FileModificationAdapter(FileActivityHandler fileActivityHandler) {
+			this.fileActivityHandler = fileActivityHandler
+		}
+
+		void setActiveFile(@NotNull Project project, @NotNull VirtualFile file) {
+			clearActiveFile()
+
+			Document document = FileDocumentManager.instance.getCachedDocument(file)
+			if (document) {
+				activeProject = project
+				activeFile = file
+				activeDocument = document
+				activeDocument.addDocumentListener(this)
+			}
+		}
+
+		void clearActiveFile() {
+			activeDocument?.removeDocumentListener(this)
+			activeDocument = null
+			activeFile = null
+			activeProject = null
+		}
+
+		@Override
+		void documentChanged(DocumentEvent event) {
+			if (activeFile) {
+				fileActivityHandler.fileModified(activeProject, activeFile)
+			}
+		}
+	}
 
 }

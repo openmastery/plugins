@@ -8,7 +8,7 @@ import org.openmastery.publisher.client.EventClient
 import org.openmastery.publisher.client.IdeaFlowClient
 import org.openmastery.publisher.client.TaskClient
 
-class IFMController<T> {
+class IFMController {
 	/*
 	private IdeaFlowModel ideaFlowModel
 	private EventToEditorActivityHandler eventToIntervalHandler
@@ -291,28 +291,32 @@ class IFMController<T> {
 ////		activeTask ? ideaFlowClient.getActiveState(activeTask.id) : null
 //	}
 
-//    void startFileEvent(String eventName) {
-////		eventToIntervalHandler?.startEvent(eventName)
-////		flush()
-//	}
-//
-//	void fileModified(String eventName) {
-////		eventToIntervalHandler?.activeEventModified(eventName)
-//	}
-//
+    void startFileEvent(String eventName) {
+	    println "start file ${eventName}"
+//		eventToIntervalHandler?.startEvent(eventName)
+//		flush()
+	}
+
+	void fileModified(String eventName) {
+		println "file modified ${eventName}"
+//		eventToIntervalHandler?.activeEventModified(eventName)
+	}
+
 //	void startFileEventForCurrentFile(T context) {
-////		String fileName = ideService.getActiveFileSelection(context)
-////		startFileEvent(fileName)
+//		String fileName = ideService.getActiveFileSelection(context)
+//		startFileEvent(fileName)
 //	}
-//
-//	void endFileEvent(String eventName) {
-////		eventToIntervalHandler?.endEvent(eventName)
-//	}
-//
-//	void markActiveFileEventAsIdle(String comment) {
-////		eventToIntervalHandler?.endActiveEventAsIdle(comment)
-//	}
-//
+
+	void endFileEvent(String eventName) {
+		println "end file ${eventName}"
+//		eventToIntervalHandler?.endEvent(eventName)
+	}
+
+	void markActiveFileEventAsIdle(String comment) {
+		println "mark active file as idle ${comment}"
+//		eventToIntervalHandler?.endActiveEventAsIdle(comment)
+	}
+
 //	void pause() {
 ////		println("Paused")
 ////		endFileEvent(null)
