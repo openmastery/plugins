@@ -1,9 +1,6 @@
 package org.openmastery.ideaflow.intellij
 
-import com.ideaflow.controller.IDEService
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.IDEServiceImpl
-import com.ideaflow.intellij.IdeaFlowState
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
@@ -13,30 +10,30 @@ import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.ui.UIBundle
 import com.intellij.util.messages.MessageBusConnection
-import org.openmastery.publisher.api.task.Task
-
-import javax.swing.Icon
 import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.joda.time.format.PeriodFormatter
 import org.joda.time.format.PeriodFormatterBuilder
+import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
+import org.openmastery.publisher.api.task.Task
+
+import javax.swing.Icon
 
 class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	static String NAME = "IdeaFlow.Component"
 	static boolean recording = false
 
-	private IDEService<Project> ideService
-	private IFMController<Project> controller
+	private IFMController controller
 	private MessageBusConnection appConnection
-	private IdeaFlowState applicationState
+	private VirtualFileActivityHandler activityHandler
 
-	static IFMController<Project> getIFMController() {
+	static IFMController getIFMController() {
 		ApplicationManager.getApplication().getComponent(NAME).controller
 	}
 
-	static IdeaFlowState getIFMState() {
-		ApplicationManager.getApplication().getComponent(NAME).applicationState
+	static VirtualFileActivityHandler getFileActivityHandler() {
+		ApplicationManager.getApplication().getComponent(NAME).activityHandler
 	}
 
 	static Icon getIcon(String path) {
@@ -44,8 +41,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	}
 
 	static String promptForInput(String title, String message) {
-		String note = Messages.showInputDialog(message,
-				UIBundle.message(title), Messages.getQuestionIcon());
+		String note = Messages.showInputDialog(message, UIBundle.message(title), Messages.getQuestionIcon());
 		return note
 	}
 
@@ -58,44 +54,51 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	@Override
 	void initComponent() {
 		controller = new IFMController()
+		activityHandler = new VirtualFileActivityHandler(controller.fileActivityHandler)
 
 		List<Task> recentTasks = controller.getRecentTasks()
 		if (recentTasks.isEmpty() == false) {
 			controller.setActiveTask(recentTasks.first())
 		}
-//		ideService = new IDEServiceImpl()
-//		controller = new IFMController(ideService)
-//		applicationState = new IdeaFlowState(controller)
-//
-//		ApplicationListener applicationListener = new ApplicationListener()
-//		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
-//		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
+
+		ApplicationListener applicationListener = new ApplicationListener(activityHandler)
+		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
+		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
 	}
 
 	@Override
 	void disposeComponent() {
-//		appConnection.disconnect()
+		appConnection.disconnect()
 	}
 
-	/*
 	private static class ApplicationListener extends ApplicationActivationListener.Adapter {
 
-		private DeactivationHandler deactivationHandler = new DeactivationHandler()
+		private VirtualFileActivityHandler fileActivityHandler
+		private DeactivationHandler deactivationHandler
 
+		ApplicationListener(VirtualFileActivityHandler fileActivityHandler) {
+			this.fileActivityHandler = fileActivityHandler
+			deactivationHandler = new DeactivationHandler(fileActivityHandler)
+		}
+
+		@Override
 		void applicationActivated(IdeFrame ideFrame) {
 			if (ideFrame.project) {
-				if (!deactivationHandler.isPromptingForIdleTime()) {
+				if (deactivationHandler.isPromptingForIdleTime() == false) {
 					deactivationHandler.markActiveFileEventAsIdleIfDeactivationThresholdExceeded(ideFrame.project)
-					getIFMController().startFileEventForCurrentFile(ideFrame.project)
 				}
 			}
 		}
 
+		@Override
 		void applicationDeactivated(IdeFrame ideFrame) {
 			if (ideFrame.project) {
 				deactivationHandler.deactivated()
-				getIFMController().startFileEvent(ideFrame.project, "[[deactivated]]")
 			}
+		}
+
+		@Override
+		void delayedApplicationDeactivated(IdeFrame ideFrame) {
 		}
 
 	}
@@ -103,13 +106,17 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	private static class DeactivationHandler {
 
 		private static final String IDLE_TITLE = "Idle Time?"
-		private static final String IDLE_QUESTION_MESSAGE = "What were you doing?"
 
 		private static final Duration DEACTIVATION_THRESHOLD = Duration.standardMinutes(50)
 		private static final Duration AUTO_IDLE_THRESHOLD = Duration.standardHours(8)
 
 		private DateTime deactivatedAt
 		private boolean promptingForIdleTime
+		private VirtualFileActivityHandler fileActivityHandler
+
+		DeactivationHandler(VirtualFileActivityHandler fileActivityHandler) {
+			this.fileActivityHandler = fileActivityHandler
+		}
 
 		boolean isPromptingForIdleTime() {
 			promptingForIdleTime
@@ -120,27 +127,28 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		}
 
 		void markActiveFileEventAsIdleIfDeactivationThresholdExceeded(Project project) {
-			if (getIFMController().isPaused()) {
+			if (recording == false) {
 				deactivatedAt = null
 			}
 
 			Duration deactivationDuration = getDeactivationDuration()
-			if (!getIFMController().isIdeaFlowOpen() || !deactivationDuration) {
+			if (!getIFMController().isTaskActive() || !deactivationDuration) {
 				return
 			}
 
 			promptingForIdleTime = true
 			try {
 				if (deactivationDuration.isLongerThan(AUTO_IDLE_THRESHOLD)) {
-					getIFMController().markActiveFileEventAsIdle("[Auto Idle]")
+					fileActivityHandler.markIdleTime(deactivationDuration)
 				} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
 					boolean wasIdleTime = wasDeactivationIdleTime(project, deactivationDuration)
-					String comment = promptForInput(IDLE_TITLE, IDLE_QUESTION_MESSAGE)
 					if (wasIdleTime) {
-						getIFMController().markActiveFileEventAsIdle(comment)
+						fileActivityHandler.markIdleTime(deactivationDuration)
 					} else {
-						getIFMController().addNote(project, comment)
+						fileActivityHandler.markExternalActivity(deactivationDuration)
 					}
+				} else {
+					fileActivityHandler.markExternalActivity(deactivationDuration)
 				}
 			} finally {
 				deactivatedAt = null
@@ -169,10 +177,11 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 					.toFormatter()
 
 			String formattedPeriod = formatter.print(deactivationDuration.toPeriod())
+			// TODO: this message should incorporate the current task name.. were you working on <task> during the last ...
 			String message = "Were you working during the last ${formattedPeriod}?"
 			int result = Messages.showYesNoDialog(project, message, IDLE_TITLE, null)
 			return result != 0
 		}
 	}
-*/
+
 }

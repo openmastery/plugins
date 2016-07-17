@@ -1,5 +1,6 @@
 package com.ideaflow.controller
 
+import com.ideaflow.activity.FileActivityHandler
 import org.openmastery.publisher.api.ideaflow.IdeaFlowPartialCompositeState
 import org.openmastery.publisher.api.ideaflow.IdeaFlowStateType
 import org.openmastery.publisher.api.task.Task
@@ -8,193 +9,7 @@ import org.openmastery.publisher.client.EventClient
 import org.openmastery.publisher.client.IdeaFlowClient
 import org.openmastery.publisher.client.TaskClient
 
-class IFMController<T> {
-	/*
-	private IdeaFlowModel ideaFlowModel
-	private EventToEditorActivityHandler eventToIntervalHandler
-	private IDEService<T> ideService
-	private IFMWorkingSet workingSet
-	private IdeaFlowFileClient client
-
-	IFMController(IDEService<T> ideService) {
-		this.ideService = ideService
-		this.client = new IdeaFlowFileClient()
-		this.workingSet = new IFMWorkingSet()
-	}
-
-	void addWorkingSetListener(IFMWorkingSetListener workingSetListener) {
-		workingSet.addWorkingSetListener(workingSetListener)
-	}
-
-	List<Task> getWorkingSetTasks() {
-		workingSet.getTasks()
-	}
-
-	void setWorkingSetTasks(List<Task> tasks) {
-		workingSet.setTasks(tasks)
-	}
-
-	IdeaFlowModel getActiveIdeaFlowModel() {
-		ideaFlowModel?.task ? ideaFlowModel : null
-	}
-
-	String getActiveIdeaFlowName() {
-		activeIdeaFlowModel?.task?.taskId
-	}
-
-	boolean isIdeaFlowOpen() {
-		activeIdeaFlowModel != null
-	}
-
-	Conflict getActiveConflict() {
-		return (isIdeaFlowOpen() ? activeIdeaFlowModel.getActiveConflict() : null)
-	}
-
-	BandStart getActiveBandStart() {
-		return (isIdeaFlowOpen() ? activeIdeaFlowModel.getActiveBandStart() : null)
-	}
-
-	boolean isOpenConflict() {
-		getActiveConflict() != null
-	}
-
-	boolean isOpenBand() {
-		getActiveBandStart() != null
-	}
-
-	void startConflict(T context, String question) {
-		if (question) {
-            boolean nested = isOpenBand()
-			addModelEntry(context, new Conflict(question, nested))
-		}
-	}
-
-	void endConflict(T context, String answer) {
-		if (answer) {
-			addModelEntry(context, new Resolution(answer))
-		}
-	}
-
-	void startBand(T context, String comment, BandType bandType, boolean isLinkedToPreviousBand) {
-		if (comment) {
-			BandStart activeBandStart = getActiveBandStart()
-			if (activeBandStart) {
-				endBand(context, activeBandStart.type)
-				isLinkedToPreviousBand = true
-			}
-
-			addModelEntry(context, new BandStart(bandType, comment, isLinkedToPreviousBand))
-		}
-	}
-
-	void endBand(T context, BandType bandType) {
-		if (bandType) {
-			addModelEntry(context, new BandEnd(bandType))
-		}
-	}
-
-	void addNote(T context, String comment) {
-		if (comment) {
-			addModelEntry(context, new Note(comment))
-		}
-	}
-
-	void newIdeaFlow(T context, Task task) {
-
-		suspendActiveIdeaFlow()
-
-		ideaFlowModel = client.readModel(task)
-
-		workingSet.setActiveTask(task)
-
-		eventToIntervalHandler = new EventToEditorActivityHandler(ideaFlowModel)
-		addStateChange(context, StateChangeType.startIdeaFlowRecording)
-		startFileEventForCurrentFile(context)
-	}
-
-	void closeIdeaFlow(T context) {
-		if (activeIdeaFlowModel) {
-			suspendActiveIdeaFlow()
-
-			workingSet.removeTask(ideaFlowModel.task)
-
-			if (workingSet.isEmpty()) {
-				ideaFlowModel = null
-				eventToIntervalHandler = null
-			} else {
-				newIdeaFlow(context, workingSet.getTasks().first())
-			}
-		}
-	}
-
-	private void suspendActiveIdeaFlow() {
-		if (activeIdeaFlowModel) {
-			endFileEvent(null)
-			flush()
-		}
-	}
-
-    void flushActiveEvent() {
-        eventToIntervalHandler?.flushActiveEvent()
-    }
-
-
-    void startFileEvent(String eventName) {
-		eventToIntervalHandler?.startEvent(eventName)
-		flush()
-	}
-
-	void fileModified(String eventName) {
-		eventToIntervalHandler?.activeEventModified(eventName)
-	}
-
-	void startFileEventForCurrentFile(T context) {
-		String fileName = ideService.getActiveFileSelection(context)
-		startFileEvent(fileName)
-	}
-
-	void endFileEvent(String eventName) {
-		eventToIntervalHandler?.endEvent(eventName)
-	}
-
-	void markActiveFileEventAsIdle(String comment) {
-		eventToIntervalHandler?.endActiveEventAsIdle(comment)
-	}
-
-	void pause() {
-		println("Paused")
-		endFileEvent(null)
-		flush()
-		activeIdeaFlowModel?.isPaused = true
-	}
-
-	void resume(T context) {
-		println("Resumed")
-		activeIdeaFlowModel?.isPaused = false
-		startFileEventForCurrentFile(context)
-	}
-
-	boolean isPaused() {
-		activeIdeaFlowModel?.isPaused
-	}
-
-	private void flush() {
-		if (activeIdeaFlowModel) {
-			client.saveModel(activeIdeaFlowModel)
-		}
-	}
-
-	private void addStateChange(T context, StateChangeType type) {
-		addModelEntry(context, new StateChange(type))
-	}
-
-	private void addModelEntry(T context, ModelEntry event) {
-		flushActiveEvent()
-		activeIdeaFlowModel?.addModelEntry(event)
-		flush()
-		startFileEventForCurrentFile(context)
-	}
-*/
+class IFMController {
 
 	private IdeaFlowClient ideaFlowClient
 	private EventClient eventClient
@@ -202,6 +17,7 @@ class IFMController<T> {
 	private ActivityClient activityClient
 	private Task activeTask
 	private IdeaFlowPartialCompositeState activeTaskState
+	private FileActivityHandler fileActivityHandler
 
 	// TODO: remove this, url
 	IFMController() {
@@ -213,6 +29,7 @@ class IFMController<T> {
 		eventClient = new EventClient(ifmUri)
 		taskClient = new TaskClient(ifmUri)
 		activityClient = new ActivityClient(ifmUri)
+		fileActivityHandler = new FileActivityHandler(this, activityClient)
 	}
 
 	boolean isTaskActive() {
@@ -285,50 +102,5 @@ class IFMController<T> {
 	List<Task> getRecentTasks() {
 		taskClient.findRecentTasks(5)
 	}
-
-//	IdeaFlowPartialCompositeState getActiveTaskState() {
-//		activeTaskState
-////		activeTask ? ideaFlowClient.getActiveState(activeTask.id) : null
-//	}
-
-//    void startFileEvent(String eventName) {
-////		eventToIntervalHandler?.startEvent(eventName)
-////		flush()
-//	}
-//
-//	void fileModified(String eventName) {
-////		eventToIntervalHandler?.activeEventModified(eventName)
-//	}
-//
-//	void startFileEventForCurrentFile(T context) {
-////		String fileName = ideService.getActiveFileSelection(context)
-////		startFileEvent(fileName)
-//	}
-//
-//	void endFileEvent(String eventName) {
-////		eventToIntervalHandler?.endEvent(eventName)
-//	}
-//
-//	void markActiveFileEventAsIdle(String comment) {
-////		eventToIntervalHandler?.endActiveEventAsIdle(comment)
-//	}
-//
-//	void pause() {
-////		println("Paused")
-////		endFileEvent(null)
-////		flush()
-////		activeIdeaFlowModel?.isPaused = true
-//	}
-//
-//	void resume(T context) {
-////		println("Resumed")
-////		activeIdeaFlowModel?.isPaused = false
-////		startFileEventForCurrentFile(context)
-//	}
-//
-//	boolean isPaused() {
-////		activeIdeaFlowModel?.isPaused
-//		false
-//	}
 
 }
