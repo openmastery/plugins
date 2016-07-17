@@ -16,7 +16,7 @@ import org.joda.time.Duration
 import org.joda.time.format.PeriodFormatter
 import org.joda.time.format.PeriodFormatterBuilder
 
-class IdeaFlowApplicationComponent implements ApplicationComponent {
+class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	static String NAME = "IdeaFlow.Component"
 
@@ -59,7 +59,7 @@ class IdeaFlowApplicationComponent implements ApplicationComponent {
 	}
 
 
-	private static class ApplicationListener implements ApplicationActivationListener {
+	private static class ApplicationListener extends ApplicationActivationListener.Adapter {
 
 		private DeactivationHandler deactivationHandler = new DeactivationHandler()
 

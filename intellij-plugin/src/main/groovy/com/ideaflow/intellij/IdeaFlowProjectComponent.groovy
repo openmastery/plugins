@@ -1,7 +1,6 @@
 package com.ideaflow.intellij
 
 import com.ideaflow.controller.IFMController
-import com.ideaflow.intellij.vcs.VcsCommitToIdeaFlowNoteAdapter
 import com.intellij.openapi.components.ProjectComponent
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.event.DocumentAdapter
@@ -21,7 +20,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 	private EventListener listener
 
 	private MessageBusConnection projectConnection
-	private VcsCommitToIdeaFlowNoteAdapter vcsCommitToIdeaFlowNoteAdapter
 
 	private static String NAME = "IdeaFlow.Component"
 
@@ -39,7 +37,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 
 	void initComponent() {
 		listener = new EventListener()
-		vcsCommitToIdeaFlowNoteAdapter = new VcsCommitToIdeaFlowNoteAdapter(project, getController())
 	}
 
 	void disposeComponent() {}
@@ -48,8 +45,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 		projectConnection = project.getMessageBus().connect()
 		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
 
-		vcsCommitToIdeaFlowNoteAdapter.connect()
-
 		if (getController().workingSetFiles.isEmpty()) {
 			IdeaFlowApplicationComponent.getIFMState().restoreActiveState(project)
 		}
@@ -57,7 +52,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 
 	void projectClosed() {
 		projectConnection.disconnect()
-		vcsCommitToIdeaFlowNoteAdapter.disconnect()
 	}
 
 	private class EventListener implements FileEditorManagerListener {
