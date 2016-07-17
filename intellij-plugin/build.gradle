@@ -31,7 +31,7 @@ task upload(dependsOn: ['assertPackagedPluginVersionMatchesVersionInSource', 'pr
 	doFirst {
 		def console = System.console()
 		if (console != null) {
-			ftpPassword = console.readPassword('> Please enter ideaflow.org FTP password: ') as String
+			ftpPassword = console.readPassword('> Please enter openmastery.org FTP password: ') as String
 		} else {
 			throw new GradleException("System.console is null, make sure you're not running gradle in daemon mode")
 		}
@@ -41,7 +41,7 @@ task upload(dependsOn: ['assertPackagedPluginVersionMatchesVersionInSource', 'pr
 			taskdef(name: 'ftp',
 					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
 					classpath: configurations.ftpAntTask.asPath)
-			ftp(server: 'ideaflow.org', userid: 'ideaflow', password: ftpPassword, passive: 'yes') {
+			ftp(server: 'openmastery.org', userid: 'janelle@openmastery.org', password: ftpPassword, passive: 'yes') {
 				fileset(dir: 'build/upload')
 			}
 		}
@@ -65,7 +65,7 @@ task createUpdatePluginXmlFile(dependsOn: clean) {
 
 		uploadDir.mkdirs()
 		new File(uploadDir, 'updatePlugins.xml').write """<plugins>
-    <plugin id="${pluginId}" url="http://ideaflow.org/${pluginFile.name}" version="${pluginVersion}"/>
+    <plugin id="${pluginId}" url="http://openmastery.org/tools/${pluginFile.name}" version="${pluginVersion}"/>
 </plugins>
 """
 	}
