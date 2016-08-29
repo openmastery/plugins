@@ -2,8 +2,11 @@
 	<id>org.ideaflow</id>
 	<name>Idea Flow</name>
 	<description>Idea Flow Mapping Tool</description>
-	<version>0.24</version>
+	<version>0.26</version>
 	<vendor>New Iron Group, Inc.</vendor>
+	<depends>com.intellij.modules.platform</depends>
+	<depends>com.intellij.modules.lang</depends>
+
 
 	<!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
 	<idea-version since-build="107.105"/>
