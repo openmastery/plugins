@@ -8,12 +8,12 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.3'
+    compile 'org.codehaus.groovy:groovy-all:1.8.6'
     compile 'joda-time:joda-time:2.3'
 
     testCompile 'org.slf4j:slf4j-api:1.7.5'
     testCompile 'org.reflections:reflections:0.9.9-RC1'
-    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+    testCompile('org.spockframework:spock-core:0.7-groovy-1.8') {
         exclude group: 'org.codehaus.groovy'
     }
 }
