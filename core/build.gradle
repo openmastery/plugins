@@ -5,12 +5,14 @@ apply plugin: 'idea'
 
 repositories {
 	mavenLocal()
-	mavenCentral()
+	jcenter()
+	maven {
+		url "https://dl.bintray.com/openmastery/maven"
+	}
 }
 
 dependencies {
 	compile 'org.codehaus.groovy:groovy-all:1.8.6'
-	compile 'joda-time:joda-time:2.3'
 	compile 'org.openmastery:ifm-publisher-client:0.+'
 
 	testCompile 'org.slf4j:slf4j-api:1.7.12'
