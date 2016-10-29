@@ -1,15 +1,15 @@
 package org.openmastery.ideaflow.intellij.file
 
-import com.ideaflow.activity.FileActivityHandler
+import com.ideaflow.activity.ActivityHandler
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.joda.time.Duration
 
 class VirtualFileActivityHandler {
 
-	private FileActivityHandler fileActivityHandler
+	private ActivityHandler fileActivityHandler
 
-	VirtualFileActivityHandler(FileActivityHandler fileActivityHandler) {
+	VirtualFileActivityHandler(ActivityHandler fileActivityHandler) {
 		this.fileActivityHandler = fileActivityHandler
 	}
 
