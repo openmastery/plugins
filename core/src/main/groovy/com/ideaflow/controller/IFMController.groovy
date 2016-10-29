@@ -1,6 +1,7 @@
 package com.ideaflow.controller
 
-import com.ideaflow.activity.FileActivityHandler
+import com.ideaflow.activity.ActivityHandler
+import com.ideaflow.activity.ActivityPublisher
 import org.openmastery.publisher.api.ideaflow.IdeaFlowPartialCompositeState
 import org.openmastery.publisher.api.ideaflow.IdeaFlowStateType
 import org.openmastery.publisher.api.task.Task
@@ -17,7 +18,7 @@ class IFMController {
 	private ActivityClient activityClient
 	private Task activeTask
 	private IdeaFlowPartialCompositeState activeTaskState
-	private FileActivityHandler fileActivityHandler
+	private ActivityHandler activityHandler
 
 	// TODO: remove this, url
 	IFMController() {
@@ -29,7 +30,15 @@ class IFMController {
 		eventClient = new EventClient(ifmUri)
 		taskClient = new TaskClient(ifmUri)
 		activityClient = new ActivityClient(ifmUri)
-		fileActivityHandler = new FileActivityHandler(this, activityClient)
+		activityHandler = new ActivityHandler(this, activityClient)
+	}
+
+	ActivityHandler getActivityHandler() {
+		activityHandler
+	}
+
+	ActivityPublisher getActivityPublisher() {
+		activityHandler.activityPublisher
 	}
 
 	boolean isTaskActive() {

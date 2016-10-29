@@ -5,17 +5,23 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import org.openmastery.publisher.client.ActivityClient
 
-class FileActivityHandler {
+class ActivityHandler {
 
 	private static final int SHORTEST_ACTIVITY = 3
 
 	private IFMController controller
-	private ActivityClient activityClient
+	private ActivityQueue activityQueue
 	private FileActivity activeFileActivity = null
+	private ActivityPublisher activityPublisher
 
-	FileActivityHandler(IFMController controller, ActivityClient activityClient) {
+	ActivityHandler(IFMController controller, ActivityClient activityClient) {
 		this.controller = controller
-		this.activityClient = activityClient
+		this.activityQueue = new ActivityQueue(activityClient)
+		this.activityPublisher = new ActivityPublisher(activityQueue)
+	}
+
+	ActivityPublisher getActivityPublisher() {
+		activityPublisher
 	}
 
 	private boolean isSame(String newFilePath) {
@@ -44,9 +50,7 @@ class FileActivityHandler {
 			return
 		}
 
-		// TODO: append file activity to idle activity
-		println "markIdleTime, idle=${idleDuration}, lastFileActivityDuration=${activeFileActivity?.getDurationInSeconds(idleDuration)}"
-		activityClient.addIdleActivity(activeTaskId, idleDuration.standardSeconds)
+		activityQueue.pushIdleActivity(activeTaskId, idleDuration.standardSeconds)
 	}
 
 	void markExternalActivity(Duration idleDuration) {
@@ -58,12 +62,10 @@ class FileActivityHandler {
 		println "activeFileActivity = ${activeFileActivity}"
 		if (idleDuration.standardSeconds >= SHORTEST_ACTIVITY) {
 			if (activeFileActivity != null) {
-				println "markExternalActivity, duration=${idleDuration}, lastFileActivityDuration=${activeFileActivity?.getDurationInSeconds(idleDuration)}s"
-				activityClient.addExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
+				activityQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 				activeFileActivity = createFileActivity(activeFileActivity.filePath)
 			} else {
-				println "markExternalActivity, duration=${idleDuration}"
-				activityClient.addExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
+				activityQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 			}
 		}
 	}
@@ -76,8 +78,7 @@ class FileActivityHandler {
 
 		if (isDifferent(filePath)) {
 			if (isOverActivityThreshold()) {
-				println "saveFileActivity ${activeFileActivity}"
-				activityClient.addEditorActivity(activeTaskId, activeFileActivity.durationInSeconds,
+				activityQueue.pushEditorActivity(activeTaskId, activeFileActivity.durationInSeconds,
 				                                 activeFileActivity.filePath, activeFileActivity.modified)
 			}
 
@@ -86,7 +87,7 @@ class FileActivityHandler {
 	}
 
 	void endFileEvent(String filePath) {
-		if (isSame(filePath)) {
+		if ((filePath == null) || isSame(filePath)) {
 			startFileEvent(null)
 		}
 	}
@@ -108,10 +109,6 @@ class FileActivityHandler {
 
 		public long getDurationInSeconds() {
 			new Duration(time, DateTime.now()).standardSeconds
-		}
-
-		public long getDurationInSeconds(Duration idleDuration) {
-			Math.max(durationInSeconds - idleDuration.standardSeconds, 0)
 		}
 
 		public String toString() {

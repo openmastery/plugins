@@ -54,7 +54,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	@Override
 	void initComponent() {
 		controller = new IFMController()
-		activityHandler = new VirtualFileActivityHandler(controller.fileActivityHandler)
+		activityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 
 		List<Task> recentTasks = controller.getRecentTasks()
 		if (recentTasks.isEmpty() == false) {
@@ -64,6 +64,9 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		ApplicationListener applicationListener = new ApplicationListener(activityHandler)
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
 		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
+
+		// TODO: find a better way to do this
+		new Thread(controller.activityPublisher).start()
 	}
 
 	@Override
