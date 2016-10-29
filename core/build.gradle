@@ -37,3 +37,9 @@ publishing {
 }
 
 task publishLocal(dependsOn: publishToMavenLocal)
+
+idea.module.iml {
+    whenMerged { module ->
+        module.dependencies*.exported = true
+    }
+}
