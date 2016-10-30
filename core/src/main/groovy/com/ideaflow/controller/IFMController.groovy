@@ -12,6 +12,7 @@ import org.openmastery.publisher.client.TaskClient
 
 class IFMController {
 
+	private boolean enabled = false
 	private IdeaFlowClient ideaFlowClient
 	private EventClient eventClient
 	private TaskClient taskClient
@@ -20,17 +21,8 @@ class IFMController {
 	private IdeaFlowPartialCompositeState activeTaskState
 	private ActivityHandler activityHandler
 
-	// TODO: remove this, url
 	IFMController() {
-		this("http://localhost:8080")
-	}
-
-	IFMController(String ifmUri) {
-		ideaFlowClient = new IdeaFlowClient(ifmUri)
-		eventClient = new EventClient(ifmUri)
-		taskClient = new TaskClient(ifmUri)
-		activityClient = new ActivityClient(ifmUri)
-		activityHandler = new ActivityHandler(this, activityClient)
+		activityHandler = new ActivityHandler(this)
 	}
 
 	ActivityHandler getActivityHandler() {
@@ -41,13 +33,34 @@ class IFMController {
 		activityHandler.activityPublisher
 	}
 
+	void initClients(String apiUrl, String apiKey) {
+		// TODO: need to validate apiKey
+
+		ideaFlowClient = new IdeaFlowClient(apiUrl)
+				.apiKey(apiKey)
+		eventClient = new EventClient(apiUrl)
+				.apiKey(apiKey)
+		taskClient = new TaskClient(apiUrl)
+				.apiKey(apiKey)
+		activityClient = new ActivityClient(apiUrl)
+				.apiKey(apiKey)
+		activityHandler.setActivityClient(activityClient)
+		enabled = true
+	}
+
+	boolean isEnabled() {
+		enabled
+	}
+
 	boolean isTaskActive() {
-		activeTask != null
+		enabled && (activeTask != null)
 	}
 
 	void setActiveTask(Task activeTask) {
-		this.activeTask = activeTask
-		this.activeTaskState = activeTask != null ? ideaFlowClient.getActiveState(activeTask.id) : null
+		if (enabled) {
+			this.activeTask = activeTask
+			this.activeTaskState = activeTask != null ? ideaFlowClient.getActiveState(activeTask.id) : null
+		}
 	}
 
 	Task getActiveTask() {
@@ -59,9 +72,11 @@ class IFMController {
 	}
 
 	void newIdeaFlow(String name, String description) {
-		// TODO: what to do on conflict?
-		Task newTask = taskClient.createTask(name, description);
-		setActiveTask(newTask)
+		if (enabled) {
+			// TODO: what to do on conflict?
+			Task newTask = taskClient.createTask(name, description);
+			setActiveTask(newTask)
+		}
 	}
 
 	String getActiveTaskName() {
@@ -109,7 +124,7 @@ class IFMController {
 	}
 
 	List<Task> getRecentTasks() {
-		taskClient.findRecentTasks(5)
+		enabled ? taskClient.findRecentTasks(5) : []
 	}
 
 }

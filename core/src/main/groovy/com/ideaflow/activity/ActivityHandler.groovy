@@ -14,10 +14,14 @@ class ActivityHandler {
 	private FileActivity activeFileActivity = null
 	private ActivityPublisher activityPublisher
 
-	ActivityHandler(IFMController controller, ActivityClient activityClient) {
+	ActivityHandler(IFMController controller) {
 		this.controller = controller
-		this.activityQueue = new ActivityQueue(activityClient)
+		this.activityQueue = new ActivityQueue()
 		this.activityPublisher = new ActivityPublisher(activityQueue)
+	}
+
+	void setActivityClient(ActivityClient activityClient) {
+		activityQueue.setActivityClient(activityClient)
 	}
 
 	ActivityPublisher getActivityPublisher() {
@@ -59,7 +63,6 @@ class ActivityHandler {
 			return
 		}
 
-		println "activeFileActivity = ${activeFileActivity}"
 		if (idleDuration.standardSeconds >= SHORTEST_ACTIVITY) {
 			if (activeFileActivity != null) {
 				activityQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)

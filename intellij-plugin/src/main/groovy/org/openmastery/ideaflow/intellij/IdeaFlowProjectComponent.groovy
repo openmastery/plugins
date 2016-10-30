@@ -41,10 +41,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 	void projectOpened() {
 		projectConnection = project.getMessageBus().connect()
 		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, listener)
-
-//		if (getController().workingSetTasks.isEmpty()) {
-//			IdeaFlowApplicationComponent.getIFMState().restoreActiveState(project)
-//		}
 	}
 
 	void projectClosed() {

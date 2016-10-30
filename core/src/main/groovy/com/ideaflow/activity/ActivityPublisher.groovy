@@ -44,6 +44,7 @@ class ActivityPublisher implements Runnable {
 		try {
 			activityQueue.publishActivityBatch()
 		} catch (Exception ex) {
+			// TODO: what to do on failure?
 			ex.printStackTrace()
 		}
 	}

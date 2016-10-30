@@ -15,11 +15,6 @@ class ActionSupport {
 		presentation.setEnabled(isTaskActiveAndRecording(e));
 	}
 
-//	private void disableWhenOpenIdeaFlow(AnActionEvent e) {
-//		Presentation presentation = e.getPresentation()
-//		presentation.setEnabled(!isIdeaFlowOpen(e));
-//	}
-//
 	private IdeaFlowPartialCompositeState getActiveTaskState(AnActionEvent e) {
 		isRecording() ? getIFMController(e).getActiveTaskState() : null
 	}
@@ -86,17 +81,5 @@ class ActionSupport {
 	private boolean isRecording() {
 		IdeaFlowApplicationComponent.isRecording()
 	}
-
-//	private VirtualFile getSelectedIdeaFlowMapFile(AnActionEvent event) {
-//		VirtualFile[] selectedFiles = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(event.dataContext)
-//
-//		selectedFiles.find { VirtualFile file ->
-//			isIdeaFlowMap(file)
-//		}
-//	}
-//
-//	private boolean isIdeaFlowMap(VirtualFile file) {
-//		return IdeaFlowMapFileType.IFM_EXTENSION.equalsIgnoreCase(file.extension)
-//	}
 
 }
