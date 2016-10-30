@@ -90,14 +90,15 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(button))
 
 		if (project != null) {
-			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
-
-			List<Task> recentTasks = controller.getRecentTasks()
-			for (Task task : recentTasks) {
-				if (task != controller.getActiveTask()) {
-					actionGroup.add(new ActivateIdeaFlowAction(project, task))
-				}
-			}
+			// TODO: don't go to controller, cache active tasks
+//			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
+//
+//			List<Task> recentTasks = controller.getRecentTasks()
+//			for (Task task : recentTasks) {
+//				if (task != controller.getActiveTask()) {
+//					actionGroup.add(new ActivateIdeaFlowAction(project, task))
+//				}
+//			}
 
 			actionGroup.addSeparator();
 			actionGroup.add(new OpenActiveInVisualizerAction())
