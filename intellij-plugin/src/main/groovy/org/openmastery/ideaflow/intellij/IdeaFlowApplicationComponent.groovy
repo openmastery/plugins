@@ -15,6 +15,7 @@ import org.joda.time.Duration
 import org.joda.time.format.PeriodFormatter
 import org.joda.time.format.PeriodFormatterBuilder
 import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsStore
 import org.openmastery.publisher.api.task.Task
 
 import javax.swing.Icon
@@ -27,6 +28,10 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	private IFMController controller
 	private MessageBusConnection appConnection
 	private VirtualFileActivityHandler activityHandler
+
+	static IdeaFlowApplicationComponent getApplicationComponent() {
+		ApplicationManager.getApplication().getComponent(NAME) as IdeaFlowApplicationComponent
+	}
 
 	static IFMController getIFMController() {
 		ApplicationManager.getApplication().getComponent(NAME).controller
@@ -56,10 +61,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		controller = new IFMController()
 		activityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 
-		List<Task> recentTasks = controller.getRecentTasks()
-		if (recentTasks.isEmpty() == false) {
-			controller.setActiveTask(recentTasks.first())
-		}
+		initIfmController(IdeaFlowSettingsStore.get())
 
 		ApplicationListener applicationListener = new ApplicationListener(activityHandler)
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
@@ -67,6 +69,28 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 		// TODO: find a better way to do this
 		new Thread(controller.activityPublisher).start()
+	}
+
+	void initIfmController(IdeaFlowSettingsStore settingsStore) {
+		String apiUrl = settingsStore.apiUrl
+		String apiKey = settingsStore.apiKey
+		if ((apiUrl == null) || (apiKey == null)) {
+			return
+		}
+
+		controller.initClients(apiUrl, apiKey)
+
+		List<Task> recentTasks = []
+		try {
+			recentTasks = controller.getRecentTasks()
+		} catch (Exception ex) {
+			// TODO: should pop up a message to the user...
+			ex.printStackTrace()
+		}
+
+		if (recentTasks.isEmpty() == false) {
+			controller.setActiveTask(recentTasks.first())
+		}
 	}
 
 	@Override

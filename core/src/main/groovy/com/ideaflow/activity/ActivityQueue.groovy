@@ -7,19 +7,29 @@ import org.openmastery.publisher.api.activity.NewExternalActivity
 import org.openmastery.publisher.api.activity.NewIdleActivity
 import org.openmastery.publisher.client.ActivityClient
 
+import java.util.concurrent.atomic.AtomicReference
+
 class ActivityQueue {
 
 	private final Object lock = new Object()
 	private List<NewEditorActivity> editorActivityList = []
 	private List<NewExternalActivity> externalActivityList = []
 	private List<NewIdleActivity> idleActivityList = []
-	private ActivityClient activityClient
+	private AtomicReference<ActivityClient> activityClientReference = new AtomicReference<>()
 
-	ActivityQueue(ActivityClient activityClient) {
-		this.activityClient = activityClient
+	void setActivityClient(ActivityClient activityClient) {
+		activityClientReference.set(activityClient)
+	}
+
+	private boolean isDisabled() {
+		activityClientReference.get() == null
 	}
 
 	void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
+		if (isDisabled()) {
+			return
+		}
+
 		NewEditorActivity activity = NewEditorActivity.builder()
 				.taskId(taskId)
 				.filePath(filePath)
@@ -33,6 +43,10 @@ class ActivityQueue {
 	}
 
 	void pushIdleActivity(Long taskId, Long durationInSeconds) {
+		if (isDisabled()) {
+			return
+		}
+
 		NewIdleActivity activity = NewIdleActivity.builder()
 				.taskId(taskId)
 				.durationInSeconds(durationInSeconds)
@@ -44,6 +58,10 @@ class ActivityQueue {
 	}
 
 	void pushExternalActivity(Long taskId, Long durationInSeconds, String comment) {
+		if (isDisabled()) {
+			return
+		}
+
 		NewExternalActivity activity = NewExternalActivity.builder()
 				.taskId(taskId)
 				.durationInSeconds(durationInSeconds)
@@ -56,6 +74,20 @@ class ActivityQueue {
 	}
 
 	void publishActivityBatch() {
+		ActivityClient activityClient = activityClientReference.get()
+		if (activityClient == null) {
+			return
+		}
+
+		NewActivityBatch batch = clearActivityListsAndCreateBatch()
+		if (batch.isEmpty() == false) {
+			withRetry(3) {
+				activityClient.addActivityBatch(batch)
+			}
+		}
+	}
+
+	private NewActivityBatch clearActivityListsAndCreateBatch() {
 		List<NewEditorActivity> editorActivityListCopy
 		List<NewExternalActivity> externalActivityListCopy
 		List<NewIdleActivity> idleActivityListCopy
@@ -70,18 +102,12 @@ class ActivityQueue {
 			idleActivityList.clear()
 		}
 
-		NewActivityBatch batch = NewActivityBatch.builder()
+		NewActivityBatch.builder()
 				.timeSent(LocalDateTime.now())
 				.idleActivityList(idleActivityListCopy)
 				.editorActivityList(editorActivityListCopy)
 				.externalActivityList(externalActivityListCopy)
 				.build()
-
-		if (batch.isEmpty() == false) {
-			withRetry(3) {
-				activityClient.addActivityBatch(batch)
-			}
-		}
 	}
 
 	private void withRetry(int maxAttempts, Closure block) {

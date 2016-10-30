@@ -112,7 +112,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		IFMController controller = getIFMController(e)
 		if (controller) {
-			e.presentation.enabled = true
+			e.presentation.enabled = controller.enabled
 			e.presentation.text = controller.getActiveTaskName() ?: "Add new task"
 		}
 	}

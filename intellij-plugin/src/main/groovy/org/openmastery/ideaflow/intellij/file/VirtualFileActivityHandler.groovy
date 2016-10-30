@@ -56,16 +56,4 @@ class VirtualFileActivityHandler {
 		filePath
 	}
 
-//	VirtualFile getActiveFileSelection(Project project) {
-//		VirtualFile file = null
-//		FileEditorManager fileEditorManager = FileEditorManager.getInstance(project)
-//		if (fileEditorManager != null) {
-//			VirtualFile[] files = fileEditorManager.getSelectedFiles()
-//			if (files.length > 0) {
-//				file = files[0]
-//			}
-//		}
-//		return file
-//	}
-
 }

@@ -62,9 +62,9 @@
 		</group>
 
 	</actions>
-<!--
-	<extensions defaultExtensionNs="org.openmastery.ideaflow">
-        <applicationConfigurable instance="com.ideaflow.intellij.settings.IdeaSettings"/>
+
+	<extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings"/>
 	</extensions>
-	-->
+
 </idea-plugin>
