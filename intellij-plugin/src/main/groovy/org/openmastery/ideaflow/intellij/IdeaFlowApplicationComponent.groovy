@@ -125,10 +125,6 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 			}
 		}
 
-		@Override
-		void delayedApplicationDeactivated(IdeFrame ideFrame) {
-		}
-
 	}
 
 	private static class DeactivationHandler {
