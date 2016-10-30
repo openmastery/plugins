@@ -1,5 +1,6 @@
 package org.openmastery.ideaflow.intellij
 
+import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.controller.IFMController
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
@@ -27,18 +28,20 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	private IFMController controller
 	private MessageBusConnection appConnection
-	private VirtualFileActivityHandler activityHandler
+	private VirtualFileActivityHandler virtualFileActivityHandler
 
 	static IdeaFlowApplicationComponent getApplicationComponent() {
 		ApplicationManager.getApplication().getComponent(NAME) as IdeaFlowApplicationComponent
 	}
 
+	// NOTE: this accessor must not be named the same as the variable it's accessing, otherwise stackoverflow
 	static IFMController getIFMController() {
 		ApplicationManager.getApplication().getComponent(NAME).controller
 	}
 
+	// NOTE: this accessor must not be named the same as the variable it's accessing, otherwise stackoverflow
 	static VirtualFileActivityHandler getFileActivityHandler() {
-		ApplicationManager.getApplication().getComponent(NAME).activityHandler
+		ApplicationManager.getApplication().getComponent(NAME).virtualFileActivityHandler
 	}
 
 	static Icon getIcon(String path) {
@@ -59,11 +62,11 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	@Override
 	void initComponent() {
 		controller = new IFMController()
-		activityHandler = new VirtualFileActivityHandler(controller.activityHandler)
+		virtualFileActivityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 
 		initIfmController(IdeaFlowSettingsStore.get())
 
-		ApplicationListener applicationListener = new ApplicationListener(activityHandler)
+		ApplicationListener applicationListener = new ApplicationListener(controller.activityHandler)
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
 		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
 
@@ -100,12 +103,10 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	private static class ApplicationListener extends ApplicationActivationListener.Adapter {
 
-		private VirtualFileActivityHandler fileActivityHandler
 		private DeactivationHandler deactivationHandler
 
-		ApplicationListener(VirtualFileActivityHandler fileActivityHandler) {
-			this.fileActivityHandler = fileActivityHandler
-			deactivationHandler = new DeactivationHandler(fileActivityHandler)
+		ApplicationListener(ActivityHandler activityHandler) {
+			deactivationHandler = new DeactivationHandler(activityHandler)
 		}
 
 		@Override
@@ -139,10 +140,10 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 		private DateTime deactivatedAt
 		private boolean promptingForIdleTime
-		private VirtualFileActivityHandler fileActivityHandler
+		private ActivityHandler activityHandler
 
-		DeactivationHandler(VirtualFileActivityHandler fileActivityHandler) {
-			this.fileActivityHandler = fileActivityHandler
+		DeactivationHandler(ActivityHandler activityHandler) {
+			this.activityHandler = activityHandler
 		}
 
 		boolean isPromptingForIdleTime() {
@@ -166,16 +167,16 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 			promptingForIdleTime = true
 			try {
 				if (deactivationDuration.isLongerThan(AUTO_IDLE_THRESHOLD)) {
-					fileActivityHandler.markIdleTime(deactivationDuration)
+					activityHandler.markIdleTime(deactivationDuration)
 				} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
 					boolean wasIdleTime = wasDeactivationIdleTime(project, deactivationDuration)
 					if (wasIdleTime) {
-						fileActivityHandler.markIdleTime(deactivationDuration)
+						activityHandler.markIdleTime(deactivationDuration)
 					} else {
-						fileActivityHandler.markExternalActivity(deactivationDuration)
+						activityHandler.markExternalActivity(deactivationDuration)
 					}
 				} else {
-					fileActivityHandler.markExternalActivity(deactivationDuration)
+					activityHandler.markExternalActivity(deactivationDuration)
 				}
 			} finally {
 				deactivatedAt = null
