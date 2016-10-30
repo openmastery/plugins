@@ -8,13 +8,13 @@ class IdeaFlowSettingsStore {
 	private static final String API_KEY = "OpenMastery.ApiKey";
 
 	public static IdeaFlowSettingsStore get() {
-		return new IdeaFlowSettingsStore(PropertiesComponent.getInstance())
+		return new IdeaFlowSettingsStore()
 	}
 
-	PropertiesComponent props
+	private IdeaFlowSettingsStore() {}
 
-	private IdeaFlowSettingsStore(PropertiesComponent props) {
-		this.props = props
+	private PropertiesComponent getProps() {
+		PropertiesComponent.getInstance()
 	}
 
 	String getApiKey() {
