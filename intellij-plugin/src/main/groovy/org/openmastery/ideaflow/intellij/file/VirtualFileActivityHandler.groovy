@@ -7,33 +7,33 @@ import org.joda.time.Duration
 
 class VirtualFileActivityHandler {
 
-	private ActivityHandler fileActivityHandler
+	private ActivityHandler activityHandler
 
-	VirtualFileActivityHandler(ActivityHandler fileActivityHandler) {
-		this.fileActivityHandler = fileActivityHandler
+	VirtualFileActivityHandler(ActivityHandler activityHandler) {
+		this.activityHandler = activityHandler
 	}
 
 	void markIdleTime(Duration idleDuration) {
-		fileActivityHandler.markIdleTime(idleDuration)
+		activityHandler.markIdleTime(idleDuration)
 	}
 
 	void markExternalActivity(Duration idleDuration) {
-		fileActivityHandler.markExternalActivity(idleDuration)
+		activityHandler.markExternalActivity(idleDuration)
 	}
 
 	void startFileEvent(Project project, VirtualFile file) {
 		String filePath = getFilePath(project, file)
-		fileActivityHandler.startFileEvent(filePath)
+		activityHandler.startFileEvent(filePath)
 	}
 
 	void endFileEvent(Project project, VirtualFile file) {
 		String filePath = getFilePath(project, file)
-		fileActivityHandler.endFileEvent(filePath)
+		activityHandler.endFileEvent(filePath)
 	}
 
 	void fileModified(Project project, VirtualFile file) {
 		String filePath = getFilePath(project, file)
-		fileActivityHandler.fileModified(filePath)
+		activityHandler.fileModified(filePath)
 	}
 
 	private String getFilePath(Project project, VirtualFile file) {
