@@ -16,7 +16,8 @@ import org.joda.time.Duration
 import org.joda.time.format.PeriodFormatter
 import org.joda.time.format.PeriodFormatterBuilder
 import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
-import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsStore
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import org.openmastery.publisher.api.task.Task
 
 import javax.swing.Icon
@@ -64,7 +65,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		controller = new IFMController()
 		virtualFileActivityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 
-		initIfmController(IdeaFlowSettingsStore.get())
+		initIfmController(IdeaFlowSettings.getInstance())
 
 		ApplicationListener applicationListener = new ApplicationListener(controller.activityHandler)
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
@@ -74,7 +75,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		new Thread(controller.activityPublisher).start()
 	}
 
-	void initIfmController(IdeaFlowSettingsStore settingsStore) {
+	void initIfmController(IdeaFlowSettings settingsStore) {
 		String apiUrl = settingsStore.apiUrl
 		String apiKey = settingsStore.apiKey
 		if ((apiUrl == null) || (apiKey == null)) {
@@ -83,14 +84,9 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 		controller.initClients(apiUrl, apiKey)
 
-		List<Task> recentTasks = []
-		try {
-			recentTasks = controller.getRecentTasks()
-		} catch (Exception ex) {
-			// TODO: should pop up a message to the user...
-			ex.printStackTrace()
-		}
-
+		IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
+		List<Task> recentTasks = taskManager.getRecentTasks()
+		// TODO: should probably record the active task in settings and set it to that...
 		if (recentTasks.isEmpty() == false) {
 			controller.setActiveTask(recentTasks.first())
 		}

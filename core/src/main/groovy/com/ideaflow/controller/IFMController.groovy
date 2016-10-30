@@ -71,12 +71,14 @@ class IFMController {
 		activeTaskState
 	}
 
-	void newIdeaFlow(String name, String description) {
+	Task newTask(String name, String description) {
+		Task newTask = null
 		if (enabled) {
 			// TODO: what to do on conflict?
-			Task newTask = taskClient.createTask(name, description);
+			newTask = taskClient.createTask(name, description);
 			setActiveTask(newTask)
 		}
+		newTask
 	}
 
 	String getActiveTaskName() {
@@ -121,10 +123,6 @@ class IFMController {
 			eventClient.addUserNote(activeTask.id, message)
 			setActiveTaskState()
 		}
-	}
-
-	List<Task> getRecentTasks() {
-		enabled ? taskClient.findRecentTasks(5) : []
 	}
 
 }
