@@ -64,7 +64,8 @@
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable instance="org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings"/>
+		<applicationService serviceImplementation="org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings"/>
+		<applicationConfigurable instance="org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsPage"/>
 	</extensions>
 
 </idea-plugin>

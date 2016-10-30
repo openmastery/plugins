@@ -10,6 +10,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import org.openmastery.publisher.api.task.Task
 
 import javax.swing.Icon
@@ -90,15 +92,13 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(button))
 
 		if (project != null) {
-			// TODO: don't go to controller, cache active tasks
-//			IFMController<Project> controller = IdeaFlowApplicationComponent.getIFMController()
-//
-//			List<Task> recentTasks = controller.getRecentTasks()
-//			for (Task task : recentTasks) {
-//				if (task != controller.getActiveTask()) {
-//					actionGroup.add(new ActivateIdeaFlowAction(project, task))
-//				}
-//			}
+			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+			IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
+			for (Task task : taskManager.recentTasks) {
+				if (task != controller.activeTask) {
+					actionGroup.add(new ActivateIdeaFlowAction(project, task))
+				}
+			}
 
 			actionGroup.addSeparator();
 			actionGroup.add(new OpenActiveInVisualizerAction())

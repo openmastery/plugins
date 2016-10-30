@@ -6,10 +6,13 @@ import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 
 import javax.swing.JComponent
 
-class IdeaFlowSettings implements Configurable {
+class IdeaFlowSettingsPage implements Configurable {
 
-	private IdeaFlowSettingsStore storage = new IdeaFlowSettingsStore()
 	private IdeaFlowSettingsPanel panel
+
+	private IdeaFlowSettings getSettings() {
+		IdeaFlowSettings.instance
+	}
 
 	@Override
 	String getDisplayName() {
@@ -34,20 +37,20 @@ class IdeaFlowSettings implements Configurable {
 	@Override
 	boolean isModified() {
 		return panel == null ||
-				panel.apiKeyText != storage.apiKey ||
-				panel.apiUrlText != storage.apiUrl
+				panel.apiKeyText != settings.apiKey ||
+				panel.apiUrlText != settings.apiUrl
 	}
 
 	@Override
 	void apply() throws ConfigurationException {
 		if (panel != null) {
-			storage.saveApiUrl(panel.apiUrlText)
-			storage.saveApiKey(panel.apiKeyText)
+			settings.setApiUrl(panel.apiUrlText)
+			settings.setApiKey(panel.apiKeyText)
 
 			if (isModified()) {
 				// TODO: where does this go?  seems like at a minimum, should fire a listener which then handles
 				// this elsewhere, likely IdeaFlowApplicationComponent...
-				IdeaFlowApplicationComponent.getApplicationComponent().initIfmController(storage)
+				IdeaFlowApplicationComponent.getApplicationComponent().initIfmController(settings)
 			}
 		}
 	}
@@ -55,8 +58,8 @@ class IdeaFlowSettings implements Configurable {
 	@Override
 	void reset() {
 		if (panel != null) {
-			panel.apiKeyText = storage.apiKey
-			panel.apiUrlText = storage.apiUrl
+			panel.apiUrlText = settings.apiUrl
+			panel.apiKeyText = settings.apiKey
 		}
 	}
 
