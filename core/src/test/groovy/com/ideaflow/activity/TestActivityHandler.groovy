@@ -3,6 +3,8 @@ package com.ideaflow.activity
 import com.ideaflow.controller.IFMController
 import org.joda.time.DateTimeUtils
 import org.openmastery.publisher.api.activity.NewEditorActivity
+import org.openmastery.publisher.api.activity.NewExecutionActivity
+import org.openmastery.publisher.api.activity.NewModificationActivity
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.ActivityClient
 import spock.lang.Ignore
@@ -24,7 +26,8 @@ class TestActivityHandler extends Specification {
 	void setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
 
-		handler = new ActivityHandler(controller, activityClient)
+		handler = new ActivityHandler(controller)
+		handler.activityClient = activityClient
 		activityQueue = handler.activityQueue
 		controller.getActiveTask() >> new Task(id: 1)
 	}
@@ -44,6 +47,16 @@ class TestActivityHandler extends Specification {
 	private NewEditorActivity getEditorActivity(int index) {
 		assert activityQueue.editorActivityList.size() > index
 		activityQueue.editorActivityList[index]
+	}
+
+	private NewModificationActivity getModificationActivity(int index) {
+		assert activityQueue.modificationActivityList.size() > index
+		activityQueue.modificationActivityList[index]
+	}
+
+	private NewExecutionActivity getExecutionActivity(int index) {
+		assert activityQueue.executionActivityList.size() > index
+		activityQueue.executionActivityList[index]
 	}
 
 	void testStartEvent_ShouldNotCreateEditorActivity_IfNoPriorEvent() {
@@ -151,6 +164,28 @@ class TestActivityHandler extends Specification {
 		assert getEditorActivity(0).modified
 		assertEditorActivityListSize(1)
 	}
+
+	void testPushModificationActivity_ShouldCountModifications() {
+		when:
+		handler.fileModified("file")
+		handler.fileModified("file")
+		handler.fileModified("file")
+		handler.pushModificationActivity(30)
+		then:
+		assert getModificationActivity(0).fileModificationCount == 3
+	}
+
+	void testMarkProcessExecution_ShouldPublishActivity_AfterStartStop() {
+		when:
+		handler.markProcessStarting(3, "TestMyUnit", "JUnit")
+		handler.markProcessEnding(3, -12)
+		then:
+		assert getExecutionActivity(0).processName == "TestMyUnit"
+		assert getExecutionActivity(0).executionTaskType == "JUnit"
+		assert getExecutionActivity(0).exitCode == -12
+
+	}
+
 
 	// TODO: the previous implementation held onto the active event, which made it possible to adjust the prior event
 	// this is not possible with the current implementation since the events could be published at any point... this means

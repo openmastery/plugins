@@ -3,8 +3,10 @@ package com.ideaflow.activity
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewActivityBatch
 import org.openmastery.publisher.api.activity.NewEditorActivity
+import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
 import org.openmastery.publisher.api.activity.NewIdleActivity
+import org.openmastery.publisher.api.activity.NewModificationActivity
 import org.openmastery.publisher.client.ActivityClient
 
 import java.util.concurrent.atomic.AtomicReference
@@ -15,6 +17,8 @@ class ActivityQueue {
 	private List<NewEditorActivity> editorActivityList = []
 	private List<NewExternalActivity> externalActivityList = []
 	private List<NewIdleActivity> idleActivityList = []
+	private List<NewModificationActivity> modificationActivityList = []
+	private List<NewExecutionActivity> executionActivityList = []
 	private AtomicReference<ActivityClient> activityClientReference = new AtomicReference<>()
 
 	void setActivityClient(ActivityClient activityClient) {
@@ -39,6 +43,40 @@ class ActivityQueue {
 
 		synchronized (lock) {
 			editorActivityList << activity
+		}
+	}
+
+	void pushModificationActivity(Long taskId, Long durationInSeconds, int modificationCount) {
+		if (isDisabled()) {
+			return
+		}
+
+		NewModificationActivity activity = NewModificationActivity.builder()
+				.taskId(taskId)
+				.fileModificationCount(modificationCount)
+				.durationInSeconds(durationInSeconds)
+				.build();
+
+		synchronized (lock) {
+			modificationActivityList << activity
+		}
+	}
+
+	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName, int exitCode, String executionTaskType) {
+		if (isDisabled()) {
+			return
+		}
+
+		NewExecutionActivity activity = NewExecutionActivity.builder()
+				.taskId(taskId)
+				.processName(processName)
+				.exitCode(exitCode)
+				.executionTaskType(executionTaskType)
+				.durationInSeconds(durationInSeconds)
+				.build();
+
+		synchronized (lock) {
+			executionActivityList << activity
 		}
 	}
 
@@ -91,15 +129,21 @@ class ActivityQueue {
 		List<NewEditorActivity> editorActivityListCopy
 		List<NewExternalActivity> externalActivityListCopy
 		List<NewIdleActivity> idleActivityListCopy
+		List<NewModificationActivity> modificationActivityListCopy
+		List<NewExecutionActivity> executionActivityListCopy
 
 		synchronized (lock) {
 			editorActivityListCopy = new ArrayList<>(editorActivityList)
 			externalActivityListCopy = new ArrayList<>(externalActivityList)
 			idleActivityListCopy = new ArrayList<>(idleActivityList)
+			modificationActivityListCopy = new ArrayList<>(modificationActivityList)
+			executionActivityListCopy = new ArrayList<>(executionActivityList)
 
 			editorActivityList.clear()
 			externalActivityList.clear()
 			idleActivityList.clear()
+			modificationActivityList.clear()
+			executionActivityList.clear()
 		}
 
 		NewActivityBatch.builder()
@@ -107,6 +151,8 @@ class ActivityQueue {
 				.idleActivityList(idleActivityListCopy)
 				.editorActivityList(editorActivityListCopy)
 				.externalActivityList(externalActivityListCopy)
+				.modificationActivityList(modificationActivityListCopy)
+				.executionActivityList(executionActivityListCopy)
 				.build()
 	}
 
