@@ -62,7 +62,10 @@ class ActivityQueue {
 		}
 	}
 
-	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName, int exitCode, String executionTaskType) {
+	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName,
+							   int exitCode,
+							   String executionTaskType,
+							   boolean isDebug) {
 		if (isDisabled()) {
 			return
 		}
@@ -73,6 +76,7 @@ class ActivityQueue {
 				.exitCode(exitCode)
 				.executionTaskType(executionTaskType)
 				.durationInSeconds(durationInSeconds)
+				.isDebug(isDebug)
 				.build();
 
 		synchronized (lock) {

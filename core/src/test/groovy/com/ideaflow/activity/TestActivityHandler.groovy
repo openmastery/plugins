@@ -177,12 +177,13 @@ class TestActivityHandler extends Specification {
 
 	void testMarkProcessExecution_ShouldPublishActivity_AfterStartStop() {
 		when:
-		handler.markProcessStarting(3, "TestMyUnit", "JUnit")
+		handler.markProcessStarting(3, "TestMyUnit", "JUnit", true)
 		handler.markProcessEnding(3, -12)
 		then:
 		assert getExecutionActivity(0).processName == "TestMyUnit"
 		assert getExecutionActivity(0).executionTaskType == "JUnit"
 		assert getExecutionActivity(0).exitCode == -12
+		assert getExecutionActivity(0).isDebug() == true
 
 	}
 
