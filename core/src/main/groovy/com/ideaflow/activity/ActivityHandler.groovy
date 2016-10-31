@@ -13,6 +13,10 @@ class ActivityHandler {
 	private ActivityQueue activityQueue
 	private FileActivity activeFileActivity = null
 	private ActivityPublisher activityPublisher
+	int fileModificationCount
+
+
+	private Map<Long, ProcessActivity> activeProcessMap =[:]
 
 	ActivityHandler(IFMController controller) {
 		this.controller = controller
@@ -64,12 +68,25 @@ class ActivityHandler {
 		}
 
 		if (idleDuration.standardSeconds >= SHORTEST_ACTIVITY) {
+			activityQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 			if (activeFileActivity != null) {
-				activityQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 				activeFileActivity = createFileActivity(activeFileActivity.filePath)
-			} else {
-				activityQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 			}
+		}
+	}
+
+	void markProcessStarting(Long processId, String processName, String executionTaskType) {
+		ProcessActivity processActivity = new ProcessActivity(processName: processName, executionTaskType: executionTaskType)
+		activeProcessMap.put(processId, processActivity)
+		//TODO this will leak memory if the processes started are never closed
+	}
+
+	void markProcessEnding(Long processId, int exitCode) {
+		ProcessActivity processActivity = activeProcessMap.remove(processId)
+		if (processActivity) {
+			activityQueue.pushExecutionActivity(activeTaskId, processActivity.getDurationInSeconds(), processActivity.processName, exitCode, processActivity.executionTaskType)
+		} else {
+			//TODO eh? should not happen, do some error handling
 		}
 	}
 
@@ -99,10 +116,33 @@ class ActivityHandler {
 		if (activeFileActivity?.filePath == filePath) {
 			activeFileActivity.modified = true
 		}
+		fileModificationCount++
+	}
+
+	void pushModificationActivity(Long intervalInSeconds) {
+		if (fileModificationCount > 0) {
+			activityQueue.pushModificationActivity(activeTaskId, intervalInSeconds, fileModificationCount)
+			fileModificationCount = 0
+		}
 	}
 
 	private FileActivity createFileActivity(filePath) {
 		filePath == null ? null : new FileActivity(filePath: filePath, time: DateTime.now(), modified: false)
+	}
+
+
+	private static class ProcessActivity {
+		DateTime timeStarted
+		String processName
+		String executionTaskType
+
+		public long getDurationInSeconds() {
+			new Duration(timeStarted, DateTime.now()).standardSeconds
+		}
+
+		public String toString() {
+			"ProcessActivity [processName=${processName}, executionTaskType=${executionTaskType}, duration=${durationInSeconds}]"
+		}
 	}
 
 	private static class FileActivity {
@@ -118,5 +158,7 @@ class ActivityHandler {
 			"FileActivity [path=${filePath}, modified=${modified}, duration=${durationInSeconds}]"
 		}
 	}
+
+
 
 }
