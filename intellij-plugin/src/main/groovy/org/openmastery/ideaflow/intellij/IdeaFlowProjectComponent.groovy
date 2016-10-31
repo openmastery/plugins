@@ -144,8 +144,9 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 			String processName = env.runProfile.name
 			Long processId = env.executionId
 			String executionTaskType = env.getRunnerAndConfigurationSettings().getType().displayName
+			boolean isDebug = executorId.equals("Debug")
 
-			activityHandler.markProcessStarting(processId, processName, executionTaskType)
+			activityHandler.markProcessStarting(processId, processName, executionTaskType, isDebug)
 		}
 
 		public void processStarted(String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler processHandler) {
@@ -159,9 +160,10 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 
 			ExitCodeListener exitCodeListener = processDecodingMap.get(processHandler)
 			if (exitCodeListener) {
-
 				processHandler.removeProcessListener(exitCodeListener)
 				activityHandler.markProcessEnding(exitCodeListener.processId, exitCodeListener.exitCode)
+			} else {
+				//TODO not supposed to happen, do some error handling stuff
 			}
 
 		}
