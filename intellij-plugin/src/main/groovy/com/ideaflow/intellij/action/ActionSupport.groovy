@@ -16,13 +16,14 @@ class ActionSupport {
 	}
 
 	private IdeaFlowPartialCompositeState getActiveTaskState(AnActionEvent e) {
-		isRecording() ? getIFMController(e).getActiveTaskState() : null
+		isRecording(e) ? getIFMController(e).getActiveTaskState() : null
 	}
 
 	private boolean isTaskActiveAndRecording(AnActionEvent e) {
-		isRecording() && isTaskActive(e)
+		isRecording(e) && isTaskActive(e)
 	}
 
+	// TODO: remove ActionEvent arg
 	private IFMController getIFMController(AnActionEvent e) {
 		IFMController controller = null
 		if (e?.project != null) {
@@ -78,8 +79,13 @@ class ActionSupport {
 //		!isPaused(e)
 //	}
 
-	private boolean isRecording() {
-		IdeaFlowApplicationComponent.isRecording()
+	private boolean isRecording(AnActionEvent e) {
+		getIFMController(e)?.isRecording()
+	}
+
+	private boolean isPaused(AnActionEvent e) {
+		IFMController controller = getIFMController(e)
+		controller == null ? true : controller.isPaused()
 	}
 
 }

@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 
 @Mixin(ActionSupport)
-class ToggleRecord extends IdeaFlowToggleAction {
+class TogglePause extends IdeaFlowToggleAction {
 
 	private static final String RECORD_TITLE = "Record IdeaFlow"
 	private static final String PAUSE_TITLE = "Pause IdeaFlow"
@@ -18,7 +18,7 @@ class ToggleRecord extends IdeaFlowToggleAction {
 
 	@Override
 	protected String getPresentationText(AnActionEvent e) {
-		return isRecording() ? PAUSE_TITLE : RECORD_TITLE
+		return isPaused(e) ? RECORD_TITLE : PAUSE_TITLE
 	}
 
 	@Override
@@ -28,12 +28,12 @@ class ToggleRecord extends IdeaFlowToggleAction {
 
 	@Override
 	boolean isSelected(AnActionEvent e) {
-		return isRecording()
+		return isPaused(e)
 	}
 
 	@Override
 	void setSelected(AnActionEvent e, boolean state) {
-		IdeaFlowApplicationComponent.recording = state
+		getIFMController(e).setPaused(state)
 	}
 
 }

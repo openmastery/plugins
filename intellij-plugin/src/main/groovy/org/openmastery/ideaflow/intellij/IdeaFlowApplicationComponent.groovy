@@ -25,7 +25,6 @@ import javax.swing.Icon
 class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	static String NAME = "IdeaFlow.Component"
-	static boolean recording = false
 
 	private IFMController controller
 	private MessageBusConnection appConnection
@@ -63,6 +62,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 	@Override
 	void initComponent() {
 		controller = new IFMController()
+		controller.setPaused(true)
 		virtualFileActivityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 
 		initIfmController(IdeaFlowSettings.getInstance())
@@ -147,7 +147,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		}
 
 		void markActiveFileEventAsIdleIfDeactivationThresholdExceeded(Project project) {
-			if (recording == false) {
+			if (getIFMController().isRecording() == false) {
 				deactivatedAt = null
 			}
 
