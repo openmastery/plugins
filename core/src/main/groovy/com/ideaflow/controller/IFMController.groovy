@@ -13,6 +13,7 @@ import org.openmastery.publisher.client.TaskClient
 class IFMController {
 
 	private boolean enabled = false
+	private boolean paused = true
 	private IdeaFlowClient ideaFlowClient
 	private EventClient eventClient
 	private TaskClient taskClient
@@ -50,6 +51,18 @@ class IFMController {
 
 	boolean isEnabled() {
 		enabled
+	}
+
+	boolean isPaused() {
+		paused
+	}
+
+	void setPaused(boolean paused) {
+		this.paused = paused
+	}
+
+	boolean isRecording() {
+		enabled && (paused == false)
 	}
 
 	boolean isTaskActive() {
