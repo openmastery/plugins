@@ -1,6 +1,9 @@
 package com.ideaflow.activity
 
+import org.joda.time.DateTime
+import org.joda.time.Duration
 import org.joda.time.LocalDateTime
+import org.joda.time.Period
 import org.openmastery.publisher.api.activity.NewActivityBatch
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
@@ -36,9 +39,10 @@ class ActivityQueue {
 
 		NewEditorActivity activity = NewEditorActivity.builder()
 				.taskId(taskId)
+				.endTime(LocalDateTime.now())
+				.durationInSeconds(durationInSeconds)
 				.filePath(filePath)
 				.isModified(isModified)
-				.durationInSeconds(durationInSeconds)
 				.build();
 
 		synchronized (lock) {
@@ -53,8 +57,9 @@ class ActivityQueue {
 
 		NewModificationActivity activity = NewModificationActivity.builder()
 				.taskId(taskId)
-				.fileModificationCount(modificationCount)
+				.endTime(LocalDateTime.now())
 				.durationInSeconds(durationInSeconds)
+				.fileModificationCount(modificationCount)
 				.build();
 
 		synchronized (lock) {
@@ -63,19 +68,20 @@ class ActivityQueue {
 	}
 
 	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName,
-							   int exitCode,
-							   String executionTaskType,
-							   boolean isDebug) {
+	                           int exitCode,
+	                           String executionTaskType,
+	                           boolean isDebug) {
 		if (isDisabled()) {
 			return
 		}
 
 		NewExecutionActivity activity = NewExecutionActivity.builder()
 				.taskId(taskId)
+				.durationInSeconds(durationInSeconds)
+				.endTime(LocalDateTime.now())
 				.processName(processName)
 				.exitCode(exitCode)
 				.executionTaskType(executionTaskType)
-				.durationInSeconds(durationInSeconds)
 				.isDebug(isDebug)
 				.build();
 
@@ -91,6 +97,7 @@ class ActivityQueue {
 
 		NewIdleActivity activity = NewIdleActivity.builder()
 				.taskId(taskId)
+				.endTime(LocalDateTime.now())
 				.durationInSeconds(durationInSeconds)
 				.build();
 
@@ -106,6 +113,7 @@ class ActivityQueue {
 
 		NewExternalActivity activity = NewExternalActivity.builder()
 				.taskId(taskId)
+				.endTime(LocalDateTime.now())
 				.durationInSeconds(durationInSeconds)
 				.comment(comment)
 				.build();

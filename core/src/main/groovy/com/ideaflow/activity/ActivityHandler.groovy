@@ -1,8 +1,9 @@
 package com.ideaflow.activity
 
 import com.ideaflow.controller.IFMController
-import org.joda.time.DateTime
 import org.joda.time.Duration
+import org.joda.time.LocalDateTime
+import org.joda.time.Period
 import org.openmastery.publisher.client.ActivityClient
 
 class ActivityHandler {
@@ -84,7 +85,7 @@ class ActivityHandler {
 	void markProcessEnding(Long processId, int exitCode) {
 		ProcessActivity processActivity = activeProcessMap.remove(processId)
 		if (processActivity) {
-			activityQueue.pushExecutionActivity(activeTaskId, processActivity.getDurationInSeconds(), processActivity.processName,
+			activityQueue.pushExecutionActivity(activeTaskId, processActivity.durationInSeconds, processActivity.processName,
 					exitCode, processActivity.executionTaskType, processActivity.isDebug)
 		} else {
 			//TODO eh? should not happen, do some error handling
@@ -128,18 +129,18 @@ class ActivityHandler {
 	}
 
 	private FileActivity createFileActivity(filePath) {
-		filePath == null ? null : new FileActivity(filePath: filePath, time: DateTime.now(), modified: false)
+		filePath == null ? null : new FileActivity(filePath: filePath, time: LocalDateTime.now(), modified: false)
 	}
 
 
 	private static class ProcessActivity {
-		DateTime timeStarted
+		LocalDateTime timeStarted
 		String processName
 		String executionTaskType
 		boolean isDebug
 
 		public long getDurationInSeconds() {
-			new Duration(timeStarted, DateTime.now()).standardSeconds
+			Period.fieldDifference(timeStarted, LocalDateTime.now()).seconds
 		}
 
 		public String toString() {
@@ -148,12 +149,12 @@ class ActivityHandler {
 	}
 
 	private static class FileActivity {
-		DateTime time
+		LocalDateTime time
 		String filePath
 		boolean modified
 
 		public long getDurationInSeconds() {
-			new Duration(time, DateTime.now()).standardSeconds
+			Period.fieldDifference(time, LocalDateTime.now()).seconds
 		}
 
 		public String toString() {
