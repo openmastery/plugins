@@ -1,13 +1,9 @@
 package com.ideaflow.intellij.action.meta;
 
-import com.ideaflow.controller.IFMController;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import org.jetbrains.annotations.Nullable;
-import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent;
-import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings;
-import org.openmastery.publisher.api.task.Task;
 
 import javax.swing.JComponent;
 
@@ -49,12 +45,8 @@ public class CreateTaskWizard extends DialogWrapper {
 		return dialog.getDescriptionText();
 	}
 
-	public void createTask() {
-		if (showAndGet()) {
-			IFMController controller = IdeaFlowApplicationComponent.getIFMController();
-			Task newTask = controller.newTask(getTaskName(), getTaskDescription());
-			IdeaFlowSettings.getInstance().getTaskManager().addRecentTask(newTask);
-		}
+	public boolean shouldCreateTask() {
+		return showAndGet();
 	}
 
 }
