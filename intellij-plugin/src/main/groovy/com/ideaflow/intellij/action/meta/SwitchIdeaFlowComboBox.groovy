@@ -30,10 +30,12 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	private static class ActivateIdeaFlowAction extends AnAction {
 
+		private SwitchIdeaFlowComboBox switchIdeaFlow
 		private Project project
 		private Task task
 
-		public ActivateIdeaFlowAction(Project project, Task task) {
+		public ActivateIdeaFlowAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project, Task task) {
+			this.switchIdeaFlow = switchIdeaFlow
 			this.project = project
 			this.task = task
 
@@ -42,7 +44,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
-			IdeaFlowApplicationComponent.getIFMController().setActiveTask(task)
+			switchIdeaFlow.activateTask(task)
 		}
 
 	}
@@ -51,7 +53,10 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
 
-		OpenActiveInVisualizerAction() {
+		private SwitchIdeaFlowComboBox switchIdeaFlow
+
+		OpenActiveInVisualizerAction(SwitchIdeaFlowComboBox switchIdeaFlow) {
+			this.switchIdeaFlow = switchIdeaFlow
 			getTemplatePresentation().setText("Open in Visualizer")
 			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
 			getTemplatePresentation().setIcon(BROWSE_ICON)
@@ -59,20 +64,17 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		@Override
 		void actionPerformed(AnActionEvent event) {
-			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			Task task = controller.getActiveTask()
-
-			if (task) {
-				OpenInVisualizerAction.openTaskInBrowser(task)
-			}
+			switchIdeaFlow.openActiveTaskInVisualizer()
 		}
 	}
 
 	private static class AddNewTaskAction extends AnAction {
 
+		private SwitchIdeaFlowComboBox switchIdeaFlow
 		private Project project
 
-		AddNewTaskAction(Project project) {
+		AddNewTaskAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project) {
+			this.switchIdeaFlow = switchIdeaFlow
 			this.project = project
 			getTemplatePresentation().setText("Add new task...")
 			getTemplatePresentation().setDescription("Add a new task")
@@ -81,7 +83,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		@Override
 		void actionPerformed(AnActionEvent e) {
 			CreateTaskWizard wizard = new CreateTaskWizard(project)
-			wizard.createTask()
+			if (wizard.shouldCreateTask()) {
+				switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription)
+			}
 		}
 	}
 
@@ -93,16 +97,15 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		if (project != null) {
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
 			for (Task task : taskManager.recentTasks) {
 				if (task != controller.activeTask) {
-					actionGroup.add(new ActivateIdeaFlowAction(project, task))
+					actionGroup.add(new ActivateIdeaFlowAction(this, project, task))
 				}
 			}
 
 			actionGroup.addSeparator();
-			actionGroup.add(new OpenActiveInVisualizerAction())
-			actionGroup.add(new AddNewTaskAction(project))
+			actionGroup.add(new OpenActiveInVisualizerAction(this, ))
+			actionGroup.add(new AddNewTaskAction(this, project))
 		}
 		return actionGroup
 	}
@@ -114,8 +117,35 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		IFMController controller = getIFMController(e)
 		if (controller) {
 			e.presentation.enabled = controller.enabled
-			e.presentation.text = controller.getActiveTaskName() ?: "Add new task"
+			e.presentation.text = controller.activeTaskName ?: "Add new task"
 		}
+	}
+
+	void activateTask(Task task) {
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		controller.activeTask = task
+		controller.paused = false
+	}
+
+	void addNewTask(String name, String description) {
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		Task task = controller.newTask(name, description)
+		controller.activeTask = task
+		controller.paused = false
+		taskManager.addRecentTask(task);
+	}
+
+	void openActiveTaskInVisualizer() {
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		Task task = controller.getActiveTask()
+
+		if (task) {
+			OpenInVisualizerAction.openTaskInBrowser(task)
+		}
+	}
+
+	private IdeaFlowSettingsTaskManager getTaskManager() {
+		IdeaFlowSettings.instance.taskManager
 	}
 
 }
