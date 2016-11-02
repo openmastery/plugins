@@ -79,6 +79,9 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		String apiUrl = settingsStore.apiUrl
 		String apiKey = settingsStore.apiKey
 		if ((apiUrl == null) || (apiKey == null)) {
+			//TODO make this a log message
+			println "Disabling Idea Flow Plugin controls because API-Key or URL is unavailable. " +
+					"Please fix the plugin configuration in your IDE Preferences, then restart your IDE. {ApiUrl=$apiUrl, ApiKey=$apiKey}"
 			return
 		}
 
