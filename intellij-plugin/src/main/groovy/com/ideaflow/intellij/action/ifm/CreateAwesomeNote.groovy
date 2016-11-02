@@ -13,8 +13,8 @@ class CreateAwesomeNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String note = IdeaFlowApplicationComponent.promptForInput("Let's Celebrate!", "What did you figure out?")
-		controller.addNote(note)
+		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("Let's Celebrate!", "What did you figure out?")
+		controller.createAwesome(awesomeNote)
 	}
 
 	@Override
