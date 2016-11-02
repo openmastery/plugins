@@ -131,9 +131,23 @@ class IFMController {
 		}
 	}
 
-	void addNote(String message) {
+	void createSubtask(String message) {
 		if (activeTask && message) {
-			eventClient.addUserNote(activeTask.id, message)
+			eventClient.createSubtask(activeTask.id, message)
+			setActiveTaskState()
+		}
+	}
+
+	void createWTF(String message) {
+		if (activeTask && message) {
+			eventClient.createWTF(activeTask.id, message)
+			setActiveTaskState()
+		}
+	}
+
+	void createAwesome(String message) {
+		if (activeTask && message) {
+			eventClient.createAwesome(activeTask.id, message)
 			setActiveTaskState()
 		}
 	}
