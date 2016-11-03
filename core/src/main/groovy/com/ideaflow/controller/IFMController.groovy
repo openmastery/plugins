@@ -2,7 +2,6 @@ package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.activity.ActivityPublisher
-import org.openmastery.publisher.api.ideaflow.IdeaFlowPartialCompositeState
 import org.openmastery.publisher.api.ideaflow.IdeaFlowStateType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.ActivityClient
@@ -19,7 +18,6 @@ class IFMController {
 	private TaskClient taskClient
 	private ActivityClient activityClient
 	private Task activeTask
-	private IdeaFlowPartialCompositeState activeTaskState
 	private ActivityHandler activityHandler
 
 	IFMController() {
@@ -72,16 +70,11 @@ class IFMController {
 	void setActiveTask(Task activeTask) {
 		if (enabled) {
 			this.activeTask = activeTask
-			this.activeTaskState = activeTask != null ? ideaFlowClient.getActiveState(activeTask.id) : null
 		}
 	}
 
 	Task getActiveTask() {
 		activeTask
-	}
-
-	IdeaFlowPartialCompositeState getActiveTaskState() {
-		activeTaskState
 	}
 
 	Task newTask(String name, String description) {
@@ -98,57 +91,21 @@ class IFMController {
 		activeTask?.name
 	}
 
-	// TODO: this method shoudl go away - we should be returning the active state on each band transition
-	private void setActiveTaskState() {
-		activeTaskState = activeTask != null ? ideaFlowClient.getActiveState(activeTask.id) : null
-	}
-
-	void startConflict(String question) {
-		if (activeTask) {
-			ideaFlowClient.startConflict(activeTask.id, question)
-			setActiveTaskState()
-		}
-	}
-
-	void endConflict(String answer) {
-		if (activeTask) {
-			ideaFlowClient.endConflict(activeTask.id, answer)
-			setActiveTaskState()
-		}
-	}
-
-	void startBand(String comment, IdeaFlowStateType type) {
-		if (activeTask) {
-			ideaFlowClient.startBand(activeTask.id, comment, type)
-			setActiveTaskState()
-		}
-	}
-
-	void endBand(String comment, IdeaFlowStateType type) {
-		if (activeTask) {
-			ideaFlowClient.endBand(activeTask.id, comment, type)
-			setActiveTaskState()
-		}
-	}
-
 	void createSubtask(String message) {
 		if (activeTask && message) {
 			eventClient.createSubtask(activeTask.id, message)
-			setActiveTaskState()
 		}
 	}
 
 	void createWTF(String message) {
 		if (activeTask && message) {
 			eventClient.createWTF(activeTask.id, message)
-			setActiveTaskState()
 		}
 	}
 
 	void createAwesome(String message) {
 		if (activeTask && message) {
 			eventClient.createAwesome(activeTask.id, message)
-			setActiveTaskState()
 		}
 	}
 
