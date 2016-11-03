@@ -2,9 +2,11 @@ package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.IFMLogger
+import lombok.ToString
 import org.apache.http.HttpStatus
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewActivityBatch
+import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.ActivityClient
 import org.openmastery.publisher.client.EventClient
@@ -137,21 +139,21 @@ class IFMController {
 
 	void createSubtask(String message) {
 		if (activeTask && message) {
-			logger.logEvent(message)
+			logger.logEvent(new Event(activeTask.id, EventType.SUBTASK, message).toString())
 			eventClient.createSubtask(activeTask.id, message)
 		}
 	}
 
 	void createWTF(String message) {
 		if (activeTask && message) {
-			logger.logEvent(message)
+			logger.logEvent(new Event(activeTask.id, EventType.WTF, message).toString())
 			eventClient.createWTF(activeTask.id, message)
 		}
 	}
 
 	void createAwesome(String message) {
 		if (activeTask && message) {
-			logger.logEvent(message)
+			logger.logEvent(new Event(activeTask.id, EventType.AWESOME, message).toString())
 			eventClient.createAwesome(activeTask.id, message)
 		}
 	}
@@ -169,4 +171,20 @@ class IFMController {
 		}
 	}
 
+
+	private static class Event {
+		Long taskId
+		EventType type
+		String message
+
+		Event(Long taskId, EventType type, String message) {
+			this.taskId = taskId
+			this.type = type
+			this.message = message
+		}
+
+		String toString() {
+			"Event(taskId=$taskId, type=${type.name()}, message=$message)"
+		}
+	}
 }

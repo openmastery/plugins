@@ -80,7 +80,7 @@ class ActivityHandler {
 	}
 
 	void markProcessStarting(Long processId, String processName, String executionTaskType, boolean isDebug) {
-		ProcessActivity processActivity = new ProcessActivity(processName: processName, executionTaskType: executionTaskType, isDebug: isDebug)
+		ProcessActivity processActivity = new ProcessActivity(processName: processName, executionTaskType: executionTaskType, isDebug: isDebug, timeStarted: LocalDateTime.now())
 		activeProcessMap.put(processId, processActivity)
 		//TODO this will leak memory if the processes started are never closed
 	}
@@ -157,6 +157,7 @@ class ActivityHandler {
 		boolean modified
 
 		public long getDurationInSeconds() {
+
 			Period.fieldDifference(time, LocalDateTime.now()).millis / 1000
 		}
 
