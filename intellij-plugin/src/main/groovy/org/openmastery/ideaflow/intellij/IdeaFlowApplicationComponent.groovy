@@ -65,12 +65,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	@Override
 	void initComponent() {
-		IFMLogger activityLogger = new IFMLogger() {
-			@Override
-			void logEvent(String message) {
-				log.info(message)
-			}
-		}
+		IFMLogger activityLogger = new IFMLogger()
 
 		controller = new IFMController(activityLogger)
 		controller.setPaused(true)

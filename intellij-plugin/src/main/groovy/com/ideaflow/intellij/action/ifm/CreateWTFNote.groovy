@@ -13,7 +13,7 @@ class CreateWTFNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String wtfNote = IdeaFlowApplicationComponent.promptForInput("WTF is THIS?!", "What's the observation you don't understand? (Why Question)")
+		String wtfNote = IdeaFlowApplicationComponent.promptForInput("WTF?!", "What are you confused about?")
 		controller.createWTF(wtfNote)
 	}
 
