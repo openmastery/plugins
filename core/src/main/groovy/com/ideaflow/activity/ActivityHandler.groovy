@@ -23,7 +23,7 @@ class ActivityHandler {
 
 	ActivityHandler(IFMController controller) {
 		this.controller = controller
-		this.activityQueue = new ActivityQueue()
+		this.activityQueue = new ActivityQueue(controller)
 		this.activityPublisher = new ActivityPublisher(activityQueue)
 	}
 

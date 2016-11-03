@@ -1,9 +1,7 @@
 package com.ideaflow.activity
 
-import org.joda.time.DateTime
-import org.joda.time.Duration
+import com.ideaflow.controller.IFMController
 import org.joda.time.LocalDateTime
-import org.joda.time.Period
 import org.openmastery.publisher.api.activity.NewActivityBatch
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
@@ -17,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference
 class ActivityQueue {
 
 	private final Object lock = new Object()
+	private IFMController controller
 	private List<NewEditorActivity> editorActivityList = []
 	private List<NewExternalActivity> externalActivityList = []
 	private List<NewIdleActivity> idleActivityList = []
@@ -24,12 +23,16 @@ class ActivityQueue {
 	private List<NewExecutionActivity> executionActivityList = []
 	private AtomicReference<ActivityClient> activityClientReference = new AtomicReference<>()
 
+	ActivityQueue(IFMController controller) {
+		this.controller = controller
+	}
+
 	void setActivityClient(ActivityClient activityClient) {
 		activityClientReference.set(activityClient)
 	}
 
 	private boolean isDisabled() {
-		activityClientReference.get() == null
+		(activityClientReference.get() == null) || (controller.isRecording() == false)
 	}
 
 	void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
