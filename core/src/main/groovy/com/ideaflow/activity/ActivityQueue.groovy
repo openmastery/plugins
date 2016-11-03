@@ -1,5 +1,6 @@
 package com.ideaflow.activity
 
+import com.ideaflow.IFMLogger
 import com.ideaflow.controller.IFMController
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewActivityBatch
@@ -16,6 +17,7 @@ class ActivityQueue {
 
 	private final Object lock = new Object()
 	private IFMController controller
+	private IFMLogger logger
 	private List<NewEditorActivity> editorActivityList = []
 	private List<NewExternalActivity> externalActivityList = []
 	private List<NewIdleActivity> idleActivityList = []
@@ -23,8 +25,9 @@ class ActivityQueue {
 	private List<NewExecutionActivity> executionActivityList = []
 	private AtomicReference<ActivityClient> activityClientReference = new AtomicReference<>()
 
-	ActivityQueue(IFMController controller) {
+	ActivityQueue(IFMController controller, IFMLogger logger) {
 		this.controller = controller
+		this.logger = logger
 	}
 
 	void setActivityClient(ActivityClient activityClient) {
@@ -48,6 +51,7 @@ class ActivityQueue {
 				.isModified(isModified)
 				.build();
 
+		logger.logEvent(activity.toString())
 		synchronized (lock) {
 			editorActivityList << activity
 		}
@@ -65,6 +69,7 @@ class ActivityQueue {
 				.fileModificationCount(modificationCount)
 				.build();
 
+		logger.logEvent(activity.toString())
 		synchronized (lock) {
 			modificationActivityList << activity
 		}
@@ -88,6 +93,7 @@ class ActivityQueue {
 				.isDebug(isDebug)
 				.build();
 
+		logger.logEvent(activity.toString())
 		synchronized (lock) {
 			executionActivityList << activity
 		}
@@ -104,6 +110,7 @@ class ActivityQueue {
 				.durationInSeconds(durationInSeconds)
 				.build();
 
+		logger.logEvent(activity.toString())
 		synchronized (lock) {
 			idleActivityList << activity
 		}
@@ -121,6 +128,7 @@ class ActivityQueue {
 				.comment(comment)
 				.build();
 
+		logger.logEvent(activity.toString())
 		synchronized (lock) {
 			externalActivityList << activity
 		}

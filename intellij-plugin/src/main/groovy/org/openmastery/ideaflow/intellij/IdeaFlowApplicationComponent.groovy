@@ -1,10 +1,12 @@
 package org.openmastery.ideaflow.intellij
 
 import com.ideaflow.activity.ActivityHandler
+import com.ideaflow.IFMLogger
 import com.ideaflow.controller.IFMController
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
@@ -21,9 +23,10 @@ import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import org.openmastery.publisher.api.task.Task
 
 import javax.swing.Icon
-import java.util.concurrent.ExecutorService
 
 class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
+
+	private static final Logger log = Logger.getInstance(IdeaFlowApplicationComponent)
 
 	static String NAME = "IdeaFlow.Component"
 
@@ -62,7 +65,14 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	@Override
 	void initComponent() {
-		controller = new IFMController()
+		IFMLogger activityLogger = new IFMLogger() {
+			@Override
+			void logEvent(String message) {
+				log.info(message)
+			}
+		}
+
+		controller = new IFMController(activityLogger)
 		controller.setPaused(true)
 		virtualFileActivityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 
@@ -77,14 +87,19 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		String apiUrl = settingsStore.apiUrl
 		String apiKey = settingsStore.apiKey
 		if ((apiUrl == null) || (apiKey == null)) {
-			//TODO make this a log message
-			println "Disabling Idea Flow Plugin controls because API-Key or URL is unavailable. " +
-					"Please fix the plugin configuration in your IDE Preferences, then restart your IDE. {ApiUrl=$apiUrl, ApiKey=$apiKey}"
+			log.info("Disabling Idea Flow Plugin controls because API-Key or URL is unavailable {ApiUrl=$apiUrl, ApiKey=$apiKey}. " +
+					         "Please fix the plugin configuration in your IDE Preferences")
 			return
 		}
 
+		try {
+			controller.initClients(apiUrl, apiKey)
+		} catch (Exception ex) {
+			// TODO: this should be a message popup to the user
+			log.error("Failed to initialize controller: ${ex.message}")
+			return
+		}
 
-		controller.initClients(apiUrl, apiKey)
 		IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
 		List<Task> recentTasks = taskManager.getRecentTasks()
 		// TODO: should probably record the active task in settings and set it to that...
