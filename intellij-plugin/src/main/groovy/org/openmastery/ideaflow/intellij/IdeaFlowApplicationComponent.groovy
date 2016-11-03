@@ -21,6 +21,7 @@ import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import org.openmastery.publisher.api.task.Task
 
 import javax.swing.Icon
+import java.util.concurrent.ExecutorService
 
 class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
@@ -70,9 +71,6 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		ApplicationListener applicationListener = new ApplicationListener(controller.activityHandler)
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
 		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
-
-		// TODO: find a better way to do this
-		new Thread(controller.activityPublisher).start()
 	}
 
 	void initIfmController(IdeaFlowSettings settingsStore) {
