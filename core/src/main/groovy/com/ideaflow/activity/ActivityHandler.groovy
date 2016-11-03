@@ -1,5 +1,6 @@
 package com.ideaflow.activity
 
+import com.ideaflow.IFMLogger
 import com.ideaflow.controller.IFMController
 import org.joda.time.Duration
 import org.joda.time.LocalDateTime
@@ -21,9 +22,9 @@ class ActivityHandler {
 
 	private Map<Long, ProcessActivity> activeProcessMap =[:]
 
-	ActivityHandler(IFMController controller) {
+	ActivityHandler(IFMController controller, IFMLogger logger) {
 		this.controller = controller
-		this.activityQueue = new ActivityQueue(controller)
+		this.activityQueue = new ActivityQueue(controller, logger)
 		this.activityPublisher = new ActivityPublisher(activityQueue)
 	}
 
@@ -142,7 +143,7 @@ class ActivityHandler {
 		boolean isDebug
 
 		public long getDurationInSeconds() {
-			Period.fieldDifference(timeStarted, LocalDateTime.now()).seconds
+			Period.fieldDifference(timeStarted, LocalDateTime.now()).millis / 1000
 		}
 
 		public String toString() {
@@ -156,7 +157,7 @@ class ActivityHandler {
 		boolean modified
 
 		public long getDurationInSeconds() {
-			Period.fieldDifference(time, LocalDateTime.now()).seconds
+			Period.fieldDifference(time, LocalDateTime.now()).millis / 1000
 		}
 
 		public String toString() {
