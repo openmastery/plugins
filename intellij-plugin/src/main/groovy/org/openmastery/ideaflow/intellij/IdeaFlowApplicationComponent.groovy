@@ -86,23 +86,13 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		}
 
 
-		//TODO: This try-catch keeps the plugin from disabling, but the preference pane still isn't being loaded... so can't fix it.
-		try {
-			controller.initClients(apiUrl, apiKey)
-			IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
-			List<Task> recentTasks = taskManager.getRecentTasks()
-			// TODO: should probably record the active task in settings and set it to that...
-			if (recentTasks.isEmpty() == false) {
-				controller.setActiveTask(recentTasks.first())
-			}
-		} catch (Exception ex) {
-			//TODO make this a log message and catch more specific error
-			println "BAD API-key or URL. " +
-					"Please fix the plugin configuration in your IDE Preferences, then restart your IDE. {ApiUrl=$apiUrl, ApiKey=$apiKey}"
+		controller.initClients(apiUrl, apiKey)
+		IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
+		List<Task> recentTasks = taskManager.getRecentTasks()
+		// TODO: should probably record the active task in settings and set it to that...
+		if (recentTasks.isEmpty() == false) {
+			controller.setActiveTask(recentTasks.first())
 		}
-
-
-
 	}
 
 	@Override
