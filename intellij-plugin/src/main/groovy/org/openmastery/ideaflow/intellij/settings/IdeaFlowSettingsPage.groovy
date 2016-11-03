@@ -47,11 +47,9 @@ class IdeaFlowSettingsPage implements Configurable {
 			settings.setApiUrl(panel.apiUrlText)
 			settings.setApiKey(panel.apiKeyText)
 
-			if (isModified()) {
-				// TODO: where does this go?  seems like at a minimum, should fire a listener which then handles
-				// this elsewhere, likely IdeaFlowApplicationComponent...
-				IdeaFlowApplicationComponent.getApplicationComponent().initIfmController(settings)
-			}
+			// TODO: where does this go?  seems like at a minimum, should fire a listener which then handles
+			// this elsewhere, likely IdeaFlowApplicationComponent...
+			IdeaFlowApplicationComponent.getApplicationComponent().initIfmController(settings)
 		}
 	}
 
