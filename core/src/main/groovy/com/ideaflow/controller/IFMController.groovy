@@ -1,8 +1,6 @@
 package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
-import com.ideaflow.activity.ActivityPublisher
-import org.openmastery.publisher.api.ideaflow.IdeaFlowStateType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.ActivityClient
 import org.openmastery.publisher.client.EventClient
@@ -22,14 +20,25 @@ class IFMController {
 
 	IFMController() {
 		activityHandler = new ActivityHandler(this)
+
+		new Thread(activityHandler.activityPublisher).start()
+		startPushModificationActivityTimer(30)
+	}
+
+	private void startPushModificationActivityTimer(final long intervalInSeconds) {
+		TimerTask timerTask = new TimerTask() {
+			@Override
+			void run() {
+				activityHandler.pushModificationActivity(intervalInSeconds)
+			}
+		}
+
+		long intervalInMillis = intervalInSeconds * 1000
+		new Timer().scheduleAtFixedRate(timerTask, intervalInMillis, intervalInMillis)
 	}
 
 	ActivityHandler getActivityHandler() {
 		activityHandler
-	}
-
-	ActivityPublisher getActivityPublisher() {
-		activityHandler.activityPublisher
 	}
 
 	void initClients(String apiUrl, String apiKey) {

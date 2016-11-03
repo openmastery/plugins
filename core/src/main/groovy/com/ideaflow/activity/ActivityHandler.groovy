@@ -6,15 +6,17 @@ import org.joda.time.LocalDateTime
 import org.joda.time.Period
 import org.openmastery.publisher.client.ActivityClient
 
+import java.util.concurrent.atomic.AtomicInteger
+
 class ActivityHandler {
 
 	private static final int SHORTEST_ACTIVITY = 3
 
 	private IFMController controller
 	private ActivityQueue activityQueue
-	private FileActivity activeFileActivity = null
+	private FileActivity activeFileActivity
 	private ActivityPublisher activityPublisher
-	int fileModificationCount
+	private AtomicInteger fileModificationCount = new AtomicInteger(0)
 
 
 	private Map<Long, ProcessActivity> activeProcessMap =[:]
@@ -118,13 +120,13 @@ class ActivityHandler {
 		if (activeFileActivity?.filePath == filePath) {
 			activeFileActivity.modified = true
 		}
-		fileModificationCount++
+		fileModificationCount.incrementAndGet()
 	}
 
 	void pushModificationActivity(Long intervalInSeconds) {
-		if (fileModificationCount > 0) {
-			activityQueue.pushModificationActivity(activeTaskId, intervalInSeconds, fileModificationCount)
-			fileModificationCount = 0
+		int modificationCount = fileModificationCount.getAndSet(0)
+		if (modificationCount > 0) {
+			activityQueue.pushModificationActivity(activeTaskId, intervalInSeconds, modificationCount)
 		}
 	}
 
@@ -161,7 +163,5 @@ class ActivityHandler {
 			"FileActivity [path=${filePath}, modified=${modified}, duration=${durationInSeconds}]"
 		}
 	}
-
-
 
 }
