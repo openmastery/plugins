@@ -66,7 +66,7 @@ class ActivityQueue {
 				.taskId(taskId)
 				.endTime(LocalDateTime.now())
 				.durationInSeconds(durationInSeconds)
-				.fileModificationCount(modificationCount)
+				.modificationCount(modificationCount)
 				.build();
 
 		logger.logEvent(activity.toString())
