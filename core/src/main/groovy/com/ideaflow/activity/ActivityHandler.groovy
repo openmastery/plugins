@@ -17,7 +17,7 @@ class ActivityHandler {
 	private ActivityQueue activityQueue
 	private FileActivity activeFileActivity
 	private ActivityPublisher activityPublisher
-	private AtomicInteger fileModificationCount = new AtomicInteger(0)
+	private AtomicInteger modificationCount = new AtomicInteger(0)
 
 
 	private Map<Long, ProcessActivity> activeProcessMap =[:]
@@ -121,11 +121,11 @@ class ActivityHandler {
 		if (activeFileActivity?.filePath == filePath) {
 			activeFileActivity.modified = true
 		}
-		fileModificationCount.incrementAndGet()
+		modificationCount.incrementAndGet()
 	}
 
 	void pushModificationActivity(Long intervalInSeconds) {
-		int modificationCount = fileModificationCount.getAndSet(0)
+		int modificationCount = modificationCount.getAndSet(0)
 		if (modificationCount > 0) {
 			activityQueue.pushModificationActivity(activeTaskId, intervalInSeconds, modificationCount)
 		}

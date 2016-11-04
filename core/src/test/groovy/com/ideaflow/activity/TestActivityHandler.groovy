@@ -172,7 +172,7 @@ class TestActivityHandler extends Specification {
 		handler.fileModified("file")
 		handler.pushModificationActivity(30)
 		then:
-		assert getModificationActivity(0).fileModificationCount == 3
+		assert getModificationActivity(0).modificationCount == 3
 	}
 
 	void testMarkProcessExecution_ShouldPublishActivity_AfterStartStop() {
