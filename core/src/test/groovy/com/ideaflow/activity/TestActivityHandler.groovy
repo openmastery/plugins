@@ -1,5 +1,6 @@
 package com.ideaflow.activity
 
+import com.ideaflow.IFMLogger
 import com.ideaflow.controller.IFMController
 import org.joda.time.DateTimeUtils
 import org.openmastery.publisher.api.activity.NewEditorActivity
@@ -26,10 +27,12 @@ class TestActivityHandler extends Specification {
 	void setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
 
-		handler = new ActivityHandler(controller)
+		IFMLogger logger = Mock(IFMLogger)
+		handler = new ActivityHandler(controller, logger)
 		handler.activityClient = activityClient
 		activityQueue = handler.activityQueue
 		controller.getActiveTask() >> new Task(id: 1)
+		controller.isRecording() >> true
 	}
 
 	void cleanup() {
