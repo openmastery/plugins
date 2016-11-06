@@ -11,8 +11,8 @@ public class CreateTaskWizard extends DialogWrapper {
 
 	private CreateTaskDialog dialog;
 
-	public CreateTaskWizard() {
-		super(null);
+	public CreateTaskWizard(@Nullable Project project) {
+		super(project);
 		init();
 		setTitle("Create Task");
 	}
