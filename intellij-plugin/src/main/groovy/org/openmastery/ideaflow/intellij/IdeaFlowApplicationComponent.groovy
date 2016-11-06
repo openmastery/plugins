@@ -92,7 +92,6 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		} catch (Exception ex) {
 			// TODO: this should be a message popup to the user
 			log.error("Failed to initialize controller: ${ex.message}")
-			return
 		}
 
 		IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
