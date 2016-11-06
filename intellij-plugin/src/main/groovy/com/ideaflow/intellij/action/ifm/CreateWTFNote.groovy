@@ -5,6 +5,7 @@ import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
 class CreateWTFNote extends AnAction {
@@ -14,7 +15,7 @@ class CreateWTFNote extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
 		String wtfNote = IdeaFlowApplicationComponent.promptForInput("WTF?!", "What are you confused about?")
-		controller.createWTF(wtfNote)
+		controller.createEvent(wtfNote, EventType.WTF)
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
 class CreateAwesomeNote extends AnAction {
@@ -14,7 +15,7 @@ class CreateAwesomeNote extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
 		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("AWESOME!", "What did you figure out?")
-		controller.createAwesome(awesomeNote)
+		controller.createEvent(awesomeNote, EventType.AWESOME)
 	}
 
 	@Override
