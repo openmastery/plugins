@@ -19,17 +19,17 @@ class TestActivityHandler extends Specification {
 	private static final long DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS = DOES_NOT_PERSIST_ACTIVITY_DURATION * 1000
 
 	ActivityHandler handler
-	ActivityLogger activityQueue
+	MessageQueue activityQueue
 	IFMController controller = Mock(IFMController)
 	ActivityClient activityClient = Mock(ActivityClient)
 
 	void setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
 
-		IFMLogger logger = Mock(IFMLogger)
-		handler = new ActivityHandler(controller, logger)
-		handler.activityClient = activityClient
-		activityQueue = handler.activityLogger
+		MessageQueue.MessageLogger messageLoggerMock = Mock(MessageQueue.MessageLogger)
+		activityQueue = new MessageQueue(controller, messageLoggerMock)
+		handler = new ActivityHandler(controller, activityQueue)
+
 		controller.getActiveTask() >> new Task(id: 1)
 		controller.isRecording() >> true
 	}

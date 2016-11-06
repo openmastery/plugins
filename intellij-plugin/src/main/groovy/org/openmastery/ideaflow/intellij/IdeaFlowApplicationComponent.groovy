@@ -1,7 +1,6 @@
 package org.openmastery.ideaflow.intellij
 
 import com.ideaflow.activity.ActivityHandler
-import com.ideaflow.activity.IFMLogger
 import com.ideaflow.controller.IFMController
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager

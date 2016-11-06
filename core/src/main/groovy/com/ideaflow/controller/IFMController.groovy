@@ -1,8 +1,8 @@
 package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
-import com.ideaflow.activity.BatchSender
-import com.ideaflow.activity.IFMLogger
+import com.ideaflow.activity.BatchPublisher
+import com.ideaflow.activity.MessageQueue
 import org.apache.http.HttpStatus
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewActivityBatch
@@ -25,13 +25,15 @@ class IFMController {
 	private ActivityClient activityClient
 	private Task activeTask
 	private ActivityHandler activityHandler
-	private BatchSender batchSender
+	private MessageQueue messageQueue
+	private BatchPublisher batchPublisher
 
 	IFMController() {
-		activityHandler = new ActivityHandler(this)
-		batchSender = new BatchSender()
+		messageQueue = new MessageQueue(this)
+		activityHandler = new ActivityHandler(this, messageQueue)
+		batchPublisher = new BatchPublisher()
 
-		new Thread(batchSender).start()
+		new Thread(batchPublisher).start()
 		startPushModificationActivityTimer(30)
 	}
 
@@ -67,7 +69,7 @@ class IFMController {
 				.apiKey(apiKey)
 		activityClient = new ActivityClient(apiUrl)
 				.apiKey(apiKey)
-		batchSender.setActivityClient(activityClient)
+		batchPublisher.setActivityClient(activityClient)
 		enabled = true
 	}
 
@@ -138,9 +140,10 @@ class IFMController {
 	}
 
 	void createEvent(String message, EventType eventType) {
-		activityHandler.createEvent(message, eventType)
+		if (activeTask && message != null) {
+			messageQueue.pushEvent(activeTask.id, eventType, message)
+		}
 	}
-
 
 	private static class InvalidApiKeyException extends RuntimeException {
 		InvalidApiKeyException(String apiKey) {

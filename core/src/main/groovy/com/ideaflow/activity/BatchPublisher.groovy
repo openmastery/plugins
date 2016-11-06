@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 
-class BatchSender implements Runnable {
+class BatchPublisher implements Runnable {
 
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread

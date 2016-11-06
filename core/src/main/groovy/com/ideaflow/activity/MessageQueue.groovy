@@ -9,19 +9,25 @@ import org.openmastery.publisher.api.activity.NewIdleActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
 import org.openmastery.publisher.api.event.EventType
 
-class ActivityLogger {
+class MessageQueue {
 
 	private IFMController controller
-	private IFMLogger logger
+	private MessageLogger messageLogger
 
-	ActivityLogger(IFMController controller) {
+	private static final String MESSAGE_FILE = "active_messages.log"
+	private static final String BATCH_FILE_PREFIX = "batch_"
+
+
+	MessageQueue(IFMController controller) {
 		this.controller = controller
-		this.logger = new IFMLogger()
+		this.messageLogger = new MessageLogger()
 	}
 
-	private boolean isDisabled() {
-		controller.isRecording() == false
+	MessageQueue(IFMController controller, MessageLogger messageLogger) {
+		this.controller = controller
+		this.messageLogger = messageLogger
 	}
+
 
 	void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
 		if (isDisabled()) {
@@ -36,7 +42,7 @@ class ActivityLogger {
 				.isModified(isModified)
 				.build();
 
-		logger.logEvent(activity.toString())
+		messageLogger.writeMessage(activity.toString())
 	}
 
 	void pushModificationActivity(Long taskId, Long durationInSeconds, int modificationCount) {
@@ -51,7 +57,7 @@ class ActivityLogger {
 				.modificationCount(modificationCount)
 				.build();
 
-		logger.logEvent(activity.toString())
+		messageLogger.writeMessage(activity.toString())
 	}
 
 	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName,
@@ -72,7 +78,7 @@ class ActivityLogger {
 				.isDebug(isDebug)
 				.build();
 
-		logger.logEvent(activity.toString())
+		messageLogger.writeMessage(activity.toString())
 	}
 
 	void pushIdleActivity(Long taskId, Long durationInSeconds) {
@@ -86,7 +92,7 @@ class ActivityLogger {
 				.durationInSeconds(durationInSeconds)
 				.build();
 
-		logger.logEvent(activity.toString())
+		messageLogger.writeMessage(activity.toString())
 	}
 
 	void pushExternalActivity(Long taskId, Long durationInSeconds, String comment) {
@@ -101,7 +107,7 @@ class ActivityLogger {
 				.comment(comment)
 				.build();
 
-		logger.logEvent(activity.toString())
+		messageLogger.writeMessage(activity.toString())
 	}
 
 	void pushEvent(Long taskId, EventType eventType, String message) {
@@ -111,9 +117,49 @@ class ActivityLogger {
 
 		Event event = new Event(taskId, eventType, message)
 
-		logger.logEvent(event.toString())
+		messageLogger.writeMessage(event.toString())
 	}
 
+
+	private boolean isDisabled() {
+		controller.isRecording() == false
+	}
+
+
+	static class MessageLogger {
+		private File activeLog
+		private File logDir
+		private final Object lock = new Object()
+
+		MessageLogger() {
+			logDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
+			logDir.mkdirs()
+
+			activeLog = new File(logDir, MESSAGE_FILE)
+		}
+
+		private void writeMessage(String message) {
+			synchronized (lock) {
+				activeLog.append("\n$message")
+			}
+
+		}
+
+		private void startNewBatch() {
+			synchronized (lock) {
+				activeLog.renameTo(BATCH_FILE_PREFIX + createTimestampSuffix())
+				activeLog = new File(logDir, MESSAGE_FILE)
+			}
+
+		}
+
+		String createTimestampSuffix() {
+			LocalDateTime now = LocalDateTime.now()
+
+			now.toString("yyyy-MM-dd-HH-mm")
+		}
+
+	}
 
 	private static class Event {
 		Long taskId
