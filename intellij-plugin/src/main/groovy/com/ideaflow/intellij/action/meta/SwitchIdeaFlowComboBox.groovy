@@ -28,85 +28,20 @@ import javax.swing.JComponent
 @Mixin(ActionSupport)
 class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
-	private static class ActivateIdeaFlowAction extends AnAction {
-
-		private SwitchIdeaFlowComboBox switchIdeaFlow
-		private Project project
-		private Task task
-
-		public ActivateIdeaFlowAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project, Task task) {
-			this.switchIdeaFlow = switchIdeaFlow
-			this.project = project
-			this.task = task
-
-			getTemplatePresentation().setText(task.name, false)
-			getTemplatePresentation().setDescription("Set ${task.name} as Active IdeaFlow")
-		}
-
-		public void actionPerformed(final AnActionEvent e) {
-			switchIdeaFlow.activateTask(task)
-		}
-
-	}
-
-	private static class OpenActiveInVisualizerAction extends AnAction {
-
-		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
-
-		private SwitchIdeaFlowComboBox switchIdeaFlow
-
-		OpenActiveInVisualizerAction(SwitchIdeaFlowComboBox switchIdeaFlow) {
-			this.switchIdeaFlow = switchIdeaFlow
-			getTemplatePresentation().setText("Open in Visualizer")
-			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
-			getTemplatePresentation().setIcon(BROWSE_ICON)
-		}
-
-		@Override
-		void actionPerformed(AnActionEvent event) {
-			switchIdeaFlow.openActiveTaskInVisualizer()
-		}
-	}
-
-	private static class AddNewTaskAction extends AnAction {
-
-		private SwitchIdeaFlowComboBox switchIdeaFlow
-		private Project project
-
-		AddNewTaskAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project) {
-			this.switchIdeaFlow = switchIdeaFlow
-			this.project = project
-			getTemplatePresentation().setText("Add new task...")
-			getTemplatePresentation().setDescription("Add a new task")
-		}
-
-		@Override
-		void actionPerformed(AnActionEvent e) {
-			CreateTaskWizard wizard = new CreateTaskWizard(project)
-			if (wizard.shouldCreateTask()) {
-				switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription)
-			}
-		}
-	}
-
 
 	@Override
 	protected DefaultActionGroup createPopupActionGroup(JComponent button) {
 		DefaultActionGroup actionGroup = new DefaultActionGroup()
-		Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(button))
-
-		if (project != null) {
-			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			for (Task task : taskManager.recentTasks) {
-				if (task != controller.activeTask) {
-					actionGroup.add(new ActivateIdeaFlowAction(this, project, task))
-				}
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		for (Task task : taskManager.recentTasks) {
+			if (task != controller.activeTask) {
+				actionGroup.add(new ActivateIdeaFlowAction(this, task))
 			}
-
-			actionGroup.addSeparator();
-			actionGroup.add(new OpenActiveInVisualizerAction(this, ))
-			actionGroup.add(new AddNewTaskAction(this, project))
 		}
+
+		actionGroup.addSeparator();
+		actionGroup.add(new OpenActiveInVisualizerAction(this))
+		actionGroup.add(new AddNewTaskAction(this))
 		return actionGroup
 	}
 
@@ -147,5 +82,68 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 	private IdeaFlowSettingsTaskManager getTaskManager() {
 		IdeaFlowSettings.instance.taskManager
 	}
+
+
+	private static class ActivateIdeaFlowAction extends AnAction {
+
+		private static final Icon IDEAFLOW_ICON = IdeaFlowApplicationComponent.getIcon("ideaflow.png")
+
+
+		private SwitchIdeaFlowComboBox switchIdeaFlow
+		private Task task
+
+		public ActivateIdeaFlowAction(SwitchIdeaFlowComboBox switchIdeaFlow, Task task) {
+			this.switchIdeaFlow = switchIdeaFlow
+			this.task = task
+
+			getTemplatePresentation().setText(task.name, false)
+			getTemplatePresentation().setDescription("Set ${task.name} as Active IdeaFlow")
+			getTemplatePresentation().setIcon(IDEAFLOW_ICON);
+		}
+
+		public void actionPerformed(final AnActionEvent e) {
+			switchIdeaFlow.activateTask(task)
+		}
+
+	}
+
+	private static class OpenActiveInVisualizerAction extends AnAction {
+
+		private static final Icon BROWSE_ICON = IdeaFlowApplicationComponent.getIcon("browse.png")
+
+		private SwitchIdeaFlowComboBox switchIdeaFlow
+
+		OpenActiveInVisualizerAction(SwitchIdeaFlowComboBox switchIdeaFlow) {
+			this.switchIdeaFlow = switchIdeaFlow
+			getTemplatePresentation().setText("Open in Visualizer")
+			getTemplatePresentation().setDescription("Open the active IdeaFlow in the Visualizer")
+			getTemplatePresentation().setIcon(BROWSE_ICON)
+		}
+
+		@Override
+		void actionPerformed(AnActionEvent event) {
+			switchIdeaFlow.openActiveTaskInVisualizer()
+		}
+	}
+
+	private static class AddNewTaskAction extends AnAction {
+
+		private SwitchIdeaFlowComboBox switchIdeaFlow
+
+		AddNewTaskAction(SwitchIdeaFlowComboBox switchIdeaFlow) {
+			this.switchIdeaFlow = switchIdeaFlow
+			getTemplatePresentation().setText("Add new task...")
+			getTemplatePresentation().setDescription("Add a new task")
+		}
+
+		@Override
+		void actionPerformed(AnActionEvent e) {
+			CreateTaskWizard wizard = new CreateTaskWizard()
+			if (wizard.shouldCreateTask()) {
+				switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription)
+			}
+		}
+	}
+
 
 }
