@@ -20,7 +20,7 @@ class MessageQueue {
 
 	MessageQueue(IFMController controller) {
 		this.controller = controller
-		this.messageLogger = new MessageLogger()
+		this.messageLogger = new FileMessageLogger()
 	}
 
 	MessageQueue(IFMController controller, MessageLogger messageLogger) {
@@ -42,7 +42,7 @@ class MessageQueue {
 				.isModified(isModified)
 				.build();
 
-		messageLogger.writeMessage(activity.toString())
+		messageLogger.writeMessage(activity)
 	}
 
 	void pushModificationActivity(Long taskId, Long durationInSeconds, int modificationCount) {
@@ -57,7 +57,7 @@ class MessageQueue {
 				.modificationCount(modificationCount)
 				.build();
 
-		messageLogger.writeMessage(activity.toString())
+		messageLogger.writeMessage(activity)
 	}
 
 	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName,
@@ -78,7 +78,7 @@ class MessageQueue {
 				.isDebug(isDebug)
 				.build();
 
-		messageLogger.writeMessage(activity.toString())
+		messageLogger.writeMessage(activity)
 	}
 
 	void pushIdleActivity(Long taskId, Long durationInSeconds) {
@@ -92,7 +92,7 @@ class MessageQueue {
 				.durationInSeconds(durationInSeconds)
 				.build();
 
-		messageLogger.writeMessage(activity.toString())
+		messageLogger.writeMessage(activity)
 	}
 
 	void pushExternalActivity(Long taskId, Long durationInSeconds, String comment) {
@@ -107,7 +107,7 @@ class MessageQueue {
 				.comment(comment)
 				.build();
 
-		messageLogger.writeMessage(activity.toString())
+		messageLogger.writeMessage(activity)
 	}
 
 	void pushEvent(Long taskId, EventType eventType, String message) {
@@ -117,7 +117,7 @@ class MessageQueue {
 
 		Event event = new Event(taskId, eventType, message)
 
-		messageLogger.writeMessage(event.toString())
+		messageLogger.writeMessage(event)
 	}
 
 
@@ -126,23 +126,22 @@ class MessageQueue {
 	}
 
 
-	static class MessageLogger {
+	static class FileMessageLogger implements MessageLogger {
 		private File activeLog
 		private File logDir
 		private final Object lock = new Object()
 
-		MessageLogger() {
+		FileMessageLogger() {
 			logDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
 			logDir.mkdirs()
 
 			activeLog = new File(logDir, MESSAGE_FILE)
 		}
 
-		private void writeMessage(String message) {
+		void writeMessage(Object message) {
 			synchronized (lock) {
-				activeLog.append("\n$message")
+				activeLog.append("\n${message.toString()}")
 			}
-
 		}
 
 		private void startNewBatch() {
