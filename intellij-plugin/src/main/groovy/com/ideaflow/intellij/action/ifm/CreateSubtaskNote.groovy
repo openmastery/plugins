@@ -5,6 +5,7 @@ import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
 class CreateSubtaskNote extends AnAction {
@@ -14,7 +15,7 @@ class CreateSubtaskNote extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
 		String subtaskNote = IdeaFlowApplicationComponent.promptForInput("Start Subtask", "What's the subgoal you are trying to accomplish?")
-		controller.createSubtask(subtaskNote)
+		controller.createEvent(subtaskNote, EventType.SUBTASK)
 	}
 
 	@Override

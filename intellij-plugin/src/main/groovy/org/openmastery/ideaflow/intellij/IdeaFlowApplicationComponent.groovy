@@ -1,7 +1,7 @@
 package org.openmastery.ideaflow.intellij
 
 import com.ideaflow.activity.ActivityHandler
-import com.ideaflow.IFMLogger
+import com.ideaflow.activity.IFMLogger
 import com.ideaflow.controller.IFMController
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
@@ -65,9 +65,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	@Override
 	void initComponent() {
-		IFMLogger activityLogger = new IFMLogger()
-
-		controller = new IFMController(activityLogger)
+		controller = new IFMController()
 		controller.setPaused(true)
 		virtualFileActivityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 

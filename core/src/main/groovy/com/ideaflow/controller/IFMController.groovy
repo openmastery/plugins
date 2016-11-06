@@ -1,8 +1,8 @@
 package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
-import com.ideaflow.IFMLogger
-import lombok.ToString
+import com.ideaflow.activity.BatchSender
+import com.ideaflow.activity.IFMLogger
 import org.apache.http.HttpStatus
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewActivityBatch
@@ -19,19 +19,19 @@ class IFMController {
 
 	private boolean enabled = false
 	private boolean paused = true
-	private IFMLogger logger
 	private IdeaFlowClient ideaFlowClient
 	private EventClient eventClient
 	private TaskClient taskClient
 	private ActivityClient activityClient
 	private Task activeTask
 	private ActivityHandler activityHandler
+	private BatchSender batchSender
 
-	IFMController(IFMLogger logger) {
-		this.logger = logger
-		activityHandler = new ActivityHandler(this, logger)
+	IFMController() {
+		activityHandler = new ActivityHandler(this)
+		batchSender = new BatchSender()
 
-		new Thread(activityHandler.activityPublisher).start()
+		new Thread(batchSender).start()
 		startPushModificationActivityTimer(30)
 	}
 
@@ -67,7 +67,7 @@ class IFMController {
 				.apiKey(apiKey)
 		activityClient = new ActivityClient(apiUrl)
 				.apiKey(apiKey)
-		activityHandler.setActivityClient(activityClient)
+		batchSender.setActivityClient(activityClient)
 		enabled = true
 	}
 
@@ -137,25 +137,8 @@ class IFMController {
 		activeTask?.name
 	}
 
-	void createSubtask(String message) {
-		if (activeTask && message) {
-			logger.logEvent(new Event(activeTask.id, EventType.SUBTASK, message).toString())
-			eventClient.createSubtask(activeTask.id, message)
-		}
-	}
-
-	void createWTF(String message) {
-		if (activeTask && message) {
-			logger.logEvent(new Event(activeTask.id, EventType.WTF, message).toString())
-			eventClient.createWTF(activeTask.id, message)
-		}
-	}
-
-	void createAwesome(String message) {
-		if (activeTask && message) {
-			logger.logEvent(new Event(activeTask.id, EventType.AWESOME, message).toString())
-			eventClient.createAwesome(activeTask.id, message)
-		}
+	void createEvent(String message, EventType eventType) {
+		activityHandler.createEvent(message, eventType)
 	}
 
 
@@ -172,19 +155,4 @@ class IFMController {
 	}
 
 
-	private static class Event {
-		Long taskId
-		EventType type
-		String message
-
-		Event(Long taskId, EventType type, String message) {
-			this.taskId = taskId
-			this.type = type
-			this.message = message
-		}
-
-		String toString() {
-			"Event(taskId=$taskId, type=${type.name()}, message=$message)"
-		}
-	}
 }

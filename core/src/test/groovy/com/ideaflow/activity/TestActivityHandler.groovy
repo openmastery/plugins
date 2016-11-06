@@ -1,6 +1,5 @@
 package com.ideaflow.activity
 
-import com.ideaflow.IFMLogger
 import com.ideaflow.controller.IFMController
 import org.joda.time.DateTimeUtils
 import org.openmastery.publisher.api.activity.NewEditorActivity
@@ -20,7 +19,7 @@ class TestActivityHandler extends Specification {
 	private static final long DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS = DOES_NOT_PERSIST_ACTIVITY_DURATION * 1000
 
 	ActivityHandler handler
-	ActivityQueue activityQueue
+	ActivityLogger activityQueue
 	IFMController controller = Mock(IFMController)
 	ActivityClient activityClient = Mock(ActivityClient)
 
@@ -30,7 +29,7 @@ class TestActivityHandler extends Specification {
 		IFMLogger logger = Mock(IFMLogger)
 		handler = new ActivityHandler(controller, logger)
 		handler.activityClient = activityClient
-		activityQueue = handler.activityQueue
+		activityQueue = handler.activityLogger
 		controller.getActiveTask() >> new Task(id: 1)
 		controller.isRecording() >> true
 	}
