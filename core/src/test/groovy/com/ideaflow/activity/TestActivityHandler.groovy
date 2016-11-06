@@ -6,7 +6,6 @@ import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
 import org.openmastery.publisher.api.task.Task
-import org.openmastery.publisher.client.ActivityClient
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -19,15 +18,14 @@ class TestActivityHandler extends Specification {
 	private static final long DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS = DOES_NOT_PERSIST_ACTIVITY_DURATION * 1000
 
 	ActivityHandler handler
-	MessageQueue activityQueue
+	InMemoryMessageLogger messageLogger
 	IFMController controller = Mock(IFMController)
-	ActivityClient activityClient = Mock(ActivityClient)
 
 	void setup() {
 		DateTimeUtils.setCurrentMillisFixed(NOW)
 
-		MessageQueue.MessageLogger messageLoggerMock = Mock(MessageQueue.MessageLogger)
-		activityQueue = new MessageQueue(controller, messageLoggerMock)
+		messageLogger = new InMemoryMessageLogger()
+		MessageQueue activityQueue = new MessageQueue(controller, messageLogger)
 		handler = new ActivityHandler(controller, activityQueue)
 
 		controller.getActiveTask() >> new Task(id: 1)
@@ -38,35 +36,12 @@ class TestActivityHandler extends Specification {
 		DateTimeUtils.setCurrentMillisSystem()
 	}
 
-	private void assertEditorActivityListEmpty() {
-		assertEditorActivityListSize(0)
-	}
-
-	private void assertEditorActivityListSize(int expectedSize) {
-		assert activityQueue.editorActivityList.size() == expectedSize
-	}
-
-	private NewEditorActivity getEditorActivity(int index) {
-		assert activityQueue.editorActivityList.size() > index
-		activityQueue.editorActivityList[index]
-	}
-
-	private NewModificationActivity getModificationActivity(int index) {
-		assert activityQueue.modificationActivityList.size() > index
-		activityQueue.modificationActivityList[index]
-	}
-
-	private NewExecutionActivity getExecutionActivity(int index) {
-		assert activityQueue.executionActivityList.size() > index
-		activityQueue.executionActivityList[index]
-	}
-
 	void testStartEvent_ShouldNotCreateEditorActivity_IfNoPriorEvent() {
 		when:
 		handler.startFileEvent("file")
 
 		then:
-		assertEditorActivityListEmpty()
+		assertNoMessages()
 	}
 
 	void testStartEvent_ShouldNotCreateEditorActivity_IfSameEvent() {
@@ -76,7 +51,7 @@ class TestActivityHandler extends Specification {
 		handler.startFileEvent("file")
 
 		then:
-		assertEditorActivityListEmpty()
+		assertNoMessages()
 	}
 
 	void testStartEvent_ShouldCreateEditorActivity_IfDifferentEvent() {
@@ -86,9 +61,9 @@ class TestActivityHandler extends Specification {
 		handler.startFileEvent("other")
 
 		then:
-		assert getEditorActivity(0).filePath == "file"
-		assert getEditorActivity(0).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
-		assertEditorActivityListSize(1)
+		assert getMessage(0, NewEditorActivity).filePath == "file"
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assertMessageCount(1)
 	}
 
 	void testStartEvent_ShouldNotCreateEditorActivity_IfShortDelay() {
@@ -98,7 +73,7 @@ class TestActivityHandler extends Specification {
 		handler.startFileEvent("other")
 
 		then:
-		assertEditorActivityListEmpty()
+		assertNoMessages()
 	}
 
 	void testStartEvent_ShouldEndCurrentEvent_IfNull() {
@@ -108,8 +83,8 @@ class TestActivityHandler extends Specification {
 		handler.startFileEvent(null)
 
 		then:
-		assert getEditorActivity(0).filePath == "file"
-		assertEditorActivityListSize(1)
+		assert getMessage(0, NewEditorActivity).filePath == "file"
+		assertMessageCount(1)
 	}
 
 	void testEndEvent_ShouldEndCurrentEvent_IfSameEvent() {
@@ -119,9 +94,9 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent("file")
 
 		then:
-		assert getEditorActivity(0).filePath == "file"
-		assert getEditorActivity(0).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
-		assertEditorActivityListSize(1)
+		assert getMessage(0, NewEditorActivity).filePath == "file"
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assertMessageCount(1)
 	}
 
 	void testEndEvent_ShouldNotEndCurrentEvent_IfDifferentEvent() {
@@ -131,7 +106,7 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent("other")
 
 		then:
-		assertEditorActivityListEmpty()
+		assertNoMessages()
 	}
 
 	void testEndEvent_ShouldEndCurrentEvent_IfNull() {
@@ -141,7 +116,7 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent(null)
 
 		then:
-		assertEditorActivityListSize(1)
+		assertMessageCount(1)
 	}
 
 	void testEndEvent_ShouldNotCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedNotCalled() {
@@ -151,8 +126,8 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent(null)
 
 		then:
-		assert getEditorActivity(0).modified == false
-		assertEditorActivityListSize(1)
+		assert getMessage(0, NewEditorActivity).modified == false
+		assertMessageCount(1)
 	}
 
 	void testEndEvent_ShouldCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedCalled() {
@@ -163,8 +138,8 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent(null)
 
 		then:
-		assert getEditorActivity(0).modified
-		assertEditorActivityListSize(1)
+		assert getMessage(0, NewEditorActivity).modified == true
+		assertMessageCount(1)
 	}
 
 	void testPushModificationActivity_ShouldCountModifications() {
@@ -174,7 +149,7 @@ class TestActivityHandler extends Specification {
 		handler.fileModified("file")
 		handler.pushModificationActivity(30)
 		then:
-		assert getModificationActivity(0).modificationCount == 3
+		assert getMessage(0, NewModificationActivity).modificationCount == 3
 	}
 
 	void testMarkProcessExecution_ShouldPublishActivity_AfterStartStop() {
@@ -182,10 +157,10 @@ class TestActivityHandler extends Specification {
 		handler.markProcessStarting(3, "TestMyUnit", "JUnit", true)
 		handler.markProcessEnding(3, -12)
 		then:
-		assert getExecutionActivity(0).processName == "TestMyUnit"
-		assert getExecutionActivity(0).executionTaskType == "JUnit"
-		assert getExecutionActivity(0).exitCode == -12
-		assert getExecutionActivity(0).isDebug() == true
+		assert getMessage(0, NewExecutionActivity).processName == "TestMyUnit"
+		assert getMessage(0, NewExecutionActivity).executionTaskType == "JUnit"
+		assert getMessage(0, NewExecutionActivity).exitCode == -12
+		assert getMessage(0, NewExecutionActivity).isDebug() == true
 
 	}
 
@@ -212,9 +187,9 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent(null)
 
 		then:
-		assert getEditorActivity(0).filePath == "file1"
-		assert getEditorActivity(0).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION * 2
-		assertEditorActivityListSize(1)
+		assert getMessage(0, NewEditorActivity).filePath == "file1"
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION * 2
+		assertMessageCount(1)
 	}
 
 	void testDuplicateEvents_ShouldCreateNewEvent_IfShortActivityComesBetweenTwoActivitiesWithSameNameButDifferentInModifiedState() {
@@ -235,11 +210,26 @@ class TestActivityHandler extends Specification {
 		handler.endFileEvent(null)
 
 		then:
-		assert getEditorActivity(0).filePath == "file1"
-		assert getEditorActivity(0).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
-		assert getEditorActivity(1).filePath == "file3"
-		assert getEditorActivity(1).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
-		assertEditorActivityListSize(2)
+		assert getMessage(0, NewEditorActivity).filePath == "file1"
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assert getMessage(1, NewEditorActivity).filePath == "file3"
+		assert getMessage(1, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assertMessageCount(2)
 	}
+
+
+	private void assertNoMessages() {
+		messageLogger.messages.size() == 0
+	}
+
+	private void assertMessageCount(int expectedSize) {
+		messageLogger.messages.size() == expectedSize
+	}
+
+	private <T> T getMessage(int index, Class<T> clazz) {
+		assert messageLogger.messages.size() > index
+		(T)messageLogger.messages[index]
+	}
+
 
 }
