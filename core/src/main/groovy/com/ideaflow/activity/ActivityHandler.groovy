@@ -4,7 +4,6 @@ import com.ideaflow.controller.IFMController
 import org.joda.time.Duration
 import org.joda.time.LocalDateTime
 import org.joda.time.Period
-import org.openmastery.publisher.api.event.EventType
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -13,16 +12,16 @@ class ActivityHandler {
 	private static final int SHORTEST_ACTIVITY = 3
 
 	private IFMController controller
-	private ActivityLogger activityLogger
+	private MessageQueue messageQueue
 	private FileActivity activeFileActivity
 	private AtomicInteger modificationCount = new AtomicInteger(0)
 
 
 	private Map<Long, ProcessActivity> activeProcessMap =[:]
 
-	ActivityHandler(IFMController controller) {
+	ActivityHandler(IFMController controller, MessageQueue messageQueue) {
 		this.controller = controller
-		this.activityLogger = new ActivityLogger(controller)
+		this.messageQueue = messageQueue
 	}
 
 	private boolean isSame(String newFilePath) {
@@ -51,7 +50,7 @@ class ActivityHandler {
 			return
 		}
 
-		activityLogger.pushIdleActivity(activeTaskId, idleDuration.standardSeconds)
+		messageQueue.pushIdleActivity(activeTaskId, idleDuration.standardSeconds)
 	}
 
 	void markExternalActivity(Duration idleDuration) {
@@ -61,7 +60,7 @@ class ActivityHandler {
 		}
 
 		if (idleDuration.standardSeconds >= SHORTEST_ACTIVITY) {
-			activityLogger.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
+			messageQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 			if (activeFileActivity != null) {
 				activeFileActivity = createFileActivity(activeFileActivity.filePath)
 			}
@@ -78,7 +77,7 @@ class ActivityHandler {
 		ProcessActivity processActivity = activeProcessMap.remove(processId)
 		Long activeTaskId = activeTaskId
 		if (processActivity && activeTaskId != null) {
-			activityLogger.pushExecutionActivity(activeTaskId, processActivity.durationInSeconds, processActivity.processName,
+			messageQueue.pushExecutionActivity(activeTaskId, processActivity.durationInSeconds, processActivity.processName,
 					exitCode, processActivity.executionTaskType, processActivity.isDebug)
 		}
 	}
@@ -91,7 +90,7 @@ class ActivityHandler {
 
 		if (isDifferent(filePath)) {
 			if (isOverActivityThreshold()) {
-				activityLogger.pushEditorActivity(activeTaskId, activeFileActivity.durationInSeconds,
+				messageQueue.pushEditorActivity(activeTaskId, activeFileActivity.durationInSeconds,
 				                                 activeFileActivity.filePath, activeFileActivity.modified)
 			}
 
@@ -115,16 +114,8 @@ class ActivityHandler {
 	void pushModificationActivity(Long intervalInSeconds) {
 		int modificationCount = modificationCount.getAndSet(0)
 		if (modificationCount > 0) {
-			activityLogger.pushModificationActivity(activeTaskId, intervalInSeconds, modificationCount)
+			messageQueue.pushModificationActivity(activeTaskId, intervalInSeconds, modificationCount)
 		}
-	}
-
-	void createEvent(String message, EventType eventType) {
-		Long activeTaskId = activeTaskId
-		if (activeTaskId == null) {
-			return
-		}
-		activityLogger.pushEvent(activeTaskId, eventType, message)
 	}
 
 	private FileActivity createFileActivity(filePath) {
