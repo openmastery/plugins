@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicReference
 class BatchPublisher implements Runnable {
 
 	static final String BATCH_FILE_PREFIX = "batch_"
+	static final String LOG_FILE_NAME = "all_ideaflow_activity.log"
 
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread
@@ -24,9 +25,11 @@ class BatchPublisher implements Runnable {
 
 	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>()
 	private File messageQueueDir
+	private File ifmLogFile
 
 	BatchPublisher(File messageQueueDir) {
 		this.messageQueueDir = messageQueueDir
+		this.ifmLogFile = new File(messageQueueDir, LOG_FILE_NAME)
 	}
 
 	void setBatchClient(BatchClient activityClient) {
@@ -69,6 +72,7 @@ class BatchPublisher implements Runnable {
 			batchFiles.each { File batchFile ->
 				NewIFMBatch batch = convertBatchFileToObject(batchFile)
 				publishBatch(batch)
+				copyBatchToLog(batchFile)
 				batchFile.delete()
 			}
 		} catch (Exception ex) {
@@ -77,8 +81,11 @@ class BatchPublisher implements Runnable {
 		}
 	}
 
+	private void copyBatchToLog(File batchFile) {
+		ifmLogFile.append(batchFile.getBytes())
+	}
+
 	void publishBatch(NewIFMBatch batch) {
-		println "Sending batch to server!" + batch
 		BatchClient batchClient = batchClientReference.get()
 		if (batchClient == null) {
 			throw new ServerUnavailable("ActivityClient is")
