@@ -128,6 +128,7 @@ class IFMController {
 	Task newTask(String name, String description) {
 		Task newTask = null
 		// TODO: what to do on conflict?
+
 		newTask = taskClient.createTask(name, description);
 		setActiveTask(newTask)
 

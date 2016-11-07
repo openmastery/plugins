@@ -56,6 +56,10 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		return note
 	}
 
+	static void showErrorMessage(String title, String message) {
+		Messages.showErrorDialog(message, title)
+	}
+
 
 	@Override
 	String getComponentName() {
