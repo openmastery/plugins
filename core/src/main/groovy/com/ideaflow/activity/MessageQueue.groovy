@@ -2,6 +2,7 @@ package com.ideaflow.activity
 
 import com.ideaflow.controller.IFMController
 import org.joda.time.LocalDateTime
+import org.joda.time.Period
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
@@ -14,20 +15,16 @@ class MessageQueue {
 	private IFMController controller
 	private MessageLogger messageLogger
 
-	private static final String MESSAGE_FILE = "active_messages.log"
-	private static final String BATCH_FILE_PREFIX = "batch_"
 
-
-	MessageQueue(IFMController controller) {
+	MessageQueue(IFMController controller, BatchPublisher batchPublisher, File queueDir) {
 		this.controller = controller
-		this.messageLogger = new FileMessageLogger()
+		this.messageLogger = new FileMessageLogger(batchPublisher, queueDir)
 	}
 
 	MessageQueue(IFMController controller, MessageLogger messageLogger) {
 		this.controller = controller
 		this.messageLogger = messageLogger
 	}
-
 
 	void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
 		if (isDisabled()) {
@@ -127,36 +124,53 @@ class MessageQueue {
 
 
 	static class FileMessageLogger implements MessageLogger {
-		private File activeLog
-		private File logDir
+		private BatchPublisher batchPublisher
+		private File queueDir
+		private File activeMessageFile
+
 		private final Object lock = new Object()
+		private JSONConverter jsonConverter = new JSONConverter()
 
-		FileMessageLogger() {
-			logDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
-			logDir.mkdirs()
+		private LocalDateTime lastBatchTime
+		private int messageCount
 
-			activeLog = new File(logDir, MESSAGE_FILE)
+		private final int BATCH_TIME_LIMIT_IN_SECONDS = 5
+		private final int BATCH_MESSAGE_LIMIT = 500
+		private static final String MESSAGE_FILE = "active_messages.log"
+
+
+		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
+			this.batchPublisher = batchPublisher
+			activeMessageFile = new File(queueDir, MESSAGE_FILE)
+			lastBatchTime = LocalDateTime.now()
 		}
 
 		void writeMessage(Object message) {
 			synchronized (lock) {
-				activeLog.append("\n${message.toString()}")
+				if (isBatchThresholdReached()) {
+					startNewBatch()
+				}
+				activeMessageFile.append(jsonConverter.toJSON(message) + "\n")
+				messageCount++
 			}
+		}
+
+		private boolean isBatchThresholdReached() {
+			Period period = new Period(lastBatchTime, LocalDateTime.now())
+			return messageCount > 0 && ((period.toStandardSeconds().seconds > BATCH_TIME_LIMIT_IN_SECONDS) ||
+					messageCount > BATCH_MESSAGE_LIMIT)
 		}
 
 		private void startNewBatch() {
 			synchronized (lock) {
-				activeLog.renameTo(BATCH_FILE_PREFIX + createTimestampSuffix())
-				activeLog = new File(logDir, MESSAGE_FILE)
+				batchPublisher.commitBatch(activeMessageFile)
+				activeMessageFile = new File(queueDir, MESSAGE_FILE)
+
+				lastBatchTime = LocalDateTime.now()
+				messageCount = 0
 			}
-
 		}
 
-		String createTimestampSuffix() {
-			LocalDateTime now = LocalDateTime.now()
-
-			now.toString("yyyy-MM-dd-HH-mm")
-		}
 
 	}
 
