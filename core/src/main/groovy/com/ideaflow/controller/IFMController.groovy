@@ -2,7 +2,10 @@ package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.activity.BatchPublisher
+import com.ideaflow.activity.JSONConverter
 import com.ideaflow.activity.MessageQueue
+import org.joda.time.LocalDateTime
+import org.openmastery.publisher.api.batch.NewBatchEvent
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.BatchClient
@@ -22,10 +25,15 @@ class IFMController {
 	private MessageQueue messageQueue
 	private BatchPublisher batchPublisher
 
+	private static final String ALL_IFM_HISTORY = "all_ifm_history.log"
+	private File allHistoryFile
+
 	IFMController() {
 		File messageQueueDir = createMessageQueueDir()
+		allHistoryFile = createAllHistoryLog(messageQueueDir)
+
 		batchPublisher = new BatchPublisher(messageQueueDir)
-		messageQueue = new MessageQueue(this, batchPublisher, messageQueueDir)
+		messageQueue = new MessageQueue(this, batchPublisher, messageQueueDir, allHistoryFile)
 
 		activityHandler = new ActivityHandler(this, messageQueue)
 
@@ -37,6 +45,10 @@ class IFMController {
 		File queueDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
 		queueDir.mkdirs()
 		return queueDir
+	}
+
+	private File createAllHistoryLog(File queueDir) {
+		new File(queueDir, ALL_IFM_HISTORY)
 	}
 
 	private void startPushModificationActivityTimer(final long intervalInSeconds) {
@@ -136,8 +148,26 @@ class IFMController {
 
 	void createEvent(String message, EventType eventType) {
 		if (activeTask && message != null) {
-			messageQueue.pushEvent(activeTask.id, eventType, message)
+			try {
+				eventClient.createEvent(activeTask.id, eventType, message)
+				logEventHistory(eventType, message)
+
+			} catch (Exception ex) {
+				//if we can't connect to server, put the event in the batch
+				messageQueue.pushEvent(activeTask.id, eventType, message)
+			}
 		}
+	}
+
+	private void logEventHistory(EventType eventType, String message) {
+		NewBatchEvent event = NewBatchEvent.builder()
+				.taskId(activeTask.id)
+				.type(eventType)
+				.comment(message)
+				.endTime(LocalDateTime.now())
+				.build()
+		
+		allHistoryFile.append(new JSONConverter().toJSON(event) + "\n")
 	}
 
 	private static class InvalidApiKeyException extends RuntimeException {
