@@ -146,7 +146,16 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		void actionPerformed(AnActionEvent e) {
 			CreateTaskWizard wizard = new CreateTaskWizard(project)
 			if (wizard.shouldCreateTask()) {
-				switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription)
+				try {
+					switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription)
+				} catch (Exception ex) {
+					IdeaFlowApplicationComponent.showErrorMessage("Unable to connect to server",
+							"Sorry, the server is currently unavailable for creating new tasks.  " +
+									"You can currently work offline only with existing tasks.  " +
+									"If the lack of connectivity is unexpected, please make sure the URL and API-Key" +
+								" are configured correctly in Idea Flow Preferences.  Server Error: "+	ex.message)
+				}
+
 			}
 		}
 	}
