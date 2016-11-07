@@ -123,9 +123,7 @@ class IFMController {
 	}
 
 	void setActiveTask(Task activeTask) {
-
 			this.activeTask = activeTask
-
 	}
 
 	Task getActiveTask() {
@@ -134,7 +132,7 @@ class IFMController {
 
 	Task newTask(String name, String description) {
 		Task newTask = null
-		// TODO: what to do on conflict?
+		// TODO: what to do on conflict?  Do we still need to activate tasks?
 
 		newTask = taskClient.createTask(name, description);
 		setActiveTask(newTask)
@@ -164,9 +162,9 @@ class IFMController {
 				.taskId(activeTask.id)
 				.type(eventType)
 				.comment(message)
-				.endTime(LocalDateTime.now())
+				.position(LocalDateTime.now())
 				.build()
-		
+
 		allHistoryFile.append(new JSONConverter().toJSON(event) + "\n")
 	}
 
