@@ -83,9 +83,10 @@ class BatchPublisher implements Runnable {
 	}
 
 	void publishActivityBatch(NewActivityBatch batch) {
+		println "Sending batch to server!" + batch
 		ActivityClient activityClient = activityClientReference.get()
 		if (activityClient == null) {
-			return
+			throw new ServerUnavailable("ActivityClient is")
 		}
 
 		if (batch.isEmpty() == false) {
@@ -150,16 +151,16 @@ class BatchPublisher implements Runnable {
 	}
 
 
-
-
-
-
-
-
 	String createTimestampSuffix() {
 		LocalDateTime now = LocalDateTime.now()
 
 		now.toString("yyyyMMdd_HHmmss")
+	}
+
+	static class ServerUnavailable extends RuntimeException {
+		ServerUnavailable(String message) {
+			super(message)
+		}
 	}
 
 
