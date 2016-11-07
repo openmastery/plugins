@@ -97,7 +97,7 @@ class TestBatchPublisher extends Specification {
 		given:
 		NewBatchEvent batchEvent = NewBatchEvent.builder()
 				.taskId(1)
-				.endTime(LocalDateTime.now())
+				.position(LocalDateTime.now())
 				.type(EventType.AWESOME)
 				.comment("hello!")
 				.build();
