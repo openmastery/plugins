@@ -17,9 +17,9 @@ class MessageQueue {
 	private MessageLogger messageLogger
 
 
-	MessageQueue(IFMController controller, BatchPublisher batchPublisher, File queueDir) {
+	MessageQueue(IFMController controller, BatchPublisher batchPublisher, File queueDir, File allHistoryFile) {
 		this.controller = controller
-		this.messageLogger = new FileMessageLogger(batchPublisher, queueDir)
+		this.messageLogger = new FileMessageLogger(batchPublisher, queueDir, allHistoryFile)
 	}
 
 	MessageQueue(IFMController controller, MessageLogger messageLogger) {
@@ -133,6 +133,7 @@ class MessageQueue {
 		private BatchPublisher batchPublisher
 		private File queueDir
 		private File activeMessageFile
+		private File historyFile
 
 		private final Object lock = new Object()
 		private JSONConverter jsonConverter = new JSONConverter()
@@ -144,11 +145,12 @@ class MessageQueue {
 		private final int BATCH_MESSAGE_LIMIT = 500
 		private static final String MESSAGE_FILE = "active_messages.log"
 
-
-		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
+		FileMessageLogger(BatchPublisher batchPublisher, File queueDir, File historyFile) {
 			this.batchPublisher = batchPublisher
 			this.queueDir = queueDir
 			activeMessageFile = new File(queueDir, MESSAGE_FILE)
+			this.historyFile = historyFile
+
 			lastBatchTime = LocalDateTime.now()
 		}
 
@@ -158,6 +160,7 @@ class MessageQueue {
 					startNewBatch()
 				}
 				activeMessageFile.append(jsonConverter.toJSON(message) + "\n")
+				historyFile.append(jsonConverter.toJSON(message) + "\n")
 				messageCount++
 			}
 		}
