@@ -3,17 +3,12 @@ package com.ideaflow.controller
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.activity.BatchPublisher
 import com.ideaflow.activity.MessageQueue
-import org.apache.http.HttpStatus
-import org.joda.time.LocalDateTime
-import org.openmastery.publisher.api.activity.NewActivityBatch
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
-import org.openmastery.publisher.client.ActivityClient
+import org.openmastery.publisher.client.BatchClient
 import org.openmastery.publisher.client.EventClient
 import org.openmastery.publisher.client.IdeaFlowClient
 import org.openmastery.publisher.client.TaskClient
-
-import javax.ws.rs.WebApplicationException
 
 class IFMController {
 
@@ -21,7 +16,7 @@ class IFMController {
 	private IdeaFlowClient ideaFlowClient
 	private EventClient eventClient
 	private TaskClient taskClient
-	private ActivityClient activityClient
+	private BatchClient batchClient
 	private Task activeTask
 	private ActivityHandler activityHandler
 	private MessageQueue messageQueue
@@ -68,17 +63,17 @@ class IFMController {
 				.apiKey(apiKey)
 		taskClient = new TaskClient(apiUrl)
 				.apiKey(apiKey)
-		activityClient = new ActivityClient(apiUrl)
+		batchClient = new BatchClient(apiUrl)
 				.apiKey(apiKey)
-		batchPublisher.setActivityClient(activityClient)
+		batchPublisher.setBatchClient(batchClient)
 	}
 
 //	private void assertValidApiUrlAndKey(String apiUrl, String apiKey) {
-//		ActivityClient activityClient = new ActivityClient(apiUrl)
+//		ActivityClient batchClient = new ActivityClient(apiUrl)
 //				.apiKey(apiKey)
 //
 //		try {
-//			activityClient.addActivityBatch(NewActivityBatch.builder()
+//			batchClient.addActivityBatch(NewActivityBatch.builder()
 //					.timeSent(LocalDateTime.now())
 //					.build()
 //			)

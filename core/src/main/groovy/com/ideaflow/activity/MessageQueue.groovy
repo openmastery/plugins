@@ -8,6 +8,7 @@ import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
 import org.openmastery.publisher.api.activity.NewIdleActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
+import org.openmastery.publisher.api.batch.NewBatchEvent
 import org.openmastery.publisher.api.event.EventType
 
 class MessageQueue {
@@ -112,9 +113,14 @@ class MessageQueue {
 			return
 		}
 
-		Event event = new Event(taskId, eventType, message)
+		NewBatchEvent batchEvent = NewBatchEvent.builder()
+				.taskId(taskId)
+				.endTime(LocalDateTime.now())
+				.type(eventType)
+				.comment(message)
+				.build();
 
-		messageLogger.writeMessage(event)
+		messageLogger.writeMessage(batchEvent)
 	}
 
 
@@ -172,22 +178,5 @@ class MessageQueue {
 			}
 		}
 
-
-	}
-
-	private static class Event {
-		Long taskId
-		EventType type
-		String message
-
-		Event(Long taskId, EventType type, String message) {
-			this.taskId = taskId
-			this.type = type
-			this.message = message
-		}
-
-		String toString() {
-			"Event(taskId=$taskId, type=${type.name()}, message=$message)"
-		}
 	}
 }
