@@ -15,100 +15,130 @@ import java.util.concurrent.atomic.AtomicReference
 
 class BatchPublisher implements Runnable {
 
+	static final String BATCH_FILE_PREFIX = "batch_"
+
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread
-	private final Object lock = new Object()
+	private JSONConverter jsonConverter = new JSONConverter()
 
 	private AtomicReference<ActivityClient> activityClientReference = new AtomicReference<>()
+	private File messageQueueDir
 
-	private List<NewEditorActivity> editorActivityList = []
-	private List<NewExternalActivity> externalActivityList = []
-	private List<NewIdleActivity> idleActivityList = []
-	private List<NewModificationActivity> modificationActivityList = []
-	private List<NewExecutionActivity> executionActivityList = []
+	BatchPublisher(File messageQueueDir) {
+		this.messageQueueDir = messageQueueDir
+	}
 
 	void setActivityClient(ActivityClient activityClient) {
 		activityClientReference.set(activityClient)
-	}
-
-	private NewActivityBatch clearActivityListsAndCreateBatch() {
-		List<NewEditorActivity> editorActivityListCopy
-		List<NewExternalActivity> externalActivityListCopy
-		List<NewIdleActivity> idleActivityListCopy
-		List<NewModificationActivity> modificationActivityListCopy
-		List<NewExecutionActivity> executionActivityListCopy
-
-		synchronized (lock) {
-			editorActivityListCopy = new ArrayList<>(editorActivityList)
-			externalActivityListCopy = new ArrayList<>(externalActivityList)
-			idleActivityListCopy = new ArrayList<>(idleActivityList)
-			modificationActivityListCopy = new ArrayList<>(modificationActivityList)
-			executionActivityListCopy = new ArrayList<>(executionActivityList)
-
-			editorActivityList.clear()
-			externalActivityList.clear()
-			idleActivityList.clear()
-			modificationActivityList.clear()
-			executionActivityList.clear()
-		}
-
-		NewActivityBatch.builder()
-				.timeSent(LocalDateTime.now())
-				.idleActivityList(idleActivityListCopy)
-				.editorActivityList(editorActivityListCopy)
-				.externalActivityList(externalActivityListCopy)
-				.modificationActivityList(modificationActivityListCopy)
-				.executionActivityList(executionActivityListCopy)
-				.build()
-	}
-
-	void publishActivityBatch() {
-		ActivityClient activityClient = activityClientReference.get()
-		if (activityClient == null) {
-			return
-		}
-
-		NewActivityBatch batch = clearActivityListsAndCreateBatch()
-		if (batch.isEmpty() == false) {
-			withRetry(3) {
-				activityClient.addActivityBatch(batch)
-			}
-		}
-	}
-
-	private void withRetry(int maxAttempts, Closure block) {
-		boolean success = false
-
-		for (int count = 1; success == false; count++) {
-			try {
-				block.call()
-				success = true
-			} catch (Exception ex) {
-				if (count >= maxAttempts) {
-					throw ex
-				}
-			}
-		}
 	}
 
 	@Override
 	void run() {
 		runThread = Thread.currentThread()
 
-		while (shouldPublish()) {
+		while (isNotClosed()) {
 			try {
 				Thread.sleep(30000)
 			} catch (InterruptedException ex) {
 			}
 
-			if (shouldPublish()) {
-				publishBatch()
+			if (isNotClosed() && hasSomethingToPublish()) {
+				publishBatches()
 			}
 		}
 	}
 
+	void commitBatch(File messageFile) {
+		File batchFile = new File(messageQueueDir, BATCH_FILE_PREFIX + createTimestampSuffix())
+		println batchFile
+		messageFile.renameTo(batchFile)
+	}
 
-	private boolean shouldPublish() {
+	boolean hasSomethingToPublish() {
+		messageQueueDir.listFiles().find{ File file ->
+			if (file.name.contains("batch")) {
+				println file.name
+			}
+		}
+		messageQueueDir.listFiles(new FilenameFilter() {
+			@Override
+			boolean accept(File filePath, String fileName) {
+				return fileName.matches(BATCH_FILE_PREFIX+".*")
+			}
+		}).size() > 0
+	}
+
+	void publishBatches() {
+		try {
+			List<File> batchFiles = findAllBatchesAndSort()
+			batchFiles.each { File batchFile ->
+				NewActivityBatch batch = convertBatchFileToObject(batchFile)
+				publishActivityBatch(batch)
+				batchFile.delete()
+			}
+		} catch (Exception ex) {
+			// Try again later... oh well
+			ex.printStackTrace()
+		}
+	}
+
+	void publishActivityBatch(NewActivityBatch batch) {
+		ActivityClient activityClient = activityClientReference.get()
+		if (activityClient == null) {
+			return
+		}
+
+		if (batch.isEmpty() == false) {
+			activityClient.addActivityBatch(batch)
+		}
+	}
+
+
+	List<File> findAllBatchesAndSort() {
+		messageQueueDir.listFiles().findAll { File file ->
+			file.name.matches(BATCH_FILE_PREFIX+".*")
+		}.sort { File file ->
+			file.name
+		}
+	}
+
+	NewActivityBatch convertBatchFileToObject(File batchFile) {
+		NewActivityBatch batch = createEmptyBatch()
+		batchFile.eachLine { String line ->
+			Object object = jsonConverter.fromJSON(line)
+			addObjectToBatch(batch, object)
+
+		}
+		return batch
+	}
+
+	private NewActivityBatch createEmptyBatch() {
+		NewActivityBatch.builder()
+				.timeSent(LocalDateTime.now())
+				.editorActivityList([])
+				.externalActivityList([])
+				.idleActivityList([])
+				.executionActivityList([])
+				.modificationActivityList([])
+				.build()
+	}
+
+
+	private void addObjectToBatch(NewActivityBatch batch, Object object) {
+		if (object instanceof NewEditorActivity) {
+			batch.editorActivityList.add(object)
+		} else if (object instanceof NewExternalActivity) {
+			batch.externalActivityList.add(object)
+		} else if (object instanceof NewIdleActivity) {
+			batch.idleActivityList.add(object)
+		} else if (object instanceof NewExecutionActivity) {
+			batch.executionActivityList.add(object)
+		} else if (object instanceof NewModificationActivity) {
+			batch.modificationActivityList.add(object)
+		}
+	}
+
+	private boolean isNotClosed() {
 		closed.get() == false
 	}
 
@@ -120,12 +150,17 @@ class BatchPublisher implements Runnable {
 	}
 
 
-	private void publishBatch() {
-		try {
-			//TODO publish some stuff
-		} catch (Exception ex) {
-			// TODO: what to do on failure?
-			ex.printStackTrace()
-		}
+
+
+
+
+
+
+	String createTimestampSuffix() {
+		LocalDateTime now = LocalDateTime.now()
+
+		now.toString("yyyyMMdd_HHmmss")
 	}
+
+
 }

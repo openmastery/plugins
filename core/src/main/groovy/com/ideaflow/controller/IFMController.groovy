@@ -29,12 +29,20 @@ class IFMController {
 	private BatchPublisher batchPublisher
 
 	IFMController() {
-		messageQueue = new MessageQueue(this)
+		File messageQueueDir = createMessageQueueDir()
+		batchPublisher = new BatchPublisher(messageQueueDir)
+		messageQueue = new MessageQueue(this, batchPublisher, messageQueueDir)
+
 		activityHandler = new ActivityHandler(this, messageQueue)
-		batchPublisher = new BatchPublisher()
 
 		new Thread(batchPublisher).start()
 		startPushModificationActivityTimer(30)
+	}
+
+	private File createMessageQueueDir() {
+		File queueDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
+		queueDir.mkdirs()
+		return queueDir
 	}
 
 	private void startPushModificationActivityTimer(final long intervalInSeconds) {
