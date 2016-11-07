@@ -115,7 +115,7 @@ class MessageQueue {
 
 		NewBatchEvent batchEvent = NewBatchEvent.builder()
 				.taskId(taskId)
-				.endTime(LocalDateTime.now())
+				.position(LocalDateTime.now())
 				.type(eventType)
 				.comment(message)
 				.build();
