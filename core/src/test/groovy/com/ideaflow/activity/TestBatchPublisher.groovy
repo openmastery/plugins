@@ -1,11 +1,12 @@
 package com.ideaflow.activity
 
 import org.joda.time.LocalDateTime
-import org.openmastery.publisher.api.activity.NewActivityBatch
 import org.openmastery.publisher.api.activity.NewEditorActivity
-import org.openmastery.publisher.client.ActivityClient
+import org.openmastery.publisher.api.batch.NewBatchEvent
+import org.openmastery.publisher.api.batch.NewIFMBatch
+import org.openmastery.publisher.api.event.EventType
+import org.openmastery.publisher.client.BatchClient
 import spock.lang.Specification
-
 
 class TestBatchPublisher extends Specification {
 
@@ -13,26 +14,16 @@ class TestBatchPublisher extends Specification {
 	File tempDir
 	JSONConverter jsonConverter = new JSONConverter()
 
-	ActivityClient mockActivityClient
+	BatchClient mockBatchClient
 
 	void setup() {
 		tempDir = new File(File.createTempFile("temp", ".txt").parentFile, "queue-dir")
 		tempDir.mkdirs()
 
-
-
 		batchPublisher = new BatchPublisher(tempDir)
 
-		mockActivityClient = Mock(ActivityClient)
-		batchPublisher.activityClient = mockActivityClient
-//		DateTimeUtils.setCurrentMillisFixed(NOW)
-//
-//		messageLogger = new InMemoryMessageLogger()
-//		MessageQueue activityQueue = new MessageQueue(controller, messageLogger)
-//		handler = new ActivityHandler(controller, activityQueue)
-//
-//		controller.getActiveTask() >> new Task(id: 1)
-//		controller.isRecording() >> true
+		mockBatchClient = Mock(BatchClient)
+		batchPublisher.batchClient = mockBatchClient
 	}
 
 	def cleanup() {
@@ -94,11 +85,33 @@ class TestBatchPublisher extends Specification {
 		tmpFile << jsonConverter.toJSON(editorActivity) + "\n"
 
 		when:
-		NewActivityBatch batch = batchPublisher.convertBatchFileToObject(tmpFile)
+		NewIFMBatch batch = batchPublisher.convertBatchFileToObject(tmpFile)
 
 		then:
 		assert batch != null
 		assert batch.editorActivityList.size() == 1
+	}
+
+	def "convertBatchFileToObject SHOULD support events "() {
+
+		given:
+		NewBatchEvent batchEvent = NewBatchEvent.builder()
+				.taskId(1)
+				.endTime(LocalDateTime.now())
+				.type(EventType.AWESOME)
+				.comment("hello!")
+				.build();
+
+
+		File tmpFile = File.createTempFile("messages", ".log")
+		tmpFile << jsonConverter.toJSON(batchEvent) + "\n"
+
+		when:
+		NewIFMBatch batch = batchPublisher.convertBatchFileToObject(tmpFile)
+
+		then:
+		assert batch != null
+		assert batch.eventList.size() == 1
 	}
 
 
@@ -122,6 +135,6 @@ class TestBatchPublisher extends Specification {
 
 		then:
 		assert batchPublisher.hasSomethingToPublish() == false
-		 1 * mockActivityClient.addActivityBatch(_)
+		 1 * mockBatchClient.addIFMBatch(_)
 	}
 }

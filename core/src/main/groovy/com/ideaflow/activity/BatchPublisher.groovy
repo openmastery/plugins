@@ -1,13 +1,14 @@
 package com.ideaflow.activity
 
 import org.joda.time.LocalDateTime
-import org.openmastery.publisher.api.activity.NewActivityBatch
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
 import org.openmastery.publisher.api.activity.NewIdleActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
-import org.openmastery.publisher.client.ActivityClient
+import org.openmastery.publisher.api.batch.NewBatchEvent
+import org.openmastery.publisher.api.batch.NewIFMBatch
+import org.openmastery.publisher.client.BatchClient
 
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -21,15 +22,15 @@ class BatchPublisher implements Runnable {
 	private Thread runThread
 	private JSONConverter jsonConverter = new JSONConverter()
 
-	private AtomicReference<ActivityClient> activityClientReference = new AtomicReference<>()
+	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>()
 	private File messageQueueDir
 
 	BatchPublisher(File messageQueueDir) {
 		this.messageQueueDir = messageQueueDir
 	}
 
-	void setActivityClient(ActivityClient activityClient) {
-		activityClientReference.set(activityClient)
+	void setBatchClient(BatchClient activityClient) {
+		batchClientReference.set(activityClient)
 	}
 
 	@Override
@@ -50,16 +51,10 @@ class BatchPublisher implements Runnable {
 
 	void commitBatch(File messageFile) {
 		File batchFile = new File(messageQueueDir, BATCH_FILE_PREFIX + createTimestampSuffix())
-		println batchFile
 		messageFile.renameTo(batchFile)
 	}
 
 	boolean hasSomethingToPublish() {
-		messageQueueDir.listFiles().find{ File file ->
-			if (file.name.contains("batch")) {
-				println file.name
-			}
-		}
 		messageQueueDir.listFiles(new FilenameFilter() {
 			@Override
 			boolean accept(File filePath, String fileName) {
@@ -72,8 +67,8 @@ class BatchPublisher implements Runnable {
 		try {
 			List<File> batchFiles = findAllBatchesAndSort()
 			batchFiles.each { File batchFile ->
-				NewActivityBatch batch = convertBatchFileToObject(batchFile)
-				publishActivityBatch(batch)
+				NewIFMBatch batch = convertBatchFileToObject(batchFile)
+				publishBatch(batch)
 				batchFile.delete()
 			}
 		} catch (Exception ex) {
@@ -82,15 +77,15 @@ class BatchPublisher implements Runnable {
 		}
 	}
 
-	void publishActivityBatch(NewActivityBatch batch) {
+	void publishBatch(NewIFMBatch batch) {
 		println "Sending batch to server!" + batch
-		ActivityClient activityClient = activityClientReference.get()
-		if (activityClient == null) {
+		BatchClient batchClient = batchClientReference.get()
+		if (batchClient == null) {
 			throw new ServerUnavailable("ActivityClient is")
 		}
 
 		if (batch.isEmpty() == false) {
-			activityClient.addActivityBatch(batch)
+			batchClient.addIFMBatch(batch)
 		}
 	}
 
@@ -103,8 +98,8 @@ class BatchPublisher implements Runnable {
 		}
 	}
 
-	NewActivityBatch convertBatchFileToObject(File batchFile) {
-		NewActivityBatch batch = createEmptyBatch()
+	NewIFMBatch convertBatchFileToObject(File batchFile) {
+		NewIFMBatch batch = createEmptyBatch()
 		batchFile.eachLine { String line ->
 			Object object = jsonConverter.fromJSON(line)
 			addObjectToBatch(batch, object)
@@ -113,19 +108,20 @@ class BatchPublisher implements Runnable {
 		return batch
 	}
 
-	private NewActivityBatch createEmptyBatch() {
-		NewActivityBatch.builder()
+	private NewIFMBatch createEmptyBatch() {
+		NewIFMBatch.builder()
 				.timeSent(LocalDateTime.now())
 				.editorActivityList([])
 				.externalActivityList([])
 				.idleActivityList([])
 				.executionActivityList([])
 				.modificationActivityList([])
+				.eventList([])
 				.build()
 	}
 
 
-	private void addObjectToBatch(NewActivityBatch batch, Object object) {
+	private void addObjectToBatch(NewIFMBatch batch, Object object) {
 		if (object instanceof NewEditorActivity) {
 			batch.editorActivityList.add(object)
 		} else if (object instanceof NewExternalActivity) {
@@ -136,6 +132,8 @@ class BatchPublisher implements Runnable {
 			batch.executionActivityList.add(object)
 		} else if (object instanceof NewModificationActivity) {
 			batch.modificationActivityList.add(object)
+		} else if (object instanceof NewBatchEvent) {
+			batch.eventList.add(object)
 		}
 	}
 

@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
-import org.openmastery.publisher.api.activity.NewModificationActivity;
+import org.openmastery.publisher.api.activity.NewModificationActivity
+import org.openmastery.publisher.api.batch.NewBatchEvent;
 
 import java.io.IOException;
 
@@ -16,7 +17,8 @@ public class JSONConverter {
 		"EditorActivity" : NewEditorActivity.class,
 			"ExecutionActivity" : NewExecutionActivity.class,
 			"ExternalActivity" : NewExternalActivity.class,
-			"ModificationActivity" : NewModificationActivity.class
+			"ModificationActivity" : NewModificationActivity.class,
+			"Event" : NewBatchEvent.class
 			]
 
 	Map<Class, String> classToIdMap
