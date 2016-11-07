@@ -141,6 +141,7 @@ class MessageQueue {
 
 		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
 			this.batchPublisher = batchPublisher
+			this.queueDir = queueDir
 			activeMessageFile = new File(queueDir, MESSAGE_FILE)
 			lastBatchTime = LocalDateTime.now()
 		}

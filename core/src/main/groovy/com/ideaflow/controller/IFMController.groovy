@@ -17,7 +17,6 @@ import javax.ws.rs.WebApplicationException
 
 class IFMController {
 
-	private boolean enabled = false
 	private boolean paused = true
 	private IdeaFlowClient ideaFlowClient
 	private EventClient eventClient
@@ -62,12 +61,6 @@ class IFMController {
 	}
 
 	void initClients(String apiUrl, String apiKey) {
-		try {
-			assertValidApiUrlAndKey(apiUrl, apiKey)
-		} catch (Exception ex) {
-			enabled = false
-			throw ex
-		}
 
 		ideaFlowClient = new IdeaFlowClient(apiUrl)
 				.apiKey(apiKey)
@@ -78,33 +71,32 @@ class IFMController {
 		activityClient = new ActivityClient(apiUrl)
 				.apiKey(apiKey)
 		batchPublisher.setActivityClient(activityClient)
-		enabled = true
 	}
 
-	private void assertValidApiUrlAndKey(String apiUrl, String apiKey) {
-		ActivityClient activityClient = new ActivityClient(apiUrl)
-				.apiKey(apiKey)
-
-		try {
-			activityClient.addActivityBatch(NewActivityBatch.builder()
-					.timeSent(LocalDateTime.now())
-					.build()
-			)
-		} catch (ConnectException ex) {
-			// TODO: what about offline?  what if the API key is invalid?
-			throw new FailedToConnectException(apiUrl)
-		} catch (WebApplicationException ex) {
-			if (ex.response.status == HttpStatus.SC_FORBIDDEN) {
-				throw new InvalidApiKeyException(apiKey)
-			}
-			throw ex
-		} catch (Exception ex) {
-			throw ex
-		}
-	}
+//	private void assertValidApiUrlAndKey(String apiUrl, String apiKey) {
+//		ActivityClient activityClient = new ActivityClient(apiUrl)
+//				.apiKey(apiKey)
+//
+//		try {
+//			activityClient.addActivityBatch(NewActivityBatch.builder()
+//					.timeSent(LocalDateTime.now())
+//					.build()
+//			)
+//		} catch (ConnectException ex) {
+//			// TODO: what about offline?  what if the API key is invalid?
+//			throw new FailedToConnectException(apiUrl)
+//		} catch (WebApplicationException ex) {
+//			if (ex.response.status == HttpStatus.SC_FORBIDDEN) {
+//				throw new InvalidApiKeyException(apiKey)
+//			}
+//			throw ex
+//		} catch (Exception ex) {
+//			throw ex
+//		}
+//	}
 
 	boolean isEnabled() {
-		enabled
+		true
 	}
 
 	boolean isPaused() {
@@ -116,17 +108,17 @@ class IFMController {
 	}
 
 	boolean isRecording() {
-		enabled && (paused == false)
+		(paused == false)
 	}
 
 	boolean isTaskActive() {
-		enabled && (activeTask != null)
+		(activeTask != null)
 	}
 
 	void setActiveTask(Task activeTask) {
-		if (enabled) {
+
 			this.activeTask = activeTask
-		}
+
 	}
 
 	Task getActiveTask() {
@@ -135,11 +127,10 @@ class IFMController {
 
 	Task newTask(String name, String description) {
 		Task newTask = null
-		if (enabled) {
-			// TODO: what to do on conflict?
-			newTask = taskClient.createTask(name, description);
-			setActiveTask(newTask)
-		}
+		// TODO: what to do on conflict?
+		newTask = taskClient.createTask(name, description);
+		setActiveTask(newTask)
+
 		newTask
 	}
 
