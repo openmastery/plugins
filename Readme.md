@@ -1,3 +1,15 @@
+# Usage Instructions
+
+The Idea Flow Mapping plugin measures the "friction" that occurs during developer experience to help developers run "Experience Reviews" with objective data.  To use the plugin:
+
+After installing, you'll need to configure Preferences > Idea Flow and configure the API url, and API key to connect to an ifm-publisher server.  You can use the server at ifm-publisher.heroku.com or install a local server from https://github.com/openmastery/ifm-publisher
+
+To get an API-Key for ifm-publisher.heroku.com, you'll need to get an API-key via email from the Open Mastery community.  You can join for free at openmastery.org, or request an API-key by emailing janelle@openmastery.org.
+
+After the server is configured, create a new task from the drop down, click the unpause button, and start recording.  All data being sent to the server is first spooled to the <userHome>/.ideaflow directory so you have full visibility of the data collected.
+
+## Project Setup Instructions
+
 To setup the projects:
 
 cd core
