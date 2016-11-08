@@ -17,9 +17,9 @@ class MessageQueue {
 	private MessageLogger messageLogger
 
 
-	MessageQueue(IFMController controller, BatchPublisher batchPublisher, File queueDir, File allHistoryFile) {
+	MessageQueue(IFMController controller, BatchPublisher batchPublisher, File queueDir) {
 		this.controller = controller
-		this.messageLogger = new FileMessageLogger(batchPublisher, queueDir, allHistoryFile)
+		this.messageLogger = new FileMessageLogger(batchPublisher, queueDir)
 	}
 
 	MessageQueue(IFMController controller, MessageLogger messageLogger) {
@@ -141,15 +141,17 @@ class MessageQueue {
 		private LocalDateTime lastBatchTime
 		private int messageCount
 
-		private final int BATCH_TIME_LIMIT_IN_SECONDS = 5
+		private final int BATCH_TIME_LIMIT_IN_SECONDS = 5 * 60
 		private final int BATCH_MESSAGE_LIMIT = 500
 		private static final String MESSAGE_FILE = "active_messages.log"
+		private static final String ALL_IFM_HISTORY = "all_ifm_history.log"
 
-		FileMessageLogger(BatchPublisher batchPublisher, File queueDir, File historyFile) {
+
+		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
 			this.batchPublisher = batchPublisher
 			this.queueDir = queueDir
 			activeMessageFile = new File(queueDir, MESSAGE_FILE)
-			this.historyFile = historyFile
+			this.historyFile = new File(queueDir, ALL_IFM_HISTORY)
 
 			lastBatchTime = LocalDateTime.now()
 		}
