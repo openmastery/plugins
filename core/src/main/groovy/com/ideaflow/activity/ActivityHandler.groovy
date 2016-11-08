@@ -45,22 +45,32 @@ class ActivityHandler {
 	}
 
 	void markIdleTime(Duration idleDuration) {
-		Long activeTaskId = activeTaskId
-		if (activeTaskId == null) {
-			return
+		markIdleOrExternal(idleDuration) { Long activeTaskId ->
+			messageQueue.pushIdleActivity(activeTaskId, idleDuration.standardSeconds)
 		}
-
-		messageQueue.pushIdleActivity(activeTaskId, idleDuration.standardSeconds)
 	}
 
-	void markExternalActivity(Duration idleDuration) {
+	void markExternalActivity(Duration idleDuration, String comment) {
+		markIdleOrExternal(idleDuration) { Long activeTaskId ->
+			messageQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, comment)
+		}
+	}
+
+	private void markIdleOrExternal(Duration idleDuration, Closure push) {
 		Long activeTaskId = activeTaskId
 		if (activeTaskId == null) {
 			return
 		}
 
 		if (idleDuration.standardSeconds >= SHORTEST_ACTIVITY) {
-			messageQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
+			if (activeFileActivity != null) {
+				long duration = activeFileActivity.durationInSeconds - idleDuration.getStandardSeconds()
+				if (duration > 0) {
+					LocalDateTime endTime = LocalDateTime.now().minusSeconds(idleDuration.standardSeconds as int)
+					messageQueue.pushEditorActivity(activeTaskId, duration, endTime, activeFileActivity.filePath, activeFileActivity.modified)
+				}
+			}
+			push.call(activeTaskId)
 			if (activeFileActivity != null) {
 				activeFileActivity = createFileActivity(activeTaskId, activeFileActivity.filePath)
 			}
@@ -149,7 +159,6 @@ class ActivityHandler {
 		boolean modified
 
 		public long getDurationInSeconds() {
-
 			Period.fieldDifference(time, LocalDateTime.now()).millis / 1000
 		}
 

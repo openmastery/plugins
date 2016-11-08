@@ -28,13 +28,17 @@ class MessageQueue {
 	}
 
 	void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
+		pushEditorActivity(taskId, durationInSeconds, LocalDateTime.now(), filePath, isModified)
+	}
+
+	void pushEditorActivity(Long taskId, Long durationInSeconds, LocalDateTime endTime, String filePath, boolean isModified) {
 		if (isDisabled()) {
 			return
 		}
 
 		NewEditorActivity activity = NewEditorActivity.builder()
 				.taskId(taskId)
-				.endTime(LocalDateTime.now())
+				.endTime(endTime)
 				.durationInSeconds(durationInSeconds)
 				.filePath(filePath)
 				.isModified(isModified)

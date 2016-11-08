@@ -176,10 +176,11 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 					if (wasIdleTime) {
 						activityHandler.markIdleTime(deactivationDuration)
 					} else {
-						activityHandler.markExternalActivity(deactivationDuration)
+						String comment = promptForInput("External Activity Comment", "What were you doing?")
+						activityHandler.markExternalActivity(deactivationDuration, comment)
 					}
 				} else {
-					activityHandler.markExternalActivity(deactivationDuration)
+					activityHandler.markExternalActivity(deactivationDuration, null)
 				}
 			} finally {
 				deactivatedAt = null
@@ -208,11 +209,17 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 					.toFormatter()
 
 			String formattedPeriod = formatter.print(deactivationDuration.toPeriod())
-			// TODO: this message should incorporate the current task name.. were you working on <task> during the last ...
-			String message = "Were you working during the last ${formattedPeriod}?"
-			int result = Messages.showYesNoDialog(project, message, IDLE_TITLE, null)
+			StringBuilder messageBuilder = new StringBuilder()
+			messageBuilder.append("Were you working ")
+			String activeTaskName = getIFMController().getActiveTaskName()
+			if (activeTaskName != null) {
+				messageBuilder.append("on ").append(activeTaskName).append(" ")
+			}
+			messageBuilder.append("during the last ${formattedPeriod}?")
+			int result = Messages.showYesNoDialog(project, messageBuilder.toString(), IDLE_TITLE, null)
 			return result != 0
 		}
+
 	}
 
 }
