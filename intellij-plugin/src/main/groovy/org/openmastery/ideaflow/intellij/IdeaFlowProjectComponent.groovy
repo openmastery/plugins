@@ -141,12 +141,13 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 
 		@Override
 		public void processStarting(String executorId, @NotNull ExecutionEnvironment env) {
+			Long taskId = IdeaFlowApplicationComponent.getIFMController().getActiveTask().id
 			String processName = env.runProfile.name
 			Long processId = env.executionId
 			String executionTaskType = env.getRunnerAndConfigurationSettings().getType().displayName
 			boolean isDebug = executorId.equals("Debug")
 
-			activityHandler.markProcessStarting(processId, processName, executionTaskType, isDebug)
+			activityHandler.markProcessStarting(taskId, processId, processName, executionTaskType, isDebug)
 		}
 
 		public void processStarted(String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler processHandler) {

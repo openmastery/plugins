@@ -62,22 +62,21 @@ class ActivityHandler {
 		if (idleDuration.standardSeconds >= SHORTEST_ACTIVITY) {
 			messageQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, null)
 			if (activeFileActivity != null) {
-				activeFileActivity = createFileActivity(activeFileActivity.filePath)
+				activeFileActivity = createFileActivity(activeTaskId, activeFileActivity.filePath)
 			}
 		}
 	}
 
-	void markProcessStarting(Long processId, String processName, String executionTaskType, boolean isDebug) {
-		ProcessActivity processActivity = new ProcessActivity(processName: processName, executionTaskType: executionTaskType, isDebug: isDebug, timeStarted: LocalDateTime.now())
+	void markProcessStarting(Long taskId, Long processId, String processName, String executionTaskType, boolean isDebug) {
+		ProcessActivity processActivity = new ProcessActivity(taskId: taskId, processName: processName, executionTaskType: executionTaskType, isDebug: isDebug, timeStarted: LocalDateTime.now())
 		activeProcessMap.put(processId, processActivity)
 		//TODO this will leak memory if the processes started are never closed
 	}
 
 	void markProcessEnding(Long processId, int exitCode) {
 		ProcessActivity processActivity = activeProcessMap.remove(processId)
-		Long activeTaskId = activeTaskId
 		if (processActivity && activeTaskId != null) {
-			messageQueue.pushExecutionActivity(activeTaskId, processActivity.durationInSeconds, processActivity.processName,
+			messageQueue.pushExecutionActivity(processActivity.taskId, processActivity.durationInSeconds, processActivity.processName,
 					exitCode, processActivity.executionTaskType, processActivity.isDebug)
 		}
 	}
@@ -90,11 +89,11 @@ class ActivityHandler {
 
 		if (isDifferent(filePath)) {
 			if (isOverActivityThreshold()) {
-				messageQueue.pushEditorActivity(activeTaskId, activeFileActivity.durationInSeconds,
+				messageQueue.pushEditorActivity(activeFileActivity.taskId, activeFileActivity.durationInSeconds,
 				                                 activeFileActivity.filePath, activeFileActivity.modified)
 			}
 
-			activeFileActivity = createFileActivity(filePath)
+			activeFileActivity = createFileActivity(activeTaskId, filePath)
 		}
 	}
 
@@ -118,11 +117,12 @@ class ActivityHandler {
 		}
 	}
 
-	private FileActivity createFileActivity(filePath) {
-		filePath == null ? null : new FileActivity(filePath: filePath, time: LocalDateTime.now(), modified: false)
+	private FileActivity createFileActivity(Long taskId, String filePath) {
+		filePath == null ? null : new FileActivity(taskId: taskId, filePath: filePath, time: LocalDateTime.now(), modified: false)
 	}
 
 	private static class ProcessActivity {
+		Long taskId
 		LocalDateTime timeStarted
 		String processName
 		String executionTaskType
@@ -133,11 +133,13 @@ class ActivityHandler {
 		}
 
 		public String toString() {
-			"ProcessActivity [processName=${processName}, executionTaskType=${executionTaskType}, duration=${durationInSeconds}, isDebug=${isDebug}]"
+			"ProcessActivity [taskId=${taskId}, processName=${processName}, executionTaskType=${executionTaskType}, " +
+					"duration=${durationInSeconds}, isDebug=${isDebug}]"
 		}
 	}
 
 	private static class FileActivity {
+		Long taskId
 		LocalDateTime time
 		String filePath
 		boolean modified
@@ -148,7 +150,7 @@ class ActivityHandler {
 		}
 
 		public String toString() {
-			"FileActivity [path=${filePath}, modified=${modified}, duration=${durationInSeconds}]"
+			"FileActivity [taskId=${taskId}, path=${filePath}, modified=${modified}, duration=${durationInSeconds}]"
 		}
 	}
 

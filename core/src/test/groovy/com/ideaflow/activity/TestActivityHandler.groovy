@@ -154,16 +154,16 @@ class TestActivityHandler extends Specification {
 
 	void testMarkProcessExecution_ShouldPublishActivity_AfterStartStop() {
 		when:
-		handler.markProcessStarting(3, "TestMyUnit", "JUnit", true)
+		handler.markProcessStarting(5, 3, "TestMyUnit", "JUnit", true)
 		handler.markProcessEnding(3, -12)
 		then:
+		assert getMessage(0, NewExecutionActivity).taskId == 5L
 		assert getMessage(0, NewExecutionActivity).processName == "TestMyUnit"
 		assert getMessage(0, NewExecutionActivity).executionTaskType == "JUnit"
 		assert getMessage(0, NewExecutionActivity).exitCode == -12
 		assert getMessage(0, NewExecutionActivity).isDebug() == true
 
 	}
-
 
 	// TODO: the previous implementation held onto the active event, which made it possible to adjust the prior event
 	// this is not possible with the current implementation since the events could be published at any point... this means
