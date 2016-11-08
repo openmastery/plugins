@@ -76,7 +76,7 @@ class ActivityHandler {
 	void markProcessEnding(Long processId, int exitCode) {
 		ProcessActivity processActivity = activeProcessMap.remove(processId)
 		if (processActivity && activeTaskId != null) {
-			messageQueue.pushExecutionActivity(processActivity.taskId, processActivity.durationInSeconds, processActivity.processName,
+			messageQueue.pushExecutionActivity(coalesce(processActivity.taskId, activeTaskId), processActivity.durationInSeconds, processActivity.processName,
 					exitCode, processActivity.executionTaskType, processActivity.isDebug)
 		}
 	}
@@ -89,7 +89,7 @@ class ActivityHandler {
 
 		if (isDifferent(filePath)) {
 			if (isOverActivityThreshold()) {
-				messageQueue.pushEditorActivity(activeFileActivity.taskId, activeFileActivity.durationInSeconds,
+				messageQueue.pushEditorActivity(coalesce(activeFileActivity.taskId, activeTaskId), activeFileActivity.durationInSeconds,
 				                                 activeFileActivity.filePath, activeFileActivity.modified)
 			}
 
@@ -119,6 +119,10 @@ class ActivityHandler {
 
 	private FileActivity createFileActivity(Long taskId, String filePath) {
 		filePath == null ? null : new FileActivity(taskId: taskId, filePath: filePath, time: LocalDateTime.now(), modified: false)
+	}
+
+	private Long coalesce(Long primary, Long secondary) {
+		primary ? primary : secondary
 	}
 
 	private static class ProcessActivity {
