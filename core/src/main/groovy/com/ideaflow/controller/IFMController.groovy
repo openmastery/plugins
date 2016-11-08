@@ -25,15 +25,12 @@ class IFMController {
 	private MessageQueue messageQueue
 	private BatchPublisher batchPublisher
 
-	private static final String ALL_IFM_HISTORY = "all_ifm_history.log"
-	private File allHistoryFile
 
 	IFMController() {
 		File messageQueueDir = createMessageQueueDir()
-		allHistoryFile = createAllHistoryLog(messageQueueDir)
 
 		batchPublisher = new BatchPublisher(messageQueueDir)
-		messageQueue = new MessageQueue(this, batchPublisher, messageQueueDir, allHistoryFile)
+		messageQueue = new MessageQueue(this, batchPublisher, messageQueueDir)
 
 		activityHandler = new ActivityHandler(this, messageQueue)
 
@@ -145,27 +142,7 @@ class IFMController {
 	}
 
 	void createEvent(String message, EventType eventType) {
-		if (activeTask && message != null) {
-			try {
-				eventClient.createEvent(activeTask.id, eventType, message)
-				logEventHistory(eventType, message)
-
-			} catch (Exception ex) {
-				//if we can't connect to server, put the event in the batch
-				messageQueue.pushEvent(activeTask.id, eventType, message)
-			}
-		}
-	}
-
-	private void logEventHistory(EventType eventType, String message) {
-		NewBatchEvent event = NewBatchEvent.builder()
-				.taskId(activeTask.id)
-				.type(eventType)
-				.comment(message)
-				.position(LocalDateTime.now())
-				.build()
-
-		allHistoryFile.append(new JSONConverter().toJSON(event) + "\n")
+		messageQueue.pushEvent(activeTask.id, eventType, message)
 	}
 
 	private static class InvalidApiKeyException extends RuntimeException {
