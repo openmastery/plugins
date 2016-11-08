@@ -67,7 +67,8 @@ class ActivityHandler {
 				long duration = activeFileActivity.durationInSeconds - idleDuration.getStandardSeconds()
 				if (duration > 0) {
 					LocalDateTime endTime = LocalDateTime.now().minusSeconds(idleDuration.standardSeconds as int)
-					messageQueue.pushEditorActivity(activeTaskId, duration, endTime, activeFileActivity.filePath, activeFileActivity.modified)
+					messageQueue.pushEditorActivity(coalesce(activeFileActivity.taskId, activeTaskId),
+					                                duration, endTime, activeFileActivity.filePath, activeFileActivity.modified)
 				}
 			}
 			push.call(activeTaskId)
