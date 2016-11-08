@@ -19,7 +19,7 @@ public class IdeaFlowSettings implements PersistentStateComponent<IdeaFlowSettin
 	}
 
 	// TODO: set to heroku url
-	private String apiUrl = "http://localhost:8080";
+	private String apiUrl = "http://ifm-publisher.heroku.com";
 	private String apiKey;
 	private int recentTaskListSize = 5;
 	private String taskListJsonString;
