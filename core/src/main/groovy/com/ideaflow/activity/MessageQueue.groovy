@@ -133,7 +133,6 @@ class MessageQueue {
 		private BatchPublisher batchPublisher
 		private File queueDir
 		private File activeMessageFile
-		private File historyFile
 
 		private final Object lock = new Object()
 		private JSONConverter jsonConverter = new JSONConverter()
@@ -144,14 +143,12 @@ class MessageQueue {
 		private final int BATCH_TIME_LIMIT_IN_SECONDS = 5 * 60
 		private final int BATCH_MESSAGE_LIMIT = 500
 		private static final String MESSAGE_FILE = "active_messages.log"
-		private static final String ALL_IFM_HISTORY = "all_ifm_history.log"
 
 
 		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
 			this.batchPublisher = batchPublisher
 			this.queueDir = queueDir
 			activeMessageFile = new File(queueDir, MESSAGE_FILE)
-			this.historyFile = new File(queueDir, ALL_IFM_HISTORY)
 
 			lastBatchTime = LocalDateTime.now()
 		}
@@ -162,7 +159,6 @@ class MessageQueue {
 					startNewBatch()
 				}
 				activeMessageFile.append(jsonConverter.toJSON(message) + "\n")
-				historyFile.append(jsonConverter.toJSON(message) + "\n")
 				messageCount++
 			}
 		}
