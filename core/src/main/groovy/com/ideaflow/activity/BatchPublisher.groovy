@@ -24,7 +24,6 @@ class BatchPublisher implements Runnable {
 
 	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>()
 	private File messageQueueDir
-	private File ifmLogFile
 
 	BatchPublisher(File messageQueueDir) {
 		this.messageQueueDir = messageQueueDir

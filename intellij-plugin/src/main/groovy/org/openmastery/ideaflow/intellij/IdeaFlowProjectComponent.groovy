@@ -141,7 +141,7 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 
 		@Override
 		public void processStarting(String executorId, @NotNull ExecutionEnvironment env) {
-			Long taskId = IdeaFlowApplicationComponent.getIFMController().getActiveTask().id
+			Long taskId = IdeaFlowApplicationComponent.getIFMController().getActiveTask()?.id
 			String processName = env.runProfile.name
 			Long processId = env.executionId
 			String executionTaskType = env.getRunnerAndConfigurationSettings().getType().displayName
@@ -154,7 +154,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 			ExitCodeListener exitCodeListener = new ExitCodeListener(env.executionId)
 			processHandler.addProcessListener(exitCodeListener)
 			processDecodingMap.put(processHandler, exitCodeListener)
-
 		}
 
 		public void processTerminated(@NotNull RunProfile runProfile, @NotNull ProcessHandler processHandler) {

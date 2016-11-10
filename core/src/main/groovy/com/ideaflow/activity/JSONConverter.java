@@ -3,10 +3,7 @@ package com.ideaflow.activity;
 import com.bancvue.rest.config.ObjectMapperContextResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.openmastery.publisher.api.activity.NewEditorActivity;
-import org.openmastery.publisher.api.activity.NewExecutionActivity;
-import org.openmastery.publisher.api.activity.NewExternalActivity;
-import org.openmastery.publisher.api.activity.NewModificationActivity;
+import org.openmastery.publisher.api.activity.*;
 import org.openmastery.publisher.api.batch.NewBatchEvent;
 
 import java.io.IOException;
@@ -31,6 +28,7 @@ public class JSONConverter {
 		idToClassMap.put("ExecutionActivity", NewExecutionActivity.class);
 		idToClassMap.put("ExternalActivity", NewExternalActivity.class);
 		idToClassMap.put("ModificationActivity", NewModificationActivity.class);
+		idToClassMap.put("IdleActivity", NewIdleActivity.class);
 		idToClassMap.put("Event", NewBatchEvent.class);
 		return idToClassMap;
 	}
