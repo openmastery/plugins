@@ -3,14 +3,10 @@ package com.ideaflow.intellij.action.ifm
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.action.IdeaFlowToggleAction
-import com.ideaflow.state.TaskState
-import com.ideaflow.state.TimeConverter
 import com.intellij.openapi.actionSystem.AnActionEvent
-import org.joda.time.LocalDateTime
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
-import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
 class ToggleBlock extends IdeaFlowToggleAction {
@@ -44,7 +40,7 @@ class ToggleBlock extends IdeaFlowToggleAction {
 		if (ifmController == null) return;
 
 		if (blocked) {
-			String comment = IdeaFlowApplicationComponent.promptForInput("What's blocked?!", "What block are you waiting on?")
+			String comment = IdeaFlowApplicationComponent.promptForInput("BLOCK!", "What block are you waiting on?")
 			ifmController.blockTask(comment)
 		} else {
 			ifmController.resolveBlock()

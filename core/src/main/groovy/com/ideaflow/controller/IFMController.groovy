@@ -168,6 +168,22 @@ class IFMController {
 		activeTask?.name
 	}
 
+	void createWTF(String wtfMessage) {
+		if (activeTask.unresolvedWTFList == null) {
+			activeTask.unresolvedWTFList = []
+		}
+		if (activeTask.unresolvedWTFList.size() > 10) {
+			activeTask.unresolvedWTFList.remove(0)
+		}
+		activeTask.unresolvedWTFList.add(wtfMessage)
+		createEvent(wtfMessage, EventType.WTF)
+	}
+
+	void resolveWithYay(String yayMessage) {
+		activeTask.unresolvedWTFList = []
+		createEvent(yayMessage, EventType.AWESOME)
+	}
+
 	void createEvent(String message, EventType eventType) {
 		messageQueue.pushEvent(activeTask.id, eventType, message)
 	}

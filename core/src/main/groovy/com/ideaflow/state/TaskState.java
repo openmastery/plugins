@@ -2,6 +2,8 @@ package com.ideaflow.state;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class TaskState {
 	Long id;
@@ -11,4 +13,6 @@ public class TaskState {
 	boolean isBlocked;
 	String blockComment;
 	String blockTime;
+
+	List<String> unresolvedWTFList;
 }

@@ -5,6 +5,8 @@ import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
+import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
@@ -14,8 +16,18 @@ class CreateAwesomeNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("AWESOME!", "What did you figure out?")
-		controller.createEvent(awesomeNote, EventType.AWESOME)
+		List<String> unresolvedWTFs = controller.getActiveTask().unresolvedWTFList
+
+		String wtfString = "";
+		for (String wtfMessage : unresolvedWTFs) {
+			wtfString += "-- WTF: " + wtfMessage + "\n"
+		}
+
+		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("AWESOME!", "What caused the confusion?\n" + wtfString)
+		if (awesomeNote != null) {
+			controller.resolveWithYay(awesomeNote)
+			getTaskManager().updateTask(controller.getActiveTask())
+		}
 	}
 
 	@Override
@@ -24,4 +36,7 @@ class CreateAwesomeNote extends AnAction {
 		disableWhenNotRecording(e)
 	}
 
+	private static IdeaFlowSettingsTaskManager getTaskManager() {
+		IdeaFlowSettings.instance.taskManager
+	}
 }
