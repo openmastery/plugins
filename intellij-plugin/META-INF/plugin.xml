@@ -32,6 +32,11 @@
 		<action id="IdeaFlow.Subtask" class="com.ideaflow.intellij.action.ifm.CreateSubtaskNote" text="Start a subtask..."
 				description="Mark the beginning of a subtask in the active IdeaFlow" icon="/icons/note.png">
 		</action>
+		<action id="IdeaFlow.ToggleBlock" class="com.ideaflow.intellij.action.ifm.ToggleBlock" text="Progress is blocked..."
+				description="Mark progress for this task as blocked, either partially or fully." icon="/icons/block.png">
+		</action>
+
+
 		<action id="IdeaFlow.WTF" class="com.ideaflow.intellij.action.ifm.CreateWTFNote" text="WTF?!"
 				description="Mark the start of confusion (unexpected observation) in the active IdeaFlow" icon="/icons/pain.png">
 		</action>
@@ -55,6 +60,7 @@
 			<reference ref="IdeaFlow.TogglePause"/>
 			<reference ref="IdeaFlow.SwitchActive"/>
 			<reference ref="IdeaFlow.Subtask"/>
+			<reference ref="IdeaFlow.ToggleBlock"/>
 			<reference ref="IdeaFlow.WTF"/>
 			<reference ref="IdeaFlow.Awesome"/>
 			<separator/>

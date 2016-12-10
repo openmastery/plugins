@@ -1,9 +1,9 @@
 package org.openmastery.ideaflow.intellij.settings
 
+import com.ideaflow.state.TaskState
 import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import org.openmastery.publisher.api.task.Task
 
 /**
  * TODO: JsonOutput and LocalDateTime apparently do not mix... throws stack overflow if a Task is serialized to json
@@ -17,14 +17,15 @@ public class IdeaFlowSettingsTaskManager {
 		this.settings = settings;
 	}
 
-	List<Task> getRecentTasks() {
+	List<TaskState> getRecentTasks() {
 		List<Map> recentTasks = new JsonSlurper().parseText(settings.taskListJsonString ?: '[]')
-		recentTasks.collect { new Task(it) }
+		recentTasks.collect { new TaskState(it) }
 	}
 
-	private List<SimpleTask> getSimpleTasks() {
+
+	private List<TaskState> getTaskStateList() {
 		try {
-			new JsonSlurper().parseText(settings.taskListJsonString ?: '[]') as List<SimpleTask>
+			new JsonSlurper().parseText(settings.taskListJsonString ?: '[]') as List<TaskState>
 		} catch (JsonException ex) {
 			// TODO: log to intellij
 			ex.printStackTrace()
@@ -32,26 +33,34 @@ public class IdeaFlowSettingsTaskManager {
 		}
 	}
 
-	public void addRecentTask(Task task) {
+	public void addRecentTask(TaskState task) {
 		if (task != null) {
-			List<SimpleTask> simpleTaskList = getSimpleTasks()
+			List<TaskState> taskStateList = getTaskStateList()
 
-			SimpleTask simpleTask = new SimpleTask(id: task.id, name: task.name, description: task.description)
-			simpleTaskList.add(0, simpleTask)
+			taskStateList.add(0, task)
 
 			int maxListSize = settings.recentTaskListSize
-			if (simpleTaskList.size() > maxListSize) {
-				simpleTaskList = simpleTaskList.subList(0, maxListSize)
+			if (taskStateList.size() > maxListSize) {
+				taskStateList = taskStateList.subList(0, maxListSize)
 			}
 
-			settings.taskListJsonString = JsonOutput.toJson(simpleTaskList)
+			settings.taskListJsonString = JsonOutput.toJson(taskStateList)
 		}
 	}
 
-	public static final class SimpleTask {
-		Long id
-		String name
-		String description
+	public void updateTask(TaskState updatedTask) {
+		if (updatedTask != null) {
+			List<TaskState> taskStateList = getTaskStateList()
+
+			for (int i = 0; i < taskStateList.size(); i++) {
+				TaskState taskState = taskStateList.get(i);
+				if (updatedTask.id.equals(taskState.id)) {
+					taskStateList.set(i, updatedTask);
+				}
+			}
+
+			settings.taskListJsonString = JsonOutput.toJson(taskStateList)
+		}
 	}
 
 }

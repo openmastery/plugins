@@ -119,6 +119,10 @@ class TestActivityHandler extends Specification {
 		assertMessageCount(1)
 	}
 
+
+
+
+
 	void testEndEvent_ShouldNotCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedNotCalled() {
 		when:
 		handler.startFileEvent("file")
@@ -219,11 +223,11 @@ class TestActivityHandler extends Specification {
 
 
 	private void assertNoMessages() {
-		messageLogger.messages.size() == 0
+		assert messageLogger.messages.size() == 0
 	}
 
 	private void assertMessageCount(int expectedSize) {
-		messageLogger.messages.size() == expectedSize
+		assert messageLogger.messages.size() == expectedSize
 	}
 
 	private <T> T getMessage(int index, Class<T> clazz) {

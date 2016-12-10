@@ -29,6 +29,7 @@ public class JSONConverter {
 		idToClassMap.put("ExternalActivity", NewExternalActivity.class);
 		idToClassMap.put("ModificationActivity", NewModificationActivity.class);
 		idToClassMap.put("IdleActivity", NewIdleActivity.class);
+		idToClassMap.put("BlockActivity", NewBlockActivity.class);
 		idToClassMap.put("Event", NewBatchEvent.class);
 		return idToClassMap;
 	}

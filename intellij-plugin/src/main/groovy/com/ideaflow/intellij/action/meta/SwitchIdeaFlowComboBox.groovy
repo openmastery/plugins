@@ -12,7 +12,7 @@ import com.intellij.openapi.project.Project
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
-import org.openmastery.publisher.api.task.Task
+import com.ideaflow.state.TaskState
 
 import javax.swing.Icon
 import javax.swing.JComponent
@@ -37,7 +37,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			//TODO get recent tasks for project, and active task for project
 
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-			for (Task task : taskManager.recentTasks) {
+			for (TaskState task : taskManager.recentTasks) {
 				if (task != controller.activeTask) {
 					actionGroup.add(new ActivateIdeaFlowAction(this, project, task))
 				}
@@ -53,14 +53,14 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 	@Override
 	public void update(AnActionEvent e) {
 		super.update(e)
-
 		IFMController controller = getIFMController(e)
 		if (controller) {
 			e.presentation.text = controller.activeTaskName ?: "Add new task"
 		}
 	}
 
-	void activateTask(Task task) {
+
+	void activateTask(TaskState task) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		controller.activeTask = task
 		controller.paused = false
@@ -68,15 +68,14 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	void addNewTask(String name, String description) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-		Task task = controller.newTask(name, description)
-		controller.activeTask = task
+		TaskState task = controller.createAndActivateTask(name, description)
 		controller.paused = false
 		taskManager.addRecentTask(task);
 	}
 
 	void openActiveTaskInVisualizer() {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-		Task task = controller.getActiveTask()
+		TaskState task = controller.getActiveTask()
 
 		if (task) {
 			OpenInVisualizerAction.openTaskInBrowser(task)
@@ -93,9 +92,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 		private SwitchIdeaFlowComboBox switchIdeaFlow
 		private Project project
-		private Task task
+		private TaskState task
 
-		public ActivateIdeaFlowAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project, Task task) {
+		public ActivateIdeaFlowAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project, TaskState task) {
 			this.switchIdeaFlow = switchIdeaFlow
 			this.project = project
 			this.task = task

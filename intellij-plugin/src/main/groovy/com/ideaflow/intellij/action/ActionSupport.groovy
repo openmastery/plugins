@@ -1,10 +1,10 @@
 package com.ideaflow.intellij.action
 
 import com.ideaflow.controller.IFMController
+import com.ideaflow.state.TaskState
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
-import org.openmastery.publisher.api.task.Task
 
 class ActionSupport {
 
@@ -30,8 +30,8 @@ class ActionSupport {
 		getIFMController(e)?.activeTaskName
 	}
 
-	private Task getActiveTask(AnActionEvent e) {
-		getIFMController(e).getActiveTask()
+	private TaskState getActiveTask(AnActionEvent e) {
+		getIFMController(e)?.getActiveTask()
 	}
 
 	private boolean isTaskActive(AnActionEvent e) {

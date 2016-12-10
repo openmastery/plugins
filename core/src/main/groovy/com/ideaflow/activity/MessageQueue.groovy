@@ -3,6 +3,7 @@ package com.ideaflow.activity
 import com.ideaflow.controller.IFMController
 import org.joda.time.LocalDateTime
 import org.joda.time.Period
+import org.openmastery.publisher.api.activity.NewBlockActivity
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
@@ -108,6 +109,21 @@ class MessageQueue {
 				.durationInSeconds(durationInSeconds)
 				.comment(comment)
 				.build();
+
+		messageLogger.writeMessage(activity)
+	}
+
+	void pushBlockActivity(Long taskId, Long durationInSeconds, String comment) {
+		if (isDisabled()) {
+			return
+		}
+
+		NewBlockActivity activity = NewBlockActivity.builder()
+			.taskId(taskId)
+			.endTime(LocalDateTime.now())
+			.durationInSeconds(durationInSeconds)
+			.comment(comment)
+			.build();
 
 		messageLogger.writeMessage(activity)
 	}

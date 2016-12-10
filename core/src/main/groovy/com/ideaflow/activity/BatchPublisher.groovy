@@ -1,6 +1,7 @@
 package com.ideaflow.activity
 
 import org.joda.time.LocalDateTime
+import org.openmastery.publisher.api.activity.NewBlockActivity
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewExternalActivity
@@ -80,7 +81,7 @@ class BatchPublisher implements Runnable {
 	void publishBatch(NewIFMBatch batch) {
 		BatchClient batchClient = batchClientReference.get()
 		if (batchClient == null) {
-			throw new ServerUnavailable("ActivityClient is")
+			throw new ServerUnavailable("BatchClient is unavailable")
 		}
 
 		if (batch.isEmpty() == false) {
@@ -115,6 +116,7 @@ class BatchPublisher implements Runnable {
 				.idleActivityList([])
 				.executionActivityList([])
 				.modificationActivityList([])
+				.blockActivityList([])
 				.eventList([])
 				.build()
 	}
@@ -131,6 +133,8 @@ class BatchPublisher implements Runnable {
 			batch.executionActivityList.add(object)
 		} else if (object instanceof NewModificationActivity) {
 			batch.modificationActivityList.add(object)
+		} else if (object instanceof NewBlockActivity) {
+			batch.blockActivityList.add(object)
 		} else if (object instanceof NewBatchEvent) {
 			batch.eventList.add(object)
 		}

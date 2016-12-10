@@ -19,7 +19,7 @@ abstract class IdeaFlowToggleAction extends ToggleAction {
 	}
 
 	@Override
-	public final void update(AnActionEvent e) {
+	public void update(AnActionEvent e) {
 		super.update(e);
 
 		Presentation presentation = e.getPresentation()

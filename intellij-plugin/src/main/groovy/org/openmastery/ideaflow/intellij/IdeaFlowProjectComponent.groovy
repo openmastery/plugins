@@ -56,6 +56,7 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, fileListener)
 
 
+
 		projectConnection.subscribe(ExecutionManager.EXECUTION_TOPIC, processExecutionListener);
 
 	}

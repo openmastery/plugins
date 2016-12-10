@@ -23,7 +23,7 @@ class TestJSONConverter extends Specification {
 		NewEditorActivity deserializedActivity = (NewEditorActivity) converter.fromJSON(json)
 
 		then:
-		println json
+		assert false
 		assert deserializedActivity != null
 	}
 

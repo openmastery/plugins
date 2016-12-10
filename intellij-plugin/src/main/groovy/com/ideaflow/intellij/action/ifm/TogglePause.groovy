@@ -3,7 +3,6 @@ package com.ideaflow.intellij.action.ifm
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.action.IdeaFlowToggleAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 
 @Mixin(ActionSupport)
 class TogglePause extends IdeaFlowToggleAction {
@@ -33,7 +32,8 @@ class TogglePause extends IdeaFlowToggleAction {
 
 	@Override
 	void setSelected(AnActionEvent e, boolean state) {
-		getIFMController(e).setPaused(state)
+		getIFMController(e)?.setPaused(state)
 	}
+
 
 }

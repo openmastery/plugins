@@ -116,6 +116,12 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 			deactivationHandler = new DeactivationHandler(activityHandler)
 		}
 
+
+
+
+
+
+
 		@Override
 		void applicationActivated(IdeFrame ideFrame) {
 			if (ideFrame.project) {

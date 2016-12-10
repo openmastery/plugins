@@ -128,6 +128,10 @@ class ActivityHandler {
 		}
 	}
 
+	void pushBlockActivity(Long durationInSeconds, String comment) {
+		messageQueue.pushBlockActivity(activeTaskId, durationInSeconds, comment)
+	}
+
 	private FileActivity createFileActivity(Long taskId, String filePath) {
 		filePath == null ? null : new FileActivity(taskId: taskId, filePath: filePath, time: LocalDateTime.now(), modified: false)
 	}

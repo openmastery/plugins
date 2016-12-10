@@ -2,10 +2,11 @@ package com.ideaflow.controller
 
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.activity.BatchPublisher
-import com.ideaflow.activity.JSONConverter
 import com.ideaflow.activity.MessageQueue
+import com.ideaflow.state.TaskState
+import com.ideaflow.state.TimeConverter
 import org.joda.time.LocalDateTime
-import org.openmastery.publisher.api.batch.NewBatchEvent
+import org.joda.time.Seconds
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.BatchClient
@@ -20,7 +21,7 @@ class IFMController {
 	private EventClient eventClient
 	private TaskClient taskClient
 	private BatchClient batchClient
-	private Task activeTask
+	private TaskState activeTask
 	private ActivityHandler activityHandler
 	private MessageQueue messageQueue
 	private BatchPublisher batchPublisher
@@ -42,10 +43,6 @@ class IFMController {
 		File queueDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
 		queueDir.mkdirs()
 		return queueDir
-	}
-
-	private File createAllHistoryLog(File queueDir) {
-		new File(queueDir, ALL_IFM_HISTORY)
 	}
 
 	private void startPushModificationActivityTimer(final long intervalInSeconds) {
@@ -111,6 +108,36 @@ class IFMController {
 		this.paused = paused
 	}
 
+	void blockTask(String blockComment) {
+		if (activeTask != null) {
+			activeTask.blocked = true
+			activeTask.blockComment = blockComment
+			activeTask.blockTime = TimeConverter.toJodaDateTimeString(new LocalDateTime())
+		}
+	}
+
+	void resolveBlock() {
+		if (activeTask != null) {
+			LocalDateTime endBlock = new LocalDateTime()
+			LocalDateTime startBlock = TimeConverter.toJodaDateTime(activeTask.blockTime)
+
+			Long duration = Seconds.secondsBetween(startBlock, endBlock).seconds
+			activityHandler.pushBlockActivity(duration, activeTask.blockComment)
+
+			activeTask.blocked = false
+			activeTask.blockComment = null
+			activeTask.blockTime = null
+		}
+	}
+
+	boolean isTaskBlocked() {
+		boolean isBlocked = false;
+		if (activeTask != null) {
+			isBlocked = activeTask.blocked;
+		}
+		return isBlocked;
+	}
+
 	boolean isRecording() {
 		(paused == false)
 	}
@@ -119,22 +146,22 @@ class IFMController {
 		(activeTask != null)
 	}
 
-	void setActiveTask(Task activeTask) {
+	void setActiveTask(TaskState activeTask) {
 			this.activeTask = activeTask
 	}
 
-	Task getActiveTask() {
+	TaskState getActiveTask() {
 		activeTask
 	}
 
-	Task newTask(String name, String description) {
-		Task newTask = null
+	TaskState createAndActivateTask(String name, String description) {
 		// TODO: what to do on conflict?  Do we still need to activate tasks?
 
-		newTask = taskClient.createTask(name, description);
-		setActiveTask(newTask)
+		Task remoteTask = taskClient.createTask(name, description);
+		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
 
-		newTask
+		setActiveTask(task)
+		return task
 	}
 
 	String getActiveTaskName() {
