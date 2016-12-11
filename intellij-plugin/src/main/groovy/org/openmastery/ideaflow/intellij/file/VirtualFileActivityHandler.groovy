@@ -1,6 +1,8 @@
 package org.openmastery.ideaflow.intellij.file
 
 import com.ideaflow.activity.ActivityHandler
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import org.joda.time.Duration
@@ -11,14 +13,6 @@ class VirtualFileActivityHandler {
 
 	VirtualFileActivityHandler(ActivityHandler activityHandler) {
 		this.activityHandler = activityHandler
-	}
-
-	void markIdleTime(Duration idleDuration) {
-		activityHandler.markIdleTime(idleDuration)
-	}
-
-	void markExternalActivity(Duration idleDuration) {
-		activityHandler.markExternalActivity(idleDuration)
 	}
 
 	void startFileEvent(Project project, VirtualFile file) {
@@ -43,14 +37,21 @@ class VirtualFileActivityHandler {
 
 		String filePath = file.name
 		if (project != null) {
-			String projectBasePath = project.basePath
+
 			String fullFilePath = file.path
 
 			// TODO: detect path via module
-//			Module module = ModuleUtil.findModuleForFile(file, project)
-
-			if (fullFilePath.startsWith(projectBasePath)) {
-				filePath = fullFilePath.substring(projectBasePath.length())
+			Module module = ModuleUtil.findModuleForFile(file, project)
+			if (module != null) {
+				String moduleBasePath = module.getModuleFile().getParent().path
+				if (fullFilePath.startsWith(moduleBasePath)) {
+					filePath = fullFilePath.substring(moduleBasePath.length())
+				}
+			} else {
+				String projectBasePath = project.basePath
+				if (fullFilePath.startsWith(projectBasePath)) {
+					filePath = fullFilePath.substring(projectBasePath.length())
+				}
 			}
 		}
 		filePath
