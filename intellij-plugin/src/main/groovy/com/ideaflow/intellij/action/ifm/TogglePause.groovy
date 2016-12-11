@@ -1,8 +1,10 @@
 package com.ideaflow.intellij.action.ifm
 
+import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.action.IdeaFlowToggleAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
 class TogglePause extends IdeaFlowToggleAction {
@@ -32,7 +34,17 @@ class TogglePause extends IdeaFlowToggleAction {
 
 	@Override
 	void setSelected(AnActionEvent e, boolean state) {
-		getIFMController(e)?.setPaused(state)
+		IFMController controller = getIFMController(e)
+
+		//WARNING: Make sure event state is sent in unpaused state, since after activity is paused we can't write to logs
+		if (state) {
+			controller?.createEvent("Pause", EventType.DEACTIVATE)
+			controller?.setPaused(true)
+		} else {
+			controller?.setPaused(false)
+			controller?.createEvent("Unpause", EventType.ACTIVATE)
+		}
+
 	}
 
 

@@ -2,6 +2,7 @@ package org.openmastery.ideaflow.intellij
 
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.controller.IFMController
+import com.ideaflow.state.TaskState
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
@@ -19,7 +20,6 @@ import org.joda.time.format.PeriodFormatterBuilder
 import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
-import org.openmastery.publisher.api.task.Task
 
 import javax.swing.Icon
 
@@ -96,7 +96,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		}
 
 		IdeaFlowSettingsTaskManager taskManager = IdeaFlowSettings.instance.taskManager
-		List<Task> recentTasks = taskManager.getRecentTasks()
+		List<TaskState> recentTasks = taskManager.getRecentTasks()
 		// TODO: should probably record the active task in settings and set it to that...
 		if (recentTasks.isEmpty() == false) {
 			controller.setActiveTask(recentTasks.first())
@@ -105,6 +105,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	@Override
 	void disposeComponent() {
+		controller.shutdown()
 		appConnection.disconnect()
 	}
 

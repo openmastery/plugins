@@ -146,12 +146,8 @@ class IFMController {
 		(activeTask != null)
 	}
 
-	void setActiveTask(TaskState activeTask) {
-			this.activeTask = activeTask
-	}
-
-	TaskState getActiveTask() {
-		activeTask
+	void setActiveTask(TaskState newActiveTask) {
+			this.activeTask = newActiveTask
 	}
 
 	TaskState createAndActivateTask(String name, String description, String project) {
@@ -160,8 +156,29 @@ class IFMController {
 		Task remoteTask = taskClient.createTask(name, description, project);
 		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
 
-		setActiveTask(task)
+		activateTask(task)
 		return task
+	}
+
+	void activateTask(TaskState newActiveTask) {
+		setPaused(false)
+		if (this.activeTask != null) {
+			messageQueue.pushEvent(activeTask.id,  EventType.DEACTIVATE, "Task-Switch: ["+activeTask?.name +"] to ["+newActiveTask.name+"]")
+			messageQueue.pushEvent(newActiveTask.id, EventType.ACTIVATE, "Task-Switch: ["+activeTask?.name +"] to ["+newActiveTask.name+"]")
+		} else {
+			messageQueue.pushEvent(newActiveTask.id, EventType.ACTIVATE, "Task-Start: ["+newActiveTask.name+"]")
+		}
+		setActiveTask(newActiveTask)
+	}
+
+	void shutdown() {
+		if (this.activeTask != null) {
+			messageQueue.pushEvent(activeTask.id, EventType.DEACTIVATE, "IDE Shutdown")
+		}
+	}
+
+	TaskState getActiveTask() {
+		activeTask
 	}
 
 	String getActiveTaskName() {

@@ -62,14 +62,12 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 
 	void activateTask(TaskState task) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-		controller.activeTask = task
-		controller.paused = false
+		controller.activateTask(task)
 	}
 
 	void addNewTask(String name, String description, String project) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		TaskState task = controller.createAndActivateTask(name, description, project)
-		controller.paused = false
 		taskManager.addRecentTask(task);
 	}
 
