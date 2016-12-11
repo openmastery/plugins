@@ -1,6 +1,7 @@
 package com.ideaflow.activity
 
 import com.ideaflow.controller.IFMController
+import com.ideaflow.state.TaskState
 import org.joda.time.DateTimeUtils
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
@@ -28,7 +29,7 @@ class TestActivityHandler extends Specification {
 		MessageQueue activityQueue = new MessageQueue(controller, messageLogger)
 		handler = new ActivityHandler(controller, activityQueue)
 
-		controller.getActiveTask() >> new Task(id: 1)
+		controller.getActiveTask() >> new TaskState(id: 1)
 		controller.isRecording() >> true
 	}
 

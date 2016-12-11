@@ -160,7 +160,7 @@ class MessageQueue {
 		private LocalDateTime lastBatchTime
 		private int messageCount
 
-		private final int BATCH_TIME_LIMIT_IN_SECONDS = 5 * 60
+		private final int BATCH_TIME_LIMIT_IN_SECONDS = 30 * 60
 		private final int BATCH_MESSAGE_LIMIT = 500
 		private static final String MESSAGE_FILE = "active_messages.log"
 
