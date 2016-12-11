@@ -66,9 +66,9 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		controller.paused = false
 	}
 
-	void addNewTask(String name, String description) {
+	void addNewTask(String name, String description, String project) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
-		TaskState task = controller.createAndActivateTask(name, description)
+		TaskState task = controller.createAndActivateTask(name, description, project)
 		controller.paused = false
 		taskManager.addRecentTask(task);
 	}
@@ -100,7 +100,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			this.task = task
 
 			getTemplatePresentation().setText(task.name, false)
-			getTemplatePresentation().setDescription("Set ${task.name} as Active IdeaFlow")
+			getTemplatePresentation().setDescription("Set ${task.name} as active IdeaFlow")
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
@@ -146,7 +146,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			CreateTaskWizard wizard = new CreateTaskWizard(project)
 			if (wizard.shouldCreateTask()) {
 				try {
-					switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription)
+					switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription, wizard.taskProject)
 				} catch (Exception ex) {
 					IdeaFlowApplicationComponent.showErrorMessage("Unable to connect to server",
 							"Sorry, the server is currently unavailable for creating new tasks.  " +

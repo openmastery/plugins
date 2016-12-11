@@ -154,10 +154,10 @@ class IFMController {
 		activeTask
 	}
 
-	TaskState createAndActivateTask(String name, String description) {
+	TaskState createAndActivateTask(String name, String description, String project) {
 		// TODO: what to do on conflict?  Do we still need to activate tasks?
 
-		Task remoteTask = taskClient.createTask(name, description);
+		Task remoteTask = taskClient.createTask(name, description, project);
 		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
 
 		setActiveTask(task)

@@ -45,6 +45,8 @@ public class CreateTaskWizard extends DialogWrapper {
 		return dialog.getDescriptionText();
 	}
 
+	public String getTaskProject() { return dialog.getProjectText(); }
+
 	public boolean shouldCreateTask() {
 		return showAndGet();
 	}

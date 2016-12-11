@@ -9,6 +9,7 @@ public class TaskState {
 	Long id;
 	String name;
 	String description;
+	String project;
 
 	boolean isBlocked;
 	String blockComment;
