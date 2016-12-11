@@ -41,12 +41,15 @@ class ToggleBlock extends IdeaFlowToggleAction {
 
 		if (blocked) {
 			String comment = IdeaFlowApplicationComponent.promptForInput("BLOCK!", "What block are you waiting on?")
-			ifmController.blockTask(comment)
+			if (comment) {
+				ifmController.blockTask(comment)
+			}
 		} else {
 			ifmController.resolveBlock()
+			getTaskManager().updateTask(ifmController.getActiveTask())
 		}
 
-		getTaskManager().updateTask(ifmController.getActiveTask())
+
 	}
 
 	@Override
