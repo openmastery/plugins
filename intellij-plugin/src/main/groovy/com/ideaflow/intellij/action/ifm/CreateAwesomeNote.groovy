@@ -19,11 +19,12 @@ class CreateAwesomeNote extends AnAction {
 		List<String> unresolvedWTFs = controller.getActiveTask().unresolvedWTFList
 
 		String wtfString = "";
-		for (String wtfMessage : unresolvedWTFs) {
-			wtfString += "-- WTF: " + wtfMessage + "\n"
+		for (int i = 0; i < unresolvedWTFs.size(); i++) {
+			String wtfMessage = unresolvedWTFs.get(i)
+			wtfString += "-- $i: " + wtfMessage + "\n"
 		}
 
-		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("AWESOME!", "What caused the confusion?\n" + wtfString)
+		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out?\n" + wtfString)
 		if (awesomeNote != null) {
 			controller.resolveWithYay(awesomeNote)
 			getTaskManager().updateTask(controller.getActiveTask())
