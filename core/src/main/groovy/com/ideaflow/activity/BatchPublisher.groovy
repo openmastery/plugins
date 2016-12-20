@@ -109,18 +109,17 @@ class BatchPublisher implements Runnable {
 	}
 
 	private NewIFMBatch createEmptyBatch() {
-		NewIFMBatch.builder()
-				.timeSent(LocalDateTime.now())
-				.editorActivityList([])
-				.externalActivityList([])
-				.idleActivityList([])
-				.executionActivityList([])
-				.modificationActivityList([])
-				.blockActivityList([])
-				.eventList([])
-				.build()
+		NewIFMBatch batch = new NewIFMBatch()
+		batch.timeSent = LocalDateTime.now()
+		batch.editorActivityList = []
+		batch.externalActivityList = []
+		batch.idleActivityList = []
+		batch.executionActivityList = []
+		batch.modificationActivityList = []
+		batch.blockActivityList = []
+		batch.eventList =[]
+		return batch
 	}
-
 
 	private void addObjectToBatch(NewIFMBatch batch, Object object) {
 		if (object instanceof NewEditorActivity) {
