@@ -113,21 +113,6 @@ class MessageQueue {
 		messageLogger.writeMessage(activity)
 	}
 
-	void pushBlockActivity(Long taskId, Long durationInSeconds, String comment) {
-		if (isDisabled()) {
-			return
-		}
-
-		NewBlockActivity activity = NewBlockActivity.builder()
-			.taskId(taskId)
-			.endTime(LocalDateTime.now())
-			.durationInSeconds(durationInSeconds)
-			.comment(comment)
-			.build();
-
-		messageLogger.writeMessage(activity)
-	}
-
 	void pushEvent(Long taskId, EventType eventType, String message) {
 		if (isDisabled()) {
 			return

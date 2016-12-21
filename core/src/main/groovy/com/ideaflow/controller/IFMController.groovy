@@ -74,28 +74,6 @@ class IFMController {
 		batchPublisher.setBatchClient(batchClient)
 	}
 
-//	private void assertValidApiUrlAndKey(String apiUrl, String apiKey) {
-//		ActivityClient batchClient = new ActivityClient(apiUrl)
-//				.apiKey(apiKey)
-//
-//		try {
-//			batchClient.addActivityBatch(NewActivityBatch.builder()
-//					.timeSent(LocalDateTime.now())
-//					.build()
-//			)
-//		} catch (ConnectException ex) {
-//			// TODO: what about offline?  what if the API key is invalid?
-//			throw new FailedToConnectException(apiUrl)
-//		} catch (WebApplicationException ex) {
-//			if (ex.response.status == HttpStatus.SC_FORBIDDEN) {
-//				throw new InvalidApiKeyException(apiKey)
-//			}
-//			throw ex
-//		} catch (Exception ex) {
-//			throw ex
-//		}
-//	}
-
 	boolean isEnabled() {
 		true
 	}
@@ -106,36 +84,6 @@ class IFMController {
 
 	void setPaused(boolean paused) {
 		this.paused = paused
-	}
-
-	void blockTask(String blockComment) {
-		if (activeTask != null) {
-			activeTask.blocked = true
-			activeTask.blockComment = blockComment
-			activeTask.blockTime = TimeConverter.toJodaDateTimeString(new LocalDateTime())
-		}
-	}
-
-	void resolveBlock() {
-		if (activeTask != null) {
-			LocalDateTime endBlock = new LocalDateTime()
-			LocalDateTime startBlock = TimeConverter.toJodaDateTime(activeTask.blockTime)
-
-			Long duration = Seconds.secondsBetween(startBlock, endBlock).seconds
-			activityHandler.pushBlockActivity(duration, activeTask.blockComment)
-
-			activeTask.blocked = false
-			activeTask.blockComment = null
-			activeTask.blockTime = null
-		}
-	}
-
-	boolean isTaskBlocked() {
-		boolean isBlocked = false;
-		if (activeTask != null) {
-			isBlocked = activeTask.blocked;
-		}
-		return isBlocked;
 	}
 
 	boolean isRecording() {
