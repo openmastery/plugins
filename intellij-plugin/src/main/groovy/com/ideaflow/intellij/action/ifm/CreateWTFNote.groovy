@@ -57,6 +57,7 @@ class CreateWTFNote extends AnAction {
 	private String determineQuestionToAsk() {
 		String questionToAsk
 		int wtfSize = 0
+
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		if (controller != null && controller.getActiveTask() != null) {
 			TaskState activeTask = controller.getActiveTask()
@@ -71,20 +72,16 @@ class CreateWTFNote extends AnAction {
 	}
 
 	private void updateIcon(Presentation presentation, List<String> unresolvedWtfs) {
+
 		if (unresolvedWtfs == null || unresolvedWtfs.isEmpty()) {
 			presentation.setIcon(WTF_ICON)
 		} else if (unresolvedWtfs.size() == 1) {
 			presentation.setIcon(WTF_ICON_DOT1)
 		} else if (unresolvedWtfs.size() == 2) {
-			println "Icon 2!"
 			presentation.setIcon(WTF_ICON_DOT2)
 		} else if (unresolvedWtfs.size() >= 3) {
-			println "Icon 3!"
 			presentation.setIcon(WTF_ICON_DOT3)
-			presentation.setText("Yo!")
-
 		}
-
 	}
 
 	private static IdeaFlowSettingsTaskManager getTaskManager() {

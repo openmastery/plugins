@@ -21,13 +21,11 @@ class CreateDistractionNote extends AnAction {
 
 		Duration recentIdleDuration = controller.getRecentIdleDuration()
 
-		if (recentIdleDuration != null) {
-			String message = "You recently spent "+TimeConverter.toFormattedDuration(recentIdleDuration) + " outside of the IDE.  What was the recent distraction?"
-			String distractionNote = IdeaFlowApplicationComponent.promptForInput("Label a recent distraction", message)
-			controller.createEvent(distractionNote, EventType.DISTRACTION)
-		} else {
-			IdeaFlowApplicationComponent.showErrorMessage("No recent external activity", "Unable to find recent external activity to label as a distraction.")
-		}
+		String message = "How much time do you estimate being recently disrupted?" +
+						"\n (in minutes)"
+
+		String timeEstimate = IdeaFlowApplicationComponent.promptForInput("Estimate a recent distraction", message)
+		controller.createEvent(timeEstimate, EventType.DISTRACTION)
 
 	}
 

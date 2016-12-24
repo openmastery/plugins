@@ -20,6 +20,10 @@ public class TimeConverter {
 	}
 
 	public static String toFormattedDuration(Duration duration) {
+		if (duration == null) {
+			return "[undefined]";
+		}
+
 		PeriodFormatterBuilder builder = new PeriodFormatterBuilder()
 				.appendDays()
 				.appendSuffix("d")
