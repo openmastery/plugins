@@ -9,6 +9,7 @@ out
 eclipse-plugin/bin
 eclipse-plugin/plugins.jar
 intellij-plugin/ideaflow-plugin.zip
+intellij-plugin/intellij-plugin.zip
 visualizer/.sass-cache
 visualizer/target/
 visualizer/buildPlugins
