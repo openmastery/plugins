@@ -51,9 +51,11 @@ public class JSONConverter {
 	}
 
 	Object fromJSON(String jsonInString) throws IOException {
-		String [] jsonSplit = jsonInString.split("=");
-		String typeName = jsonSplit[0];
-		String jsonContent = jsonSplit[1];
+		int index = jsonInString.indexOf("=");
+
+		String typeName = jsonInString.substring(0, index);
+		String jsonContent = jsonInString.substring(index+1, jsonInString.length());
+
 		Class clazz = idToClassMap.get(typeName);
 		return mapper.readValue(jsonContent, clazz);
 	}

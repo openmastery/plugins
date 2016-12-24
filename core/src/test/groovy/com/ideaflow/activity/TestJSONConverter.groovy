@@ -2,6 +2,7 @@ package com.ideaflow.activity
 
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewEditorActivity
+import org.openmastery.publisher.api.batch.NewBatchEvent
 import spock.lang.Specification
 
 class TestJSONConverter extends Specification {
@@ -26,6 +27,20 @@ class TestJSONConverter extends Specification {
 		assert deserializedActivity != null
 	}
 
+	def "fromJSON SHOULD not explode if = sign in comments"() {
+		given:
+		NewBatchEvent event = NewBatchEvent.builder()
+				.comment("This is a comment about an == sign that I screwed up")
+				.build();
+
+		when:
+		String json = converter.toJSON(event)
+		NewBatchEvent deserializedEvent = (NewBatchEvent) converter.fromJSON(json)
+
+		then:
+		assert deserializedEvent != null
+	}
+
 	def "toJSON SHOULD not explode if serialization type is not in the type map"() {
 		given:
 		Object o = new Object()
@@ -36,5 +51,7 @@ class TestJSONConverter extends Specification {
 		then:
 		thrown(JSONConverter.UnsupportedObjectType.class)
 	}
+
+
 
 }
