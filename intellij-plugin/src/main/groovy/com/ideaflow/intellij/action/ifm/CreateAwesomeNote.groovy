@@ -24,7 +24,7 @@ class CreateAwesomeNote extends AnAction {
 			wtfString += "-- $i: " + wtfMessage + "\n"
 		}
 
-		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out?\n" + wtfString)
+		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out? (discovery)\n" + wtfString)
 		if (awesomeNote != null) {
 			controller.resolveWithYay(awesomeNote)
 			getTaskManager().updateTask(controller.getActiveTask())
