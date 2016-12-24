@@ -1,5 +1,6 @@
 package com.ideaflow.activity
 
+import com.fasterxml.jackson.core.JsonParseException
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewBlockActivity
 import org.openmastery.publisher.api.activity.NewEditorActivity
@@ -72,6 +73,8 @@ class BatchPublisher implements Runnable {
 				publishBatch(batch)
 				batchFile.delete()
 			}
+		} catch (JsonParseException ex) {
+			throw ex //splode loudly
 		} catch (Exception ex) {
 			// Try again later... oh well
 			ex.printStackTrace()
