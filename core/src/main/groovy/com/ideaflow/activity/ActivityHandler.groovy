@@ -16,12 +16,17 @@ class ActivityHandler {
 	private FileActivity activeFileActivity
 	private AtomicInteger modificationCount = new AtomicInteger(0)
 
+	private Duration recentIdleDuration = null
 
 	private Map<Long, ProcessActivity> activeProcessMap =[:]
 
 	ActivityHandler(IFMController controller, MessageQueue messageQueue) {
 		this.controller = controller
 		this.messageQueue = messageQueue
+	}
+
+	public Duration getRecentIdleDuration() {
+		recentIdleDuration
 	}
 
 	private boolean isSame(String newFilePath) {
@@ -51,6 +56,7 @@ class ActivityHandler {
 	}
 
 	void markExternalActivity(Duration idleDuration, String comment) {
+		recentIdleDuration = idleDuration
 		markIdleOrExternal(idleDuration) { Long activeTaskId ->
 			messageQueue.pushExternalActivity(activeTaskId, idleDuration.standardSeconds, comment)
 		}

@@ -19,7 +19,20 @@ public class IdeaFlowSettingsTaskManager {
 
 	List<TaskState> getRecentTasks() {
 		List<Map> recentTasks = new JsonSlurper().parseText(settings.taskListJsonString ?: '[]')
-		recentTasks.collect { new TaskState(it) }
+		recentTasks.collect { createTask(it) }
+	}
+
+	private TaskState createTask(Map properties) {
+		TaskState taskState = new TaskState()
+		properties.each { propName, value ->
+			if (taskState.hasProperty(propName)) {
+				taskState."$propName" = value
+			} else {
+				println "Property unavailable:" +propName
+			}
+		}
+		return taskState
+
 	}
 
 

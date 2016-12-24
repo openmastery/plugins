@@ -3,8 +3,10 @@ package com.ideaflow.intellij.action.ifm
 import com.ideaflow.controller.IFMController
 import com.ideaflow.intellij.action.ActionSupport
 import com.ideaflow.intellij.action.IdeaFlowToggleAction
+import com.ideaflow.state.TimeConverter
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import org.joda.time.Duration
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
@@ -17,8 +19,16 @@ class CreateDistractionNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String distractionNote = IdeaFlowApplicationComponent.promptForInput("Mark Distraction", "What was the recent (prior) distraction?")
-		controller.createEvent(distractionNote, EventType.DISTRACTION)
+		Duration recentIdleDuration = controller.getRecentIdleDuration()
+
+		if (recentIdleDuration != null) {
+			String message = "You recently spent "+TimeConverter.toFormattedDuration(recentIdleDuration) + " outside of the IDE.  What was the recent distraction?"
+			String distractionNote = IdeaFlowApplicationComponent.promptForInput("Label a recent distraction", message)
+			controller.createEvent(distractionNote, EventType.DISTRACTION)
+		} else {
+			IdeaFlowApplicationComponent.showErrorMessage("No recent external activity", "Unable to find recent external activity to label as a distraction.")
+		}
+
 	}
 
 	@Override

@@ -32,8 +32,9 @@ class CreateWTFNote extends AnAction {
 	@Override
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		String questionToAsk = determineQuestionToAsk()
 
-		String wtfNote = IdeaFlowApplicationComponent.promptForInput("WTF?!", "What are you confused about? (question)")
+		String wtfNote = IdeaFlowApplicationComponent.promptForInput("WTF?!", questionToAsk)
 		if (wtfNote != null) {
 			controller.createWTF(wtfNote)
 			getTaskManager().updateTask(controller.getActiveTask())
@@ -51,6 +52,22 @@ class CreateWTFNote extends AnAction {
 			updateIcon(e.presentation, activeTask.getUnresolvedWTFList())
 		}
 
+	}
+
+	private String determineQuestionToAsk() {
+		String questionToAsk
+		int wtfSize = 0
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		if (controller != null && controller.getActiveTask() != null) {
+			TaskState activeTask = controller.getActiveTask()
+			wtfSize = activeTask.getUnresolvedWTFList().size()
+		}
+		if (wtfSize == 0) {
+			questionToAsk = "What are you confused about? (question)"
+		} else {
+			questionToAsk = "What did you discover? What are you still confused about?"
+		}
+		return questionToAsk
 	}
 
 	private void updateIcon(Presentation presentation, List<String> unresolvedWtfs) {

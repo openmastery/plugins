@@ -8,13 +8,13 @@ import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
-class CreateNote extends AnAction {
+class CreateProgressNote extends AnAction {
 
 	@Override
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String subtaskNote = IdeaFlowApplicationComponent.promptForInput("Write a Note", "What's your note?")
+		String subtaskNote = IdeaFlowApplicationComponent.promptForInput("Create a Progress Note", "What are you doing next?")
 		controller.createEvent(subtaskNote, EventType.SUBTASK)
 	}
 

@@ -3,6 +3,7 @@ package org.openmastery.ideaflow.intellij
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.controller.IFMController
 import com.ideaflow.state.TaskState
+import com.ideaflow.state.TimeConverter
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
@@ -206,16 +207,8 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 		}
 
 		private boolean wasDeactivationIdleTime(Project project, Duration deactivationDuration) {
-			PeriodFormatter formatter = new PeriodFormatterBuilder()
-					.appendDays()
-					.appendSuffix("d")
-					.appendHours()
-					.appendSuffix("h")
-					.appendMinutes()
-					.appendSuffix("m")
-					.toFormatter()
 
-			String formattedPeriod = formatter.print(deactivationDuration.toPeriod())
+			String formattedPeriod = TimeConverter.toFormattedDuration(deactivationDuration)
 			StringBuilder messageBuilder = new StringBuilder()
 			messageBuilder.append("Were you working ")
 			String activeTaskName = getIFMController().getActiveTaskName()

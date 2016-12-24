@@ -5,6 +5,7 @@ import com.ideaflow.activity.BatchPublisher
 import com.ideaflow.activity.MessageQueue
 import com.ideaflow.state.TaskState
 import com.ideaflow.state.TimeConverter
+import org.joda.time.Duration
 import org.joda.time.LocalDateTime
 import org.joda.time.Seconds
 import org.openmastery.publisher.api.event.EventType
@@ -72,6 +73,10 @@ class IFMController {
 		batchClient = new BatchClient(apiUrl)
 				.apiKey(apiKey)
 		batchPublisher.setBatchClient(batchClient)
+	}
+
+	Duration getRecentIdleDuration() {
+		getActivityHandler().getRecentIdleDuration()
 	}
 
 	boolean isEnabled() {
