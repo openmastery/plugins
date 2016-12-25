@@ -139,9 +139,6 @@ class IFMController {
 	}
 
 	void createWTF(String wtfMessage) {
-		if (activeTask.unresolvedWTFList == null) {
-			activeTask.unresolvedWTFList = []
-		}
 		if (activeTask.unresolvedWTFList.size() > 10) {
 			activeTask.unresolvedWTFList.remove(0)
 		}
