@@ -45,7 +45,7 @@ class MessageQueue {
 				.isModified(isModified)
 				.build();
 
-		messageLogger.writeMessage(activity)
+		messageLogger.writeMessage(taskId, activity)
 	}
 
 	void pushModificationActivity(Long taskId, Long durationInSeconds, int modificationCount) {
@@ -60,7 +60,7 @@ class MessageQueue {
 				.modificationCount(modificationCount)
 				.build();
 
-		messageLogger.writeMessage(activity)
+		messageLogger.writeMessage(taskId, activity)
 	}
 
 	void pushExecutionActivity(Long taskId, Long durationInSeconds, String processName,
@@ -81,7 +81,7 @@ class MessageQueue {
 				.isDebug(isDebug)
 				.build();
 
-		messageLogger.writeMessage(activity)
+		messageLogger.writeMessage(taskId, activity)
 	}
 
 	void pushIdleActivity(Long taskId, Long durationInSeconds) {
@@ -95,7 +95,7 @@ class MessageQueue {
 				.durationInSeconds(durationInSeconds)
 				.build();
 
-		messageLogger.writeMessage(activity)
+		messageLogger.writeMessage(taskId, activity)
 	}
 
 	void pushExternalActivity(Long taskId, Long durationInSeconds, String comment) {
@@ -110,7 +110,7 @@ class MessageQueue {
 				.comment(comment)
 				.build();
 
-		messageLogger.writeMessage(activity)
+		messageLogger.writeMessage(taskId, activity)
 	}
 
 	void pushEvent(Long taskId, EventType eventType, String message) {
@@ -125,7 +125,7 @@ class MessageQueue {
 				.comment(message)
 				.build();
 
-		messageLogger.writeMessage(batchEvent)
+		messageLogger.writeMessage(taskId, batchEvent)
 	}
 
 
@@ -137,7 +137,7 @@ class MessageQueue {
 	static class FileMessageLogger implements MessageLogger {
 		private BatchPublisher batchPublisher
 		private File queueDir
-		private File activeMessageFile
+		private Map<Long, File> activeMessageFiles = new HashMap<>()
 
 		private final Object lock = new Object()
 		private JSONConverter jsonConverter = new JSONConverter()
@@ -153,17 +153,18 @@ class MessageQueue {
 		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
 			this.batchPublisher = batchPublisher
 			this.queueDir = queueDir
-			activeMessageFile = new File(queueDir, MESSAGE_FILE)
 
 			lastBatchTime = LocalDateTime.now()
 		}
 
-		void writeMessage(Object message) {
+		void writeMessage(Long taskId, Object message) {
+			String messageAsJson = jsonConverter.toJSON(message)
+
 			synchronized (lock) {
 				if (isBatchThresholdReached()) {
 					startNewBatch()
 				}
-				activeMessageFile.append(jsonConverter.toJSON(message) + "\n")
+				getFileForTask(taskId).append(messageAsJson + "\n")
 				messageCount++
 			}
 		}
@@ -176,11 +177,24 @@ class MessageQueue {
 
 		private void startNewBatch() {
 			synchronized (lock) {
-				batchPublisher.commitBatch(activeMessageFile)
-				activeMessageFile = new File(queueDir, MESSAGE_FILE)
+				activeMessageFiles.values().each { File file ->
+					batchPublisher.commitBatch(file)
+				}
+				activeMessageFiles.clear()
 
 				lastBatchTime = LocalDateTime.now()
 				messageCount = 0
+			}
+		}
+
+		private File getFileForTask(Long taskId) {
+			synchronized (lock) {
+				File file = activeMessageFiles.get(taskId)
+				if (file == null) {
+					file = new File(queueDir, "${taskId}_${MESSAGE_FILE}")
+					activeMessageFiles.put(taskId, file)
+				}
+				file
 			}
 		}
 

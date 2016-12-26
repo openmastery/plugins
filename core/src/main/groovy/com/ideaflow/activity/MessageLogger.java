@@ -3,5 +3,5 @@ package com.ideaflow.activity;
 
 public interface MessageLogger {
 
-	void writeMessage(Object message);
+	void writeMessage(Long taskId, Object message);
 }

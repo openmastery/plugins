@@ -6,7 +6,7 @@ class InMemoryMessageLogger implements MessageLogger {
 	List<Object> messages = []
 
 	@Override
-	void writeMessage(Object message) {
+	void writeMessage(Long taskId, Object message) {
 		messages.add(message)
 	}
 
