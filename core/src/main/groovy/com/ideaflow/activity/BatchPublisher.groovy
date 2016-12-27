@@ -1,6 +1,5 @@
 package com.ideaflow.activity
 
-import com.fasterxml.jackson.core.JsonParseException
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewBlockActivity
 import org.openmastery.publisher.api.activity.NewEditorActivity
@@ -19,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference
 class BatchPublisher implements Runnable {
 
 	static final String BATCH_FILE_PREFIX = "batch_"
+	static final String FAILED_FILE_PREFIX = "failed_"
 
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread
@@ -69,22 +69,37 @@ class BatchPublisher implements Runnable {
 		try {
 			List<File> batchFiles = findAllBatchesAndSort()
 			batchFiles.each { File batchFile ->
-				NewIFMBatch batch = convertBatchFileToObject(batchFile)
-				publishBatch(batch)
-				batchFile.delete()
+				convertPublishAndDeleteBatch(batchFile)
 			}
-		} catch (JsonParseException ex) {
-			throw ex //splode loudly
 		} catch (Exception ex) {
-			// Try again later... oh well
+			println "Unhandled error during batch file publishing..."
 			ex.printStackTrace()
+		}
+	}
+
+	private void convertPublishAndDeleteBatch(File batchFile) {
+		NewIFMBatch batch
+		try {
+			batch = convertBatchFileToObject(batchFile)
+		} catch (Exception ex) {
+			File renameToFile = new File(batchFile.parentFile, FAILED_FILE_PREFIX + batchFile.name)
+			batchFile.renameTo(renameToFile)
+			println "Failed to convert ${batchFile.absolutePath}, exception=${ex.message}, renamingTo=${renameToFile.absolutePath}"
+			return
+		}
+
+		try {
+			publishBatch(batch)
+			batchFile.delete()
+		} catch (Exception ex) {
+			println "Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry later..."
 		}
 	}
 
 	void publishBatch(NewIFMBatch batch) {
 		BatchClient batchClient = batchClientReference.get()
 		if (batchClient == null) {
-			throw new ServerUnavailable("BatchClient is unavailable")
+			throw new ServerUnavailableException("BatchClient is unavailable")
 		}
 
 		if (batch.isEmpty() == false) {
@@ -106,7 +121,6 @@ class BatchPublisher implements Runnable {
 		batchFile.eachLine { String line ->
 			Object object = jsonConverter.fromJSON(line)
 			addObjectToBatch(batch, object)
-
 		}
 		return batch
 	}
@@ -139,6 +153,8 @@ class BatchPublisher implements Runnable {
 			batch.blockActivityList.add(object)
 		} else if (object instanceof NewBatchEvent) {
 			batch.eventList.add(object)
+		} else {
+			throw new RuntimeException("Unrecognized batch object=${object}")
 		}
 	}
 
@@ -159,12 +175,5 @@ class BatchPublisher implements Runnable {
 
 		now.toString("yyyyMMdd_HHmmss")
 	}
-
-	static class ServerUnavailable extends RuntimeException {
-		ServerUnavailable(String message) {
-			super(message)
-		}
-	}
-
 
 }

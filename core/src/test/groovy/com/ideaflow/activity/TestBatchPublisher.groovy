@@ -18,6 +18,7 @@ class TestBatchPublisher extends Specification {
 
 	void setup() {
 		tempDir = new File(File.createTempFile("temp", ".txt").parentFile, "queue-dir")
+		tempDir.deleteDir()
 		tempDir.mkdirs()
 
 		batchPublisher = new BatchPublisher(tempDir)
@@ -69,20 +70,26 @@ class TestBatchPublisher extends Specification {
 
 	}
 
-	def "convertBatchFileToObject SHOULD create a Batch object that can be sent to the server"() {
+	private NewEditorActivity createEditorActivity() {
+		NewEditorActivity.builder()
+						.taskId(1)
+						.endTime(LocalDateTime.now())
+						.durationInSeconds(5)
+						.filePath("hello.txt")
+						.isModified(true)
+						.build();
+	}
 
-		given:
-		NewEditorActivity editorActivity = NewEditorActivity.builder()
-				.taskId(1)
-				.endTime(LocalDateTime.now())
-				.durationInSeconds(5)
-				.filePath("hello.txt")
-				.isModified(true)
-				.build();
-
-
+	private File createBatchFile() {
+		NewEditorActivity editorActivity = createEditorActivity()
 		File tmpFile = File.createTempFile("messages", ".log")
 		tmpFile << jsonConverter.toJSON(editorActivity) + "\n"
+		tmpFile
+	}
+
+	def "convertBatchFileToObject SHOULD create a Batch object that can be sent to the server"() {
+		given:
+		File tmpFile = createBatchFile()
 
 		when:
 		NewIFMBatch batch = batchPublisher.convertBatchFileToObject(tmpFile)
@@ -114,20 +121,9 @@ class TestBatchPublisher extends Specification {
 		assert batch.eventList.size() == 1
 	}
 
-
 	def "publishBatches SHOULD send all batches to the server and delete files"() {
 		given:
-		NewEditorActivity editorActivity = NewEditorActivity.builder()
-				.taskId(1)
-				.endTime(LocalDateTime.now())
-				.durationInSeconds(5)
-				.filePath("hello.txt")
-				.isModified(true)
-				.build();
-
-
-		File tmpFile = File.createTempFile("messages", ".log")
-		tmpFile << jsonConverter.toJSON(editorActivity) + "\n"
+		File tmpFile = createBatchFile()
 
 		when:
 		batchPublisher.commitBatch(tmpFile)
@@ -137,4 +133,33 @@ class TestBatchPublisher extends Specification {
 		assert batchPublisher.hasSomethingToPublish() == false
 		 1 * mockBatchClient.addIFMBatch(_)
 	}
+
+	def "publishBatches SHOULD mark file as failed if parsing fails"() {
+		given:
+		File tmpFile = File.createTempFile("messages", ".log")
+		tmpFile << "illegal json"
+
+		when:
+		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.publishBatches()
+
+		then:
+		File[] files = tempDir.listFiles()
+		assert files.length == 1
+		assert files[0].name.startsWith(BatchPublisher.FAILED_FILE_PREFIX)
+	}
+
+	def "publishBatches should skip batch file which fails to publish"() {
+		given:
+		File tmpFile = createBatchFile()
+		mockBatchClient.addIFMBatch(_) >> { throw new RuntimeException("Publication Failure") }
+
+		when:
+		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.publishBatches()
+
+		then:
+		assert batchPublisher.hasSomethingToPublish() == true
+	}
+
 }
