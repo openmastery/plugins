@@ -1,13 +1,11 @@
 package com.ideaflow.controller
 
+import com.bancvue.rest.exception.NotFoundException
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.activity.BatchPublisher
 import com.ideaflow.activity.MessageQueue
 import com.ideaflow.state.TaskState
-import com.ideaflow.state.TimeConverter
 import org.joda.time.Duration
-import org.joda.time.LocalDateTime
-import org.joda.time.Seconds
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.BatchClient
@@ -107,6 +105,21 @@ class IFMController {
 		// TODO: what to do on conflict?  Do we still need to activate tasks?
 
 		Task remoteTask = taskClient.createTask(name, description, project);
+		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
+
+		activateTask(task)
+		return task
+	}
+
+	TaskState resumeAndActivateTask(String name) throws NoSuchTaskToResumeException {
+		Task remoteTask
+
+		try {
+			remoteTask = taskClient.findTaskWithName(name)
+		} catch (NotFoundException ex) {
+			throw new NoSuchTaskToResumeException(name)
+		}
+
 		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
 
 		activateTask(task)

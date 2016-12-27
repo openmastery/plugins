@@ -1,13 +1,13 @@
 package com.ideaflow.intellij.action.meta
 
 import com.ideaflow.controller.IFMController
+import com.ideaflow.controller.NoSuchTaskToResumeException
 import com.ideaflow.intellij.action.ActionSupport
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
-import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
@@ -48,6 +48,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 				actionGroup.add(new CloseActiveIdeaFlowAction(this))
 			}
 			actionGroup.add(new AddNewTaskAction(this, project))
+			actionGroup.add(new ResumeExistingTaskAction(this, project))
 		}
 		return actionGroup
 	}
@@ -77,6 +78,12 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 	void addNewTask(String name, String description, String project) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		TaskState task = controller.createAndActivateTask(name, description, project)
+		taskManager.addRecentTask(task);
+	}
+
+	void resumeExistingTask(String name) {
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		TaskState task = controller.resumeAndActivateTask(name)
 		taskManager.addRecentTask(task);
 	}
 
@@ -182,12 +189,45 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 				} catch (Exception ex) {
 					String message = "Sorry, the server is currently unavailable for creating new tasks.  " +
 							"You can currently work offline only with existing tasks.  " +
-							"If the lack of connectivity is unexpected, please make sure the URL and API-Key" +
-							" are configured correctly in Idea Flow Preferences.  Server Error: " + ex.message
+							"If the lack of connectivity is unexpected, please make sure the URL and API-Key " +
+							"are configured correctly in Idea Flow Preferences.  Server Error: " + ex.message
 					IdeaFlowApplicationComponent.showErrorMessage("Unable to connect to server", message)
 				}
 
 			}
 		}
 	}
+
+	private static class ResumeExistingTaskAction extends AnAction {
+
+		private SwitchIdeaFlowComboBox switchIdeaFlow
+		private Project project
+
+		ResumeExistingTaskAction(SwitchIdeaFlowComboBox switchIdeaFlow, Project project) {
+			this.switchIdeaFlow = switchIdeaFlow
+			this.project = project
+			getTemplatePresentation().setText("Resume task...")
+			getTemplatePresentation().setDescription("Resume a previously created task")
+		}
+
+		@Override
+		void actionPerformed(AnActionEvent e) {
+			ResumeTaskWizard wizard = new ResumeTaskWizard(project)
+			if (wizard.shouldCreateTask()) {
+				try {
+					switchIdeaFlow.resumeExistingTask(wizard.taskName)
+				} catch (NoSuchTaskToResumeException ex) {
+					IdeaFlowApplicationComponent.showErrorMessage("Unable to resume task", ex.message)
+				} catch (Exception ex) {
+					String message = "Sorry, the server is currently unavailable for creating new tasks.  " +
+							"You can currently work offline only with existing tasks.  " +
+							"If the lack of connectivity is unexpected, please make sure the URL and API-Key " +
+							"are configured correctly in Idea Flow Preferences.  Server Error: " + ex.message
+					IdeaFlowApplicationComponent.showErrorMessage("Unable to connect to server", message)
+				}
+
+			}
+		}
+	}
+
 }
