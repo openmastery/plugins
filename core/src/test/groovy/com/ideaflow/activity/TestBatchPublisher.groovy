@@ -1,5 +1,6 @@
 package com.ideaflow.activity
 
+import com.bancvue.rest.exception.NotFoundException
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
@@ -145,8 +146,8 @@ class TestBatchPublisher extends Specification {
 
 		then:
 		File[] files = tempDir.listFiles()
-		assert files.length == 1
 		assert files[0].name.startsWith(BatchPublisher.FAILED_FILE_PREFIX)
+		assert files.length == 1
 	}
 
 	def "publishBatches should skip batch file which fails to publish"() {
@@ -157,6 +158,30 @@ class TestBatchPublisher extends Specification {
 		when:
 		batchPublisher.commitBatch(tmpFile)
 		batchPublisher.publishBatches()
+
+		then:
+		assert batchPublisher.hasSomethingToPublish() == true
+	}
+
+	def "publishBatches should set aside batches where the task cannot be found and resume on next session"() {
+		given:
+		File tmpFile = createBatchFile()
+		mockBatchClient.addIFMBatch(_) >> { throw new NotFoundException("task not found") }
+
+		when:
+		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.publishBatches()
+
+		then:
+		assert batchPublisher.hasSomethingToPublish() == false
+
+		and:
+		File[] files = tempDir.listFiles()
+		assert files[0].name.startsWith(BatchPublisher.RETRY_NEXT_SESSION_FILE_PREFIX)
+		assert files.length == 1
+
+		when:
+		batchPublisher.setBatchClient(mockBatchClient)
 
 		then:
 		assert batchPublisher.hasSomethingToPublish() == true

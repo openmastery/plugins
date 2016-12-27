@@ -9,15 +9,11 @@ import org.joda.time.Duration
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.BatchClient
-import org.openmastery.publisher.client.EventClient
-import org.openmastery.publisher.client.IdeaFlowClient
 import org.openmastery.publisher.client.TaskClient
 
 class IFMController {
 
 	private boolean paused = true
-	private IdeaFlowClient ideaFlowClient
-	private EventClient eventClient
 	private TaskClient taskClient
 	private BatchClient batchClient
 	private TaskState activeTask
@@ -62,10 +58,6 @@ class IFMController {
 
 	void initClients(String apiUrl, String apiKey) {
 
-		ideaFlowClient = new IdeaFlowClient(apiUrl)
-				.apiKey(apiKey)
-		eventClient = new EventClient(apiUrl)
-				.apiKey(apiKey)
 		taskClient = new TaskClient(apiUrl)
 				.apiKey(apiKey)
 		batchClient = new BatchClient(apiUrl)

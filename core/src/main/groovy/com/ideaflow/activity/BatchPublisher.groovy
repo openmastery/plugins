@@ -1,5 +1,6 @@
 package com.ideaflow.activity
 
+import com.bancvue.rest.exception.NotFoundException
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewBlockActivity
 import org.openmastery.publisher.api.activity.NewEditorActivity
@@ -19,6 +20,7 @@ class BatchPublisher implements Runnable {
 
 	static final String BATCH_FILE_PREFIX = "batch_"
 	static final String FAILED_FILE_PREFIX = "failed_"
+	static final String RETRY_NEXT_SESSION_FILE_PREFIX = "retryNextSession_"
 
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread
@@ -33,7 +35,21 @@ class BatchPublisher implements Runnable {
 
 	void setBatchClient(BatchClient activityClient) {
 		batchClientReference.set(activityClient)
+
+		getFilesToRetryNextSession().each { File fileToRetry ->
+			renameQueuedFile(fileToRetry, fileToRetry.name - RETRY_NEXT_SESSION_FILE_PREFIX)
+		}
 	}
+
+	private List<File> getFilesToRetryNextSession() {
+		messageQueueDir.listFiles(new FilenameFilter() {
+			@Override
+			boolean accept(File filePath, String fileName) {
+				return fileName.matches(RETRY_NEXT_SESSION_FILE_PREFIX+".*")
+			}
+		})
+	}
+
 
 	@Override
 	void run() {
@@ -52,8 +68,13 @@ class BatchPublisher implements Runnable {
 	}
 
 	void commitBatch(File messageFile) {
-		File batchFile = new File(messageQueueDir, BATCH_FILE_PREFIX + createTimestampSuffix())
-		messageFile.renameTo(batchFile)
+		renameQueuedFile(messageFile, BATCH_FILE_PREFIX + createTimestampSuffix())
+	}
+
+	private File renameQueuedFile(File file, String newName) {
+		File renameToFile = new File(messageQueueDir, newName)
+		file.renameTo(renameToFile)
+		renameToFile
 	}
 
 	boolean hasSomethingToPublish() {
@@ -82,9 +103,7 @@ class BatchPublisher implements Runnable {
 		try {
 			batch = convertBatchFileToObject(batchFile)
 		} catch (Exception ex) {
-			// TODO: should distinguish between communication failure and server issue (i.e. task does not exist)
-			File renameToFile = new File(batchFile.parentFile, FAILED_FILE_PREFIX + batchFile.name)
-			batchFile.renameTo(renameToFile)
+			File renameToFile = renameQueuedFile(batchFile, FAILED_FILE_PREFIX + batchFile.name)
 			println "Failed to convert ${batchFile.absolutePath}, exception=${ex.message}, renamingTo=${renameToFile.absolutePath}"
 			return
 		}
@@ -92,6 +111,9 @@ class BatchPublisher implements Runnable {
 		try {
 			publishBatch(batch)
 			batchFile.delete()
+		} catch (NotFoundException ex) {
+			renameQueuedFile(batchFile, RETRY_NEXT_SESSION_FILE_PREFIX + batchFile.name)
+			println "Failed to publish ${batchFile.absolutePath} due to missing task, will retry in future session..."
 		} catch (Exception ex) {
 			println "Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry later..."
 		}
