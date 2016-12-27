@@ -82,6 +82,7 @@ class BatchPublisher implements Runnable {
 		try {
 			batch = convertBatchFileToObject(batchFile)
 		} catch (Exception ex) {
+			// TODO: should distinguish between communication failure and server issue (i.e. task does not exist)
 			File renameToFile = new File(batchFile.parentFile, FAILED_FILE_PREFIX + batchFile.name)
 			batchFile.renameTo(renameToFile)
 			println "Failed to convert ${batchFile.absolutePath}, exception=${ex.message}, renamingTo=${renameToFile.absolutePath}"

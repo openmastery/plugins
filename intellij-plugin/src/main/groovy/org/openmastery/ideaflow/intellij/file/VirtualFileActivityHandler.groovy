@@ -5,7 +5,6 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import org.joda.time.Duration
 
 class VirtualFileActivityHandler {
 
@@ -37,21 +36,32 @@ class VirtualFileActivityHandler {
 
 		String filePath = file.name
 		if (project != null) {
-
-			String fullFilePath = file.path
-
-			// TODO: detect path via module
-			Module module = ModuleUtil.findModuleForFile(file, project)
-			if (module != null) {
-				String moduleBasePath = module.getModuleFile().getParent().path
-				if (fullFilePath.startsWith(moduleBasePath)) {
-					filePath = fullFilePath.substring(moduleBasePath.length())
+			try {
+				String fullFilePath = getFullFilePathOrNull(file, project)
+				if (fullFilePath != null) {
+					filePath = fullFilePath
 				}
-			} else {
-				String projectBasePath = project.basePath
-				if (fullFilePath.startsWith(projectBasePath)) {
-					filePath = fullFilePath.substring(projectBasePath.length())
-				}
+			} catch (Exception ex) {
+				// ignore any issue resolving full file path and just default to file name
+			}
+		}
+		filePath
+	}
+
+	private String getFullFilePathOrNull(VirtualFile file, Project project) {
+		String fullFilePath = file.path
+		String filePath = null
+
+		Module module = ModuleUtil.findModuleForFile(file, project)
+		if (module != null) {
+			String moduleBasePath = module.getModuleFile().getParent().path
+			if (fullFilePath.startsWith(moduleBasePath)) {
+				filePath = fullFilePath.substring(moduleBasePath.length())
+			}
+		} else {
+			String projectBasePath = project.basePath
+			if (fullFilePath.startsWith(projectBasePath)) {
+				filePath = fullFilePath.substring(projectBasePath.length())
 			}
 		}
 		filePath
