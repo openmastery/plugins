@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.actionSystem.PlatformDataKeys
+import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
@@ -34,8 +35,6 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(button))
 
 		if (project != null) {
-			//TODO get recent tasks for project, and active task for project
-
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 			for (TaskState task : taskManager.recentTasks) {
 				if (task != controller.activeTask) {
@@ -44,7 +43,10 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			}
 
 			actionGroup.addSeparator();
-			actionGroup.add(new OpenActiveInVisualizerAction(this, ))
+			if (controller.hasActiveTask()) {
+				actionGroup.add(new OpenActiveInVisualizerAction(this))
+				actionGroup.add(new CloseActiveIdeaFlowAction(this))
+			}
 			actionGroup.add(new AddNewTaskAction(this, project))
 		}
 		return actionGroup
@@ -80,10 +82,18 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		}
 	}
 
+	void closeActiveTask() {
+		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+		TaskState activeTask = controller.clearActiveTask()
+
+		if (activeTask != null) {
+			taskManager.removeTask(activeTask)
+		}
+	}
+
 	private IdeaFlowSettingsTaskManager getTaskManager() {
 		IdeaFlowSettings.instance.taskManager
 	}
-
 
 
 	private static class ActivateIdeaFlowAction extends AnAction {
@@ -126,6 +136,23 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		}
 	}
 
+	private static class CloseActiveIdeaFlowAction extends AnAction {
+
+		private SwitchIdeaFlowComboBox switchIdeaFlow
+
+		public CloseActiveIdeaFlowAction(SwitchIdeaFlowComboBox switchIdeaFlow) {
+			this.switchIdeaFlow = switchIdeaFlow
+
+			getTemplatePresentation().setText("Close active task")
+			getTemplatePresentation().setDescription("Close the active task")
+		}
+
+		public void actionPerformed(final AnActionEvent e) {
+			switchIdeaFlow.closeActiveTask()
+		}
+
+	}
+
 	private static class AddNewTaskAction extends AnAction {
 
 		private SwitchIdeaFlowComboBox switchIdeaFlow
@@ -146,11 +173,11 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 				try {
 					switchIdeaFlow.addNewTask(wizard.taskName, wizard.taskDescription, wizard.taskProject)
 				} catch (Exception ex) {
-					IdeaFlowApplicationComponent.showErrorMessage("Unable to connect to server",
-							"Sorry, the server is currently unavailable for creating new tasks.  " +
-									"You can currently work offline only with existing tasks.  " +
-									"If the lack of connectivity is unexpected, please make sure the URL and API-Key" +
-								" are configured correctly in Idea Flow Preferences.  Server Error: "+	ex.message)
+					String message = "Sorry, the server is currently unavailable for creating new tasks.  " +
+							"You can currently work offline only with existing tasks.  " +
+							"If the lack of connectivity is unexpected, please make sure the URL and API-Key" +
+							" are configured correctly in Idea Flow Preferences.  Server Error: " + ex.message
+					IdeaFlowApplicationComponent.showErrorMessage("Unable to connect to server", message)
 				}
 
 			}

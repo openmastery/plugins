@@ -100,7 +100,7 @@ class IFMController {
 	}
 
 	void setActiveTask(TaskState newActiveTask) {
-			this.activeTask = newActiveTask
+		this.activeTask = newActiveTask
 	}
 
 	TaskState createAndActivateTask(String name, String description, String project) {
@@ -128,6 +128,16 @@ class IFMController {
 		if (this.activeTask != null) {
 			messageQueue.pushEvent(activeTask.id, EventType.DEACTIVATE, "IDE Shutdown")
 		}
+	}
+
+	TaskState clearActiveTask() {
+		TaskState oldActiveTask = activeTask
+		activeTask = null
+		oldActiveTask
+	}
+
+	boolean hasActiveTask() {
+		activeTask != null
 	}
 
 	TaskState getActiveTask() {

@@ -37,12 +37,16 @@ public class IdeaFlowSettingsTaskManager {
 
 
 	private List<TaskState> getTaskStateList() {
+		List<Map> itemsAsMap
 		try {
-			new JsonSlurper().parseText(settings.taskListJsonString ?: '[]') as List<TaskState>
+			itemsAsMap = new JsonSlurper().parseText(settings.taskListJsonString ?: '[]') as List<Map>
 		} catch (JsonException ex) {
 			// TODO: log to intellij
 			ex.printStackTrace()
-			[]
+			itemsAsMap = []
+		}
+		itemsAsMap.collect { Map properties ->
+			properties as TaskState
 		}
 	}
 
@@ -59,6 +63,12 @@ public class IdeaFlowSettingsTaskManager {
 
 			settings.taskListJsonString = JsonOutput.toJson(taskStateList)
 		}
+	}
+
+	public void removeTask(TaskState task) {
+		List<TaskState> taskStateList = getTaskStateList()
+		taskStateList.remove(task)
+		settings.taskListJsonString = JsonOutput.toJson(taskStateList)
 	}
 
 	public void updateTask(TaskState updatedTask) {
