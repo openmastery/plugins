@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
-import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
 class CreateAwesomeNote extends AnAction {
@@ -16,11 +15,11 @@ class CreateAwesomeNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		List<String> unresolvedWTFs = controller.getActiveTask().unresolvedWTFList
+		List<String> unresolvedPainList = controller.getActiveTask().getUnresolvedPainList()
 
 		String wtfString = "";
-		for (int i = 0; i < unresolvedWTFs.size(); i++) {
-			String wtfMessage = unresolvedWTFs.get(i)
+		for (int i = 0; i < unresolvedPainList.size(); i++) {
+			String wtfMessage = unresolvedPainList.get(i)
 			wtfString += "-- $i: " + wtfMessage + "\n"
 		}
 

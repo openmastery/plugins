@@ -18,5 +18,10 @@ public class TaskState {
 	String blockComment;
 	String blockTime;
 
-	List<String> unresolvedWTFList = new ArrayList<String>();
+	List<String> unresolvedPainList = new ArrayList<String>();
+
+	void setUnresolvedWTFList(List<String> unresolvedWTFList) {
+		unresolvedPainList = unresolvedWTFList;
+	}
+
 }

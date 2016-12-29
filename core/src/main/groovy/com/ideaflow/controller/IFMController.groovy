@@ -153,16 +153,16 @@ class IFMController {
 		activeTask?.name
 	}
 
-	void createWTF(String wtfMessage) {
-		if (activeTask.unresolvedWTFList.size() > 10) {
-			activeTask.unresolvedWTFList.remove(0)
+	void createPain(String wtfMessage) {
+		if (activeTask.unresolvedPainList.size() > 10) {
+			activeTask.unresolvedPainList.remove(0)
 		}
-		activeTask.unresolvedWTFList.add(wtfMessage)
+		activeTask.unresolvedPainList.add(wtfMessage)
 		createEvent(wtfMessage, EventType.WTF)
 	}
 
 	void resolveWithYay(String yayMessage) {
-		activeTask.unresolvedWTFList = []
+		activeTask.unresolvedPainList = []
 		createEvent(yayMessage, EventType.AWESOME)
 	}
 

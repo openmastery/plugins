@@ -9,12 +9,11 @@ import com.intellij.openapi.actionSystem.Presentation
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
-import org.openmastery.publisher.api.event.EventType
 
 import javax.swing.Icon
 
 @Mixin(ActionSupport)
-class CreateWTFNote extends AnAction {
+class CreatePainNote extends AnAction {
 
 	Icon WTF_ICON
 	Icon WTF_ICON_DOT1
@@ -22,7 +21,7 @@ class CreateWTFNote extends AnAction {
 	Icon WTF_ICON_DOT3
 
 
-	CreateWTFNote() {
+	CreatePainNote() {
 		WTF_ICON = IdeaFlowApplicationComponent.getIcon("pain.png")
 		WTF_ICON_DOT1 = IdeaFlowApplicationComponent.getIcon("pain_1dot.png")
 		WTF_ICON_DOT2 = IdeaFlowApplicationComponent.getIcon("pain_2dot.png")
@@ -36,7 +35,7 @@ class CreateWTFNote extends AnAction {
 
 		String wtfNote = IdeaFlowApplicationComponent.promptForInput("WTF?!", questionToAsk)
 		if (wtfNote != null) {
-			controller.createWTF(wtfNote)
+			controller.createPain(wtfNote)
 			getTaskManager().updateTask(controller.getActiveTask())
 		}
 	}
@@ -49,7 +48,7 @@ class CreateWTFNote extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		if (controller != null && controller.getActiveTask() != null) {
 			TaskState activeTask = controller.getActiveTask()
-			updateIcon(e.presentation, activeTask.getUnresolvedWTFList())
+			updateIcon(e.presentation, activeTask.getUnresolvedPainList())
 		}
 
 	}
@@ -61,7 +60,7 @@ class CreateWTFNote extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		if (controller != null && controller.getActiveTask() != null) {
 			TaskState activeTask = controller.getActiveTask()
-			wtfSize = activeTask.getUnresolvedWTFList().size()
+			wtfSize = activeTask.getUnresolvedPainList().size()
 		}
 		if (wtfSize == 0) {
 			questionToAsk = "What are you confused about? (question)"
