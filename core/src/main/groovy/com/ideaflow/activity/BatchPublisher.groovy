@@ -10,6 +10,7 @@ import org.openmastery.publisher.api.activity.NewIdleActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
 import org.openmastery.publisher.api.batch.NewIFMBatch
+import org.openmastery.publisher.api.event.NewSnippetEvent
 import org.openmastery.publisher.client.BatchClient
 
 import java.util.concurrent.atomic.AtomicBoolean
@@ -176,6 +177,8 @@ class BatchPublisher implements Runnable {
 			batch.blockActivityList.add(object)
 		} else if (object instanceof NewBatchEvent) {
 			batch.eventList.add(object)
+		} else if (object instanceof NewSnippetEvent) {
+			batch.snippetEventList.add(object)
 		} else {
 			throw new RuntimeException("Unrecognized batch object=${object}")
 		}

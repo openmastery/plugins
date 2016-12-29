@@ -45,6 +45,15 @@
 		<action id="org.openmastery.ideaflow.Awesome" class="com.ideaflow.intellij.action.ifm.CreateAwesomeNote" text="YAY!"
 				description="Celebrate the success of solving a hard problem!" icon="/icons/awesome.png">
 		</action>
+
+		<action id="org.openmastery.ideaflow.PainSnippet" class="com.ideaflow.intellij.action.ifm.CreatePainSnippet" text="WTF?!"
+				description="Mark selected text as the start of confusion (unexpected observation) in the active IdeaFlow" icon="/icons/pain.png">
+		</action>
+
+		<action id="org.openmastery.ideaflow.AwesomeSnippet" class="com.ideaflow.intellij.action.ifm.CreateAwesomeSnippet" text="YAY!"
+				description="Mark selected text as the important to resolving confusion" icon="/icons/awesome.png">
+		</action>
+
 		<action id="org.openmastery.ideaflow.TogglePause" class="com.ideaflow.intellij.action.ifm.TogglePause"
 		        icon="/icons/pause.png">
 		</action>
@@ -57,7 +66,7 @@
 -->
 		<action id="org.openmastery.ideaflow.SwitchActive" class="com.ideaflow.intellij.action.meta.SwitchIdeaFlowComboBox"/>
 
-		<group id="org.openmastery.ideaflow" text="IdeaFlow Group" description="IdeaFlow action group">
+		<group id="org.openmastery.ideaflow.MainToolBar" text="IdeaFlow Group" description="IdeaFlow action group">
 			<add-to-group group-id="MainToolBar" anchor="first"/>
 			<reference ref="org.openmastery.ideaflow.TogglePause"/>
 			<reference ref="org.openmastery.ideaflow.SwitchActive"/>
@@ -67,6 +76,13 @@
 			<reference ref="org.openmastery.ideaflow.Pain"/>
 			<reference ref="org.openmastery.ideaflow.Awesome"/>
 			<separator/>
+		</group>
+
+		<group id="org.openmastery.ideaflow.EditorPopupMenu">
+			<add-to-group group-id="EditorPopupMenu" anchor="last"/>
+			<separator/>
+			<reference ref="org.openmastery.ideaflow.PainSnippet"/>
+			<reference ref="org.openmastery.ideaflow.AwesomeSnippet"/>
 		</group>
 
 	</actions>

@@ -3,22 +3,30 @@ package com.ideaflow.intellij.action
 import com.ideaflow.controller.IFMController
 import com.ideaflow.state.TaskState
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.Presentation
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.SelectionModel
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 
 class ActionSupport {
 
-	private void disableWhenNotRecording(AnActionEvent e) {
+	public void disableWhenNotRecording(AnActionEvent e) {
 		Presentation presentation = e.getPresentation()
 		presentation.setEnabled(isTaskActiveAndRecording(e));
 	}
 
-	private boolean isTaskActiveAndRecording(AnActionEvent e) {
+	public void disableWhenNotRecordingOrNoSelectedText(AnActionEvent e) {
+		Presentation presentation = e.getPresentation()
+		presentation.setEnabled(isTaskActiveAndRecording(e) || getSelectedText(e) == null);
+	}
+
+	public boolean isTaskActiveAndRecording(AnActionEvent e) {
 		isRecording(e) && isTaskActive(e)
 	}
 
 	// TODO: remove ActionEvent arg
-	private IFMController getIFMController(AnActionEvent e) {
+	public IFMController getIFMController(AnActionEvent e) {
 		IFMController controller = null
 		if (e?.project != null) {
 			controller = IdeaFlowApplicationComponent.getIFMController()
@@ -26,25 +34,35 @@ class ActionSupport {
 		return controller
 	}
 
-	private String getActiveIdeaFlowName(AnActionEvent e) {
+	public String getActiveIdeaFlowName(AnActionEvent e) {
 		getIFMController(e)?.activeTaskName
 	}
 
-	private TaskState getActiveTask(AnActionEvent e) {
+	public TaskState getActiveTask(AnActionEvent e) {
 		getIFMController(e)?.getActiveTask()
 	}
 
-	private boolean isTaskActive(AnActionEvent e) {
+	public boolean isTaskActive(AnActionEvent e) {
 		getIFMController(e)?.isTaskActive()
 	}
 
-	private boolean isRecording(AnActionEvent e) {
+	public boolean isRecording(AnActionEvent e) {
 		getIFMController(e)?.isRecording()
 	}
 
-	private boolean isPaused(AnActionEvent e) {
+	public boolean isPaused(AnActionEvent e) {
 		IFMController controller = getIFMController(e)
 		controller == null ? true : controller.isPaused()
+	}
+
+	public String getSelectedText(AnActionEvent e) {
+		Editor editor = e.getData(CommonDataKeys.EDITOR);
+		if (editor == null) {
+			return null;
+		}
+
+		SelectionModel selectionModel = editor.getSelectionModel();
+		return selectionModel.getSelectedText();
 	}
 
 }

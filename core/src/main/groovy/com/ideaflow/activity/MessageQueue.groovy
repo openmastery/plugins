@@ -11,6 +11,7 @@ import org.openmastery.publisher.api.activity.NewIdleActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
 import org.openmastery.publisher.api.event.EventType
+import org.openmastery.publisher.api.event.NewSnippetEvent
 
 class MessageQueue {
 
@@ -124,6 +125,23 @@ class MessageQueue {
 				.type(eventType)
 				.comment(message)
 				.build();
+
+		messageLogger.writeMessage(taskId, batchEvent)
+	}
+
+	void pushSnippet(Long taskId, EventType eventType, String message, String source, String snippet) {
+		if (isDisabled()) {
+			return
+		}
+
+		NewSnippetEvent batchEvent = NewSnippetEvent.builder()
+				.taskId(taskId)
+				.position(LocalDateTime.now())
+				.eventType(eventType)
+				.comment(message)
+				.source(source)
+				.snippet(snippet)
+				.build()
 
 		messageLogger.writeMessage(taskId, batchEvent)
 	}

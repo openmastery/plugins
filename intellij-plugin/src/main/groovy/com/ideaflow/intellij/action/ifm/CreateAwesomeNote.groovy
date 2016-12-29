@@ -13,6 +13,17 @@ class CreateAwesomeNote extends AnAction {
 
 	@Override
 	void actionPerformed(AnActionEvent e) {
+		String awesomeNote = promptForInput()
+
+		if (awesomeNote != null) {
+			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
+
+			controller.resolveWithYay(awesomeNote)
+			getTaskManager().updateTask(controller.getActiveTask())
+		}
+	}
+
+	protected String promptForInput() {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
 		List<String> unresolvedPainList = controller.getActiveTask().getUnresolvedPainList()
@@ -23,11 +34,7 @@ class CreateAwesomeNote extends AnAction {
 			wtfString += "-- $i: " + wtfMessage + "\n"
 		}
 
-		String awesomeNote = IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out? (discovery)\n" + wtfString)
-		if (awesomeNote != null) {
-			controller.resolveWithYay(awesomeNote)
-			getTaskManager().updateTask(controller.getActiveTask())
-		}
+		IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out? (discovery)\n" + wtfString)
 	}
 
 	@Override

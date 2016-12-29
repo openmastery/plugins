@@ -153,17 +153,31 @@ class IFMController {
 		activeTask?.name
 	}
 
-	void createPain(String wtfMessage) {
+	void createPain(String painMessage) {
+		addUnresolvedPain(painMessage)
+		createEvent(painMessage, EventType.WTF)
+	}
+
+	private void addUnresolvedPain(String painMessage) {
 		if (activeTask.unresolvedPainList.size() > 10) {
 			activeTask.unresolvedPainList.remove(0)
 		}
-		activeTask.unresolvedPainList.add(wtfMessage)
-		createEvent(wtfMessage, EventType.WTF)
+		activeTask.unresolvedPainList.add(painMessage)
 	}
 
 	void resolveWithYay(String yayMessage) {
 		activeTask.unresolvedPainList = []
 		createEvent(yayMessage, EventType.AWESOME)
+	}
+
+	void createPainSnippet(String painMessage, String source, String snippet) {
+		addUnresolvedPain(painMessage);
+		messageQueue.pushSnippet(activeTask.id, EventType.WTF, painMessage, source, snippet)
+	}
+
+	void resolveWithAwesomeSnippet(String awesomeMessage, String source, String snippet) {
+		activeTask.unresolvedPainList = []
+		messageQueue.pushSnippet(activeTask.id, EventType.AWESOME, awesomeMessage, source, snippet)
 	}
 
 	void createEvent(String message, EventType eventType) {
