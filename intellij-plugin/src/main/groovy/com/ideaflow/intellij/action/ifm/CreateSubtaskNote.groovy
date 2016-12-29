@@ -14,7 +14,7 @@ class CreateSubtaskNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String subtaskNote = IdeaFlowApplicationComponent.promptForInput("Start a Subtask", "What's the subtask you're trying to accomplish? (decision)")
+		String subtaskNote = IdeaFlowApplicationComponent.promptForInput("Start a Subtask", "What subtask are you doing next?")
 		controller.createEvent(subtaskNote, EventType.SUBTASK)
 	}
 
