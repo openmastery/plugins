@@ -35,23 +35,23 @@
 		<action id="org.openmastery.ideaflow.Note" class="com.ideaflow.intellij.action.ifm.CreateProgressNote" text="Create a progress note..."
 				description="Take notes as you make progress through a subtask" icon="/icons/sub_sub_task.png">
 		</action>
-		<action id="org.openmastery.ideaflow.Distraction" class="com.ideaflow.intellij.action.ifm.CreateDistractionNote" text="Mark a distraction..."
+		<action id="org.openmastery.ideaflow.Distraction" class="com.ideaflow.intellij.action.ifm.CreateDistractionNote" text="Recent disruption..."
 				description="Mark a recent (prior) distraction that took you away from the task" icon="/icons/distraction.png">
 		</action>
 
 		<action id="org.openmastery.ideaflow.Pain" class="com.ideaflow.intellij.action.ifm.CreatePainNote" text="WTF?!"
-				description="Mark the start of confusion (unexpected observation) in the active IdeaFlow" icon="/icons/pain.png">
+				description="Mark the start of confusion (unexpected observation)" icon="/icons/pain.png">
 		</action>
 		<action id="org.openmastery.ideaflow.Awesome" class="com.ideaflow.intellij.action.ifm.CreateAwesomeNote" text="YAY!"
-				description="Celebrate the success of solving a hard problem!" icon="/icons/awesome.png">
+				description="Celebrate the success of solving the problem!" icon="/icons/awesome.png">
 		</action>
 
-		<action id="org.openmastery.ideaflow.PainSnippet" class="com.ideaflow.intellij.action.ifm.CreatePainSnippet" text="WTF?!"
-				description="Mark selected text as the start of confusion (unexpected observation) in the active IdeaFlow" icon="/icons/pain.png">
+		<action id="org.openmastery.ideaflow.PainSnippet" class="com.ideaflow.intellij.action.ifm.CreatePainSnippet" text="WTF?! I'm confused..."
+				description="Mark selected text as the place of confusion (unexpected observation)" icon="/icons/pain.png">
 		</action>
 
-		<action id="org.openmastery.ideaflow.AwesomeSnippet" class="com.ideaflow.intellij.action.ifm.CreateAwesomeSnippet" text="YAY!"
-				description="Mark selected text as the important to resolving confusion" icon="/icons/awesome.png">
+		<action id="org.openmastery.ideaflow.AwesomeSnippet" class="com.ideaflow.intellij.action.ifm.CreateAwesomeSnippet" text="YAY! I found the answer..."
+				description="Mark selected text as important to resolving confusion" icon="/icons/awesome.png">
 		</action>
 
 		<action id="org.openmastery.ideaflow.TogglePause" class="com.ideaflow.intellij.action.ifm.TogglePause"
