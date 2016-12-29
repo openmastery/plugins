@@ -2,7 +2,7 @@
 	<id>org.openmastery.ideaflow</id>
 	<name>Idea Flow</name>
 	<description>Idea Flow Mapping Tool</description>
-	<version>0.10</version>
+	<version>0.11</version>
 	<vendor>New Iron Group, Inc.</vendor>
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
