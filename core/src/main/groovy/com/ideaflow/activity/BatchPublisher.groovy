@@ -159,6 +159,7 @@ class BatchPublisher implements Runnable {
 		batch.modificationActivityList = []
 		batch.blockActivityList = []
 		batch.eventList =[]
+		batch.snippetEventList = []
 		return batch
 	}
 
