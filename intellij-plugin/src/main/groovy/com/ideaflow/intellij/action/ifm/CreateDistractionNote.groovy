@@ -22,7 +22,7 @@ class CreateDistractionNote extends AnAction {
 		Duration recentIdleDuration = controller.getRecentIdleDuration()
 		String durationStr = TimeConverter.toFormattedDuration(recentIdleDuration)
 
-		String message = "You recently spent $durationStr on external activity.  What was the recent distraction?"
+		String message = "You recently spent $durationStr on external activity.  \nWhat was the recent distraction?"
 
 		String timeEstimate = IdeaFlowApplicationComponent.promptForInput("Recent Distraction", message)
 		controller.createEvent(timeEstimate, EventType.DISTRACTION)

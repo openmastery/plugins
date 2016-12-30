@@ -69,7 +69,7 @@ class CreatePainNote extends AnAction {
 		if (painSize == 0) {
 			questionToAsk = "What are you confused about? (question)"
 		} else {
-			questionToAsk = "Ask the code a question..."
+			questionToAsk = "What are you still confused about? (discovery + question)"
 		}
 		return questionToAsk
 	}
