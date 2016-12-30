@@ -14,7 +14,7 @@ class CreateProgressNote extends AnAction {
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String progressNote = IdeaFlowApplicationComponent.promptForInput("Create a Progress Note", "What micro-task are you doing next?")
+		String progressNote = IdeaFlowApplicationComponent.promptForInput("Create a Progress Note", "What are you doing next?")
 		controller.createEvent(progressNote, EventType.NOTE)
 	}
 
