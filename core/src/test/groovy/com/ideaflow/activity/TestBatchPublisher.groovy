@@ -39,36 +39,14 @@ class TestBatchPublisher extends Specification {
 
 	def "commitBatch SHOULD create stuff to publish"() {
 		given:
-		File tmpFile = File.createTempFile("messages", ".log")
+		File tmpFile = batchPublisher.createActiveFile("message")
 		tmpFile << "some stuff"
 
 		when:
-		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.commitActiveFiles()
 
 		then:
 		assert batchPublisher.hasSomethingToPublish()
-
-	}
-
-	def "findAllBatches SHOULD sort from earliest to latest"() {
-		given:
-		File tmpFile = File.createTempFile("messages", ".log")
-		tmpFile << "some stuff"
-
-		when:
-		batchPublisher.commitBatch(tmpFile)
-		Thread.sleep(1000)
-		tmpFile << "some stuff"
-		println tmpFile.exists()
-		batchPublisher.commitBatch(tmpFile)
-
-		then:
-		List<File> files = batchPublisher.findAllBatchesAndSort()
-		println files.size()
-		files.each { File file ->
-			println file.name
-		}
-
 	}
 
 	private NewEditorActivity createEditorActivity() {
@@ -83,7 +61,7 @@ class TestBatchPublisher extends Specification {
 
 	private File createBatchFile() {
 		NewEditorActivity editorActivity = createEditorActivity()
-		File tmpFile = File.createTempFile("messages", ".log")
+		File tmpFile = batchPublisher.createActiveFile("file")
 		tmpFile << jsonConverter.toJSON(editorActivity) + "\n"
 		tmpFile
 	}
@@ -124,10 +102,10 @@ class TestBatchPublisher extends Specification {
 
 	def "publishBatches SHOULD send all batches to the server and delete files"() {
 		given:
-		File tmpFile = createBatchFile()
+		createBatchFile()
 
 		when:
-		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.commitActiveFiles()
 		batchPublisher.publishBatches()
 
 		then:
@@ -137,26 +115,25 @@ class TestBatchPublisher extends Specification {
 
 	def "publishBatches SHOULD mark file as failed if parsing fails"() {
 		given:
-		File tmpFile = File.createTempFile("messages", ".log")
-		tmpFile << "illegal json"
+		File file = batchPublisher.createActiveFile("file")
+		file << "illegal json"
 
 		when:
-		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.commitActiveFiles()
 		batchPublisher.publishBatches()
 
 		then:
-		File[] files = tempDir.listFiles()
-		assert files[0].name.startsWith(BatchPublisher.FAILED_FILE_PREFIX)
+		File[] files = batchPublisher.failedDir.listFiles()
 		assert files.length == 1
 	}
 
 	def "publishBatches should skip batch file which fails to publish"() {
 		given:
-		File tmpFile = createBatchFile()
+		createBatchFile()
 		mockBatchClient.addIFMBatch(_) >> { throw new RuntimeException("Publication Failure") }
 
 		when:
-		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.commitActiveFiles()
 		batchPublisher.publishBatches()
 
 		then:
@@ -165,20 +142,18 @@ class TestBatchPublisher extends Specification {
 
 	def "publishBatches should set aside batches where the task cannot be found and resume on next session"() {
 		given:
-		File tmpFile = createBatchFile()
+		createBatchFile()
 		mockBatchClient.addIFMBatch(_) >> { throw new NotFoundException("task not found") }
 
 		when:
-		batchPublisher.commitBatch(tmpFile)
+		batchPublisher.commitActiveFiles()
 		batchPublisher.publishBatches()
 
 		then:
 		assert batchPublisher.hasSomethingToPublish() == false
 
 		and:
-		File[] files = tempDir.listFiles()
-		assert files[0].name.startsWith(BatchPublisher.RETRY_NEXT_SESSION_FILE_PREFIX)
-		assert files.length == 1
+		assert batchPublisher.retryNextSessionDir.listFiles().length == 1
 
 		when:
 		batchPublisher.setBatchClient(mockBatchClient)

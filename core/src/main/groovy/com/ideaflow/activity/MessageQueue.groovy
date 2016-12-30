@@ -19,9 +19,9 @@ class MessageQueue {
 	private MessageLogger messageLogger
 
 
-	MessageQueue(IFMController controller, BatchPublisher batchPublisher, File queueDir) {
+	MessageQueue(IFMController controller, BatchPublisher batchPublisher) {
 		this.controller = controller
-		this.messageLogger = new FileMessageLogger(batchPublisher, queueDir)
+		this.messageLogger = new FileMessageLogger(batchPublisher)
 	}
 
 	MessageQueue(IFMController controller, MessageLogger messageLogger) {
@@ -154,7 +154,6 @@ class MessageQueue {
 
 	static class FileMessageLogger implements MessageLogger {
 		private BatchPublisher batchPublisher
-		private File queueDir
 		private Map<Long, File> activeMessageFiles = new HashMap<>()
 
 		private final Object lock = new Object()
@@ -165,12 +164,9 @@ class MessageQueue {
 
 		private final int BATCH_TIME_LIMIT_IN_SECONDS = 30 * 60
 		private final int BATCH_MESSAGE_LIMIT = 500
-		private static final String MESSAGE_FILE = "active_messages.log"
 
-
-		FileMessageLogger(BatchPublisher batchPublisher, File queueDir) {
+		FileMessageLogger(BatchPublisher batchPublisher) {
 			this.batchPublisher = batchPublisher
-			this.queueDir = queueDir
 
 			lastBatchTime = LocalDateTime.now()
 		}
@@ -195,9 +191,7 @@ class MessageQueue {
 
 		private void startNewBatch() {
 			synchronized (lock) {
-				activeMessageFiles.values().each { File file ->
-					batchPublisher.commitBatch(file)
-				}
+				batchPublisher.commitActiveFiles()
 				activeMessageFiles.clear()
 
 				lastBatchTime = LocalDateTime.now()
@@ -209,7 +203,7 @@ class MessageQueue {
 			synchronized (lock) {
 				File file = activeMessageFiles.get(taskId)
 				if (file == null) {
-					file = new File(queueDir, "${taskId}_${MESSAGE_FILE}")
+					file = batchPublisher.createActiveFile("${taskId}.log")
 					activeMessageFiles.put(taskId, file)
 				}
 				file

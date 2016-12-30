@@ -23,10 +23,10 @@ class IFMController {
 
 
 	IFMController() {
-		File messageQueueDir = createMessageQueueDir()
+		File ideaFlowDir = createIdeaFlowDir()
 
-		batchPublisher = new BatchPublisher(messageQueueDir)
-		messageQueue = new MessageQueue(this, batchPublisher, messageQueueDir)
+		batchPublisher = new BatchPublisher(ideaFlowDir)
+		messageQueue = new MessageQueue(this, batchPublisher)
 
 		activityHandler = new ActivityHandler(this, messageQueue)
 
@@ -34,10 +34,10 @@ class IFMController {
 		startPushModificationActivityTimer(30)
 	}
 
-	private File createMessageQueueDir() {
-		File queueDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
-		queueDir.mkdirs()
-		return queueDir
+	private File createIdeaFlowDir() {
+		File ideaFlowDir = new File(System.getProperty("user.home") + File.separator + ".ideaflow");
+		ideaFlowDir.mkdirs()
+		return ideaFlowDir
 	}
 
 	private void startPushModificationActivityTimer(final long intervalInSeconds) {

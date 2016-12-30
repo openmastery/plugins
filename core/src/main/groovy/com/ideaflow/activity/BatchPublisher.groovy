@@ -19,72 +19,80 @@ import java.util.concurrent.atomic.AtomicReference
 
 class BatchPublisher implements Runnable {
 
-	static final String BATCH_FILE_PREFIX = "batch_"
-	static final String FAILED_FILE_PREFIX = "failed_"
-	static final String RETRY_NEXT_SESSION_FILE_PREFIX = "retryNextSession_"
-
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread
 	private JSONConverter jsonConverter = new JSONConverter()
 
 	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>()
-	private File messageQueueDir
+	private File activeDir
+	private File publishDir
+	private File failedDir
+	private File retryNextSessionDir
 
-	BatchPublisher(File messageQueueDir) {
-		this.messageQueueDir = messageQueueDir
+	BatchPublisher(File baseDir) {
+		this.activeDir = createDir(baseDir, "active")
+		this.publishDir = createDir(baseDir, "publish")
+		this.failedDir = createDir(baseDir, "failed")
+		this.retryNextSessionDir = createDir(baseDir, "retryNextSession")
+
+		commitActiveFiles()
+	}
+
+	private File createDir(File baseDir, String name) {
+		File dir = new File(baseDir, name)
+		dir.mkdirs()
+		dir
+	}
+
+	File createActiveFile(String name) {
+		new File(activeDir, name)
 	}
 
 	void setBatchClient(BatchClient activityClient) {
 		batchClientReference.set(activityClient)
 
-		getFilesToRetryNextSession().each { File fileToRetry ->
-			renameQueuedFile(fileToRetry, fileToRetry.name - RETRY_NEXT_SESSION_FILE_PREFIX)
+		retryNextSessionDir.listFiles().each { File fileToRetry ->
+			moveFileToDir(fileToRetry, publishDir)
 		}
 	}
 
-	private List<File> getFilesToRetryNextSession() {
-		messageQueueDir.listFiles(new FilenameFilter() {
-			@Override
-			boolean accept(File filePath, String fileName) {
-				return fileName.matches(RETRY_NEXT_SESSION_FILE_PREFIX+".*")
-			}
-		})
+	private File moveFileToDir(File file, File dir) {
+		moveFileToDirAndRename(file, dir, file.name)
 	}
 
+	private File moveFileToDirAndRename(File file, File dir, String renameTo) {
+		File renameToFile = new File(dir, renameTo)
+		file.renameTo(renameToFile)
+		renameToFile
+	}
 
 	@Override
 	void run() {
 		runThread = Thread.currentThread()
 
 		while (isNotClosed()) {
+			if (isNotClosed() && hasSomethingToPublish()) {
+				publishBatches()
+			}
+
 			try {
 				Thread.sleep(30000)
 			} catch (InterruptedException ex) {
 			}
-
-			if (isNotClosed() && hasSomethingToPublish()) {
-				publishBatches()
-			}
 		}
 	}
 
-	void commitBatch(File messageFile) {
-		renameQueuedFile(messageFile, BATCH_FILE_PREFIX + createTimestampSuffix())
-	}
+	void commitActiveFiles() {
+		String dateTime = LocalDateTime.now().toString("yyyyMMdd_HHmmss")
+		File[] files = activeDir.listFiles()
 
-	private File renameQueuedFile(File file, String newName) {
-		File renameToFile = new File(messageQueueDir, newName)
-		file.renameTo(renameToFile)
-		renameToFile
+		for (int i = 0; i < files.length; i++) {
+			moveFileToDirAndRename(files[i], publishDir, "${dateTime}_${i}")
+		}
 	}
 
 	boolean hasSomethingToPublish() {
-		messageQueueDir.listFiles(new FilenameFilter() {
-			@Override
-			boolean accept(File filePath, String fileName) {
-				return fileName.matches(BATCH_FILE_PREFIX+".*")
-			}
-		}).size() > 0
+		publishDir.listFiles().size() > 0
 	}
 
 	void publishBatches() {
@@ -99,12 +107,18 @@ class BatchPublisher implements Runnable {
 		}
 	}
 
+	private List<File> findAllBatchesAndSort() {
+		publishDir.listFiles().sort() { File file ->
+			file.name
+		}
+	}
+
 	private void convertPublishAndDeleteBatch(File batchFile) {
 		NewIFMBatch batch
 		try {
 			batch = convertBatchFileToObject(batchFile)
 		} catch (Exception ex) {
-			File renameToFile = renameQueuedFile(batchFile, FAILED_FILE_PREFIX + batchFile.name)
+			File renameToFile = moveFileToDir(batchFile, failedDir)
 			println "Failed to convert ${batchFile.absolutePath}, exception=${ex.message}, renamingTo=${renameToFile.absolutePath}"
 			return
 		}
@@ -113,7 +127,7 @@ class BatchPublisher implements Runnable {
 			publishBatch(batch)
 			batchFile.delete()
 		} catch (NotFoundException ex) {
-			renameQueuedFile(batchFile, RETRY_NEXT_SESSION_FILE_PREFIX + batchFile.name)
+			moveFileToDir(batchFile, retryNextSessionDir)
 			println "Failed to publish ${batchFile.absolutePath} due to missing task, will retry in future session..."
 		} catch (Exception ex) {
 			println "Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry later..."
@@ -128,15 +142,6 @@ class BatchPublisher implements Runnable {
 
 		if (batch.isEmpty() == false) {
 			batchClient.addIFMBatch(batch)
-		}
-	}
-
-
-	List<File> findAllBatchesAndSort() {
-		messageQueueDir.listFiles().findAll { File file ->
-			file.name.matches(BATCH_FILE_PREFIX+".*")
-		}.sort { File file ->
-			file.name
 		}
 	}
 
@@ -194,13 +199,6 @@ class BatchPublisher implements Runnable {
 		if (runThread != null) {
 			runThread.interrupt()
 		}
-	}
-
-
-	String createTimestampSuffix() {
-		LocalDateTime now = LocalDateTime.now()
-
-		now.toString("yyyyMMdd_HHmmss")
 	}
 
 }
