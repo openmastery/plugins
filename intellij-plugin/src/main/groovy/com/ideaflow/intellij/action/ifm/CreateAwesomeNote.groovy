@@ -13,12 +13,18 @@ class CreateAwesomeNote extends AnAction {
 
 	@Override
 	void actionPerformed(AnActionEvent e) {
-		String awesomeNote = promptForInput()
+		String awesomeMessage = promptForInput()
 
-		if (awesomeNote != null) {
+		if (awesomeMessage != null) {
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-			controller.resolveWithYay(awesomeNote)
+			String snippet = getSelectedText(e);
+			if (snippet == null) {
+				controller.resolveWithYay(awesomeMessage)
+			} else {
+				controller.resolveWithAwesomeSnippet(awesomeMessage, null, snippet);
+			}
+
 			getTaskManager().updateTask(controller.getActiveTask())
 		}
 	}

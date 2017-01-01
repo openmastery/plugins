@@ -85,8 +85,8 @@
 			<add-to-group group-id="EditorPopupMenu" anchor="last"/>
 			<add-to-group group-id="ConsoleEditorPopupMenu" anchor="last"/>
 			<separator/>
-			<reference ref="org.openmastery.ideaflow.PainSnippet"/>
-			<reference ref="org.openmastery.ideaflow.AwesomeSnippet"/>
+			<reference ref="org.openmastery.ideaflow.Pain"/>
+			<reference ref="org.openmastery.ideaflow.Awesome"/>
 		</group>
 
 	</actions>

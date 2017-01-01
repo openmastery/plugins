@@ -16,11 +16,6 @@ class ActionSupport {
 		presentation.setEnabled(isTaskActiveAndRecording(e));
 	}
 
-	public void disableWhenNotRecordingOrNoSelectedText(AnActionEvent e) {
-		Presentation presentation = e.getPresentation()
-		presentation.setEnabled(isTaskActiveAndRecording(e) && getSelectedText(e) != null);
-	}
-
 	public boolean isTaskActiveAndRecording(AnActionEvent e) {
 		isRecording(e) && isTaskActive(e)
 	}

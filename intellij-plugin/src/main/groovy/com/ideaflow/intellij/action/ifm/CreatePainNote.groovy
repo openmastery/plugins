@@ -30,11 +30,17 @@ class CreatePainNote extends AnAction {
 
 	@Override
 	void actionPerformed(AnActionEvent e) {
-		String painNote = promptForInput()
-		if (painNote != null) {
+		String painMessage = promptForInput()
+		if (painMessage != null) {
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-			controller.createPain(painNote)
+			String snippet = getSelectedText(e);
+			if (snippet != null) {
+				controller.createPainSnippet(painMessage, null, snippet);
+			} else {
+				controller.createPain(painMessage);
+			}
+
 			getTaskManager().updateTask(controller.getActiveTask())
 		}
 	}
