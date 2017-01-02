@@ -1,6 +1,8 @@
 package org.openmastery.ideaflow.activity
 
 import com.bancvue.rest.exception.NotFoundException
+import org.joda.time.DateTime
+import org.joda.time.DateTimeUtils
 import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
@@ -31,7 +33,7 @@ class TestBatchPublisher extends Specification {
 	def cleanup() {
 		tempDir.delete()
 
-		List<File> batchFiles = batchPublisher.findAllBatchesAndSort()
+		List<File> batchFiles = batchPublisher.getBatchesToPublish()
 		batchFiles.each { File file ->
 			file.delete()
 		}
@@ -51,12 +53,12 @@ class TestBatchPublisher extends Specification {
 
 	private NewEditorActivity createEditorActivity() {
 		NewEditorActivity.builder()
-						.taskId(1)
-						.endTime(LocalDateTime.now())
-						.durationInSeconds(5)
-						.filePath("hello.txt")
-						.isModified(true)
-						.build();
+				.taskId(1)
+				.endTime(LocalDateTime.now())
+				.durationInSeconds(5)
+				.filePath("hello.txt")
+				.isModified(true)
+				.build();
 	}
 
 	private File createBatchFile() {
@@ -110,7 +112,7 @@ class TestBatchPublisher extends Specification {
 
 		then:
 		assert batchPublisher.hasSomethingToPublish() == false
-		 1 * mockBatchClient.addIFMBatch(_)
+		1 * mockBatchClient.addIFMBatch(_)
 	}
 
 	def "publishBatches SHOULD mark file as failed if parsing fails"() {
@@ -137,7 +139,8 @@ class TestBatchPublisher extends Specification {
 		batchPublisher.publishBatches()
 
 		then:
-		assert batchPublisher.hasSomethingToPublish() == true
+		assert batchPublisher.hasSomethingToPublish() == false
+		assert batchPublisher.publishDir.listFiles().length == 1
 	}
 
 	def "publishBatches should set aside batches where the task cannot be found and resume on next session"() {
@@ -160,6 +163,39 @@ class TestBatchPublisher extends Specification {
 
 		then:
 		assert batchPublisher.hasSomethingToPublish() == true
+	}
+
+	def "publishBatches should delay retry of failed batch until tomorrow"() {
+		given:
+		DateTimeUtils.setCurrentMillisFixed(System.currentTimeMillis())
+		int clientCallCount = 0
+		createBatchFile()
+		mockBatchClient.addIFMBatch(_) >> {
+			clientCallCount++
+			throw new Exception("you lose!")
+		}
+
+		when:
+		batchPublisher.commitActiveFiles()
+		batchPublisher.publishBatches()
+
+		then:
+		assert clientCallCount == 1
+		assert batchPublisher.hasSomethingToPublish() == false
+		assert batchPublisher.publishDir.listFiles().length == 1
+
+		when:
+		batchPublisher.publishBatches()
+
+		then:
+		assert clientCallCount == 1
+
+		when:
+		DateTimeUtils.setCurrentMillisFixed(DateTime.now().plusDays(2).millis)
+		batchPublisher.publishBatches()
+
+		then:
+		assert clientCallCount == 2
 	}
 
 }

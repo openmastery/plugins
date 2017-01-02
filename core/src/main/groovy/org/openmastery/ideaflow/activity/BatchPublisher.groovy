@@ -16,13 +16,13 @@ import org.openmastery.publisher.client.BatchClient
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
-
 class BatchPublisher implements Runnable {
 
 	private AtomicBoolean closed = new AtomicBoolean(false)
 	private Thread runThread
 	private JSONConverter jsonConverter = new JSONConverter()
 
+	private Map<File, Integer> failedFileToLastDayRetriedMap = [:]
 	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>()
 	private File activeDir
 	private File publishDir
@@ -92,24 +92,26 @@ class BatchPublisher implements Runnable {
 	}
 
 	boolean hasSomethingToPublish() {
-		publishDir.listFiles().size() > 0
+		getBatchesToPublish().size() > 0
+	}
+
+	File[] getBatchesToPublish() {
+		int dayOfYear = LocalDateTime.now().dayOfYear
+		publishDir.listFiles().findAll { File file ->
+			Integer lastDayTried = failedFileToLastDayRetriedMap[file]
+			lastDayTried == null || lastDayTried != dayOfYear
+		}
 	}
 
 	void publishBatches() {
 		try {
-			List<File> batchFiles = findAllBatchesAndSort()
+			List<File> batchFiles = getBatchesToPublish().sort { File file -> file.name }
 			batchFiles.each { File batchFile ->
 				convertPublishAndDeleteBatch(batchFile)
 			}
 		} catch (Exception ex) {
 			println "Unhandled error during batch file publishing..."
 			ex.printStackTrace()
-		}
-	}
-
-	private List<File> findAllBatchesAndSort() {
-		publishDir.listFiles().sort() { File file ->
-			file.name
 		}
 	}
 
@@ -130,7 +132,8 @@ class BatchPublisher implements Runnable {
 			moveFileToDir(batchFile, retryNextSessionDir)
 			println "Failed to publish ${batchFile.absolutePath} due to missing task, will retry in future session..."
 		} catch (Exception ex) {
-			println "Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry later..."
+			failedFileToLastDayRetriedMap.put(batchFile, LocalDateTime.now().dayOfYear)
+			println "Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry tomorrow..."
 		}
 	}
 
@@ -163,7 +166,7 @@ class BatchPublisher implements Runnable {
 		batch.executionActivityList = []
 		batch.modificationActivityList = []
 		batch.blockActivityList = []
-		batch.eventList =[]
+		batch.eventList = []
 		batch.snippetEventList = []
 		return batch
 	}
