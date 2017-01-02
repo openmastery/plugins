@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.action.ifm
+package org.openmastery.ideaflow.intellij.action
 
 import org.openmastery.ideaflow.controller.IFMController
 import org.openmastery.ideaflow.intellij.action.ActionSupport

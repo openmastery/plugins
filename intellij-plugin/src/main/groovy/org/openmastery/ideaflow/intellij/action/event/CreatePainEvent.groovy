@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.action.ifm
+package org.openmastery.ideaflow.intellij.action.event
 
 import org.openmastery.ideaflow.controller.IFMController
 import org.openmastery.ideaflow.intellij.action.ActionSupport
@@ -13,7 +13,7 @@ import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import javax.swing.Icon
 
 @Mixin(ActionSupport)
-class CreatePainNote extends AnAction {
+class CreatePainEvent extends AnAction {
 
 	Icon PAIN_ICON
 	Icon PAIN_ICON_DOT1
@@ -21,7 +21,7 @@ class CreatePainNote extends AnAction {
 	Icon PAIN_ICON_DOT3
 
 
-	CreatePainNote() {
+	CreatePainEvent() {
 		PAIN_ICON = IdeaFlowApplicationComponent.getIcon("pain.png")
 		PAIN_ICON_DOT1 = IdeaFlowApplicationComponent.getIcon("pain_1dot.png")
 		PAIN_ICON_DOT2 = IdeaFlowApplicationComponent.getIcon("pain_2dot.png")

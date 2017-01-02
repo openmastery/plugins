@@ -18,7 +18,6 @@ public class IdeaFlowSettings implements PersistentStateComponent<IdeaFlowSettin
 		return ServiceManager.getService(IdeaFlowSettings.class);
 	}
 
-	// TODO: set to heroku url
 	private String apiUrl = "http://om-ideaflow.herokuapp.com";
 	private String apiKey;
 	private int recentTaskListSize = 5;

@@ -1,21 +1,29 @@
-package org.openmastery.ideaflow.intellij.action.ifm
+package org.openmastery.ideaflow.intellij.action.event
 
+import org.openmastery.ideaflow.state.TimeConverter
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import org.joda.time.Duration
 import org.openmastery.ideaflow.controller.IFMController
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
 import org.openmastery.ideaflow.intellij.action.ActionSupport
 import org.openmastery.publisher.api.event.EventType
 
 @Mixin(ActionSupport)
-class CreateProgressNote extends AnAction {
+class CreateDistractionEvent extends AnAction {
 
 	@Override
 	void actionPerformed(AnActionEvent e) {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		String progressNote = IdeaFlowApplicationComponent.promptForInput("Create a Progress Note", "What are you doing next?")
-		controller.createEvent(progressNote, EventType.NOTE)
+		Duration recentIdleDuration = controller.getRecentIdleDuration()
+		String durationStr = TimeConverter.toFormattedDuration(recentIdleDuration)
+
+		String message = "You recently spent $durationStr on external activity.  \nWhat was the recent distraction?"
+
+		String timeEstimate = IdeaFlowApplicationComponent.promptForInput("Recent Distraction", message)
+		controller.createEvent(timeEstimate, EventType.DISTRACTION)
+
 	}
 
 	@Override

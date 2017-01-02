@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.action.meta;
+package org.openmastery.ideaflow.intellij.action.wizard;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -7,20 +7,20 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JComponent;
 
-public class CreateTaskWizard extends DialogWrapper {
+public class ResumeTaskWizard extends DialogWrapper {
 
-	private CreateTaskDialog dialog;
+	private ResumeTaskDialog dialog;
 
-	public CreateTaskWizard(@Nullable Project project) {
+	public ResumeTaskWizard(@Nullable Project project) {
 		super(project);
 		init();
-		setTitle("Create Task");
+		setTitle("Resume Task");
 	}
 
 	@Override
 	protected JComponent createCenterPanel() {
 		if (dialog == null) {
-			dialog = new CreateTaskDialog();
+			dialog = new ResumeTaskDialog();
 		} else {
 			dialog.clearTextFields();
 		}
@@ -40,12 +40,6 @@ public class CreateTaskWizard extends DialogWrapper {
 	public String getTaskName() {
 		return dialog.getNameText();
 	}
-
-	public String getTaskDescription() {
-		return dialog.getDescriptionText();
-	}
-
-	public String getTaskProject() { return dialog.getProjectText(); }
 
 	public boolean shouldCreateTask() {
 		return showAndGet();

@@ -32,20 +32,20 @@
 	</project-components>
 
 	<actions>
-		<action id="org.openmastery.ideaflow.Subtask" class="org.openmastery.ideaflow.intellij.action.ifm.CreateSubtaskNote" text="Start a major subtask..."
+		<action id="org.openmastery.ideaflow.Subtask" class="org.openmastery.ideaflow.intellij.action.event.CreateSubtaskEvent" text="Start a major subtask..."
 				description="Mark the beginning of a subtask in the active IdeaFlow" icon="/icons/subtask.png">
 		</action>
-		<action id="org.openmastery.ideaflow.Note" class="org.openmastery.ideaflow.intellij.action.ifm.CreateProgressNote" text="Create a progress note..."
+		<action id="org.openmastery.ideaflow.Note" class="org.openmastery.ideaflow.intellij.action.event.CreateProgressEvent" text="Create a progress note..."
 				description="Take notes as you make progress through a subtask" icon="/icons/sub_sub_task.png">
 		</action>
-		<action id="org.openmastery.ideaflow.Distraction" class="org.openmastery.ideaflow.intellij.action.ifm.CreateDistractionNote" text="Recent Distraction..."
+		<action id="org.openmastery.ideaflow.Distraction" class="org.openmastery.ideaflow.intellij.action.event.CreateDistractionEvent" text="Recent Distraction..."
 				description="Mark a recent (prior) distraction that took you away from the task" icon="/icons/distraction.png">
 		</action>
 
-		<action id="org.openmastery.ideaflow.Pain" class="org.openmastery.ideaflow.intellij.action.ifm.CreatePainNote" text="WTF?!"
+		<action id="org.openmastery.ideaflow.Pain" class="org.openmastery.ideaflow.intellij.action.event.CreatePainEvent" text="WTF?!"
 				description="Mark the start of confusion (unexpected observation)" icon="/icons/pain.png">
 		</action>
-		<action id="org.openmastery.ideaflow.Awesome" class="org.openmastery.ideaflow.intellij.action.ifm.CreateAwesomeNote" text="YAY!"
+		<action id="org.openmastery.ideaflow.Awesome" class="org.openmastery.ideaflow.intellij.action.event.CreateAwesomeEvent" text="YAY!"
 				description="Celebrate the success of solving the problem!" icon="/icons/awesome.png">
 		</action>
 
@@ -57,7 +57,7 @@
 				description="Mark selected text as important to resolving confusion" icon="/icons/awesome.png">
 		</action>
 
-		<action id="org.openmastery.ideaflow.TogglePause" class="org.openmastery.ideaflow.intellij.action.ifm.TogglePause"
+		<action id="org.openmastery.ideaflow.TogglePause" class="org.openmastery.ideaflow.intellij.action.TogglePause"
 		        icon="/icons/pause.png">
 		</action>
 <!--
@@ -67,7 +67,7 @@
 		</action>
 
 -->
-		<action id="org.openmastery.ideaflow.SwitchActive" class="org.openmastery.ideaflow.intellij.action.meta.SwitchIdeaFlowComboBox"/>
+		<action id="org.openmastery.ideaflow.SwitchActive" class="org.openmastery.ideaflow.intellij.action.SwitchIdeaFlowComboBox"/>
 
 		<group id="org.openmastery.ideaflow.MainToolBar" text="IdeaFlow Group" description="IdeaFlow action group">
 			<add-to-group group-id="MainToolBar" anchor="first"/>

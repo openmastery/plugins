@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.action.ifm
+package org.openmastery.ideaflow.intellij.action.event
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -9,7 +9,7 @@ import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 
 @Mixin(ActionSupport)
-class CreateAwesomeNote extends AnAction {
+class CreateAwesomeEvent extends AnAction {
 
 	@Override
 	void actionPerformed(AnActionEvent e) {

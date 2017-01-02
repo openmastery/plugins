@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.action.meta
+package org.openmastery.ideaflow.intellij.action
 
 import org.openmastery.ideaflow.controller.IFMController
 import org.openmastery.ideaflow.controller.NoSuchTaskToResumeException
@@ -10,7 +10,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction
 import com.intellij.openapi.project.Project
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
-import org.openmastery.ideaflow.intellij.action.ActionSupport
+import org.openmastery.ideaflow.intellij.action.wizard.CreateTaskWizard
+import org.openmastery.ideaflow.intellij.action.wizard.ResumeTaskWizard
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
 import org.openmastery.ideaflow.state.TaskState
@@ -92,7 +93,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		TaskState task = controller.getActiveTask()
 
 		if (task) {
-			OpenInVisualizerAction.openTaskInBrowser(task)
+			OpenInVisualizer.openTaskInBrowser(task)
 		}
 	}
 

@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.action.meta
+package org.openmastery.ideaflow.intellij.action
 
 import org.openmastery.ideaflow.state.TaskState
 import com.intellij.ide.BrowserUtil
@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.Presentation
 import org.openmastery.ideaflow.intellij.action.ActionSupport
 
 @Mixin(ActionSupport)
-class OpenInVisualizerAction extends AnAction {
+class OpenInVisualizer extends AnAction {
 
 	@Override
 	public void update(AnActionEvent event) {
