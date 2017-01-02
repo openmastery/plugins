@@ -4,10 +4,15 @@ import com.ideaflow.controller.IFMController
 import com.ideaflow.state.TaskState
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiFile
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
 
 class ActionSupport {
 
@@ -58,6 +63,19 @@ class ActionSupport {
 
 		SelectionModel selectionModel = editor.getSelectionModel();
 		return selectionModel.getSelectedText();
+	}
+
+	public String getActiveFilePath(AnActionEvent e) {
+		VirtualFile file = e.getData(LangDataKeys.VIRTUAL_FILE)
+		String fileName = null
+
+		if (file != null) {
+			fileName = VirtualFileActivityHandler.getFullFilePathOrNull(file, e.getProject())
+			if (fileName == null) {
+				fileName = file.name
+			}
+		}
+		fileName
 	}
 
 }

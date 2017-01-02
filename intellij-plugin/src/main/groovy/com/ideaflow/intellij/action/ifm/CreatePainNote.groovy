@@ -36,7 +36,8 @@ class CreatePainNote extends AnAction {
 
 			String snippet = getSelectedText(e);
 			if (snippet != null) {
-				controller.createPainSnippet(painMessage, null, snippet);
+				String source = getActiveFilePath(e)
+				controller.createPainSnippet(painMessage, source, snippet);
 			} else {
 				controller.createPain(painMessage);
 			}

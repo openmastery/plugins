@@ -18,11 +18,12 @@ class CreateAwesomeNote extends AnAction {
 		if (awesomeMessage != null) {
 			IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-			String snippet = getSelectedText(e);
+			String snippet = getSelectedText(e)
 			if (snippet == null) {
 				controller.resolveWithYay(awesomeMessage)
 			} else {
-				controller.resolveWithAwesomeSnippet(awesomeMessage, null, snippet);
+				String source = getActiveFilePath(e)
+				controller.resolveWithAwesomeSnippet(awesomeMessage, source, snippet);
 			}
 
 			getTaskManager().updateTask(controller.getActiveTask())

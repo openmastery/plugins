@@ -48,23 +48,20 @@ class VirtualFileActivityHandler {
 		filePath
 	}
 
-	private String getFullFilePathOrNull(VirtualFile file, Project project) {
-		String fullFilePath = file.path
-		String filePath = null
-
+	public static String getFullFilePathOrNull(VirtualFile file, Project project) {
 		Module module = ModuleUtil.findModuleForFile(file, project)
 		if (module != null) {
 			String moduleBasePath = module.getModuleFile().getParent().path
-			if (fullFilePath.startsWith(moduleBasePath)) {
-				filePath = fullFilePath.substring(moduleBasePath.length())
+			if (file.path.startsWith(moduleBasePath)) {
+				return file.path.substring(moduleBasePath.length())
 			}
 		} else {
 			String projectBasePath = project.basePath
-			if (fullFilePath.startsWith(projectBasePath)) {
-				filePath = fullFilePath.substring(projectBasePath.length())
+			if (file.path.startsWith(projectBasePath)) {
+				return file.path.substring(projectBasePath.length())
 			}
 		}
-		filePath
+		return null
 	}
 
 }
