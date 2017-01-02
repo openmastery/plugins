@@ -60,7 +60,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		if (controller) {
 			TaskState activeTask = controller.activeTask
 			if (activeTask != null) {
-				e.presentation.text = activeTask.name
+				e.presentation.text = TaskState.getQualifiedName(activeTask)
 				e.presentation.description = activeTask.description
 			} else {
 				e.presentation.text = "Add new task"
@@ -121,7 +121,7 @@ class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			this.project = project
 			this.task = task
 
-			getTemplatePresentation().setText(task.name, false)
+			getTemplatePresentation().setText(TaskState.getQualifiedName(task), false)
 			getTemplatePresentation().setDescription("Set ${task.name} as active IdeaFlow")
 		}
 

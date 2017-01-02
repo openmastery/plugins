@@ -97,7 +97,7 @@ class IFMController {
 		// TODO: what to do on conflict?  Do we still need to activate tasks?
 
 		Task remoteTask = taskClient.createTask(name, description, project);
-		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
+		TaskState task = TaskState.create(remoteTask)
 
 		activateTask(task)
 		return task
@@ -112,7 +112,7 @@ class IFMController {
 			throw new NoSuchTaskToResumeException(name)
 		}
 
-		TaskState task = new TaskState(id: remoteTask.id, name: remoteTask.name, description: remoteTask.description)
+		TaskState task = TaskState.create(remoteTask)
 
 		activateTask(task)
 		return task
