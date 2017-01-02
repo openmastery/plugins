@@ -1,4 +1,4 @@
-package org.openmastery.ideaflow.intellij.file
+package org.openmastery.ideaflow.intellij.handler
 
 import org.openmastery.ideaflow.activity.ActivityHandler
 import com.intellij.openapi.module.Module

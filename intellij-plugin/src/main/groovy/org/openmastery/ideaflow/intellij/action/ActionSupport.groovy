@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SelectionModel
 import com.intellij.openapi.vfs.VirtualFile
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
-import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
+import org.openmastery.ideaflow.intellij.handler.VirtualFileActivityHandler
 
 class ActionSupport {
 

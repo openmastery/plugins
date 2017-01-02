@@ -1,23 +1,19 @@
 package org.openmastery.ideaflow.intellij
 
-import org.openmastery.ideaflow.activity.ActivityHandler
-import org.openmastery.ideaflow.controller.IFMController
-import org.openmastery.ideaflow.state.TaskState
-import org.openmastery.ideaflow.state.TimeConverter
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.IdeFrame
 import com.intellij.ui.UIBundle
 import com.intellij.util.messages.MessageBusConnection
-import org.joda.time.DateTime
-import org.joda.time.Duration
-import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
+import org.openmastery.ideaflow.controller.IFMController
+import org.openmastery.ideaflow.intellij.handler.DeactivationHandler
+import org.openmastery.ideaflow.intellij.handler.VirtualFileActivityHandler
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
+import org.openmastery.ideaflow.state.TaskState
 
 import javax.swing.Icon
 
@@ -72,7 +68,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 		initIfmController(IdeaFlowSettings.getInstance())
 
-		ApplicationListener applicationListener = new ApplicationListener(controller.activityHandler)
+		ApplicationListener applicationListener = new ApplicationListener(controller)
 		appConnection = ApplicationManager.getApplication().getMessageBus().connect()
 		appConnection.subscribe(ApplicationActivationListener.TOPIC, applicationListener)
 	}
@@ -111,15 +107,9 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 		private DeactivationHandler deactivationHandler
 
-		ApplicationListener(ActivityHandler activityHandler) {
-			deactivationHandler = new DeactivationHandler(activityHandler)
+		ApplicationListener(IFMController controller) {
+			deactivationHandler = new DeactivationHandler(controller)
 		}
-
-
-
-
-
-
 
 		@Override
 		void applicationActivated(IdeFrame ideFrame) {
@@ -135,86 +125,6 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 			if (ideFrame.project) {
 				deactivationHandler.deactivated()
 			}
-		}
-
-	}
-
-	private static class DeactivationHandler {
-
-		private static final String IDLE_TITLE = "Idle Time?"
-
-		private static final Duration DEACTIVATION_THRESHOLD = Duration.standardMinutes(50)
-		private static final Duration AUTO_IDLE_THRESHOLD = Duration.standardHours(8)
-
-		private DateTime deactivatedAt
-		private boolean promptingForIdleTime
-		private ActivityHandler activityHandler
-
-		DeactivationHandler(ActivityHandler activityHandler) {
-			this.activityHandler = activityHandler
-		}
-
-		boolean isPromptingForIdleTime() {
-			promptingForIdleTime
-		}
-
-		void deactivated() {
-			deactivatedAt = DateTime.now()
-		}
-
-		void markActiveFileEventAsIdleIfDeactivationThresholdExceeded(Project project) {
-			if (getIFMController().isRecording() == false) {
-				deactivatedAt = null
-			}
-
-			Duration deactivationDuration = getDeactivationDuration()
-			if (!getIFMController().isTaskActive() || !deactivationDuration) {
-				return
-			}
-
-			promptingForIdleTime = true
-			try {
-				if (deactivationDuration.isLongerThan(AUTO_IDLE_THRESHOLD)) {
-					activityHandler.markIdleTime(deactivationDuration)
-				} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
-					boolean wasIdleTime = wasDeactivationIdleTime(project, deactivationDuration)
-					if (wasIdleTime) {
-						activityHandler.markIdleTime(deactivationDuration)
-					} else {
-						String comment = promptForInput("External Activity Comment", "What were you doing?")
-						activityHandler.markExternalActivity(deactivationDuration, comment)
-					}
-				} else {
-					activityHandler.markExternalActivity(deactivationDuration, null)
-				}
-			} finally {
-				deactivatedAt = null
-				promptingForIdleTime = false
-			}
-		}
-
-		private Duration getDeactivationDuration() {
-			Duration deactivationDuration = null
-
-			if (deactivatedAt) {
-				long deactivationLength = DateTime.now().millis - deactivatedAt.millis
-				deactivationDuration = Duration.millis(deactivationLength)
-			}
-			deactivationDuration
-		}
-
-		private boolean wasDeactivationIdleTime(Project project, Duration deactivationDuration) {
-
-			String formattedPeriod = TimeConverter.toFormattedDuration(deactivationDuration)
-			StringBuilder messageBuilder = new StringBuilder()
-			messageBuilder.append("Were you working ")
-			String activeTaskName = getIFMController().getActiveTaskName()
-			if (activeTaskName != null) {
-				messageBuilder.append("on ").append(activeTaskName).append(" ")
-			}
-			messageBuilder.append("during the last ${formattedPeriod}?")
-			int result = Messages.showYesNoDialog(project, messageBuilder.toString(), IDLE_TITLE, null)
-			return result != 0
 		}
 
 	}

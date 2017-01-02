@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.messages.MessageBusConnection
 import org.jetbrains.annotations.NotNull
-import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
+import org.openmastery.ideaflow.intellij.handler.VirtualFileActivityHandler
 
 class IdeaFlowProjectComponent implements ProjectComponent {
 
