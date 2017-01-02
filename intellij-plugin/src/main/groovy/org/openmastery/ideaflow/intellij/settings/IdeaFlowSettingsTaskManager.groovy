@@ -1,5 +1,7 @@
 package org.openmastery.ideaflow.intellij.settings
 
+import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.ideaflow.intellij.Logger
 import org.openmastery.ideaflow.state.TaskState
 import groovy.json.JsonException
 import groovy.json.JsonOutput
@@ -12,9 +14,11 @@ import groovy.json.JsonSlurper
 public class IdeaFlowSettingsTaskManager {
 
 	private IdeaFlowSettings settings;
+	private Logger logger;
 
 	public IdeaFlowSettingsTaskManager(IdeaFlowSettings settings) {
 		this.settings = settings;
+		this.logger = IdeaFlowApplicationComponent.log
 	}
 
 	List<TaskState> getRecentTasks() {
@@ -28,7 +32,7 @@ public class IdeaFlowSettingsTaskManager {
 			if (taskState.hasProperty(propName)) {
 				taskState."$propName" = value
 			} else {
-				println "Property unavailable:" +propName
+				logger.warn("Failed to apply property=${propName}, value=${value} - no property with that name on TaskState and will be ignored")
 			}
 		}
 		return taskState
@@ -41,8 +45,7 @@ public class IdeaFlowSettingsTaskManager {
 		try {
 			itemsAsMap = new JsonSlurper().parseText(settings.taskListJsonString ?: '[]') as List<Map>
 		} catch (JsonException ex) {
-			// TODO: log to intellij
-			ex.printStackTrace()
+			logger.error("JSON error while attempting to convert task list=${settings.taskListJsonString}, clearing out task list")
 			itemsAsMap = []
 		}
 		itemsAsMap.collect { Map properties ->

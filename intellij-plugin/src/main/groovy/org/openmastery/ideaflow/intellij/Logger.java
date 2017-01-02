@@ -15,6 +15,11 @@ public class Logger implements org.openmastery.ideaflow.Logger {
 	}
 
 	@Override
+	public void warn(String message) {
+		logger.warn(message);
+	}
+
+	@Override
 	public void error(String message) {
 		logger.error(message);
 	}

@@ -4,6 +4,7 @@ import com.bancvue.rest.exception.NotFoundException
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.joda.time.LocalDateTime
+import org.openmastery.ideaflow.Logger
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
 import org.openmastery.publisher.api.batch.NewIFMBatch
@@ -24,7 +25,8 @@ class TestBatchPublisher extends Specification {
 		tempDir.deleteDir()
 		tempDir.mkdirs()
 
-		batchPublisher = new BatchPublisher(tempDir)
+		Logger logger = Mock(Logger)
+		batchPublisher = new BatchPublisher(tempDir, logger)
 
 		mockBatchClient = Mock(BatchClient)
 		batchPublisher.batchClient = mockBatchClient

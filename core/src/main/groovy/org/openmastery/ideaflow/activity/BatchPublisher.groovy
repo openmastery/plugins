@@ -2,6 +2,7 @@ package org.openmastery.ideaflow.activity
 
 import com.bancvue.rest.exception.NotFoundException
 import org.joda.time.LocalDateTime
+import org.openmastery.ideaflow.Logger
 import org.openmastery.publisher.api.activity.NewBlockActivity
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
@@ -22,6 +23,7 @@ class BatchPublisher implements Runnable {
 	private Thread runThread
 	private JSONConverter jsonConverter = new JSONConverter()
 
+	private Logger logger
 	private Map<File, Integer> failedFileToLastDayRetriedMap = [:]
 	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>()
 	private File activeDir
@@ -29,7 +31,8 @@ class BatchPublisher implements Runnable {
 	private File failedDir
 	private File retryNextSessionDir
 
-	BatchPublisher(File baseDir) {
+	BatchPublisher(File baseDir, Logger logger) {
+		this.logger = logger
 		this.activeDir = createDir(baseDir, "active")
 		this.publishDir = createDir(baseDir, "publish")
 		this.failedDir = createDir(baseDir, "failed")
@@ -110,8 +113,7 @@ class BatchPublisher implements Runnable {
 				convertPublishAndDeleteBatch(batchFile)
 			}
 		} catch (Exception ex) {
-			println "Unhandled error during batch file publishing..."
-			ex.printStackTrace()
+			logger.error("Unhandled error during batch file publishing...", ex)
 		}
 	}
 
@@ -121,7 +123,7 @@ class BatchPublisher implements Runnable {
 			batch = convertBatchFileToObject(batchFile)
 		} catch (Exception ex) {
 			File renameToFile = moveFileToDir(batchFile, failedDir)
-			println "Failed to convert ${batchFile.absolutePath}, exception=${ex.message}, renamingTo=${renameToFile.absolutePath}"
+			logger.info("Failed to convert ${batchFile.absolutePath}, exception=${ex.message}, renamingTo=${renameToFile.absolutePath}")
 			return
 		}
 
@@ -130,10 +132,10 @@ class BatchPublisher implements Runnable {
 			batchFile.delete()
 		} catch (NotFoundException ex) {
 			moveFileToDir(batchFile, retryNextSessionDir)
-			println "Failed to publish ${batchFile.absolutePath} due to missing task, will retry in future session..."
+			logger.info("Failed to publish ${batchFile.absolutePath} due to missing task, will retry in future session...")
 		} catch (Exception ex) {
 			failedFileToLastDayRetriedMap.put(batchFile, LocalDateTime.now().dayOfYear)
-			println "Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry tomorrow..."
+			logger.info("Failed to publish ${batchFile.absolutePath}, exception=${ex.message}, will retry tomorrow...")
 		}
 	}
 

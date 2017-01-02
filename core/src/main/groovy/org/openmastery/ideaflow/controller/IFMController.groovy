@@ -29,7 +29,7 @@ class IFMController {
 
 		File ideaFlowDir = createIdeaFlowDir()
 
-		batchPublisher = new BatchPublisher(ideaFlowDir)
+		batchPublisher = new BatchPublisher(ideaFlowDir, logger)
 		messageQueue = new MessageQueue(this, batchPublisher)
 
 		activityHandler = new ActivityHandler(this, messageQueue)
