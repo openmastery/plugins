@@ -153,6 +153,10 @@ class IFMController {
 		activeTask
 	}
 
+	Long getActiveTaskId() {
+		activeTask?.id
+	}
+
 	String getActiveTaskName() {
 		activeTask?.name
 	}

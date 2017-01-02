@@ -21,6 +21,8 @@ import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.messages.MessageBusConnection
 import org.jetbrains.annotations.NotNull
+import org.openmastery.ideaflow.controller.IFMController
+import org.openmastery.ideaflow.intellij.handler.ProcessExecutionHandler
 import org.openmastery.ideaflow.intellij.handler.VirtualFileActivityHandler
 
 class IdeaFlowProjectComponent implements ProjectComponent {
@@ -44,9 +46,7 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 		VirtualFileActivityHandler fileActivityHandler = IdeaFlowApplicationComponent.getFileActivityHandler()
 		fileListener = new FileListener(fileActivityHandler)
 
-		ActivityHandler activityHandler = IdeaFlowApplicationComponent.getIFMController().getActivityHandler()
-		processExecutionListener = new ProcessExecutionListener(activityHandler)
-
+		processExecutionListener = new ProcessExecutionListener(IdeaFlowApplicationComponent.getIFMController())
 	}
 
 	void disposeComponent() {}
@@ -121,8 +121,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 			activeProject = null
 		}
 
-
-
 		@Override
 		void documentChanged(DocumentEvent event) {
 			if (activeFile) {
@@ -133,71 +131,25 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 	}
 
 	private class ProcessExecutionListener extends ExecutionAdapter {
-		ActivityHandler activityHandler
-		Map<ProcessHandler, ExitCodeListener> processDecodingMap = [:]
 
-		ProcessExecutionListener(ActivityHandler activityHandler) {
-			this.activityHandler = activityHandler
+		private ProcessExecutionHandler handler
+
+		ProcessExecutionListener(IFMController controller) {
+			this.handler = new ProcessExecutionHandler(controller)
 		}
 
 		@Override
 		public void processStarting(String executorId, @NotNull ExecutionEnvironment env) {
-			Long taskId = IdeaFlowApplicationComponent.getIFMController().getActiveTask()?.id
-			String processName = env.runProfile.name
-			Long processId = env.executionId
-			String executionTaskType = env.getRunnerAndConfigurationSettings().getType().displayName
-			boolean isDebug = executorId.equals("Debug")
-
-			activityHandler.markProcessStarting(taskId, processId, processName, executionTaskType, isDebug)
+			handler.processStarting(executorId, env)
 		}
 
 		public void processStarted(String executorId, @NotNull ExecutionEnvironment env, @NotNull ProcessHandler processHandler) {
-			ExitCodeListener exitCodeListener = new ExitCodeListener(env.executionId)
-			processHandler.addProcessListener(exitCodeListener)
-			processDecodingMap.put(processHandler, exitCodeListener)
+			handler.processStarted(env, processHandler)
 		}
 
 		public void processTerminated(@NotNull RunProfile runProfile, @NotNull ProcessHandler processHandler) {
-
-			ExitCodeListener exitCodeListener = processDecodingMap.get(processHandler)
-			if (exitCodeListener) {
-				processHandler.removeProcessListener(exitCodeListener)
-				activityHandler.markProcessEnding(exitCodeListener.processId, exitCodeListener.exitCode)
-			} else {
-				//TODO not supposed to happen, do some error handling stuff
-			}
-
+			handler.processTerminated(processHandler)
 		}
 	}
-
-	private class ExitCodeListener implements ProcessListener {
-
-		int exitCode
-		Long processId
-
-		ExitCodeListener(Long processId) {
-			this.processId = processId
-		}
-
-		@Override
-		void startNotified(ProcessEvent processEvent) {
-
-		}
-
-		@Override
-		void processTerminated(ProcessEvent processEvent) {
-			exitCode = processEvent.exitCode
-		}
-
-		@Override
-		void processWillTerminate(ProcessEvent processEvent, boolean b) {
-
-		}
-
-		@Override
-		void onTextAvailable(ProcessEvent processEvent, Key key) {
-		}
-	}
-
 
 }
