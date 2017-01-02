@@ -1,6 +1,6 @@
 package org.openmastery.ideaflow.intellij.settings
 
-import com.ideaflow.state.TaskState
+import org.openmastery.ideaflow.state.TaskState
 import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper

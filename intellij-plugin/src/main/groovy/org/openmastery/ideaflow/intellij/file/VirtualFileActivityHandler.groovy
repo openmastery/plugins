@@ -1,6 +1,6 @@
 package org.openmastery.ideaflow.intellij.file
 
-import com.ideaflow.activity.ActivityHandler
+import org.openmastery.ideaflow.activity.ActivityHandler
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleUtil
 import com.intellij.openapi.project.Project

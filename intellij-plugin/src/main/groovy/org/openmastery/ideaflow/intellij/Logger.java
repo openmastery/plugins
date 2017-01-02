@@ -1,6 +1,6 @@
 package org.openmastery.ideaflow.intellij;
 
-public class Logger implements com.ideaflow.Logger {
+public class Logger implements org.openmastery.ideaflow.Logger {
 
 	com.intellij.openapi.diagnostic.Logger logger = com.intellij.openapi.diagnostic.Logger.getInstance("org.ideaflow");
 

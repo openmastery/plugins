@@ -1,9 +1,9 @@
 package org.openmastery.ideaflow.intellij
 
-import com.ideaflow.activity.ActivityHandler
-import com.ideaflow.controller.IFMController
-import com.ideaflow.state.TaskState
-import com.ideaflow.state.TimeConverter
+import org.openmastery.ideaflow.activity.ActivityHandler
+import org.openmastery.ideaflow.controller.IFMController
+import org.openmastery.ideaflow.state.TaskState
+import org.openmastery.ideaflow.state.TimeConverter
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent

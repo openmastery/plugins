@@ -1,6 +1,6 @@
 package org.openmastery.ideaflow.intellij
 
-import com.ideaflow.activity.ActivityHandler
+import org.openmastery.ideaflow.activity.ActivityHandler
 import com.intellij.execution.ExecutionAdapter
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.configurations.RunProfile
