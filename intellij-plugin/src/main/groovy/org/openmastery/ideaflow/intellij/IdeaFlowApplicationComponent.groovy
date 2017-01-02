@@ -7,7 +7,6 @@ import com.ideaflow.state.TimeConverter
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ApplicationComponent
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
@@ -16,8 +15,6 @@ import com.intellij.ui.UIBundle
 import com.intellij.util.messages.MessageBusConnection
 import org.joda.time.DateTime
 import org.joda.time.Duration
-import org.joda.time.format.PeriodFormatter
-import org.joda.time.format.PeriodFormatterBuilder
 import org.openmastery.ideaflow.intellij.file.VirtualFileActivityHandler
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettings
 import org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
@@ -26,7 +23,7 @@ import javax.swing.Icon
 
 class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
-	private static final Logger log = Logger.getInstance(IdeaFlowApplicationComponent)
+	private static final Logger log = new Logger()
 
 	static String NAME = "IdeaFlow.Component"
 
@@ -69,7 +66,7 @@ class IdeaFlowApplicationComponent extends ApplicationComponent.Adapter {
 
 	@Override
 	void initComponent() {
-		controller = new IFMController()
+		controller = new IFMController(log)
 		controller.setPaused(true)
 		virtualFileActivityHandler = new VirtualFileActivityHandler(controller.activityHandler)
 

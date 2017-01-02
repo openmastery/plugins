@@ -1,6 +1,7 @@
 package com.ideaflow.controller
 
 import com.bancvue.rest.exception.NotFoundException
+import com.ideaflow.Logger
 import com.ideaflow.activity.ActivityHandler
 import com.ideaflow.activity.BatchPublisher
 import com.ideaflow.activity.MessageQueue
@@ -14,6 +15,7 @@ import org.openmastery.publisher.client.TaskClient
 class IFMController {
 
 	private boolean paused = true
+	private Logger logger
 	private TaskClient taskClient
 	private BatchClient batchClient
 	private TaskState activeTask
@@ -22,7 +24,9 @@ class IFMController {
 	private BatchPublisher batchPublisher
 
 
-	IFMController() {
+	IFMController(Logger logger) {
+		this.logger = logger
+
 		File ideaFlowDir = createIdeaFlowDir()
 
 		batchPublisher = new BatchPublisher(ideaFlowDir)
