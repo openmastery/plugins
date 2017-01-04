@@ -61,20 +61,20 @@ class IFMController {
 	}
 
 	void initClients(String apiUrl, String apiKey) {
-
+		// TODO: make these configurable
 		taskClient = new TaskClient(apiUrl)
 				.apiKey(apiKey)
+				.connectTimeout(1000)
+				.readTimeout(2000)
 		batchClient = new BatchClient(apiUrl)
 				.apiKey(apiKey)
+				.connectTimeout(5000)
+				.readTimeout(30000)
 		batchPublisher.setBatchClient(batchClient)
 	}
 
 	Duration getRecentIdleDuration() {
 		getActivityHandler().getRecentIdleDuration()
-	}
-
-	boolean isEnabled() {
-		true
 	}
 
 	boolean isPaused() {
@@ -125,10 +125,10 @@ class IFMController {
 	void activateTask(TaskState newActiveTask) {
 		setPaused(false)
 		if (this.activeTask != null) {
-			messageQueue.pushEvent(activeTask.id,  EventType.DEACTIVATE, "Task-Switch: ["+activeTask?.name +"] to ["+newActiveTask.name+"]")
-			messageQueue.pushEvent(newActiveTask.id, EventType.ACTIVATE, "Task-Switch: ["+activeTask?.name +"] to ["+newActiveTask.name+"]")
+			messageQueue.pushEvent(activeTask.id, EventType.DEACTIVATE, "Task-Switch: [" + activeTask?.name + "] to [" + newActiveTask.name + "]")
+			messageQueue.pushEvent(newActiveTask.id, EventType.ACTIVATE, "Task-Switch: [" + activeTask?.name + "] to [" + newActiveTask.name + "]")
 		} else {
-			messageQueue.pushEvent(newActiveTask.id, EventType.ACTIVATE, "Task-Start: ["+newActiveTask.name+"]")
+			messageQueue.pushEvent(newActiveTask.id, EventType.ACTIVATE, "Task-Start: [" + newActiveTask.name + "]")
 		}
 		setActiveTask(newActiveTask)
 	}
