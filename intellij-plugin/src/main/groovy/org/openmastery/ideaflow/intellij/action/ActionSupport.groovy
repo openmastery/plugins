@@ -68,10 +68,7 @@ class ActionSupport {
 		String fileName = null
 
 		if (file != null) {
-			fileName = VirtualFileActivityHandler.getFullFilePathOrNull(file, e.getProject())
-			if (fileName == null) {
-				fileName = file.name
-			}
+			fileName = VirtualFileActivityHandler.getFullFilePathOrDefault(file, e.getProject(), file.name)
 		}
 		fileName
 	}
