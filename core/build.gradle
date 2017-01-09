@@ -11,6 +11,11 @@ repositories {
 	}
 }
 
+// intellij bundles slf4j-api and failure to exclude invites linkage errors...
+configurations.all {
+  exclude group: "org.slf4j", module: "slf4j-api"
+}
+
 dependencies {
 	compile 'org.codehaus.groovy:groovy-all:1.8.6'
 	compile 'org.openmastery:ifm-publisher-client:0.+'
