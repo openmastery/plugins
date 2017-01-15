@@ -18,7 +18,9 @@ configurations.all {
 
 dependencies {
 	compile 'org.codehaus.groovy:groovy-all:1.8.6'
-	compile 'org.openmastery:ifm-publisher-client:0.+'
+	compile ('org.openmastery:ifm-publisher-client:0.+') {
+		exclude group: 'org.slf4j'
+	}
 
 	testCompile 'org.slf4j:slf4j-api:1.7.12'
 	testCompile 'com.google.guava:guava:18.0'

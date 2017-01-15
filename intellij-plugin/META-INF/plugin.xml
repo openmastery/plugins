@@ -5,8 +5,8 @@
 		code design, and disruptions affect the pain you experience.  Intended to be used with the IdeaFlowDX Profiler
 		tools that help you categorize problems with simple #hashtags and add up the pain.  MVP Release 2/1/2017
 	</description>
-	<version>0.13</version>
-	<vendor>Open Mastery, Inc.</vendor>
+	<version>0.16</version>
+	<vendor>Open Mastery</vendor>
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
 
@@ -47,14 +47,6 @@
 		</action>
 		<action id="org.openmastery.ideaflow.Awesome" class="org.openmastery.ideaflow.intellij.action.event.CreateAwesomeEvent" text="YAY!"
 				description="Celebrate the success of solving the problem!" icon="/icons/awesome.png">
-		</action>
-
-		<action id="org.openmastery.ideaflow.PainSnippet" class="com.ideaflow.intellij.action.ifm.CreatePainSnippet" text="WTF?! I'm confused..."
-				description="Mark selected text as the place of confusion (unexpected observation)" icon="/icons/pain.png">
-		</action>
-
-		<action id="org.openmastery.ideaflow.AwesomeSnippet" class="com.ideaflow.intellij.action.ifm.CreateAwesomeSnippet" text="YAY! I found the answer..."
-				description="Mark selected text as important to resolving confusion" icon="/icons/awesome.png">
 		</action>
 
 		<action id="org.openmastery.ideaflow.TogglePause" class="org.openmastery.ideaflow.intellij.action.TogglePause"
