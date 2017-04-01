@@ -33,7 +33,7 @@ class CreateAwesomeEvent extends AnAction {
 	protected String promptForInput() {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 
-		List<String> unresolvedPainList = controller.getActiveTask().getUnresolvedPainList()
+		List<String> unresolvedPainList = controller.getActiveTask().getTroubleshootingEventList()
 
 		String wtfString = "";
 		for (int i = 0; i < unresolvedPainList.size(); i++) {

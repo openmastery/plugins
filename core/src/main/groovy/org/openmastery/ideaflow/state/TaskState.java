@@ -16,6 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id", "name"})
 public class TaskState {
+
+	private static final String PAIN_PREFIX = "WTF?: ";
+	private static final String AWESOME_PREFIX = "YAY!: ";
+
 	private Long id;
 	private String name;
 	private String description;
@@ -25,12 +29,37 @@ public class TaskState {
 	private String blockComment;
 	private String blockTime;
 
-	private List<String> unresolvedPainList = new ArrayList<String>();
+	private List<String> troubleshootingEventList = new ArrayList<String>();
 
-	@Deprecated
-	public void setUnresolvedWTFList(List<String> unresolvedWTFList) {
-		unresolvedPainList = unresolvedWTFList;
+	public int getUnresolvedPainCount() {
+		int unresolvedPainCount = 0;
+		for (String troubleshootingEvent : troubleshootingEventList) {
+			if (troubleshootingEvent.startsWith(PAIN_PREFIX)) {
+				unresolvedPainCount++;
+			}
+		}
+		return unresolvedPainCount;
 	}
+
+	public void clearTroubleshootingEventList() {
+		troubleshootingEventList.clear();
+	}
+
+	public void addPainfulTroubleshootingEvent(String event) {
+		addTroubleshootingEvent(PAIN_PREFIX + event);
+	}
+
+	public void addAwesomeTroubleshootingEvent(String event) {
+		addTroubleshootingEvent(AWESOME_PREFIX + event);
+	}
+
+	private void addTroubleshootingEvent(String event) {
+		if (troubleshootingEventList.size() > 20) {
+			troubleshootingEventList.remove(0);
+		}
+		troubleshootingEventList.add(event);
+	}
+
 
 	public static TaskState create(Task task) {
 		return TaskState.builder()
@@ -38,9 +67,29 @@ public class TaskState {
 				.name(task.getName())
 				.description(task.getDescription())
 				.project(task.getProject())
-				.unresolvedPainList(new ArrayList<String>())
+				.troubleshootingEventList(new ArrayList<String>())
 				.build();
 	}
+
+
+
+	// TODO: see org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
+	// need a better way of handling serialization; currently, this is handled by IdeaFlowSettingsTaskManager, should
+	// probably be moved here... also, the following methods are deprecated b/c the property has been renamed
+
+	@Deprecated
+	public void setUnresolvedWTFList(List<String> unresolvedWTFList) {
+		troubleshootingEventList = unresolvedWTFList;
+	}
+
+	@Deprecated
+	public void setUnresolvedPainList(List<String> unresolvedWTFList) {
+		troubleshootingEventList = unresolvedWTFList;
+	}
+
+	@Deprecated
+	public void setUnresolvedPainCount(int unresolvedPainCount) {}
+
 
 	// TODO: switch from groovy JsonOutput to jackson where it's possible to ignore properties and not have to do
 	// something stupid like this

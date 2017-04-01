@@ -54,7 +54,7 @@ class CreatePainEvent extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		if (controller != null && controller.getActiveTask() != null) {
 			TaskState activeTask = controller.getActiveTask()
-			updateIcon(e.presentation, activeTask.getUnresolvedPainList())
+			updateIcon(e.presentation, activeTask.getUnresolvedPainCount())
 		}
 	}
 
@@ -71,7 +71,7 @@ class CreatePainEvent extends AnAction {
 		IFMController controller = IdeaFlowApplicationComponent.getIFMController()
 		if (controller != null && controller.getActiveTask() != null) {
 			TaskState activeTask = controller.getActiveTask()
-			painSize = activeTask.getUnresolvedPainList().size()
+			painSize = activeTask.getUnresolvedPainCount()
 		}
 		if (painSize == 0) {
 			questionToAsk = "What are you confused about? (question)"
@@ -81,15 +81,14 @@ class CreatePainEvent extends AnAction {
 		return questionToAsk
 	}
 
-	private void updateIcon(Presentation presentation, List<String> unresolvedWtfs) {
-
-		if (unresolvedWtfs == null || unresolvedWtfs.isEmpty()) {
+	private void updateIcon(Presentation presentation, int unresolvedPainCount) {
+		if (unresolvedPainCount < 1) {
 			presentation.setIcon(PAIN_ICON)
-		} else if (unresolvedWtfs.size() == 1) {
+		} else if (unresolvedPainCount == 1) {
 			presentation.setIcon(PAIN_ICON_DOT1)
-		} else if (unresolvedWtfs.size() == 2) {
+		} else if (unresolvedPainCount == 2) {
 			presentation.setIcon(PAIN_ICON_DOT2)
-		} else if (unresolvedWtfs.size() >= 3) {
+		} else if (unresolvedPainCount > 2) {
 			presentation.setIcon(PAIN_ICON_DOT3)
 		}
 	}

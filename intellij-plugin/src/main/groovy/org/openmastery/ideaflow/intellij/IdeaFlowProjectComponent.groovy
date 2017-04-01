@@ -1,12 +1,9 @@
 package org.openmastery.ideaflow.intellij
 
-import org.openmastery.ideaflow.activity.ActivityHandler
 import com.intellij.execution.ExecutionAdapter
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.configurations.RunProfile
-import com.intellij.execution.process.ProcessEvent
 import com.intellij.execution.process.ProcessHandler
-import com.intellij.execution.process.ProcessListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.ProjectComponent
 import com.intellij.openapi.editor.Document
@@ -17,7 +14,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.messages.MessageBusConnection
 import org.jetbrains.annotations.NotNull
@@ -54,9 +50,6 @@ class IdeaFlowProjectComponent implements ProjectComponent {
 	void projectOpened() {
 		projectConnection = project.getMessageBus().connect()
 		projectConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, fileListener)
-
-
-
 		projectConnection.subscribe(ExecutionManager.EXECUTION_TOPIC, processExecutionListener);
 
 	}

@@ -167,14 +167,16 @@ class IFMController {
 	}
 
 	private void addUnresolvedPain(String painMessage) {
-		if (activeTask.unresolvedPainList.size() > 10) {
-			activeTask.unresolvedPainList.remove(0)
-		}
-		activeTask.unresolvedPainList.add(painMessage)
+		activeTask.addPainfulTroubleshootingEvent(painMessage)
 	}
 
 	void resolveWithYay(String yayMessage) {
-		activeTask.unresolvedPainList = []
+		// TODO: should pull this string from ideaflow dependency
+		if (yayMessage.contains("#resolve")) {
+			activeTask.clearTroubleshootingEventList()
+		} else {
+			activeTask.addAwesomeTroubleshootingEvent(yayMessage)
+		}
 		createEvent(yayMessage, EventType.AWESOME)
 	}
 
@@ -184,7 +186,7 @@ class IFMController {
 	}
 
 	void resolveWithAwesomeSnippet(String awesomeMessage, String source, String snippet) {
-		activeTask.unresolvedPainList = []
+		activeTask.clearTroubleshootingEventList()
 		messageQueue.pushSnippet(activeTask.id, EventType.AWESOME, awesomeMessage, source, snippet)
 	}
 
