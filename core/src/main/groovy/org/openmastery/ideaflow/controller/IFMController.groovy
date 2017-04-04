@@ -34,7 +34,6 @@ class IFMController {
 
 		activityHandler = new ActivityHandler(this, messageQueue)
 
-		new Thread(batchPublisher).start()
 		startPushModificationActivityTimer(30)
 	}
 

@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference
 class BatchPublisher implements Runnable {
 
 	private AtomicBoolean closed = new AtomicBoolean(false)
-	private Thread runThread
+	private AtomicReference<Thread> runThreadHolder = new AtomicReference<>()
 	private JSONConverter jsonConverter = new JSONConverter()
 
 	private Logger logger
@@ -57,6 +57,10 @@ class BatchPublisher implements Runnable {
 		retryNextSessionDir.listFiles().each { File fileToRetry ->
 			moveFileToDir(fileToRetry, publishDir)
 		}
+
+		if (isRunning() == false) {
+			new Thread(this).start()
+		}
 	}
 
 	private File moveFileToDir(File file, File dir) {
@@ -71,7 +75,9 @@ class BatchPublisher implements Runnable {
 
 	@Override
 	void run() {
-		runThread = Thread.currentThread()
+		if (runThreadHolder.compareAndSet(null, Thread.currentThread()) == false) {
+			return
+		}
 
 		while (isNotClosed()) {
 			if (isNotClosed() && hasSomethingToPublish()) {
@@ -195,14 +201,21 @@ class BatchPublisher implements Runnable {
 		}
 	}
 
+	private boolean isRunning() {
+		runThreadHolder.get() != null
+	}
+
 	private boolean isNotClosed() {
 		closed.get() == false
 	}
 
 	void close() {
 		closed.set(true)
+
+		Thread runThread = runThreadHolder.get()
 		if (runThread != null) {
 			runThread.interrupt()
+			runThreadHolder.compareAndSet(runThread, null)
 		}
 	}
 
