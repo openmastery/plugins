@@ -28,6 +28,10 @@ class MessageQueue {
 		this.messageLogger = messageLogger
 	}
 
+	void flush() {
+		messageLogger.flush()
+	}
+
 	void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
 		pushEditorActivity(taskId, durationInSeconds, LocalDateTime.now(), filePath, isModified)
 	}
@@ -168,6 +172,10 @@ class MessageQueue {
 			this.batchPublisher = batchPublisher
 
 			lastBatchTime = LocalDateTime.now()
+		}
+
+		void flush() {
+			startNewBatch()
 		}
 
 		void writeMessage(Long taskId, Object message) {

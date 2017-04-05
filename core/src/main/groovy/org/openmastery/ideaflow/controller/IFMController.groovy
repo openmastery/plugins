@@ -59,6 +59,11 @@ class IFMController {
 		activityHandler
 	}
 
+	void flushBatch() {
+		messageQueue.flush()
+		batchPublisher.flush()
+	}
+
 	void initClients(String apiUrl, String apiKey) {
 		// TODO: make these configurable
 		taskClient = new TaskClient(apiUrl)

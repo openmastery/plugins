@@ -51,6 +51,13 @@ class BatchPublisher implements Runnable {
 		new File(activeDir, name)
 	}
 
+	void flush() {
+		Thread thread = runThreadHolder.get()
+		if (thread != null) {
+			thread.interrupt()
+		}
+	}
+
 	void setBatchClient(BatchClient activityClient) {
 		batchClientReference.set(activityClient)
 
