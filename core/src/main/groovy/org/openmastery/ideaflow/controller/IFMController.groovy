@@ -7,6 +7,7 @@ import org.openmastery.ideaflow.state.TaskState
 import org.joda.time.Duration
 import org.openmastery.ideaflow.Logger
 import org.openmastery.ideaflow.activity.ActivityHandler
+import org.openmastery.publisher.api.SharedTags
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.api.task.Task
 import org.openmastery.publisher.client.BatchClient
@@ -175,8 +176,7 @@ class IFMController {
 	}
 
 	void resolveWithYay(String yayMessage) {
-		// TODO: should pull this string from ideaflow dependency
-		if (yayMessage.contains("#resolve")) {
+		if (yayMessage.contains(SharedTags.RESOLVE_TROUBLESHOOTING_JOURNEY)) {
 			activeTask.clearTroubleshootingEventList()
 		} else {
 			activeTask.addAwesomeTroubleshootingEvent(yayMessage)
