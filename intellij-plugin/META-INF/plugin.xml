@@ -3,9 +3,9 @@
 	<name>IdeaFlowDX Metrics</name>
 	<description>Measure the pain you experience during development, and find out how variations in development technique,
 		code design, and disruptions affect the pain you experience.  Intended to be used with the IdeaFlowDX Profiler
-		tools that help you categorize problems with simple #hashtags and add up the pain.  MVP Release 2/1/2017
+		tools that help you categorize problems with simple #hashtags and add up the pain.  MVP Release 6/1/2017
 	</description>
-	<version>0.16</version>
+	<version>0.17</version>
 	<vendor>Open Mastery</vendor>
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
@@ -32,10 +32,10 @@
 	</project-components>
 
 	<actions>
-		<action id="org.openmastery.ideaflow.Subtask" class="org.openmastery.ideaflow.intellij.action.event.CreateSubtaskEvent" text="Start a major subtask..."
+		<action id="org.openmastery.ideaflow.Subtask" class="org.openmastery.ideaflow.intellij.action.event.CreateSubtaskEvent" text="Start a subtask..."
 				description="Mark the beginning of a subtask in the active IdeaFlow" icon="/icons/subtask.png">
 		</action>
-		<action id="org.openmastery.ideaflow.Note" class="org.openmastery.ideaflow.intellij.action.event.CreateProgressEvent" text="Create a progress note..."
+		<action id="org.openmastery.ideaflow.Note" class="org.openmastery.ideaflow.intellij.action.event.CreateProgressEvent" text="Create a progress tick..."
 				description="Take notes as you make progress through a subtask" icon="/icons/sub_sub_task.png">
 		</action>
 		<action id="org.openmastery.ideaflow.Distraction" class="org.openmastery.ideaflow.intellij.action.event.CreateDistractionEvent" text="Recent Distraction..."

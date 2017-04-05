@@ -74,9 +74,9 @@ class CreatePainEvent extends AnAction {
 			painSize = activeTask.getUnresolvedPainCount()
 		}
 		if (painSize == 0) {
-			questionToAsk = "What are you confused about? (question)"
+			questionToAsk = "What conflict question is in your head? (question)"
 		} else {
-			questionToAsk = "What are you still confused about? (discovery + question)"
+			questionToAsk = "What conflict are you stuck on now? (question)"
 		}
 		return questionToAsk
 	}

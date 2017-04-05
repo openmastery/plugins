@@ -41,7 +41,7 @@ class CreateAwesomeEvent extends AnAction {
 			wtfString += "-- $i: " + wtfMessage + "\n"
 		}
 
-		IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out? (discovery)\n" + wtfString)
+		IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out? (#resolve when done)\n ")
 	}
 
 	@Override

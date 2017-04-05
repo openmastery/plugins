@@ -190,7 +190,11 @@ class IFMController {
 	}
 
 	void resolveWithAwesomeSnippet(String awesomeMessage, String source, String snippet) {
-		activeTask.clearTroubleshootingEventList()
+		if (awesomeMessage.contains("#resolve")) {
+			activeTask.clearTroubleshootingEventList()
+		} else {
+			activeTask.addAwesomeTroubleshootingEvent(awesomeMessage)
+		}
 		messageQueue.pushSnippet(activeTask.id, EventType.AWESOME, awesomeMessage, source, snippet)
 	}
 
