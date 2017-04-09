@@ -1,6 +1,7 @@
 package org.openmastery.ideaflow.state;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -10,7 +11,12 @@ import java.util.List;
 
 public class TaskStateJsonMapper {
 
-	private ObjectMapper jsonMapper = new ObjectMapper();
+	private ObjectMapper jsonMapper;
+
+	public TaskStateJsonMapper() {
+		this.jsonMapper = new ObjectMapper();
+		jsonMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+	}
 
 	public String toJson(List<TaskState> taskStateList) throws JsonProcessingException {
 		return jsonMapper.writeValueAsString(taskStateList);

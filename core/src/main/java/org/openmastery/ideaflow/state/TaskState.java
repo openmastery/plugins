@@ -26,10 +26,6 @@ public class TaskState {
 	private String description;
 	private String project;
 
-	private boolean isBlocked;
-	private String blockComment;
-	private String blockTime;
-
 	private List<String> troubleshootingEventList = new ArrayList<String>();
 
 	@JsonIgnore
@@ -44,8 +40,8 @@ public class TaskState {
 	}
 
 	@JsonIgnore
-	public String getQualifiedName(TaskState task) {
-		return task.project != null ? task.project + ":" + task.name : task.name;
+	public String getQualifiedName() {
+		return project != null ? project + ":" + name : name;
 	}
 
 	public void clearTroubleshootingEventList() {

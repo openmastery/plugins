@@ -61,7 +61,7 @@ public class SwitchIdeaFlowComboBox extends ComboBoxAction {
 		TaskState activeTask = getActiveTask(e);
 		String text, description;
 		if (activeTask != null) {
-			text = TaskState.getQualifiedName(activeTask);
+			text = activeTask.getQualifiedName();
 			description = activeTask.getDescription();
 		} else {
 			text = "Add new task";
@@ -117,7 +117,7 @@ public class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			this.switchIdeaFlow = switchIdeaFlow;
 			this.task = task;
 
-			getTemplatePresentation().setText(TaskState.getQualifiedName(task), false);
+			getTemplatePresentation().setText(task.getQualifiedName(), false);
 			getTemplatePresentation().setDescription("Set ${task.name} as active IdeaFlow");
 		}
 

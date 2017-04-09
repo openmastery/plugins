@@ -20,7 +20,7 @@ class TaskStateJsonMapperTest extends Specification {
 		String json = mapper.toJson([taskState])
 
 		then:
-		assert json == """[{"id":1,"name":"some task","description":"awesome description","project":null,"blockComment":null,"blockTime":null,"troubleshootingEventList":["event1","event2"],"blocked":false}]"""
+		assert json == """[{"id":1,"name":"some task","description":"awesome description","project":null,"troubleshootingEventList":["event1","event2"]}]"""
 
 		when:
 		List<TaskState> taskStateList = mapper.toList(json)
@@ -33,7 +33,7 @@ class TaskStateJsonMapperTest extends Specification {
 	@Unroll
 	def "toList should deserialize deprecated troubleshooting list properties"() {
 		given:
-		String json = """[{"id":1,"name":"some task","description":"awesome description","project":null,"blockComment":null,"blockTime":null,"${deprecatedTroubleshootingListPropertyName}":["event1","event2"],"blocked":false}]"""
+		String json = """[{"id":1,"name":"some task","description":"awesome description","project":null,"${deprecatedTroubleshootingListPropertyName}":["event1","event2"]}]"""
 
 		expect:
 		assert mapper.toList(json)[0].troubleshootingEventList == ["event1", "event2"]
