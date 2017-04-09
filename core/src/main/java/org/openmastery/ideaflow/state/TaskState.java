@@ -1,5 +1,6 @@
 package org.openmastery.ideaflow.state;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class TaskState {
 
 	private List<String> troubleshootingEventList = new ArrayList<String>();
 
+	@JsonIgnore
 	public int getUnresolvedPainCount() {
 		int unresolvedPainCount = 0;
 		for (String troubleshootingEvent : troubleshootingEventList) {
@@ -39,6 +41,11 @@ public class TaskState {
 			}
 		}
 		return unresolvedPainCount;
+	}
+
+	@JsonIgnore
+	public String getQualifiedName(TaskState task) {
+		return task.project != null ? task.project + ":" + task.name : task.name;
 	}
 
 	public void clearTroubleshootingEventList() {
@@ -73,9 +80,7 @@ public class TaskState {
 
 
 
-	// TODO: see org.openmastery.ideaflow.intellij.settings.IdeaFlowSettingsTaskManager
-	// need a better way of handling serialization; currently, this is handled by IdeaFlowSettingsTaskManager, should
-	// probably be moved here... also, the following methods are deprecated b/c the property has been renamed
+	// NOTE: the following methods are deprecated b/c the property has been renamed
 
 	@Deprecated
 	public void setUnresolvedWTFList(List<String> unresolvedWTFList) {
@@ -85,16 +90,6 @@ public class TaskState {
 	@Deprecated
 	public void setUnresolvedPainList(List<String> unresolvedWTFList) {
 		troubleshootingEventList = unresolvedWTFList;
-	}
-
-	@Deprecated
-	public void setUnresolvedPainCount(int unresolvedPainCount) {}
-
-
-	// TODO: switch from groovy JsonOutput to jackson where it's possible to ignore properties and not have to do
-	// something stupid like this
-	public static String getQualifiedName(TaskState task) {
-		return task.project != null ? task.project + ":" + task.name : task.name;
 	}
 
 }
