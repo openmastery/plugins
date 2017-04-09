@@ -1,11 +1,11 @@
 package org.openmastery.ideaflow.intellij.settings
 
-import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
-import org.openmastery.ideaflow.intellij.Logger
-import org.openmastery.ideaflow.state.TaskState
 import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent
+import org.openmastery.ideaflow.intellij.Logger
+import org.openmastery.ideaflow.state.TaskState
 
 /**
  * TODO: JsonOutput and LocalDateTime apparently do not mix... throws stack overflow if a Task is serialized to json
