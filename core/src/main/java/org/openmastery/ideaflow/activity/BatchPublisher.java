@@ -1,7 +1,6 @@
 package org.openmastery.ideaflow.activity;
 
 import com.bancvue.rest.exception.NotFoundException;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.joda.time.LocalDateTime;
 import org.openmastery.ideaflow.Logger;
 import org.openmastery.publisher.api.activity.NewBlockActivity;
@@ -117,7 +116,7 @@ public class BatchPublisher implements Runnable {
 	}
 
 	public boolean hasSomethingToPublish() {
-		return DefaultGroovyMethods.size(getBatchesToPublish()) > 0;
+		return getBatchesToPublish().length > 0;
 	}
 
 	public File[] getBatchesToPublish() {

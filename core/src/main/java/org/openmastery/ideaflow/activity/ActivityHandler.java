@@ -1,9 +1,9 @@
 package org.openmastery.ideaflow.activity;
 
-import org.openmastery.ideaflow.controller.IFMController;
 import org.joda.time.Duration;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
+import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.ideaflow.state.TaskState;
 
 import java.util.HashMap;

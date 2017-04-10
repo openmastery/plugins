@@ -3,7 +3,12 @@ package org.openmastery.ideaflow.activity;
 import com.bancvue.rest.config.ObjectMapperContextResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.openmastery.publisher.api.activity.*;
+import org.openmastery.publisher.api.activity.NewBlockActivity;
+import org.openmastery.publisher.api.activity.NewEditorActivity;
+import org.openmastery.publisher.api.activity.NewExecutionActivity;
+import org.openmastery.publisher.api.activity.NewExternalActivity;
+import org.openmastery.publisher.api.activity.NewIdleActivity;
+import org.openmastery.publisher.api.activity.NewModificationActivity;
 import org.openmastery.publisher.api.batch.NewBatchEvent;
 import org.openmastery.publisher.api.event.NewSnippetEvent;
 
