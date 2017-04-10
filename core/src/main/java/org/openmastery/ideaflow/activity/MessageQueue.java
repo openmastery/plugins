@@ -203,8 +203,9 @@ public class MessageQueue {
 		}
 
 		private void appendLineToFile(File file, String text) throws IOException {
-			PrintWriter printWriter = new PrintWriter(new FileWriter(file, true));
-			printWriter.println(text);
+			try (PrintWriter printWriter = new PrintWriter(new FileWriter(file, true))) {
+				printWriter.println(text);
+			}
 		}
 
 		private boolean isBatchThresholdReached() {
