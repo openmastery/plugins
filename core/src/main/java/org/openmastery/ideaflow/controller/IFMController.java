@@ -172,7 +172,7 @@ public class IFMController {
 	}
 
 	public void resolveWithYay(String yayMessage) {
-		if (yayMessage.contains(SharedTags.RESOLVE_TROUBLESHOOTING_JOURNEY)) {
+		if (yayMessage.contains("#done")) {
 			activeTask.clearTroubleshootingEventList();
 		} else {
 			activeTask.addAwesomeTroubleshootingEvent(yayMessage);
@@ -187,7 +187,12 @@ public class IFMController {
 	}
 
 	public void resolveWithAwesomeSnippet(String awesomeMessage, String source, String snippet) {
-		activeTask.clearTroubleshootingEventList();
+		if (awesomeMessage.contains("#done")) {
+			activeTask.clearTroubleshootingEventList();
+		} else {
+			activeTask.addAwesomeTroubleshootingEvent(awesomeMessage);
+		}
+
 		messageQueue.pushSnippet(activeTask.getId(), EventType.AWESOME, awesomeMessage, source, snippet);
 	}
 

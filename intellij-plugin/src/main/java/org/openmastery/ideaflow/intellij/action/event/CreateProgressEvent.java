@@ -15,7 +15,7 @@ public class CreateProgressEvent extends AnAction {
 	public void actionPerformed(AnActionEvent e) {
 		IFMController controller = getIFMController(e);
 		if (controller != null) {
-			String progressNote = IdeaFlowApplicationComponent.promptForInput("Create a Progress Note", "What are you doing next?");
+			String progressNote = IdeaFlowApplicationComponent.promptForInput("Start a Progress Tick", "What are you doing next?");
 			controller.createEvent(progressNote, EventType.NOTE);
 		}
 	}

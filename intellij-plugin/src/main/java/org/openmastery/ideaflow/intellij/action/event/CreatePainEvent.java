@@ -75,11 +75,9 @@ public class CreatePainEvent extends AnAction {
 			TaskState activeTask = controller.getActiveTask();
 			painSize = activeTask.getUnresolvedPainCount();
 		}
-		if (painSize == 0) {
-			questionToAsk = "What are you confused about? (question)";
-		} else {
-			questionToAsk = "What are you still confused about? (discovery + question)";
-		}
+
+		questionToAsk = "What unexpected question are you trying to answer?";
+
 		return questionToAsk;
 	}
 

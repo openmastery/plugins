@@ -38,13 +38,13 @@ public class CreateAwesomeEvent extends AnAction {
 	private String promptForInput(IFMController controller) {
 		List<String> unresolvedPainList = controller.getActiveTask().getTroubleshootingEventList();
 
-		String wtfString = "";
-		for (int i = 0; i < unresolvedPainList.size(); i++) {
-			String wtfMessage = unresolvedPainList.get(i);
-			wtfString += "-- $i: " + wtfMessage + "\n";
-		}
+//		String wtfString = "";
+//		for (int i = 0; i < unresolvedPainList.size(); i++) {
+//			String wtfMessage = unresolvedPainList.get(i);
+//			wtfString += "-- $i: " + wtfMessage + "\n";
+//		}
 
-		return IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you figure out? (discovery)\n" + wtfString);
+		return IdeaFlowApplicationComponent.promptForInput("YAY!", "What did you discover? (#done to resolve)");
 	}
 
 	@Override

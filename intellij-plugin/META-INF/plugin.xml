@@ -5,7 +5,7 @@
 		code design, and disruptions affect the pain you experience.  Intended to be used with the IdeaFlowDX Profiler
 		tools that help you categorize problems with simple #hashtags and add up the pain.  MVP Release 6/1/2017
 	</description>
-	<version>0.17</version>
+	<version>0.18</version>
 	<vendor>Open Mastery</vendor>
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.intellij.modules.lang</depends>
