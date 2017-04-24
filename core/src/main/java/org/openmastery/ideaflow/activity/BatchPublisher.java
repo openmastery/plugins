@@ -19,17 +19,27 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class BatchPublisher implements Runnable {
 
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+
+	// if the user has multiple IDEs running, it's possible the same file could be moved and overwritten.  so, modify files
+	// with a random number specific to the IDE instance which should make it statistically improbable for that to happen
+	private static final String FILE_MODIFIER = "." + new Random().nextLong();
+	private static final long BATCH_PUBLISH_FREQUENCY_MS = 30000;
 
 	private AtomicBoolean closed = new AtomicBoolean(false);
 	private AtomicReference<Thread> runThreadHolder = new AtomicReference<>();
@@ -42,6 +52,7 @@ public class BatchPublisher implements Runnable {
 	private File failedDir;
 	private File retryNextSessionDir;
 	private TimeService timeService;
+	private PublishingLock publishingLock;
 
 	public BatchPublisher(File baseDir, Logger logger, TimeService timeService) {
 		this.logger = logger;
@@ -50,6 +61,7 @@ public class BatchPublisher implements Runnable {
 		this.publishDir = createDir(baseDir, "publish");
 		this.failedDir = createDir(baseDir, "failed");
 		this.retryNextSessionDir = createDir(baseDir, "retryNextSession");
+		this.publishingLock = new PublishingLock(logger, baseDir);
 
 		commitActiveFiles();
 	}
@@ -88,7 +100,7 @@ public class BatchPublisher implements Runnable {
 	}
 
 	private File moveFileToDirAndRename(File file, File dir, String renameTo) {
-		File renameToFile = new File(dir, renameTo);
+		File renameToFile = new File(dir, renameTo + FILE_MODIFIER);
 		file.renameTo(renameToFile);
 		return renameToFile;
 	}
@@ -101,11 +113,11 @@ public class BatchPublisher implements Runnable {
 
 		while (isNotClosed()) {
 			if (isNotClosed() && hasSomethingToPublish()) {
-				publishBatches();
+				acquireLockAndPublishBatches();
 			}
 
 			try {
-				Thread.sleep(30000);
+				Thread.sleep(BATCH_PUBLISH_FREQUENCY_MS);
 			} catch (InterruptedException ex) {
 			}
 		}
@@ -120,7 +132,7 @@ public class BatchPublisher implements Runnable {
 		}
 	}
 
-	public boolean hasSomethingToPublish() {
+	private boolean hasSomethingToPublish() {
 		return getBatchesToPublish().length > 0;
 	}
 
@@ -137,7 +149,17 @@ public class BatchPublisher implements Runnable {
 		return batchesToPublish.toArray(new File[batchesToPublish.size()]);
 	}
 
-	public void publishBatches() {
+	private void acquireLockAndPublishBatches() {
+		if (publishingLock.acquire()) {
+			try {
+				publishBatches();
+			} finally {
+				publishingLock.release();
+			}
+		}
+	}
+
+	private void publishBatches() {
 		File[] batchesToPublish = getBatchesToPublish();
 		Arrays.sort(batchesToPublish);
 
@@ -173,7 +195,7 @@ public class BatchPublisher implements Runnable {
 
 	}
 
-	public void publishBatch(NewIFMBatch batch) {
+	private void publishBatch(NewIFMBatch batch) {
 		BatchClient batchClient = batchClientReference.get();
 		if (batchClient == null) {
 			throw new ServerUnavailableException("BatchClient is unavailable");
@@ -184,7 +206,7 @@ public class BatchPublisher implements Runnable {
 		}
 	}
 
-	public NewIFMBatch convertBatchFileToObject(File batchFile) throws IOException {
+	private NewIFMBatch convertBatchFileToObject(File batchFile) throws IOException {
 		NewIFMBatch.NewIFMBatchBuilder builder = NewIFMBatch.builder()
 				.timeSent(timeService.now());
 
@@ -236,4 +258,54 @@ public class BatchPublisher implements Runnable {
 		}
 	}
 
+
+	private static class PublishingLock {
+
+		private Logger logger;
+		private FileLock lock;
+		private RandomAccessFile publishingLockFile;
+
+		public PublishingLock(Logger logger, File baseDir) {
+			this.logger = logger;
+			this.publishingLockFile = createPublishingLockFile(baseDir);
+		}
+
+		private RandomAccessFile createPublishingLockFile(File baseDir) {
+			File lockFile = new File(baseDir, "publishing.lock");
+			try {
+				lockFile.createNewFile();
+				return new RandomAccessFile(lockFile, "rw");
+			} catch (IOException ex) {
+				throw new RuntimeException("Failed to create lock file", ex);
+			}
+		}
+
+		public boolean acquire() {
+			FileChannel channel = publishingLockFile.getChannel();
+			try {
+				lock = channel.tryLock();
+				if (lock != null) {
+					publishingLockFile.writeChars(System.currentTimeMillis() + "");
+				}
+				return lock != null;
+			} catch (OverlappingFileLockException ex) {
+				// this shouldn't be possible since the BatchPublisher is single-threaded...
+				logger.error("Application error, publishing lock already acquired by current process");
+				return false;
+			} catch (IOException ex) {
+				return false;
+			}
+		}
+
+		public void release() {
+			try {
+				lock.release();
+			} catch (Exception ex) {
+				logger.error("Failed to release publishing lock", ex);
+			} finally {
+				lock = null;
+			}
+		}
+
+	}
 }
