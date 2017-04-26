@@ -24,11 +24,12 @@ public class TaskStateJsonMapper {
 
 	public List<TaskState> toList(String jsonString) throws IOException {
 		if (jsonString == null) {
-			return new ArrayList<TaskState>();
+			return new ArrayList<>();
 		}
 
 		TaskState[] taskStates = jsonMapper.readValue(jsonString, TaskState[].class);
-		return Arrays.asList(taskStates);
+		List<TaskState> taskStateImmutableList = Arrays.asList(taskStates);
+		return new ArrayList<>(taskStateImmutableList);
 	}
 
 }
