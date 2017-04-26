@@ -45,7 +45,7 @@ public class VirtualFileActivityHandler {
 		Module module;
 		try {
 			module = ModuleUtil.findModuleForFile(file, project);
-		} catch (Exception ex) {
+		} catch (Exception | AssertionError ex) {
 			// ignore any issue resolving full file path and just default to file name
 			return defaultFilePath;
 		}
