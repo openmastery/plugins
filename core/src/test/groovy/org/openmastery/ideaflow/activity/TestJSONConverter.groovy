@@ -1,9 +1,10 @@
 package org.openmastery.ideaflow.activity
 
-import org.joda.time.LocalDateTime
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
 import spock.lang.Specification
+
+import java.time.LocalDateTime
 
 class TestJSONConverter extends Specification {
 

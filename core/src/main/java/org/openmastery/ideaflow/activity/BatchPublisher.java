@@ -1,7 +1,6 @@
 package org.openmastery.ideaflow.activity;
 
 import com.bancvue.rest.exception.NotFoundException;
-import org.joda.time.LocalDateTime;
 import org.openmastery.ideaflow.Logger;
 import org.openmastery.publisher.api.activity.NewBlockActivity;
 import org.openmastery.publisher.api.activity.NewEditorActivity;
@@ -13,11 +12,13 @@ import org.openmastery.publisher.api.batch.NewBatchEvent;
 import org.openmastery.publisher.api.batch.NewIFMBatch;
 import org.openmastery.publisher.api.event.NewSnippetEvent;
 import org.openmastery.publisher.client.BatchClient;
+import org.openmastery.time.TimeService;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -28,19 +29,23 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class BatchPublisher implements Runnable {
 
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+
 	private AtomicBoolean closed = new AtomicBoolean(false);
-	private AtomicReference<Thread> runThreadHolder = new AtomicReference<Thread>();
+	private AtomicReference<Thread> runThreadHolder = new AtomicReference<>();
 	private JSONConverter jsonConverter = new JSONConverter();
-	private Map<File, Integer> failedFileToLastDayRetriedMap = new LinkedHashMap<File, Integer>();
-	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<BatchClient>();
+	private Map<File, Integer> failedFileToLastDayRetriedMap = new LinkedHashMap<>();
+	private AtomicReference<BatchClient> batchClientReference = new AtomicReference<>();
 	private Logger logger;
 	private File activeDir;
 	private File publishDir;
 	private File failedDir;
 	private File retryNextSessionDir;
+	private TimeService timeService;
 
-	public BatchPublisher(File baseDir, Logger logger) {
+	public BatchPublisher(File baseDir, Logger logger, TimeService timeService) {
 		this.logger = logger;
+		this.timeService = timeService;
 		this.activeDir = createDir(baseDir, "active");
 		this.publishDir = createDir(baseDir, "publish");
 		this.failedDir = createDir(baseDir, "failed");
@@ -107,7 +112,7 @@ public class BatchPublisher implements Runnable {
 	}
 
 	public void commitActiveFiles() {
-		final String dateTime = LocalDateTime.now().toString("yyyyMMdd_HHmmss");
+		final String dateTime = DATE_TIME_FORMATTER.format(timeService.now());
 		File[] files = activeDir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
@@ -120,8 +125,8 @@ public class BatchPublisher implements Runnable {
 	}
 
 	public File[] getBatchesToPublish() {
-		List<File> batchesToPublish = new ArrayList<File>();
-		int dayOfYear = LocalDateTime.now().getDayOfYear();
+		List<File> batchesToPublish = new ArrayList<>();
+		int dayOfYear = timeService.now().getDayOfYear();
 
 		for (File file : publishDir.listFiles()) {
 			Integer lastDayTried = failedFileToLastDayRetriedMap.get(file);
@@ -162,7 +167,7 @@ public class BatchPublisher implements Runnable {
 			moveFileToDir(batchFile, retryNextSessionDir);
 			logger.info("Failed to publish " + batchFile.getAbsolutePath() + " due to missing task, will retry in future session...");
 		} catch (Exception ex) {
-			failedFileToLastDayRetriedMap.put(batchFile, LocalDateTime.now().getDayOfYear());
+			failedFileToLastDayRetriedMap.put(batchFile, timeService.now().getDayOfYear());
 			logger.info("Failed to publish " + batchFile.getAbsolutePath() + ", exception=" + ex.getMessage() + ", will retry tomorrow...");
 		}
 
@@ -181,7 +186,7 @@ public class BatchPublisher implements Runnable {
 
 	public NewIFMBatch convertBatchFileToObject(File batchFile) throws IOException {
 		NewIFMBatch.NewIFMBatchBuilder builder = NewIFMBatch.builder()
-				.timeSent(LocalDateTime.now());
+				.timeSent(timeService.now());
 
 		BufferedReader reader = new BufferedReader(new FileReader(batchFile));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {

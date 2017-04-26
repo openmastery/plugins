@@ -3,18 +3,19 @@ package org.openmastery.ideaflow.intellij.handler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.openmastery.ideaflow.activity.ActivityHandler;
 import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent;
 import org.openmastery.ideaflow.state.TimeConverter;
 
+import java.time.Duration;
+
 public class DeactivationHandler {
 
 	private static final String IDLE_TITLE = "Idle Time?";
 
-	private static final Duration DEACTIVATION_THRESHOLD = Duration.standardMinutes(50);
-	private static final Duration AUTO_IDLE_THRESHOLD = Duration.standardHours(8);
+	private static final Duration DEACTIVATION_THRESHOLD = Duration.ofMinutes(50);
+	private static final Duration AUTO_IDLE_THRESHOLD = Duration.ofHours(8);
 
 	private IFMController controller;
 	private ActivityHandler activityHandler;
@@ -46,9 +47,9 @@ public class DeactivationHandler {
 
 		promptingForIdleTime = true;
 		try {
-			if (deactivationDuration.isLongerThan(AUTO_IDLE_THRESHOLD)) {
+			if (deactivationDuration.compareTo(AUTO_IDLE_THRESHOLD) > 0) {
 				activityHandler.markIdleTime(deactivationDuration);
-			} else if (deactivationDuration.isLongerThan(DEACTIVATION_THRESHOLD)) {
+			} else if (deactivationDuration.compareTo(DEACTIVATION_THRESHOLD) > 0) {
 				boolean wasIdleTime = wasDeactivationIdleTime(project, deactivationDuration);
 				if (wasIdleTime) {
 					activityHandler.markIdleTime(deactivationDuration);
@@ -70,7 +71,7 @@ public class DeactivationHandler {
 
 		if (deactivatedAt != null) {
 			long deactivationLength = DateTime.now().getMillis() - deactivatedAt.getMillis();
-			deactivationDuration = Duration.millis(deactivationLength);
+			deactivationDuration = Duration.ofMillis(deactivationLength);
 		}
 		return deactivationDuration;
 	}

@@ -1,11 +1,11 @@
 package org.openmastery.ideaflow.activity;
 
-import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
 import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.ideaflow.state.TaskState;
+import org.openmastery.time.TimeService;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,16 +16,18 @@ public class ActivityHandler {
 
 	private IFMController controller;
 	private MessageQueue messageQueue;
+	private TimeService timeService;
 	private FileActivity activeFileActivity;
 	private AtomicInteger modificationCount = new AtomicInteger(0);
 
 	private Duration recentIdleDuration = null;
 
-	private Map<Long, ProcessActivity> activeProcessMap = new HashMap<Long, ProcessActivity>();
+	private Map<Long, ProcessActivity> activeProcessMap = new HashMap<>();
 
-	public ActivityHandler(IFMController controller, MessageQueue messageQueue) {
+	public ActivityHandler(IFMController controller, MessageQueue messageQueue, TimeService timeService) {
 		this.controller = controller;
 		this.messageQueue = messageQueue;
+		this.timeService = timeService;
 	}
 
 	public Duration getRecentIdleDuration() {
@@ -54,22 +56,12 @@ public class ActivityHandler {
 	}
 
 	public void markIdleTime(final Duration idleDuration) {
-		markIdleOrExternal(idleDuration, new ActiveTaskBlock() {
-			@Override
-			public void execute(Long activeTaskId) {
-				messageQueue.pushIdleActivity(activeTaskId, idleDuration.getStandardSeconds());
-			}
-		});
+		markIdleOrExternal(idleDuration, activeTaskId -> messageQueue.pushIdleActivity(activeTaskId, idleDuration.getSeconds()));
 	}
 
 	public void markExternalActivity(final Duration idleDuration, final String comment) {
 		recentIdleDuration = idleDuration;
-		markIdleOrExternal(idleDuration, new ActiveTaskBlock() {
-			@Override
-			public void execute(Long activeTaskId) {
-				messageQueue.pushExternalActivity(activeTaskId, idleDuration.getStandardSeconds(), comment);
-			}
-		});
+		markIdleOrExternal(idleDuration, activeTaskId -> messageQueue.pushExternalActivity(activeTaskId, idleDuration.getSeconds(), comment));
 	}
 
 	private void markIdleOrExternal(Duration idleDuration, ActiveTaskBlock block) {
@@ -78,11 +70,11 @@ public class ActivityHandler {
 			return;
 		}
 
-		if (idleDuration.getStandardSeconds() >= SHORTEST_ACTIVITY) {
+		if (idleDuration.getSeconds() >= SHORTEST_ACTIVITY) {
 			if (activeFileActivity != null) {
-				long duration = activeFileActivity.getDurationInSeconds() - idleDuration.getStandardSeconds();
+				long duration = activeFileActivity.getDurationInSeconds() - idleDuration.getSeconds();
 				if (duration > 0) {
-					LocalDateTime endTime = LocalDateTime.now().minusSeconds((int) idleDuration.getStandardSeconds());
+					LocalDateTime endTime = timeService.now().minusSeconds((int) idleDuration.getSeconds());
 					messageQueue.pushEditorActivity(coalesce(activeFileActivity.taskId, activeTaskId),
 					                                duration, endTime, activeFileActivity.filePath, activeFileActivity.modified);
 				}
@@ -95,7 +87,7 @@ public class ActivityHandler {
 	}
 
 	public void markProcessStarting(Long taskId, Long processId, String processName, String executionTaskType, boolean isDebug) {
-		ProcessActivity processActivity = new ProcessActivity(taskId, processName, executionTaskType, LocalDateTime.now(), isDebug);
+		ProcessActivity processActivity = new ProcessActivity(taskId, processName, executionTaskType, timeService, isDebug);
 		activeProcessMap.put(processId, processActivity);
 		//TODO this will leak memory if the processes started are never closed
 	}
@@ -147,7 +139,7 @@ public class ActivityHandler {
 	}
 
 	private FileActivity createFileActivity(Long taskId, String filePath) {
-		return filePath == null ? null : new FileActivity(taskId, filePath, LocalDateTime.now(), false);
+		return filePath == null ? null : new FileActivity(taskId, filePath, timeService, false);
 	}
 
 	private Long coalesce(Long primary, Long secondary) {
@@ -165,21 +157,23 @@ public class ActivityHandler {
 	private static class ProcessActivity {
 
 		private Long taskId;
+		private TimeService timeService;
 		private LocalDateTime timeStarted;
 		private String processName;
 		private String executionTaskType;
 		private boolean isDebug;
 
-		public ProcessActivity(Long taskId, String processName, String executionTaskType, LocalDateTime timeStarted, boolean isDebug) {
+		public ProcessActivity(Long taskId, String processName, String executionTaskType, TimeService timeService, boolean isDebug) {
 			this.taskId = taskId;
 			this.processName = processName;
 			this.executionTaskType = executionTaskType;
-			this.timeStarted = timeStarted;
+			this.timeService = timeService;
+			this.timeStarted = timeService.now();
 			this.isDebug = isDebug;
 		}
 
 		public long getDurationInSeconds() {
-			return Period.fieldDifference(timeStarted, LocalDateTime.now()).getMillis() / 1000;
+			return Duration.between(timeStarted, timeService.now()).toMillis() / 1000;
 		}
 
 		public String toString() {
@@ -192,18 +186,20 @@ public class ActivityHandler {
 
 		private Long taskId;
 		private LocalDateTime time;
+		private TimeService timeService;
 		private String filePath;
 		private boolean modified;
 
-		public FileActivity(Long taskId, String filePath, LocalDateTime time, boolean modified) {
+		public FileActivity(Long taskId, String filePath, TimeService timeService, boolean modified) {
 			this.taskId = taskId;
 			this.filePath = filePath;
-			this.time = time;
+			this.timeService = timeService;
+			this.time = timeService.now();
 			this.modified = modified;
 		}
 
 		public long getDurationInSeconds() {
-			return Period.fieldDifference(time, LocalDateTime.now()).getMillis() / 1000;
+			return Duration.between(time, timeService.now()).toMillis() / 1000;
 		}
 
 		public String toString() {

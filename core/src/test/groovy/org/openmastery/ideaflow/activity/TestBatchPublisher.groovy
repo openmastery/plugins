@@ -1,22 +1,23 @@
 package org.openmastery.ideaflow.activity
 
 import com.bancvue.rest.exception.NotFoundException
-import org.joda.time.DateTime
-import org.joda.time.DateTimeUtils
-import org.joda.time.LocalDateTime
 import org.openmastery.ideaflow.Logger
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.batch.NewBatchEvent
 import org.openmastery.publisher.api.batch.NewIFMBatch
 import org.openmastery.publisher.api.event.EventType
 import org.openmastery.publisher.client.BatchClient
+import org.openmastery.time.MockTimeService
 import spock.lang.Specification
+
+import java.time.LocalDateTime
 
 class TestBatchPublisher extends Specification {
 
 	BatchPublisher batchPublisher
 	File tempDir
 	JSONConverter jsonConverter = new JSONConverter()
+	MockTimeService timeService = new MockTimeService()
 
 	BatchClient mockBatchClient
 
@@ -26,7 +27,7 @@ class TestBatchPublisher extends Specification {
 		tempDir.mkdirs()
 
 		Logger logger = Mock(Logger)
-		batchPublisher = new BatchPublisher(tempDir, logger)
+		batchPublisher = new BatchPublisher(tempDir, logger, timeService)
 
 		mockBatchClient = Mock(BatchClient)
 		batchPublisher.batchClient = mockBatchClient
@@ -169,7 +170,6 @@ class TestBatchPublisher extends Specification {
 
 	def "publishBatches should delay retry of failed batch until tomorrow"() {
 		given:
-		DateTimeUtils.setCurrentMillisFixed(System.currentTimeMillis())
 		int clientCallCount = 0
 		createBatchFile()
 		mockBatchClient.addIFMBatch(_) >> {
@@ -193,7 +193,7 @@ class TestBatchPublisher extends Specification {
 		assert clientCallCount == 1
 
 		when:
-		DateTimeUtils.setCurrentMillisFixed(DateTime.now().plusDays(2).millis)
+		timeService.plusDays(2)
 		batchPublisher.publishBatches()
 
 		then:

@@ -1,19 +1,19 @@
 package org.openmastery.ideaflow.controller;
 
 import com.bancvue.rest.exception.NotFoundException;
-import org.joda.time.Duration;
 import org.openmastery.ideaflow.Logger;
 import org.openmastery.ideaflow.activity.ActivityHandler;
 import org.openmastery.ideaflow.activity.BatchPublisher;
 import org.openmastery.ideaflow.activity.MessageQueue;
 import org.openmastery.ideaflow.state.TaskState;
-import org.openmastery.publisher.api.SharedTags;
 import org.openmastery.publisher.api.event.EventType;
 import org.openmastery.publisher.api.task.Task;
 import org.openmastery.publisher.client.BatchClient;
 import org.openmastery.publisher.client.TaskClient;
+import org.openmastery.time.LocalDateTimeService;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,9 +28,10 @@ public class IFMController {
 
 	public IFMController(Logger logger) {
 		File ideaFlowDir = createIdeaFlowDir();
-		batchPublisher = new BatchPublisher(ideaFlowDir, logger);
-		messageQueue = new MessageQueue(this, batchPublisher);
-		activityHandler = new ActivityHandler(this, messageQueue);
+		LocalDateTimeService timeService = new LocalDateTimeService();
+		batchPublisher = new BatchPublisher(ideaFlowDir, logger, timeService);
+		messageQueue = new MessageQueue(this, batchPublisher, timeService);
+		activityHandler = new ActivityHandler(this, messageQueue, timeService);
 		startPushModificationActivityTimer(30);
 	}
 

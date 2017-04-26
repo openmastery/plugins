@@ -1,7 +1,5 @@
 package org.openmastery.ideaflow.activity;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
 import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.publisher.api.activity.NewEditorActivity;
 import org.openmastery.publisher.api.activity.NewExecutionActivity;
@@ -11,11 +9,14 @@ import org.openmastery.publisher.api.activity.NewModificationActivity;
 import org.openmastery.publisher.api.batch.NewBatchEvent;
 import org.openmastery.publisher.api.event.EventType;
 import org.openmastery.publisher.api.event.NewSnippetEvent;
+import org.openmastery.time.TimeService;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,16 +24,16 @@ public class MessageQueue {
 
 	private IFMController controller;
 	private MessageLogger messageLogger;
+	private TimeService timeService;
 
-
-	public MessageQueue(IFMController controller, BatchPublisher batchPublisher) {
-		this.controller = controller;
-		this.messageLogger = new FileMessageLogger(batchPublisher);
+	public MessageQueue(IFMController controller, BatchPublisher batchPublisher, TimeService timeService) {
+		this(controller, new FileMessageLogger(batchPublisher, timeService), timeService);
 	}
 
-	public MessageQueue(IFMController controller, MessageLogger messageLogger) {
+	public MessageQueue(IFMController controller, MessageLogger messageLogger, TimeService timeService) {
 		this.controller = controller;
 		this.messageLogger = messageLogger;
+		this.timeService = timeService;
 	}
 
 	public void flush() {
@@ -40,7 +41,7 @@ public class MessageQueue {
 	}
 
 	public void pushEditorActivity(Long taskId, Long durationInSeconds, String filePath, boolean isModified) {
-		pushEditorActivity(taskId, durationInSeconds, LocalDateTime.now(), filePath, isModified);
+		pushEditorActivity(taskId, durationInSeconds, timeService.now(), filePath, isModified);
 	}
 
 	public void pushEditorActivity(Long taskId, Long durationInSeconds, LocalDateTime endTime, String filePath, boolean isModified) {
@@ -66,7 +67,7 @@ public class MessageQueue {
 
 		NewModificationActivity activity = NewModificationActivity.builder()
 				.taskId(taskId)
-				.endTime(LocalDateTime.now())
+				.endTime(timeService.now())
 				.durationInSeconds(durationInSeconds)
 				.modificationCount(modificationCount)
 				.build();
@@ -85,7 +86,7 @@ public class MessageQueue {
 		NewExecutionActivity activity = NewExecutionActivity.builder()
 				.taskId(taskId)
 				.durationInSeconds(durationInSeconds)
-				.endTime(LocalDateTime.now())
+				.endTime(timeService.now())
 				.processName(processName)
 				.exitCode(exitCode)
 				.executionTaskType(executionTaskType)
@@ -102,7 +103,7 @@ public class MessageQueue {
 
 		NewIdleActivity activity = NewIdleActivity.builder()
 				.taskId(taskId)
-				.endTime(LocalDateTime.now())
+				.endTime(timeService.now())
 				.durationInSeconds(durationInSeconds)
 				.build();
 
@@ -116,7 +117,7 @@ public class MessageQueue {
 
 		NewExternalActivity activity = NewExternalActivity.builder()
 				.taskId(taskId)
-				.endTime(LocalDateTime.now())
+				.endTime(timeService.now())
 				.durationInSeconds(durationInSeconds)
 				.comment(comment)
 				.build();
@@ -131,7 +132,7 @@ public class MessageQueue {
 
 		NewBatchEvent batchEvent = NewBatchEvent.builder()
 				.taskId(taskId)
-				.position(LocalDateTime.now())
+				.position(timeService.now())
 				.type(eventType)
 				.comment(message)
 				.build();
@@ -146,7 +147,7 @@ public class MessageQueue {
 
 		NewSnippetEvent batchEvent = NewSnippetEvent.builder()
 				.taskId(taskId)
-				.position(LocalDateTime.now())
+				.position(timeService.now())
 				.eventType(eventType)
 				.comment(message)
 				.source(source)
@@ -163,8 +164,9 @@ public class MessageQueue {
 
 
 	static class FileMessageLogger implements MessageLogger {
+		private TimeService timeService;
 		private BatchPublisher batchPublisher;
-		private Map<Long, File> activeMessageFiles = new HashMap<Long, File>();
+		private Map<Long, File> activeMessageFiles = new HashMap<>();
 
 		private final Object lock = new Object();
 		private JSONConverter jsonConverter = new JSONConverter();
@@ -175,10 +177,11 @@ public class MessageQueue {
 		private final int BATCH_TIME_LIMIT_IN_SECONDS = 30 * 60;
 		private final int BATCH_MESSAGE_LIMIT = 500;
 
-		FileMessageLogger(BatchPublisher batchPublisher) {
+		FileMessageLogger(BatchPublisher batchPublisher, TimeService timeService) {
 			this.batchPublisher = batchPublisher;
+			this.timeService = timeService;
 
-			lastBatchTime = LocalDateTime.now();
+			lastBatchTime = timeService.now();
 		}
 
 		public void flush() {
@@ -209,8 +212,8 @@ public class MessageQueue {
 		}
 
 		private boolean isBatchThresholdReached() {
-			Period period = new Period(lastBatchTime, LocalDateTime.now());
-			return messageCount > 0 && ((period.toStandardSeconds().getSeconds() > BATCH_TIME_LIMIT_IN_SECONDS) ||
+			Duration duration = Duration.between(lastBatchTime, timeService.now());
+			return messageCount > 0 && ((duration.getSeconds() > BATCH_TIME_LIMIT_IN_SECONDS) ||
 					messageCount > BATCH_MESSAGE_LIMIT);
 		}
 
@@ -219,7 +222,7 @@ public class MessageQueue {
 				batchPublisher.commitActiveFiles();
 				activeMessageFiles.clear();
 
-				lastBatchTime = LocalDateTime.now();
+				lastBatchTime = timeService.now();
 				messageCount = 0;
 			}
 		}

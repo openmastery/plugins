@@ -2,38 +2,30 @@ package org.openmastery.ideaflow.activity
 
 import org.openmastery.ideaflow.controller.IFMController
 import org.openmastery.ideaflow.state.TaskState
-import org.joda.time.DateTimeUtils
 import org.openmastery.publisher.api.activity.NewEditorActivity
 import org.openmastery.publisher.api.activity.NewExecutionActivity
 import org.openmastery.publisher.api.activity.NewModificationActivity
+import org.openmastery.time.MockTimeService
 import spock.lang.Ignore
 import spock.lang.Specification
 
 class TestActivityHandler extends Specification {
 
-	private static final long NOW = System.currentTimeMillis()
-	private static final long PERSISTABLE_ACTIVITY_DURATION = ActivityHandler.SHORTEST_ACTIVITY + 1
-	private static final long PERSISTABLE_ACTIVITY_DURATION_MILLIS = PERSISTABLE_ACTIVITY_DURATION * 1000
-	private static final long DOES_NOT_PERSIST_ACTIVITY_DURATION = ActivityHandler.SHORTEST_ACTIVITY - 1
-	private static final long DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS = DOES_NOT_PERSIST_ACTIVITY_DURATION * 1000
+	private static final int  PERSISTABLE_ACTIVITY_DURATION_SECONDS = ActivityHandler.SHORTEST_ACTIVITY + 1
+	private static final int DOES_NOT_PERSIST_ACTIVITY_DURATION_SECONDS = ActivityHandler.SHORTEST_ACTIVITY - 1
 
 	ActivityHandler handler
 	InMemoryMessageLogger messageLogger
 	IFMController controller = Mock(IFMController)
+	MockTimeService timeService = new MockTimeService()
 
 	void setup() {
-		DateTimeUtils.setCurrentMillisFixed(NOW)
-
 		messageLogger = new InMemoryMessageLogger()
-		MessageQueue activityQueue = new MessageQueue(controller, messageLogger)
-		handler = new ActivityHandler(controller, activityQueue)
+		MessageQueue activityQueue = new MessageQueue(controller, messageLogger, timeService)
+		handler = new ActivityHandler(controller, activityQueue, timeService)
 
 		controller.getActiveTask() >> new TaskState(id: 1)
 		controller.isRecording() >> true
-	}
-
-	void cleanup() {
-		DateTimeUtils.setCurrentMillisSystem()
 	}
 
 	void testStartEvent_ShouldNotCreateEditorActivity_IfNoPriorEvent() {
@@ -47,7 +39,7 @@ class TestActivityHandler extends Specification {
 	void testStartEvent_ShouldNotCreateEditorActivity_IfSameEvent() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("file")
 
 		then:
@@ -57,19 +49,20 @@ class TestActivityHandler extends Specification {
 	void testStartEvent_ShouldCreateEditorActivity_IfDifferentEvent() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("other")
 
 		then:
 		assert getMessage(0, NewEditorActivity).filePath == "file"
-		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION_SECONDS
 		assertMessageCount(1)
 	}
 
 	void testStartEvent_ShouldNotCreateEditorActivity_IfShortDelay() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(DOES_NOT_PERSIST_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("other")
 
 		then:
@@ -79,7 +72,7 @@ class TestActivityHandler extends Specification {
 	void testStartEvent_ShouldEndCurrentEvent_IfNull() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent(null)
 
 		then:
@@ -90,19 +83,19 @@ class TestActivityHandler extends Specification {
 	void testEndEvent_ShouldEndCurrentEvent_IfSameEvent() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.endFileEvent("file")
 
 		then:
 		assert getMessage(0, NewEditorActivity).filePath == "file"
-		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION_SECONDS
 		assertMessageCount(1)
 	}
 
 	void testEndEvent_ShouldNotEndCurrentEvent_IfDifferentEvent() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.endFileEvent("other")
 
 		then:
@@ -112,21 +105,17 @@ class TestActivityHandler extends Specification {
 	void testEndEvent_ShouldEndCurrentEvent_IfNull() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.endFileEvent(null)
 
 		then:
 		assertMessageCount(1)
 	}
 
-
-
-
-
 	void testEndEvent_ShouldNotCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedNotCalled() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.endFileEvent(null)
 
 		then:
@@ -137,7 +126,7 @@ class TestActivityHandler extends Specification {
 	void testEndEvent_ShouldCreateEditorActivityWithModifiedTrue_IfActiveEventModifiedCalled() {
 		when:
 		handler.startFileEvent("file")
-		DateTimeUtils.setCurrentMillisFixed(NOW + PERSISTABLE_ACTIVITY_DURATION_MILLIS)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.fileModified("file")
 		handler.endFileEvent(null)
 
@@ -175,49 +164,37 @@ class TestActivityHandler extends Specification {
 	// server side - could also account for this in the timeline and just collapse events there
 	@Ignore
 	void testDuplicateEvents_ShouldIncrementDurationOnExistingEditorActivityAndNotCreateNewActivity_IfShortActivityComesBetweenTwoSameActivities() {
-		given:
-		long currentTime = NOW
-
 		when:
 		handler.startFileEvent("file1")
-		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
-		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("file2")
-		currentTime += DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS
-		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		timeService.plusSeconds(DOES_NOT_PERSIST_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("file3")
-		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
-		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.endFileEvent(null)
 
 		then:
 		assert getMessage(0, NewEditorActivity).filePath == "file1"
-		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION * 2
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION_SECONDS * 2
 		assertMessageCount(1)
 	}
 
 	void testDuplicateEvents_ShouldCreateNewEvent_IfShortActivityComesBetweenTwoActivitiesWithSameNameButDifferentInModifiedState() {
-		given:
-		long currentTime = NOW
-
 		when:
 		handler.startFileEvent("file1")
-		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
-		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("file2")
-		currentTime += DOES_NOT_PERSIST_ACTIVITY_DURATION_MILLIS
-		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		timeService.plusSeconds(DOES_NOT_PERSIST_ACTIVITY_DURATION_SECONDS)
 		handler.startFileEvent("file3")
-		currentTime += PERSISTABLE_ACTIVITY_DURATION_MILLIS
-		DateTimeUtils.setCurrentMillisFixed(currentTime)
+		timeService.plusSeconds(PERSISTABLE_ACTIVITY_DURATION_SECONDS)
 		handler.fileModified("file1")
 		handler.endFileEvent(null)
 
 		then:
 		assert getMessage(0, NewEditorActivity).filePath == "file1"
-		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assert getMessage(0, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION_SECONDS
 		assert getMessage(1, NewEditorActivity).filePath == "file3"
-		assert getMessage(1, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION
+		assert getMessage(1, NewEditorActivity).durationInSeconds == PERSISTABLE_ACTIVITY_DURATION_SECONDS
 		assertMessageCount(2)
 	}
 
@@ -234,6 +211,5 @@ class TestActivityHandler extends Specification {
 		assert messageLogger.messages.size() > index
 		(T)messageLogger.messages[index]
 	}
-
 
 }
