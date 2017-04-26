@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.publisher.api.event.EventType;
 
+import static org.openmastery.ideaflow.intellij.action.ActionSupport.getActiveIdeaFlowName;
 import static org.openmastery.ideaflow.intellij.action.ActionSupport.getIFMController;
 import static org.openmastery.ideaflow.intellij.action.ActionSupport.isPaused;
 import static org.openmastery.ideaflow.intellij.action.ActionSupport.isTaskActive;
@@ -25,7 +26,7 @@ public class TogglePause extends IdeaFlowToggleAction {
 
 	@Override
 	protected String getPresentationDescription(AnActionEvent e) {
-		return "${getPresentationText(e)}: ${getActiveIdeaFlowName(e)}";
+		return getPresentationText(e) + ": " + getActiveIdeaFlowName(e);
 	}
 
 	@Override

@@ -118,7 +118,7 @@ public class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			this.task = task;
 
 			getTemplatePresentation().setText(task.getQualifiedName(), false);
-			getTemplatePresentation().setDescription("Set ${task.name} as active IdeaFlow");
+			getTemplatePresentation().setDescription("Set " + task.getName() + " as active IdeaFlow");
 		}
 
 		public void actionPerformed(final AnActionEvent e) {
