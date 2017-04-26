@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent;
@@ -53,8 +54,7 @@ public class ActionSupport {
 		return controller != null && controller.isPaused();
 	}
 
-	public static String getSelectedText(AnActionEvent e) {
-		Editor editor = e.getData(CommonDataKeys.EDITOR);
+	public static String getSelectedText(Editor editor) {
 		if (editor == null) {
 			return null;
 		}
@@ -68,12 +68,11 @@ public class ActionSupport {
 		presentation.setEnabled(isTaskActiveAndRecording(e));
 	}
 
-	public static String getActiveFilePath(AnActionEvent e) {
-		VirtualFile file = e.getData(LangDataKeys.VIRTUAL_FILE);
+	public static String getActiveFilePath(Project project, VirtualFile file) {
 		String fileName = null;
 
 		if (file != null) {
-			fileName = VirtualFileActivityHandler.getFullFilePathOrDefault(file, e.getProject(), file.getName());
+			fileName = VirtualFileActivityHandler.getFullFilePathOrDefault(file, project, file.getName());
 		}
 		return fileName;
 	}

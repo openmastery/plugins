@@ -2,7 +2,12 @@ package org.openmastery.ideaflow.intellij.action.event;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.openmastery.ideaflow.controller.IFMController;
 import org.openmastery.ideaflow.intellij.IdeaFlowApplicationComponent;
 import org.openmastery.ideaflow.state.TaskState;
@@ -34,11 +39,15 @@ public class CreatePainEvent extends AnAction {
 	public void actionPerformed(AnActionEvent e) {
 		IFMController controller = getIFMController(e);
 		if (controller != null) {
+			Project project = e.getProject();
+			Editor editor = e.getData(CommonDataKeys.EDITOR);
+			VirtualFile file = e.getData(LangDataKeys.VIRTUAL_FILE);
+
 			String painMessage = promptForInput(controller);
 			if (painMessage != null) {
-				String snippet = getSelectedText(e);
+				String snippet = getSelectedText(editor);
 				if (snippet != null) {
-					String source = getActiveFilePath(e);
+					String source = getActiveFilePath(project, file);
 					controller.createPainSnippet(painMessage, source, snippet);
 				} else {
 					controller.createPain(painMessage);
