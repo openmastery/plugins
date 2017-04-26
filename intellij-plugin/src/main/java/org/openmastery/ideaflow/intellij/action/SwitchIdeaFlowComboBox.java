@@ -1,5 +1,6 @@
 package org.openmastery.ideaflow.intellij.action;
 
+import com.bancvue.rest.exception.ConflictException;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -182,6 +183,9 @@ public class SwitchIdeaFlowComboBox extends ComboBoxAction {
 			if (wizard.shouldCreateTask()) {
 				try {
 					switchIdeaFlow.addNewTask(wizard.getTaskName(), wizard.getTaskDescription(), wizard.getTaskProject());
+				} catch (ConflictException ex) {
+					String message = "Task with name '" + wizard.getTaskName() + "' already exists";
+					IdeaFlowApplicationComponent.showErrorMessage("Duplicate task", message);
 				} catch (Exception ex) {
 					String message = "Sorry, the server is currently unavailable for creating new tasks.  " +
 							"You can currently work offline only with existing tasks.  " +
