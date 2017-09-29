@@ -126,7 +126,7 @@ task assertPackagedPluginVersionMatchesVersionInSource(dependsOn: extractPluginX
  */
 
 String getModuleJdkName() {
-	File moduleFile = file('ideaflow-plugin.iml')
+	File moduleFile = file('intellij-plugin.iml')
 	String moduleJdkName = null
 	if (moduleFile.exists()) {
 		def module = new XmlParser().parseText(moduleFile.text)
@@ -141,7 +141,7 @@ String moduleJdkName = getModuleJdkName()
 
 idea {
 	module {
-		name = 'ideaflow-plugin'
+		name = 'intellij-plugin'
 
 		iml {
 			whenMerged { module ->
